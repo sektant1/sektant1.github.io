@@ -42,8 +42,8 @@ const TREE: NavNode[] = [
 ]
 
 // Shown in the header rule, so the current location reads like a path.
-function toPath(pathname: string) {
-  return pathname === "/" ? "~/codex" : `~${pathname}`
+function toSegment(pathname: string) {
+  return pathname === "/" ? "codex" : pathname.replace(/^\//, "")
 }
 
 export function AppShell() {
@@ -56,22 +56,16 @@ export function AppShell() {
     <AriaRouterProvider navigate={navigate} useHref={useHref}>
       <SidebarProvider>
         <Sidebar>
-          <SidebarHeader className="p-0 pt-3">
-            <div className="flex items-center gap-2 px-3 pb-2">
-              <span
-                aria-hidden="true"
-                className="flex size-5 shrink-0 items-center justify-center bg-primary font-mono text-[0.65rem] font-semibold text-primary-foreground"
-              >
-                SK
-              </span>
-              <span className="truncate font-mono text-xs font-semibold tracking-wide text-primary uppercase crt-glow">
-                skt codex
-              </span>
-            </div>
+          {/* Same height and bottom rule as the content header, so the two
+              read as one bar across the top rather than two misaligned ones. */}
+          <SidebarHeader className="h-11 justify-center border-b border-border p-0 px-3">
+            <span className="truncate font-mono text-xs tracking-[0.2em] text-terminal-chrome uppercase crt-glow">
+              skt codex
+            </span>
           </SidebarHeader>
 
           <SidebarContent className="px-1">
-            <NavTree tree={TREE} root="codex" branch="local" />
+            <NavTree tree={TREE} />
           </SidebarContent>
 
           <SidebarFooter className="p-0">
@@ -87,9 +81,13 @@ export function AppShell() {
           <header className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-2 border-b bg-background px-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-4" />
-            <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem] text-terminal-ink-dim">
-              {toPath(pathname)}
+
+            {/* The prefix stays quiet so the current segment is what reads. */}
+            <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem]">
+              <span className="text-terminal-ink-faint">~/</span>
+              <span className="text-terminal-ink">{toSegment(pathname)}</span>
             </span>
+
             <FontPicker />
             <ThemeToggle />
           </header>

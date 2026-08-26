@@ -1,0 +1,238 @@
+- generic [ref=f17e3]:
+  - generic [ref=f17e6]:
+    - generic [ref=f17e7]: skt codex
+    - navigation "Site sections" [ref=f17e10]:
+      - generic [ref=f17e11]:
+        - generic [ref=f17e12]:
+          - button "learn/ (3)" [expanded] [ref=f17e13]:
+            - generic [ref=f17e14]: ▾
+            - generic [ref=f17e15]: learn/
+            - generic [ref=f17e16]: (3)
+          - list [ref=f17e17]:
+            - listitem [ref=f17e18]:
+              - generic [ref=f17e19]: ├─
+              - link "codex" [ref=f17e20] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/
+            - listitem [ref=f17e21]:
+              - generic [ref=f17e22]: ├─
+              - link "courses" [ref=f17e23] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/courses
+            - listitem [ref=f17e24]:
+              - generic [ref=f17e25]: └─
+              - link "practice" [ref=f17e26] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/practice
+        - generic [ref=f17e27]:
+          - button "workspace/ (3)" [expanded] [ref=f17e28]:
+            - generic [ref=f17e29]: ▾
+            - generic [ref=f17e30]: workspace/
+            - generic [ref=f17e31]: (3)
+          - list [ref=f17e32]:
+            - listitem [ref=f17e33]:
+              - generic [ref=f17e34]: ├─
+              - link "tasks" [ref=f17e35] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/tasks
+            - listitem [ref=f17e36]:
+              - generic [ref=f17e37]: ├─
+              - link "notes" [ref=f17e38] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/notes
+            - listitem [ref=f17e39]:
+              - generic [ref=f17e40]: └─
+              - link "snippets" [ref=f17e41] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/snippets
+        - generic [ref=f17e42]:
+          - button "toolkit/ (2)" [expanded] [ref=f17e43]:
+            - generic [ref=f17e44]: ▾
+            - generic [ref=f17e45]: toolkit/
+            - generic [ref=f17e46]: (2)
+          - list [ref=f17e47]:
+            - listitem [ref=f17e48]:
+              - generic [ref=f17e49]: ├─
+              - link "components" [ref=f17e50] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/components
+            - listitem [ref=f17e51]:
+              - generic [ref=f17e52]: └─
+              - link "submit" [ref=f17e53] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/submit
+    - generic [ref=f17e54]: :NERDTREE
+  - main [ref=f17e56]:
+    - generic [ref=f17e57]:
+      - button "Toggle Sidebar" [ref=f17e58]
+      - separator [ref=f17e60]
+      - generic [ref=f17e61]: ~/codex
+      - button "Change display face" [ref=f17e62]
+      - button "Dark theme. Switch to system theme" [ref=f17e63]
+    - generic [ref=f17e65]:
+      - generic [ref=f17e66]:
+        - generic [ref=f17e71]:
+          - generic [ref=f17e72]: skt://codex
+          - generic [ref=f17e74]: │
+          - generic [ref=f17e75]: build 0.1.0
+          - generic [ref=f17e76]: │
+          - generic [ref=f17e77]: 8 topics
+          - generic [ref=f17e78]: │
+          - generic [ref=f17e79]: 4 tracks
+          - generic [ref=f17e81]:
+            - generic [ref=f17e82]: link established
+            - text: "!\\}^ __{*__-]+__"
+        - generic [ref=f17e83]:
+          - generic [ref=f17e84]:
+            - generic [ref=f17e85]:
+              - generic [ref=f17e86]: SKT CODEX
+              - generic [ref=f17e87]: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+              - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+              - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+            - generic [ref=f17e88]:
+              - progressbar "topics" [ref=f17e89]:
+                - generic [ref=f17e91]: "[##............]"
+                - generic [ref=f17e92]: 13% 1/8
+              - progressbar "lessons" [ref=f17e93]:
+                - generic [ref=f17e95]: "[###...........]"
+                - generic [ref=f17e96]: 18% of 17
+              - progressbar "snippets" [ref=f17e97]:
+                - generic [ref=f17e99]: "[##########....]"
+                - generic [ref=f17e100]: 70% indexed
+            - generic [ref=f17e101]:
+              - generic [ref=f17e102]: ~/codex
+              - generic [ref=f17e103]: $
+              - generic [ref=f17e104]:
+                - generic [ref=f17e105]: resume --last
+                - text: "!\\}^__ {*__-]"
+              - generic [ref=f17e106]: _
+          - figure "fig. 1 — lambert sphere, 80 col" [ref=f17e107]
+      - generic [ref=f17e109]:
+        - generic [ref=f17e110]:
+          - generic [ref=f17e111]:
+            - generic [ref=f17e113]: "[ resume ]"
+            - generic [ref=f17e115]: online
+          - list [ref=f17e117]:
+            - listitem [ref=f17e118]:
+              - link "Deferred Shading and the G-Buffer 62% 62%" [ref=f17e119] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/deferred-shading
+                - generic [ref=f17e123]:
+                  - generic [ref=f17e124]: Deferred Shading and the G-Buffer
+                  - progressbar "Deferred Shading and the G-Buffer progress" [ref=f17e125]
+                - generic [ref=f17e128]: 62%
+            - listitem [ref=f17e132]:
+              - link "GJK Collision Detection 24% 24%" [ref=f17e133] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/gjk-collision
+                - generic [ref=f17e137]:
+                  - generic [ref=f17e138]: GJK Collision Detection
+                  - progressbar "GJK Collision Detection progress" [ref=f17e139]
+                - generic [ref=f17e142]: 24%
+            - listitem [ref=f17e146]:
+              - link "Archetype vs Sparse Set ECS Storage 45% 45%" [ref=f17e147] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/ecs-storage
+                - generic [ref=f17e151]:
+                  - generic [ref=f17e152]: Archetype vs Sparse Set ECS Storage
+                  - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f17e153]
+                - generic [ref=f17e156]: 45%
+            - listitem [ref=f17e160]:
+              - link "Signed Distance Fields 8% 8%" [ref=f17e161] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/signed-distance-fields
+                - generic [ref=f17e165]:
+                  - generic [ref=f17e166]: Signed Distance Fields
+                  - progressbar "Signed Distance Fields progress" [ref=f17e167]
+                - generic [ref=f17e170]: 8%
+          - generic [ref=f17e174]: 4 open
+        - generic [ref=f17e175]:
+          - generic [ref=f17e176]:
+            - generic [ref=f17e178]: "[ sys/boot ]"
+            - generic [ref=f17e180]: online
+          - generic [ref=f17e181]: mounting /codex ok. indexing 8 reference topics ok. loading 22 practice sets ok. calibrating phosphor output ok. gpu capability probe warn. telemetry uplink skip
+          - generic [ref=f17e184]: last cold start
+      - generic [ref=f17e185]:
+        - generic [ref=f17e186]:
+          - heading "Rendering" [level=2] [ref=f17e187]
+          - generic [ref=f17e188]: "2"
+          - separator [ref=f17e189]
+        - generic [ref=f17e190]:
+          - generic [ref=f17e192]:
+            - link "Deferred Shading and the G-Buffer" [ref=f17e193] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/deferred-shading
+            - paragraph [ref=f17e194]: Lorem sit adipiscing do incididunt et aliqua minim nostrud. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur.
+            - generic [ref=f17e195]:
+              - generic [ref=f17e196]: 14 min
+              - progressbar "Deferred Shading and the G-Buffer progress" [ref=f17e197]
+              - generic [ref=f17e200]: 62%
+          - generic [ref=f17e202]:
+            - link "The Rendering Equation, Read Slowly" [ref=f17e203] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/rendering-equation
+            - paragraph [ref=f17e204]: Elit eiusmod ut dolore enim veniam exercitation nisi ea duis. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia.
+            - generic [ref=f17e205]:
+              - generic [ref=f17e206]: 18 min
+              - progressbar "The Rendering Equation, Read Slowly progress" [ref=f17e207]
+              - generic [ref=f17e209]: 0%
+      - generic [ref=f17e210]:
+        - generic [ref=f17e211]:
+          - heading "Physics" [level=2] [ref=f17e212]
+          - generic [ref=f17e213]: "2"
+          - separator [ref=f17e214]
+        - generic [ref=f17e215]:
+          - generic [ref=f17e217]:
+            - link "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent" [ref=f17e218] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/fixed-timestep
+            - paragraph [ref=f17e219]: Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit.
+            - generic [ref=f17e220]:
+              - generic [ref=f17e221]: 11 min
+              - progressbar "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent progress" [ref=f17e222]
+              - generic [ref=f17e225]: 100%
+          - generic [ref=f17e227]:
+            - link "GJK Collision Detection" [ref=f17e228] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/gjk-collision
+            - paragraph [ref=f17e229]: Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut.
+            - generic [ref=f17e230]:
+              - generic [ref=f17e231]: 16 min
+              - progressbar "GJK Collision Detection progress" [ref=f17e232]
+              - generic [ref=f17e235]: 24%
+      - generic [ref=f17e236]:
+        - generic [ref=f17e237]:
+          - heading "ECS" [level=2] [ref=f17e238]
+          - generic [ref=f17e239]: "1"
+          - separator [ref=f17e240]
+        - generic [ref=f17e243]:
+          - link "Archetype vs Sparse Set ECS Storage" [ref=f17e244] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/ecs-storage
+          - paragraph [ref=f17e245]: Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis.
+          - generic [ref=f17e246]:
+            - generic [ref=f17e247]: 15 min
+            - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f17e248]
+            - generic [ref=f17e251]: 45%
+      - generic [ref=f17e252]:
+        - generic [ref=f17e253]:
+          - heading "Shaders" [level=2] [ref=f17e254]
+          - generic [ref=f17e255]: "1"
+          - separator [ref=f17e256]
+        - generic [ref=f17e259]:
+          - link "Signed Distance Fields" [ref=f17e260] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/signed-distance-fields
+          - paragraph [ref=f17e261]: Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat.
+          - generic [ref=f17e262]:
+            - generic [ref=f17e263]: 13 min
+            - progressbar "Signed Distance Fields progress" [ref=f17e264]
+            - generic [ref=f17e267]: 8%
+      - generic [ref=f17e268]:
+        - generic [ref=f17e269]:
+          - heading "Netcode" [level=2] [ref=f17e270]
+          - generic [ref=f17e271]: "1"
+          - separator [ref=f17e272]
+        - generic [ref=f17e275]:
+          - link "Client-Side Prediction and Server Reconciliation" [ref=f17e276] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/client-prediction
+          - paragraph [ref=f17e277]: Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu.
+          - generic [ref=f17e278]:
+            - generic [ref=f17e279]: 17 min
+            - progressbar "Client-Side Prediction and Server Reconciliation progress" [ref=f17e280]
+            - generic [ref=f17e282]: 0%
+      - generic [ref=f17e283]:
+        - generic [ref=f17e284]:
+          - heading "Tooling" [level=2] [ref=f17e285]
+          - generic [ref=f17e286]: "1"
+          - separator [ref=f17e287]
+        - generic [ref=f17e290]:
+          - link "Hot-Reloading an Asset Pipeline" [ref=f17e291] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/hot-reload-assets
+          - paragraph [ref=f17e292]: Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt.
+          - generic [ref=f17e293]:
+            - generic [ref=f17e294]: 12 min
+            - progressbar "Hot-Reloading an Asset Pipeline progress" [ref=f17e295]
+            - generic [ref=f17e297]: 0%

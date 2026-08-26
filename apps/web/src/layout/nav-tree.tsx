@@ -11,8 +11,6 @@ export type NavNode = {
 
 type NavTreeProps = {
   tree: NavNode[]
-  root: string
-  branch?: string
 }
 
 /**
@@ -23,35 +21,15 @@ type NavTreeProps = {
  * structure is a nav of lists, and each directory toggle is a button that
  * reports its expanded state.
  */
-export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
+export function NavTree({ tree }: NavTreeProps) {
   const { pathname } = useLocation()
   const [collapsed, setCollapsed] = React.useState<string[]>([])
 
   return (
     <nav
       aria-label="Site sections"
-      className="flex min-w-0 flex-col gap-3 font-mono text-[0.72rem]"
+      className="flex min-w-0 flex-col gap-1.5 pt-3 font-mono text-[0.72rem]"
     >
-      <div className="flex flex-col gap-0.5 px-2">
-        <div className="flex items-center gap-1.5">
-          <span
-            aria-hidden="true"
-            className="size-1 shrink-0 bg-primary shadow-[0_0_6px_var(--primary)]"
-          />
-          <span className="tracking-[0.25em] text-terminal-chrome-dim uppercase">
-            [nav]
-          </span>
-        </div>
-        <span className="truncate tracking-wide text-primary crt-glow">
-          ~/{root.toUpperCase()}
-        </span>
-        <span className="text-[0.65rem] text-terminal-ink-faint italic">
-          // {branch}
-        </span>
-      </div>
-
-      <div aria-hidden="true" className="mx-2 border-t border-terminal-rule" />
-
       <div className="flex flex-col gap-1.5">
         {tree.map((node) => {
           const isCollapsed = collapsed.includes(node.dir)
