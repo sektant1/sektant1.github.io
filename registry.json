@@ -185,6 +185,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "figlet"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/ascii-banner.tsx",

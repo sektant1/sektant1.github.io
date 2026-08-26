@@ -5,6 +5,7 @@ import { Codex } from "@/pages/codex"
 import { Courses } from "@/pages/courses"
 import { Lesson } from "@/pages/lesson"
 import { Stub } from "@/pages/stub"
+import { Tasks } from "@/pages/tasks"
 import { Topic } from "@/pages/topic"
 
 export const routes: RouteObject[] = [
@@ -15,7 +16,7 @@ export const routes: RouteObject[] = [
       { path: "/topic/:slug", element: <Topic /> },
       { path: "/courses", element: <Courses /> },
       { path: "/courses/:slug", element: <Lesson /> },
-      { path: "/tasks", element: <Stub name="Tasks" /> },
+      { path: "/tasks", element: <Tasks /> },
       { path: "/notes", element: <Stub name="Notes" /> },
       { path: "/snippets", element: <Stub name="Snippets" /> },
       { path: "/practice", element: <Stub name="Practice" /> },

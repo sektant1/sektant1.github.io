@@ -2,65 +2,44 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import figlet from "figlet"
+import banner3 from "figlet/importable-fonts/Banner3.js"
+import big from "figlet/importable-fonts/Big.js"
+import slant from "figlet/importable-fonts/Slant.js"
+import small from "figlet/importable-fonts/Small.js"
+import standard from "figlet/importable-fonts/Standard.js"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-// A 5-row block font. Every glyph is 6 columns wide so lines stay aligned
-// without measuring anything.
+// Fonts are imported as modules rather than fetched, so rendering stays
+// synchronous and the component works offline.
 //
-// Drawn with '#' rather than U+2588 FULL BLOCK deliberately: the theme's mono
-// face has no block-drawing glyphs, so those fall back to another font at a
-// different advance width and the rows stop lining up.
-const GLYPH_WIDTH = 6
-const GLYPH_HEIGHT = 5
+// Every font here is drawn with plain ASCII. The block-drawing fonts figlet
+// also ships (ANSI Shadow and friends) look better in a terminal but break
+// here: the theme's mono face has no block glyphs, so they fall back to
+// another face at a different advance width and the rows stop lining up.
+const FONTS = {
+  Standard: standard,
+  Slant: slant,
+  Small: small,
+  Big: big,
+  Banner3: banner3,
+} as const
 
-const FONT: Record<string, string[]> = {
-  A: [" #### ", "##  ##", "######", "##  ##", "##  ##"],
-  B: ["##### ", "##  ##", "##### ", "##  ##", "##### "],
-  C: [" #####", "##    ", "##    ", "##    ", " #####"],
-  D: ["##### ", "##  ##", "##  ##", "##  ##", "##### "],
-  E: ["######", "##    ", "##### ", "##    ", "######"],
-  F: ["######", "##    ", "##### ", "##    ", "##    "],
-  G: [" #####", "##    ", "## ###", "##  ##", " #####"],
-  H: ["##  ##", "##  ##", "######", "##  ##", "##  ##"],
-  I: ["######", "  ##  ", "  ##  ", "  ##  ", "######"],
-  J: ["######", "    ##", "    ##", "##  ##", " #### "],
-  K: ["##  ##", "## ## ", "####  ", "## ## ", "##  ##"],
-  L: ["##    ", "##    ", "##    ", "##    ", "######"],
-  M: ["##  ##", "######", "######", "##  ##", "##  ##"],
-  N: ["##  ##", "### ##", "######", "## ###", "##  ##"],
-  O: [" #### ", "##  ##", "##  ##", "##  ##", " #### "],
-  P: ["##### ", "##  ##", "##### ", "##    ", "##    "],
-  Q: [" #### ", "##  ##", "##  ##", "## ## ", " ## ##"],
-  R: ["##### ", "##  ##", "##### ", "## ## ", "##  ##"],
-  S: [" #####", "##    ", " #### ", "    ##", "##### "],
-  T: ["######", "  ##  ", "  ##  ", "  ##  ", "  ##  "],
-  U: ["##  ##", "##  ##", "##  ##", "##  ##", " #### "],
-  V: ["##  ##", "##  ##", "##  ##", " #### ", "  ##  "],
-  W: ["##  ##", "##  ##", "######", "######", "##  ##"],
-  X: ["##  ##", " #### ", "  ##  ", " #### ", "##  ##"],
-  Y: ["##  ##", " #### ", "  ##  ", "  ##  ", "  ##  "],
-  Z: ["######", "   ## ", "  ##  ", " ##   ", "######"],
-  "0": [" #### ", "##  ##", "##  ##", "##  ##", " #### "],
-  "1": ["  ##  ", " ###  ", "  ##  ", "  ##  ", "######"],
-  "2": [" #### ", "##  ##", "   ## ", " ##   ", "######"],
-  "3": ["##### ", "    ##", " #### ", "    ##", "##### "],
-  "4": ["##  ##", "##  ##", "######", "    ##", "    ##"],
-  "5": ["######", "##    ", "##### ", "    ##", "##### "],
-  "6": [" #####", "##    ", "##### ", "##  ##", " #### "],
-  "7": ["######", "    ##", "   ## ", "  ##  ", "  ##  "],
-  "8": [" #### ", "##  ##", " #### ", "##  ##", " #### "],
-  "9": [" #### ", "##  ##", " #####", "    ##", " #### "],
-  ".": ["      ", "      ", "      ", "      ", "  ##  "],
-  "-": ["      ", "      ", "######", "      ", "      "],
-  "/": ["    ##", "   ## ", "  ##  ", " ##   ", "##    "],
-  ":": ["      ", "  ##  ", "      ", "  ##  ", "      "],
-  "!": ["  ##  ", "  ##  ", "  ##  ", "      ", "  ##  "],
-  " ": ["      ", "      ", "      ", "      ", "      "],
+export type AsciiBannerFont = keyof typeof FONTS
+
+let registered = false
+
+function ensureFontsRegistered() {
+  if (registered) return
+  for (const [name, data] of Object.entries(FONTS)) {
+    figlet.parseFont(name, data)
+  }
+  registered = true
 }
 
 const bannerVariants = cva(
-  "w-full overflow-x-auto font-mono leading-[0.78] whitespace-pre select-none",
+  "w-full overflow-x-auto font-mono leading-[0.95] whitespace-pre select-none",
   {
     variants: {
       tone: {
@@ -80,25 +59,31 @@ const bannerVariants = cva(
 
 type AsciiBannerProps = Omit<React.ComponentProps<"div">, "children"> &
   VariantProps<typeof bannerVariants> & {
-    /** Rendered in the block font. Unsupported characters fall back to a space. */
     text: string
-    /** Adds scanlines and a periodic horizontal tear. */
+    font?: AsciiBannerFont
+    /** Adds scanlines, or scanlines plus a chromatic split on hover. */
     effect?: "none" | "scanlines" | "glitch"
   }
 
 /**
- * Large text drawn in a block font, with optional CRT treatment. The real
- * string stays available to screen readers; the art is decorative.
+ * Large text rendered as figlet ASCII art, with optional CRT treatment. The
+ * real string stays available to screen readers; the art is decorative.
  */
 function AsciiBanner({
   text,
+  font = "Standard",
   effect = "scanlines",
   tone,
   size,
   className,
   ...props
 }: AsciiBannerProps) {
-  const art = React.useMemo(() => toArt(text), [text])
+  const art = React.useMemo(() => {
+    ensureFontsRegistered()
+    // Figlet pads its output with trailing blank lines, which read as dead
+    // space above whatever follows the banner.
+    return figlet.textSync(text, { font }).replace(/\s+$/, "")
+  }, [text, font])
 
   return (
     <div
@@ -118,8 +103,7 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 text-destructive opacity-0 mix-blend-screen group-hover/ascii-banner:animate-pulse group-hover/ascii-banner:opacity-70",
-              "translate-x-[2px] -translate-y-[1px]"
+              "pointer-events-none absolute inset-0 translate-x-[2px] -translate-y-[1px] text-destructive opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-70"
             )}
           >
             {art}
@@ -128,8 +112,7 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60",
-              "-translate-x-[2px] translate-y-[1px]"
+              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60"
             )}
           >
             {art}
@@ -149,25 +132,6 @@ function AsciiBanner({
       ) : null}
     </div>
   )
-}
-
-function toArt(text: string) {
-  const chars = [...text.toUpperCase()]
-  const rows: string[] = []
-
-  for (let row = 0; row < GLYPH_HEIGHT; row++) {
-    rows.push(
-      chars
-        .map(
-          (char) => (FONT[char] ?? FONT[" "])[row] ?? " ".repeat(GLYPH_WIDTH)
-        )
-        // One blank column between glyphs, or letters whose edges both reach
-        // the glyph boundary — S then K — fuse into an unreadable run.
-        .join(" ")
-    )
-  }
-
-  return rows.join("\n")
 }
 
 export { AsciiBanner, bannerVariants }
