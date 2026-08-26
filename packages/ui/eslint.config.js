@@ -18,5 +18,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // This package is a library, not an app with Fast Refresh boundaries.
+      // Every shadcn component exports its cva variants alongside the
+      // component, which is the intended public surface here.
+      'react-refresh/only-export-components': 'off',
+    },
   },
 ])
