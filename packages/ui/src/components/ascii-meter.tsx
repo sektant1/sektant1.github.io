@@ -6,8 +6,8 @@ import { cn } from "@workspace/ui/lib/utils"
 const meterVariants = cva("font-mono whitespace-pre tabular-nums", {
   variants: {
     tone: {
-      default: "text-primary text-glow-soft",
-      muted: "text-muted-foreground",
+      default: "text-primary crt-glow-soft",
+      muted: "text-primary/85",
       warning: "text-destructive",
     },
     size: {
@@ -66,12 +66,12 @@ function AsciiMeter({
       )}
       {...props}
     >
-      <span className="shrink-0 tracking-widest text-muted-foreground uppercase">
+      <span className="shrink-0 tracking-widest uppercase opacity-90">
         {label}
       </span>
       <span aria-hidden="true" className="shrink-0">
         [{"#".repeat(filled)}
-        <span className="text-muted-foreground/40">
+        <span className="text-muted-foreground/60">
           {".".repeat(cells - filled)}
         </span>
         ]

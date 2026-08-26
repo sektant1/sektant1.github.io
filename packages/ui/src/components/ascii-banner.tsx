@@ -64,9 +64,9 @@ const bannerVariants = cva(
   {
     variants: {
       tone: {
-        default: "text-primary text-glow",
+        default: "text-primary crt-glow",
         muted: "text-muted-foreground",
-        foreground: "text-foreground text-glow-soft",
+        foreground: "text-foreground crt-glow-soft",
       },
       size: {
         sm: "text-[0.4rem]",

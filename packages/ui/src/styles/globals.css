@@ -20,9 +20,13 @@
 /* Phosphor bloom. The glow is built from currentColor, so it takes the tone of
    whatever it is applied to and needs no per-colour variants.
 
+   Named crt-glow, not text-glow: tailwind-merge treats an unknown `text-*`
+   class as a text colour, so `cn("text-primary", "text-glow")` would drop the
+   colour entirely.
+
    Light backgrounds cannot carry a bloom — the halo reads as blur rather than
    emission — so the effect is scoped to dark mode and degrades to nothing. */
-@utility text-glow {
+@utility crt-glow {
   @variant dark {
     text-shadow:
       0 0 4px color-mix(in oklch, currentColor 55%, transparent),
@@ -30,7 +34,7 @@
   }
 }
 
-@utility text-glow-soft {
+@utility crt-glow-soft {
   @variant dark {
     text-shadow: 0 0 8px color-mix(in oklch, currentColor 28%, transparent);
   }

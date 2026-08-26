@@ -44,9 +44,9 @@ export function Codex() {
   return (
     <div className="flex flex-col gap-8">
       <CrtScreen
-        intensity="default"
+        intensity="subtle"
         sweep
-        className="border border-border bg-[color-mix(in_oklch,var(--card),var(--background)_55%)]"
+        className="border border-primary/25 bg-[color-mix(in_oklch,var(--card),var(--primary)_6%)]"
       >
         {/* Corner ticks — the frame reads as an instrument rather than a card. */}
         <span
@@ -68,14 +68,14 @@ export function Codex() {
 
         <div className="grid gap-6 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-8">
           <div className="flex min-w-0 flex-col gap-4">
-            <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
+            <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-primary/90 uppercase crt-glow-soft">
               <span className="size-1 bg-primary shadow-[0_0_6px_var(--primary)]" />
               <ScrambleText text="terminal // sektant systems" speed={18} />
             </div>
 
             <AsciiBanner text="SKT CODEX" effect="glitch" size="lg" />
 
-            <p className="max-w-prose text-xs leading-relaxed text-muted-foreground">
+            <p className="max-w-prose text-xs leading-relaxed text-foreground/80">
               <ScrambleText
                 text="Reference and practice for real-time graphics, engine architecture and network simulation."
                 speed={12}
@@ -92,18 +92,16 @@ export function Codex() {
                 label="lessons"
                 value={0.18}
                 unit={`of ${totalLessons}`}
-                tone="muted"
               />
               <AsciiMeter
                 label="snippets"
                 value={snippets.length / 20}
                 unit="indexed"
-                tone="muted"
               />
             </div>
 
-            <div className="flex items-center gap-1.5 font-mono text-[11px] text-primary text-glow">
-              <span className="text-muted-foreground">~/codex</span>
+            <div className="flex items-center gap-1.5 font-mono text-[11px] text-primary crt-glow">
+              <span className="text-foreground/75">~/codex</span>
               <span>$</span>
               <ScrambleText text="resume --last" speed={40} />
               <span className="motion-safe:animate-pulse">_</span>
@@ -113,7 +111,7 @@ export function Codex() {
           <AsciiSolid
             shape="sphere"
             columns={60}
-            className="mx-auto hidden shrink-0 opacity-90 md:block"
+            className="mx-auto hidden shrink-0 md:block"
           />
         </div>
       </CrtScreen>
@@ -132,7 +130,7 @@ export function Codex() {
                     to={`/topic/${topic.slug}`}
                     className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50"
                   >
-                    <IconBook className="size-4 shrink-0 text-muted-foreground" />
+                    <IconBook className="size-4 shrink-0 text-foreground/75" />
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-xs font-medium">
                         {topic.title}
@@ -143,10 +141,10 @@ export function Codex() {
                         aria-label={`${topic.title} progress`}
                       />
                     </div>
-                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground tabular-nums">
+                    <span className="shrink-0 font-mono text-[10px] text-foreground/75 tabular-nums">
                       {topic.progress}%
                     </span>
-                    <IconArrowRight className="size-3.5 shrink-0 text-muted-foreground" />
+                    <IconArrowRight className="size-3.5 shrink-0 text-foreground/75" />
                   </Link>
                 </li>
               ))}
@@ -177,7 +175,7 @@ export function Codex() {
         return (
           <section key={area} className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
-              <h2 className="shrink-0 font-mono text-xs tracking-widest uppercase">
+              <h2 className="shrink-0 font-mono text-xs tracking-widest text-primary uppercase crt-glow-soft">
                 {area}
               </h2>
               <Badge
@@ -202,11 +200,11 @@ export function Codex() {
                     >
                       {topic.title}
                     </Link>
-                    <p className="line-clamp-3 text-[11px] leading-relaxed text-muted-foreground">
+                    <p className="line-clamp-3 text-[11px] leading-relaxed text-foreground/75">
                       {topic.summary}
                     </p>
                     <div className="mt-auto flex items-center gap-2 pt-1">
-                      <span className="font-mono text-[10px] text-muted-foreground">
+                      <span className="font-mono text-[10px] text-foreground/75">
                         {topic.readingMinutes} min
                       </span>
                       <Progress
@@ -214,7 +212,7 @@ export function Codex() {
                         className="h-0.5 flex-1"
                         aria-label={`${topic.title} progress`}
                       />
-                      <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                      <span className="font-mono text-[10px] text-foreground/75 tabular-nums">
                         {topic.progress}%
                       </span>
                     </div>

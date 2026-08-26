@@ -75,7 +75,7 @@ export function AppShell() {
               <div className="flex size-6 shrink-0 items-center justify-center bg-primary font-mono text-[11px] font-semibold text-primary-foreground">
                 SK
               </div>
-              <span className="truncate font-mono text-xs font-semibold tracking-wide uppercase group-data-[collapsible=icon]:hidden">
+              <span className="truncate font-mono text-xs font-semibold tracking-wide text-primary uppercase crt-glow group-data-[collapsible=icon]:hidden">
                 SKT Codex
               </span>
             </div>
@@ -104,7 +104,7 @@ export function AppShell() {
             ))}
           </SidebarContent>
           <SidebarFooter>
-            <div className="px-2 py-1 font-mono text-[10px] text-muted-foreground group-data-[collapsible=icon]:hidden">
+            <div className="px-2 py-1 font-mono text-[10px] text-primary/70 group-data-[collapsible=icon]:hidden">
               skt-ui-toolkit
             </div>
           </SidebarFooter>

@@ -44,14 +44,14 @@ function TerminalFrame({
           aria-hidden="true"
           className={cn("size-1.5 shrink-0", STATUS_CLASS[status])}
         />
-        <span className="truncate font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+        <span className="truncate font-mono text-[10px] tracking-widest text-primary uppercase crt-glow-soft">
           [ {title} ]
         </span>
         <span
           aria-hidden="true"
           className="ms-auto hidden h-px flex-1 border-t border-border sm:block"
         />
-        <span className="hidden shrink-0 font-mono text-[10px] tracking-widest text-muted-foreground uppercase sm:inline">
+        <span className="hidden shrink-0 font-mono text-[10px] tracking-widest text-primary/90 uppercase sm:inline">
           {status}
         </span>
       </div>
@@ -59,7 +59,7 @@ function TerminalFrame({
       <div className="min-w-0">{children}</div>
 
       {footer ? (
-        <div className="truncate border-t border-border px-2 py-1 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+        <div className="truncate border-t border-border px-2 py-1 font-mono text-[10px] tracking-wider text-primary/80 uppercase">
           {footer}
         </div>
       ) : null}

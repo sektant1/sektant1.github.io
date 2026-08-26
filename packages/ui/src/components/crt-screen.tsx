@@ -12,9 +12,9 @@ const crtVariants = cva("relative isolate overflow-hidden", {
       subtle: "[border-radius:6px/10px]",
     },
     intensity: {
-      subtle: "[--crt-scanline-opacity:0.06] [--crt-vignette-opacity:0.35]",
-      default: "[--crt-scanline-opacity:0.12] [--crt-vignette-opacity:0.55]",
-      heavy: "[--crt-scanline-opacity:0.2] [--crt-vignette-opacity:0.75]",
+      subtle: "[--crt-scanline-opacity:0.05] [--crt-vignette-opacity:0.18]",
+      default: "[--crt-scanline-opacity:0.1] [--crt-vignette-opacity:0.35]",
+      heavy: "[--crt-scanline-opacity:0.18] [--crt-vignette-opacity:0.6]",
     },
   },
   defaultVariants: { curvature: "none", intensity: "default" },
@@ -67,7 +67,7 @@ function CrtScreen({
         className="pointer-events-none absolute inset-0 z-20"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 45%, rgb(0 0 0 / var(--crt-vignette-opacity)) 100%)",
+            "radial-gradient(ellipse at center, transparent 60%, rgb(0 0 0 / var(--crt-vignette-opacity)) 100%)",
         }}
       />
 
