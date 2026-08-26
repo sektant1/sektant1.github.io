@@ -7,13 +7,17 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "turbo format",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "test": "vitest run",
+    "registry:build": "node scripts/build-registry.mjs && shadcn build --output apps/web/public/r",
+    "registry:check": "node scripts/build-registry.mjs --check"
   },
   "devDependencies": {
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "turbo": "^2.9.18",
-    "typescript": "~6"
+    "typescript": "~6",
+    "vitest": "^4.1.11"
   },
   "packageManager": "npm@11.11.0",
   "engines": {

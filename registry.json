@@ -1,0 +1,980 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "skt-ui-toolkit",
+  "homepage": "https://<GITHUB_USER>.github.io/skt-ui-toolkit",
+  "items": [
+    {
+      "name": "skt-theme",
+      "type": "registry:theme",
+      "title": "SKT Theme",
+      "description": "The skt-ui-toolkit visual identity: colors, zero radius, flat shadows and typefaces.",
+      "dependencies": [
+        "@fontsource/chakra-petch",
+        "@fontsource/ibm-plex-mono"
+      ],
+      "cssVars": {
+        "light": {
+          "background": "oklch(1.0000 0 0)",
+          "foreground": "oklch(0.2178 0 0)",
+          "card": "oklch(1.0000 0 0)",
+          "card-foreground": "oklch(0.2178 0 0)",
+          "popover": "oklch(1.0000 0 0)",
+          "popover-foreground": "oklch(0.2178 0 0)",
+          "primary": "oklch(0.5799 0.2203 25.1911)",
+          "primary-foreground": "oklch(1.0000 0 0)",
+          "secondary": "oklch(0.9271 0.0040 106.4775)",
+          "secondary-foreground": "oklch(0.2686 0 0)",
+          "muted": "oklch(0.9699 0.0013 106.4238)",
+          "muted-foreground": "oklch(0.5555 0 0)",
+          "accent": "oklch(0.9495 0.0208 13.8603)",
+          "accent-foreground": "oklch(0.4931 0.1859 24.8319)",
+          "destructive": "oklch(0.6358 0.2088 25.4126)",
+          "destructive-foreground": "oklch(1.0000 0 0)",
+          "border": "oklch(0.3211 0 0)",
+          "input": "oklch(0.3211 0 0)",
+          "ring": "oklch(0.5799 0.2203 25.1911)",
+          "chart-1": "oklch(0.5799 0.2203 25.1911)",
+          "chart-2": "oklch(0.3211 0 0)",
+          "chart-3": "oklch(0.5103 0 0)",
+          "chart-4": "oklch(0.6830 0 0)",
+          "chart-5": "oklch(0.8452 0 0)",
+          "sidebar": "oklch(0.9851 0 0)",
+          "sidebar-foreground": "oklch(0.3211 0 0)",
+          "sidebar-primary": "oklch(0.5799 0.2203 25.1911)",
+          "sidebar-primary-foreground": "oklch(1.0000 0 0)",
+          "sidebar-accent": "oklch(0.9401 0 0)",
+          "sidebar-accent-foreground": "oklch(0.5799 0.2203 25.1911)",
+          "sidebar-border": "oklch(0.9310 0 0)",
+          "sidebar-ring": "oklch(0.5799 0.2203 25.1911)",
+          "font-sans": "Chakra Petch, ui-sans-serif, sans-serif, system-ui",
+          "font-serif": "Georgia, serif",
+          "font-mono": "IBM Plex Mono, ui-monospace, monospace",
+          "radius": "0rem",
+          "shadow-x": "0px",
+          "shadow-y": "0px",
+          "shadow-blur": "0px",
+          "shadow-spread": "0px",
+          "shadow-opacity": "0",
+          "shadow-color": "#1a1a1a",
+          "shadow-2xs": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-xs": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-sm": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-md": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 2px 4px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-lg": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 4px 6px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-xl": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 8px 10px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-2xl": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "tracking-normal": "0em",
+          "spacing": "0.22rem",
+          "shadow-offset-x": "0px",
+          "shadow-offset-y": "0px",
+          "letter-spacing": "0em"
+        },
+        "dark": {
+          "background": "oklch(0.2178 0 0)",
+          "foreground": "oklch(0.9612 0 0)",
+          "card": "oklch(0.2178 0 0)",
+          "card-foreground": "oklch(0.9612 0 0)",
+          "popover": "oklch(0.2178 0 0)",
+          "popover-foreground": "oklch(0.9612 0 0)",
+          "primary": "oklch(0.5799 0.2203 25.1911)",
+          "primary-foreground": "oklch(1.0000 0 0)",
+          "secondary": "oklch(0.2393 0 0)",
+          "secondary-foreground": "oklch(0.9851 0 0)",
+          "muted": "oklch(0.2393 0 0)",
+          "muted-foreground": "oklch(0.7252 0 0)",
+          "accent": "oklch(0.2230 0.0725 21.8281)",
+          "accent-foreground": "oklch(0.6331 0.1896 20.4467)",
+          "destructive": "oklch(0.3901 0.1298 25.5873)",
+          "destructive-foreground": "oklch(1.0000 0 0)",
+          "border": "oklch(0.3715 0 0)",
+          "input": "oklch(0.3715 0 0)",
+          "ring": "oklch(0.5799 0.2203 25.1911)",
+          "chart-1": "oklch(0.5799 0.2203 25.1911)",
+          "chart-2": "oklch(0.8853 0 0)",
+          "chart-3": "oklch(0.6830 0 0)",
+          "chart-4": "oklch(0.5103 0 0)",
+          "chart-5": "oklch(0.3211 0 0)",
+          "sidebar": "oklch(0.2178 0 0)",
+          "sidebar-foreground": "oklch(0.8853 0 0)",
+          "sidebar-primary": "oklch(0.5799 0.2203 25.1911)",
+          "sidebar-primary-foreground": "oklch(1.0000 0 0)",
+          "sidebar-accent": "oklch(0.2178 0 0)",
+          "sidebar-accent-foreground": "oklch(0.6331 0.1896 20.4467)",
+          "sidebar-border": "oklch(0.2686 0 0)",
+          "sidebar-ring": "oklch(0.5799 0.2203 25.1911)",
+          "font-sans": "Chakra Petch, ui-sans-serif, sans-serif, system-ui",
+          "font-serif": "Georgia, serif",
+          "font-mono": "IBM Plex Mono, ui-monospace, monospace",
+          "radius": "0rem",
+          "shadow-x": "0px",
+          "shadow-y": "0px",
+          "shadow-blur": "0px",
+          "shadow-spread": "0px",
+          "shadow-opacity": "0",
+          "shadow-color": "#1a1a1a",
+          "shadow-2xs": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-xs": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-sm": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-md": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 2px 4px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-lg": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 4px 6px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-xl": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 8px 10px -1px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-2xl": "0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00)",
+          "shadow-offset-x": "0px",
+          "shadow-offset-y": "0px",
+          "letter-spacing": "0em",
+          "spacing": "0.22rem"
+        }
+      }
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Accordion component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/accordion.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/accordion.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Alert component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/alert.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "description": "Alert Dialog component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/alert-dialog.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/alert-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "title": "Aspect Ratio",
+      "description": "Aspect Ratio component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/aspect-ratio.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/aspect-ratio.tsx"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "Avatar component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/avatar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/avatar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Badge component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/badge.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "Breadcrumb component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/breadcrumb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/breadcrumb.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Button component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Button Group",
+      "description": "Button Group component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/button-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "Calendar component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/calendar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/calendar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Card component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "description": "Carousel component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "dependencies": [
+        "embla-carousel-react"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/carousel.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/carousel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "Chart component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "dependencies": [
+        "recharts"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/chart.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Checkbox component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/checkbox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "Collapsible component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/collapsible.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/collapsible.tsx"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "Combobox component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/combobox.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/combobox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "description": "Command component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/command.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/command.tsx"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context Menu",
+      "description": "Context Menu component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/context-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/context-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Dialog component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/dialog.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "Drawer component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/drawer.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/drawer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Dropdown Menu component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/dropdown-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "Empty component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/empty.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/empty.tsx"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "Field component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/field.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Hover Card",
+      "description": "Hover Card component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/hover-card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/hover-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Input component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Input Group component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Input Otp",
+      "description": "Input Otp component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "dependencies": [
+        "input-otp"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input-otp.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input-otp.tsx"
+        }
+      ]
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "description": "Item component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/item.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/item.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "Kbd component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/kbd.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Label component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/label.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "title": "Native Select",
+      "description": "Native Select component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/native-select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/native-select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Pagination component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/pagination.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pagination.tsx"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Popover component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/popover.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Progress component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/progress.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Radio Group component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/radio-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "description": "Resizable component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "dependencies": [
+        "react-resizable-panels"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/resizable.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/resizable.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "title": "Scroll Area",
+      "description": "Scroll Area component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/scroll-area.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/scroll-area.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Select component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Separator component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/separator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "Sheet component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/sheet.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sheet.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "Sidebar component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/sidebar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sidebar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Skeleton component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Slider component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/slider.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/slider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "description": "Sonner component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "dependencies": [
+        "sonner",
+        "next-themes"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/sonner.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sonner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "Spinner component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/spinner.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/spinner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Switch component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/switch.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/switch.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Table component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/table.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Tabs component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/tabs.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Textarea component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "Toggle component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/toggle.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/toggle.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle Group",
+      "description": "Toggle Group component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/toggle-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/toggle-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Tooltip component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/tooltip.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tooltip.tsx"
+        }
+      ]
+    }
+  ]
+}
