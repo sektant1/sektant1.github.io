@@ -87,7 +87,8 @@ Adding them is mechanical (`shadcn add`), but the result is not accepted on fait
 component must clear a verification gate:
 
 1. `npm run typecheck`, `npm run lint`, and `npm run build` pass across the workspace.
-2. The component renders in the showcase without a console error.
+2. The component renders on the showcase's `/components` verification index without a
+   console error.
 3. Its visual result is consistent with the theme (radius 0, no shadows, correct fonts).
 
 Any component that cannot clear the gate is either fixed or cut from v1, and the omission
@@ -97,14 +98,43 @@ consumer who installs only `button` does not inherit a charting library.
 
 ## Showcase
 
-`apps/web` is rewritten from the template placeholder into the documentation surface:
+`apps/web` is rewritten from the template placeholder into **SKT Codex**: a reference and
+practice site for software engineering, computer graphics, and game development. The
+components are demonstrated inside a plausible product rather than on a grid of isolated
+swatches.
 
-- One section per component, showing every variant and size it exposes.
-- A dark/light toggle whose choice persists in `localStorage`.
-- A copyable `npx shadcn add ...` command per item.
+This framing is a design decision, not decoration. A component library is judged by how
+its parts compose — whether a `sidebar` and a `breadcrumb` and a `tabs` read as one system
+on the same screen. A gallery of components in isolation cannot answer that; a real
+layout can. It also matches the theme: zero radius, no shadows, Chakra Petch and IBM Plex
+Mono read as technical tooling, which is what this content is.
 
-Its purpose is verification as much as documentation: it is where a human confirms the
-theme is actually applied before a project depends on it.
+The site has two layers:
+
+**1. The product layer** — four routes, each chosen to exercise a different component
+cluster under realistic density:
+
+| Route | Content | Components exercised |
+| --- | --- | --- |
+| `/` — Codex | Topic index: Rendering, Physics, ECS, Shaders, Netcode, Tooling | sidebar, navigation-menu, card, item, badge, avatar, separator, empty, skeleton |
+| `/topic/:slug` — Reference article | A technique write-up with code, math, caveats, and related links | breadcrumb, tabs, accordion, alert, table, kbd, tooltip, hover-card, scroll-area, collapsible, progress |
+| `/practice` — Exercise catalogue | Filterable list of practice problems by topic, difficulty, and language | input, combobox, select, checkbox, radio-group, slider, toggle-group, pagination, command, popover, native-select |
+| `/submit` — Contribute a resource | Form to submit a technique or exercise to the codex | form, field, label, textarea, input-group, input-otp, switch, button-group, dialog, drawer, sheet, sonner, calendar, spinner |
+
+Content is static fixture data in `apps/web/src/data/` — enough to make the layouts
+honest (long titles, empty states, overflow), with no backend.
+
+**2. The verification layer** — `/components`, an exhaustive index rendering every
+registered item with every variant and size it exposes, plus a copyable
+`npx shadcn add ...` command per item. This is the gate surface: it is where a human
+confirms the theme is applied and no component is silently broken. The product layer
+proves composition; this layer proves coverage. Both are required.
+
+A dark/light toggle persists in `localStorage` and applies across both layers.
+
+Routing uses `react-router` — four product routes plus the verification index is past
+what conditional rendering handles cleanly, and consumers of the registry will use a
+router anyway.
 
 ## Data flow
 
