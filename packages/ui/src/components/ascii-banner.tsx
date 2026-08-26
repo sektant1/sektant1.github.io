@@ -39,7 +39,7 @@ function ensureFontsRegistered() {
 }
 
 const bannerVariants = cva(
-  "w-full overflow-x-auto crt-scanfill font-mono leading-[0.95] whitespace-pre select-none",
+  "w-full crt-scanfill font-mono ascii-fit-text leading-[0.95] whitespace-pre select-none",
   {
     variants: {
       // The tone sets --ascii-ink rather than `color`: the glyph fill is a
@@ -50,10 +50,12 @@ const bannerVariants = cva(
         muted: "[--ascii-ink:var(--muted-foreground)]",
         foreground: "[--ascii-ink:var(--foreground)]",
       },
+      // Sizes set the ceiling; ascii-fit-text shrinks below it to fit the
+      // container, so the art never overflows at any width.
       size: {
-        sm: "text-[0.4rem]",
-        default: "text-[0.55rem] sm:text-[0.7rem]",
-        lg: "text-[0.8rem] sm:text-[1.15rem]",
+        sm: "[--ascii-max:0.5rem]",
+        default: "[--ascii-max:0.8rem]",
+        lg: "[--ascii-max:1.3rem]",
       },
     },
     defaultVariants: { tone: "default", size: "default" },
@@ -84,11 +86,15 @@ function AsciiBanner({
   className,
   ...props
 }: AsciiBannerProps) {
-  const art = React.useMemo(() => {
+  const { art, columns } = React.useMemo(() => {
     ensureFontsRegistered()
     // Figlet pads its output with trailing blank lines, which read as dead
     // space above whatever follows the banner.
-    return figlet.textSync(text, { font }).replace(/\s+$/, "")
+    const rendered = figlet.textSync(text, { font }).replace(/\s+$/, "")
+    const widest = rendered
+      .split("\n")
+      .reduce((max, line) => Math.max(max, line.length), 0)
+    return { art: rendered, columns: widest }
   }, [text, font])
 
   return (
@@ -96,10 +102,12 @@ function AsciiBanner({
       data-slot="ascii-banner"
       data-effect={effect}
       className={cn(
-        "group/ascii-banner relative w-fit max-w-full crt-bloom",
+        "group/ascii-banner ascii-fit relative crt-bloom",
         className
       )}
       {...props}
+      // The art's own column count is what ascii-fit-text divides by.
+      style={{ "--ascii-cols": columns, ...props.style } as React.CSSProperties}
     >
       <span className="sr-only">{text}</span>
       <pre aria-hidden="true" className={cn(bannerVariants({ tone, size }))}>

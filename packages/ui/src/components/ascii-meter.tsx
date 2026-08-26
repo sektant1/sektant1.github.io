@@ -11,8 +11,8 @@ const meterVariants = cva("font-mono whitespace-pre tabular-nums", {
       warning: "text-destructive",
     },
     size: {
-      sm: "text-[0.65rem]",
-      default: "text-xs",
+      sm: "text-[0.6rem]",
+      default: "text-[0.65rem] sm:text-xs",
     },
   },
   defaultVariants: { tone: "default", size: "default" },
@@ -60,7 +60,7 @@ function AsciiMeter({
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "flex items-center gap-2",
+        "flex min-w-0 items-center gap-2 overflow-hidden",
         meterVariants({ tone, size }),
         className
       )}

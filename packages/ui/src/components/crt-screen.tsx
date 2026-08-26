@@ -53,7 +53,7 @@ function CrtScreen({
       <div
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute inset-0 z-20 opacity-[var(--crt-scanline-opacity)]",
+          "pointer-events-none absolute inset-0 z-20 opacity-0 dark:opacity-[var(--crt-scanline-opacity)]",
           flicker && "motion-safe:animate-[crt-flicker_4s_steps(2)_infinite]"
         )}
         style={{
@@ -64,7 +64,7 @@ function CrtScreen({
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-20"
+        className="pointer-events-none absolute inset-0 z-20 opacity-0 dark:opacity-100"
         style={{
           background:
             "radial-gradient(ellipse at center, transparent 60%, rgb(0 0 0 / var(--crt-vignette-opacity)) 100%)",
@@ -74,7 +74,7 @@ function CrtScreen({
       {sweep ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 z-20 h-16 opacity-0 motion-safe:animate-[crt-sweep_6s_linear_infinite]"
+          className="pointer-events-none absolute inset-x-0 z-20 hidden h-16 opacity-0 motion-safe:animate-[crt-sweep_6s_linear_infinite] dark:block"
           style={{
             background:
               "linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.06), transparent)",

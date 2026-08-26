@@ -34,6 +34,23 @@
   }
 }
 
+/* Fluid sizing for fixed-column ASCII art.
+   A monospace advance is ~0.6em, so art N columns wide needs
+   font-size = containerWidth / (N * 0.6) to fit exactly. Container query
+   units make that a pure CSS expression, so the art tracks its container at
+   every width instead of stepping at breakpoints. --ascii-max caps it so the
+   art stops growing once there is room to spare. */
+@utility ascii-fit {
+  container-type: inline-size;
+}
+
+@utility ascii-fit-text {
+  font-size: min(
+    var(--ascii-max, 1rem),
+    calc(100cqi / (var(--ascii-cols, 40) * 0.6))
+  );
+}
+
 /* Scanlines painted *inside* the glyphs rather than over them. The gradient
    is the text's fill via background-clip, so there is no rectangle covering
    the block and the effect follows the letterforms exactly.
@@ -284,6 +301,38 @@
 }
 
 @layer base {
+  /* The platform scrollbar is a wide grey slab that breaks the terminal
+     surface it sits on. This is the same bar, reduced to a thin rule in the
+     theme's own colours, and it keeps working as a scrollbar — nothing is
+     hidden, so scrollable regions still show they can scroll. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--primary) 45%, transparent)
+      transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in oklch, var(--primary) 35%, transparent);
+    border-radius: 0;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklch, var(--primary) 60%, transparent);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   /* The theme's type scale is built for dense terminal UI, which lands too
      small at a 16px root. Everything downstream is in rem, so one value here
      scales the whole system coherently. */

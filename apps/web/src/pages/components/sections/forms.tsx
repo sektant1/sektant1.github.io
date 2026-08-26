@@ -54,7 +54,7 @@ export const forms: SectionMap = {
         <Input defaultValue="With a value" className="w-52" />
       </Row>
       <Row label="state">
-        <Input isDisabled placeholder="Disabled" className="w-52" />
+        <Input disabled placeholder="Disabled" className="w-52" />
         <Input aria-invalid placeholder="Invalid" className="w-52" />
       </Row>
     </>

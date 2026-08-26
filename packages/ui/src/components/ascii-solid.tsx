@@ -62,22 +62,31 @@ function AsciiSolid({
   }, [shape, columns, speed, reduceMotion])
 
   return (
-    <pre
-      data-slot="ascii-solid"
-      aria-hidden="true"
-      // A monospace cell is 0.6em wide, so leading of 1.2em makes it exactly
-      // twice as tall as it is wide — the aspect the renderer assumes when it
-      // derives rows from columns. Any other leading skews the solid.
-      className={cn(
-        "overflow-hidden font-mono text-[0.5rem] leading-[1.2] text-primary select-none",
-        effect === "glitch" &&
-          "crt-bloom motion-safe:animate-[crt-jitter_9s_ease-in-out_infinite]",
-        className
-      )}
-      {...props}
-    >
-      {staticFrame ?? frame}
-    </pre>
+    // ascii-fit establishes the container the type scales against, so the
+    // solid shrinks to fit rather than overflowing at narrow widths.
+    <div className={cn("ascii-fit", className)}>
+      <pre
+        data-slot="ascii-solid"
+        aria-hidden="true"
+        // A monospace cell is 0.6em wide, so leading of 1.2em makes it exactly
+        // twice as tall as it is wide — the aspect the renderer assumes when it
+        // derives rows from columns. Any other leading skews the solid.
+        className={cn(
+          "font-mono ascii-fit-text leading-[1.2] text-primary select-none",
+          effect === "glitch" &&
+            "crt-bloom motion-safe:animate-[crt-jitter_9s_ease-in-out_infinite]"
+        )}
+        style={
+          {
+            "--ascii-cols": columns,
+            "--ascii-max": "0.6rem",
+          } as React.CSSProperties
+        }
+        {...props}
+      >
+        {staticFrame ?? frame}
+      </pre>
+    </div>
   )
 }
 
