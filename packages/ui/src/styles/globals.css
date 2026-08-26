@@ -34,6 +34,16 @@
   }
 }
 
+/* Phosphor bloom for a block of glyphs. drop-shadow follows the rendered
+   shapes, so unlike text-shadow it haloes ASCII art as one mass rather than
+   per character. Two layers: a tight core and a wide, faint spill. */
+@utility crt-bloom {
+  @variant dark {
+    filter: drop-shadow(0 0 8px color-mix(in oklch, currentColor 28%, transparent))
+      drop-shadow(0 0 22px color-mix(in oklch, currentColor 18%, transparent));
+  }
+}
+
 @utility crt-glow-soft {
   @variant dark {
     text-shadow: 0 0 8px color-mix(in oklch, currentColor 28%, transparent);

@@ -43,9 +43,9 @@ const bannerVariants = cva(
   {
     variants: {
       tone: {
-        default: "text-primary crt-glow",
+        default: "text-primary",
         muted: "text-muted-foreground",
-        foreground: "text-foreground crt-glow-soft",
+        foreground: "text-foreground",
       },
       size: {
         sm: "text-[0.4rem]",
@@ -71,7 +71,7 @@ type AsciiBannerProps = Omit<React.ComponentProps<"div">, "children"> &
  */
 function AsciiBanner({
   text,
-  font = "Standard",
+  font = "Slant",
   effect = "scanlines",
   tone,
   size,
@@ -89,7 +89,7 @@ function AsciiBanner({
     <div
       data-slot="ascii-banner"
       data-effect={effect}
-      className={cn("group/ascii-banner relative", className)}
+      className={cn("group/ascii-banner relative crt-bloom", className)}
       {...props}
     >
       <span className="sr-only">{text}</span>
@@ -123,10 +123,13 @@ function AsciiBanner({
       {effect !== "none" ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-30 mix-blend-overlay"
+          // Dark lines cut through the glyphs, which is what a scanline
+          // does. Tinting with currentColor lightened them into stripes that
+          // fought the art for legibility.
+          className="pointer-events-none absolute inset-0 opacity-45"
           style={{
             backgroundImage:
-              "repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 3px)",
+              "repeating-linear-gradient(to bottom, var(--background) 0 1px, transparent 1px 4px)",
           }}
         />
       ) : null}
