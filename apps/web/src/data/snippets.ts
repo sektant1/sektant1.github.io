@@ -16,7 +16,7 @@ export const snippets: Snippet[] = [
     language: "GLSL",
     area: "Shaders",
     description:
-      "The D term. Keep alpha squared in a float and clamp roughness away from zero or low-roughness highlights blow up.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa.",
     source: `float D_GGX(float NoH, float roughness) {
   float a = roughness * roughness;
   float a2 = a * a;
@@ -30,7 +30,7 @@ export const snippets: Snippet[] = [
     language: "GLSL",
     area: "Shaders",
     description:
-      "Folds the BRDF denominator into the visibility term, which is both cheaper and better behaved at grazing angles.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum.",
     source: `float V_SmithGGXCorrelated(float NoV, float NoL, float roughness) {
   float a2 = pow(roughness, 4.0);
   float lv = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2);
@@ -44,7 +44,7 @@ export const snippets: Snippet[] = [
     language: "GLSL",
     area: "Rendering",
     description:
-      "Two channels instead of three, with far better precision than storing xy and reconstructing z by sign.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor.",
     source: `vec2 encodeOct(vec3 n) {
   n /= abs(n.x) + abs(n.y) + abs(n.z);
   vec2 e = n.z >= 0.0 ? n.xy : (1.0 - abs(n.yx)) * sign(n.xy);
@@ -65,7 +65,7 @@ vec3 decodeOct(vec2 e) {
     language: "C++",
     area: "Physics",
     description:
-      "The clamp on frame time is the part people leave out, and it is the part that stops a stall from cascading.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim.",
     source: `constexpr double kStep = 1.0 / 60.0;
 constexpr double kMaxFrame = 0.25; // never simulate more than 15 steps at once
 
@@ -86,7 +86,7 @@ while (running) {
     language: "C++",
     area: "Physics",
     description:
-      "Velocity first, then position. One line's difference from explicit Euler, and it stops energy growing without bound.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do. Nisi ea duis in velit eu pariatur occaecat proident.",
     source: `void Integrate(Body& body, double dt) {
   body.velocity += body.acceleration * dt;  // velocity first —
   body.position += body.velocity * dt;      // — position uses the new value
@@ -98,7 +98,7 @@ while (running) {
     language: "Rust",
     area: "Physics",
     description:
-      "Everything GJK needs to know about a shape. A dot-product scan is fine below a few hundred vertices.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum.",
     source: `fn furthest_in(&self, dir: Vec3) -> Vec3 {
     self.vertices
         .iter()
@@ -113,7 +113,7 @@ while (running) {
     language: "Rust",
     area: "ECS",
     description:
-      "The repair line after swap_remove is where nearly every hand-written sparse set gets it wrong.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do.",
     source: `pub fn remove(&mut self, entity: Entity) -> Option<T> {
     let dense_index = self.sparse.get(entity.index())?.to_owned()?;
     let moved = *self.entities.last()?;
@@ -135,7 +135,7 @@ while (running) {
     language: "Rust",
     area: "ECS",
     description:
-      "Packs index and generation into one u64 so a stale handle is detected instead of quietly aliasing a recycled slot.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim.",
     source: `#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 pub struct Entity(u64);
 
@@ -153,7 +153,7 @@ impl Entity {
     language: "TypeScript",
     area: "Netcode",
     description:
-      "Fixed capacity, sequence numbered, no allocation per frame. This is what reconciliation replays from.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip.",
     source: `export class InputBuffer {
   private readonly items: (Input | undefined)[]
   constructor(private readonly capacity: number) {
@@ -177,7 +177,7 @@ impl Entity {
     language: "TypeScript",
     area: "Netcode",
     description:
-      "Render remote players a fixed delay in the past and interpolate. A missing snapshot holds position rather than teleporting.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate.",
     source: `const RENDER_DELAY_MS = 100
 
 export function interpolate(buffer: Snapshot[], now: number): State | null {
@@ -196,7 +196,7 @@ export function interpolate(buffer: Snapshot[], now: number): State | null {
     language: "TypeScript",
     area: "Tooling",
     description:
-      "An atomic save emits several events. Coalesce per path or you rebuild the same asset four times in a row.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat.",
     source: `const pending = new Map<string, ReturnType<typeof setTimeout>>()
 
 watcher.on("change", (path: string) => {
@@ -213,7 +213,7 @@ watcher.on("change", (path: string) => {
     language: "C++",
     area: "Tooling",
     description:
-      "Frames still in flight may reference the old resource. Destroying it on swap is a use-after-free that only shows up under load.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim.",
     source: `struct PendingDelete { GpuHandle handle; uint64_t retire_frame; };
 std::vector<PendingDelete> pending;
 
@@ -235,7 +235,7 @@ void CollectRetired() {
     language: "WGSL",
     area: "Rendering",
     description:
-      "The bounds check is not optional — the dispatch rounds up, so the last workgroup runs threads past the end of your data.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing.",
     source: `@compute @workgroup_size(8, 8, 1)
 fn main(@builtin(global_invocation_id) id: vec3<u32>) {
   // Dispatch rounds up, so the tail workgroup overruns. Always guard.
@@ -250,7 +250,7 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
     language: "C#",
     area: "Tooling",
     description:
-      "Scope-based timing that cannot be left unclosed, because an early return still runs the disposer.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore.",
     source: `public readonly struct ProfileScope : IDisposable {
     private readonly string _label;
     private readonly long _start;

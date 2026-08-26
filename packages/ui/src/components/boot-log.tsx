@@ -19,7 +19,7 @@ const STATUS_TEXT: Record<NonNullable<BootLine["status"]>, string> = {
 }
 
 const STATUS_CLASS: Record<NonNullable<BootLine["status"]>, string> = {
-  ok: "text-primary",
+  ok: "text-primary text-glow-soft",
   warn: "text-muted-foreground",
   fail: "text-destructive",
   skip: "text-muted-foreground/60",
@@ -106,7 +106,9 @@ function BootLog({
         ))}
 
         {cursor && visible >= lines.length ? (
-          <span className="text-primary motion-safe:animate-pulse">█</span>
+          <span className="text-primary text-glow motion-safe:animate-pulse">
+            _
+          </span>
         ) : null}
       </div>
     </div>

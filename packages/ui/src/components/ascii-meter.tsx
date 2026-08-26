@@ -6,7 +6,7 @@ import { cn } from "@workspace/ui/lib/utils"
 const meterVariants = cva("font-mono whitespace-pre tabular-nums", {
   variants: {
     tone: {
-      default: "text-primary",
+      default: "text-primary text-glow-soft",
       muted: "text-muted-foreground",
       warning: "text-destructive",
     },
@@ -30,8 +30,12 @@ type AsciiMeterProps = Omit<React.ComponentProps<"div">, "children"> &
   }
 
 /**
- * A block-character gauge, styled after a hardware status readout. Exposed to
- * assistive tech as a real progressbar rather than as decorative glyphs.
+ * An ASCII gauge. Uses '#' and '.' rather than block-drawing characters,
+ * which the theme's mono face lacks — they would fall back to another font at
+ * a different width and misalign the bar.
+ *
+ * Styled after a hardware status readout. Exposed to assistive tech as a
+ * real progressbar rather than as decorative glyphs.
  */
 function AsciiMeter({
   label,
@@ -66,9 +70,9 @@ function AsciiMeter({
         {label}
       </span>
       <span aria-hidden="true" className="shrink-0">
-        [{"█".repeat(filled)}
+        [{"#".repeat(filled)}
         <span className="text-muted-foreground/40">
-          {"░".repeat(cells - filled)}
+          {".".repeat(cells - filled)}
         </span>
         ]
       </span>

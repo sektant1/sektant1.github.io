@@ -17,6 +17,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Phosphor bloom. The glow is built from currentColor, so it takes the tone of
+   whatever it is applied to and needs no per-colour variants.
+
+   Light backgrounds cannot carry a bloom — the halo reads as blur rather than
+   emission — so the effect is scoped to dark mode and degrades to nothing. */
+@utility text-glow {
+  @variant dark {
+    text-shadow:
+      0 0 4px color-mix(in oklch, currentColor 55%, transparent),
+      0 0 14px color-mix(in oklch, currentColor 30%, transparent);
+  }
+}
+
+@utility text-glow-soft {
+  @variant dark {
+    text-shadow: 0 0 8px color-mix(in oklch, currentColor 28%, transparent);
+  }
+}
+
 :root {
   --background: oklch(1.0000 0 0);
   --foreground: oklch(0.2178 0 0);

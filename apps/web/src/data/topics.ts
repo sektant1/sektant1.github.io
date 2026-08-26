@@ -38,18 +38,18 @@ export const topics: Topic[] = [
     title: "Deferred Shading and the G-Buffer",
     area: "Rendering",
     summary:
-      "Decouple geometry cost from light count by writing surface attributes to a buffer first and shading once per pixel afterwards.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur.",
     readingMinutes: 14,
     progress: 62,
     prerequisites: [],
     sections: [
       {
         heading: "Why defer at all",
-        body: "A forward renderer shades every fragment for every light that touches it, so cost scales with geometry times lights. Deferred shading breaks that product: the geometry pass writes position, normal, albedo and roughness into render targets, and a full-screen pass shades each visible pixel exactly once per light. The win is that overdraw stops multiplying with your light count.",
+        body: "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu.",
       },
       {
         heading: "Laying out the G-buffer",
-        body: "Bandwidth, not arithmetic, is the limit. Pack aggressively: store normals as two channels via octahedral encoding and reconstruct the third, and derive world position from depth rather than storing it. Three RGBA8 targets plus depth is a common budget.",
+        body: "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non. Elit eiusmod ut dolore enim veniam exercitation nisi ea. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt.",
         code: {
           lang: "glsl",
           source: `// Octahedral normal encoding — 3 floats into 2, no branches.
@@ -65,7 +65,7 @@ vec2 encodeNormal(vec3 n) {
       },
       {
         heading: "Reconstructing position from depth",
-        body: "Storing world position wastes an entire target for information you already have. Take the non-linear depth value, move to clip space, multiply by the inverse view-projection matrix and divide by w. One matrix multiply per pixel is far cheaper than the memory traffic it replaces.",
+        body: "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem.",
         code: {
           lang: "glsl",
           source: `vec3 worldFromDepth(vec2 uv, float depth, mat4 invViewProj) {
@@ -77,9 +77,9 @@ vec2 encodeNormal(vec3 n) {
       },
     ],
     caveats: [
-      "Transparency does not fit. A G-buffer stores one surface per pixel, so blended geometry needs a separate forward pass composited afterwards.",
-      "Hardware MSAA becomes expensive, because resolving must happen per-sample before lighting rather than after.",
-      "Material variety is constrained by what fits in the buffer. Anything needing per-material branching wants a shading model ID channel.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit.",
     ],
     references: [
       {
@@ -97,27 +97,27 @@ vec2 encodeNormal(vec3 n) {
     title: "The Rendering Equation, Read Slowly",
     area: "Rendering",
     summary:
-      "Every offline and real-time renderer is an approximation of one integral. Knowing which terms you dropped tells you which artefacts to expect.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia.",
     readingMinutes: 18,
     progress: 0,
     prerequisites: ["deferred-shading"],
     sections: [
       {
         heading: "The statement",
-        body: "Outgoing radiance at a point in a direction equals emitted radiance plus the integral, over the hemisphere, of incoming radiance times the BRDF times the cosine of the angle to the normal. That is the whole thing. Every renderer differs only in how it approximates the integral.",
+        body: "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod.",
       },
       {
         heading: "What real-time drops",
-        body: "Rasterisation with punctual lights replaces the hemisphere integral with a small sum: one term per light, incoming radiance assumed to arrive from a single direction. Everything the sum omits — light arriving after bouncing off other surfaces — is what ambient occlusion, light probes and global illumination try to put back.",
+        body: "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad.",
       },
       {
         heading: "Why energy conservation matters",
-        body: "A BRDF that reflects more energy than it receives makes a scene brighten with every bounce. Physically based models normalise so the integral over the hemisphere never exceeds one, which is why a rough metal looks dimmer than a smooth one instead of merely blurrier.",
+        body: "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex.",
       },
     ],
     caveats: [
-      "The equation says nothing about how to solve it. Convergence behaviour comes from your sampling strategy, not from the formulation.",
-      "It assumes light transport is instantaneous and wavelength-independent. Dispersion and subsurface scattering need extensions.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur.",
     ],
     references: [
       {
@@ -136,18 +136,18 @@ vec2 encodeNormal(vec3 n) {
       "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent",
     area: "Physics",
     summary:
-      "Variable timesteps make simulation results depend on frame rate. An accumulator separates simulation cadence from render cadence.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit.",
     readingMinutes: 11,
     progress: 100,
     prerequisites: [],
     sections: [
       {
         heading: "The failure",
-        body: "Integrating with the frame's delta time means a machine running at 30 fps and one at 144 fps take different numbers of differently sized steps. Numerical integration error depends on step size, so the two machines disagree — a jump height changes with frame rate, and a replay recorded on one machine desynchronises on another.",
+        body: "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit.",
       },
       {
         heading: "The accumulator",
-        body: "Add the frame's real elapsed time to an accumulator, then consume it in fixed-size chunks. Whatever remains under one step size stays for the next frame. The simulation only ever sees a constant dt.",
+        body: "Cillum nulla sint non culpa deserunt id lorem sit adipiscing. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat.",
         code: {
           lang: "cpp",
           source: `constexpr double kStep = 1.0 / 60.0;
@@ -169,13 +169,13 @@ while (running) {
       },
       {
         heading: "Interpolating for the renderer",
-        body: "The leftover accumulator is exactly how far the render time sits between the last two simulation states. Interpolate between them by that fraction, or motion stutters visibly whenever the simulation and display cadences disagree.",
+        body: "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id.",
       },
     ],
     caveats: [
-      "Clamp the frame time. Without a ceiling, a long stall makes the inner loop run many steps, which takes longer, which grows the accumulator further — the spiral of death.",
-      "Interpolation renders one step in the past. For input-sensitive games, extrapolation trades latency for occasional overshoot correction.",
-      "Fixed steps alone do not give determinism across platforms; floating point still has to match.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor.",
     ],
     references: [
       {
@@ -189,18 +189,18 @@ while (running) {
     title: "GJK Collision Detection",
     area: "Physics",
     summary:
-      "Test any two convex shapes for intersection by asking whether their Minkowski difference contains the origin.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut.",
     readingMinutes: 16,
     progress: 24,
     prerequisites: ["fixed-timestep"],
     sections: [
       {
         heading: "The reframing",
-        body: "Two convex shapes intersect precisely when their Minkowski difference contains the origin. This turns 'do these two complicated shapes overlap' into 'does this one shape contain a specific point', which is a far easier question.",
+        body: "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit.",
       },
       {
         heading: "Support functions",
-        body: "GJK never builds the Minkowski difference. It only needs the support function: given a direction, return the furthest point of the shape that way. For a sphere it is centre plus radius times the direction; for a polytope it is a dot-product scan over the vertices. Any shape with a support function works, which is why GJK handles capsules and hulls with the same code.",
+        body: "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit. Labore magna ad quis ullamco aliquip commodo aute reprehenderit.",
         code: {
           lang: "rust",
           source: `fn support(a: &Shape, b: &Shape, dir: Vec3) -> Vec3 {
@@ -211,13 +211,13 @@ while (running) {
       },
       {
         heading: "Evolving the simplex",
-        body: "Build up to a tetrahedron that might enclose the origin. Each iteration adds a support point in the current search direction, then discards the vertices that cannot be part of the region closest to the origin. If a new support point does not pass the origin, no such tetrahedron exists and the shapes are disjoint.",
+        body: "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint.",
       },
     ],
     caveats: [
-      "GJK answers whether, not how much. Penetration depth needs EPA as a second phase.",
-      "Convex only. Concave geometry has to be decomposed first.",
-      "Termination needs care with near-degenerate simplices; an iteration cap is not optional in shipping code.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo.",
     ],
     references: [
       {
@@ -236,22 +236,22 @@ while (running) {
     title: "Archetype vs Sparse Set ECS Storage",
     area: "ECS",
     summary:
-      "The two dominant component storage layouts, and the workloads each one wins.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis.",
     readingMinutes: 15,
     progress: 45,
     prerequisites: [],
     sections: [
       {
         heading: "Archetypes",
-        body: "Group entities by their exact component set. All entities with precisely {Transform, Velocity, Mesh} live in one table, each component a contiguous column. Iteration is a linear walk over dense arrays with no indirection, which is as cache-friendly as it gets.",
+        body: "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et. Nisi ea duis in velit eu pariatur occaecat proident qui mollit.",
       },
       {
         heading: "Sparse sets",
-        body: "Each component type owns a dense array of values plus a sparse array mapping entity ID to dense index. Adding or removing a component touches only that component's arrays, so structural change is cheap. Iterating several component types means intersecting sets, which costs indirection.",
+        body: "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur.",
       },
       {
         heading: "Choosing",
-        body: "Archetypes win when component sets are stable and queries are wide — the common case for rendering and transform hierarchies. Sparse sets win when components are added and removed constantly, as with gameplay tags and status effects, because an archetype implementation has to move the entity's whole row between tables on every change.",
+        body: "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et.",
         code: {
           lang: "cpp",
           source: `// Archetype iteration: one linear pass, no indirection.
@@ -266,9 +266,9 @@ for (Archetype& arch : MatchingArchetypes({Transform::ID, Velocity::ID})) {
       },
     ],
     caveats: [
-      "Archetype fragmentation is real: many rare component combinations produce many tables with few entities each, and iteration degenerates.",
-      "Neither layout fixes a bad query. Iterating one entity at a time by ID defeats both.",
-      "Benchmark against your actual component distribution; synthetic ECS benchmarks rarely match a real game's.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip.",
     ],
     references: [
       {
@@ -283,14 +283,14 @@ for (Archetype& arch : MatchingArchetypes({Transform::ID, Velocity::ID})) {
     title: "Signed Distance Fields",
     area: "Shaders",
     summary:
-      "A function returning the distance to the nearest surface, which turns rendering into sphere tracing and gives cheap soft shadows and ambient occlusion.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat.",
     readingMinutes: 13,
     progress: 8,
     prerequisites: [],
     sections: [
       {
         heading: "The definition",
-        body: "An SDF maps a point to the distance to the nearest surface, negative inside. Because the value is a true distance, you can step along a ray by exactly that amount and be certain you have not passed through anything. That is sphere tracing.",
+        body: "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis. Cillum nulla sint non culpa deserunt id lorem sit. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation.",
         code: {
           lang: "glsl",
           source: `float sdSphere(vec3 p, float r) { return length(p) - r; }
@@ -307,16 +307,16 @@ float opSubtract(float a, float b) { return max(-a, b); }`,
       },
       {
         heading: "Normals without geometry",
-        body: "The gradient of the distance field is the surface normal. Sample the field four to six times around the point and take differences; there is no mesh and no vertex data involved.",
+        body: "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat. Occaecat proident qui mollit est ipsum amet elit eiusmod ut. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute.",
       },
       {
         heading: "Free shadows and occlusion",
-        body: "March toward the light and track the smallest ratio of distance to travel — that gives a penumbra for the cost of one extra march. Ambient occlusion falls out of sampling the field along the normal and comparing against expected distances.",
+        body: "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu. Officia anim laborum dolor consectetur sed tempor labore magna ad quis. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla.",
       },
     ],
     caveats: [
-      "Operations like smooth-min and non-uniform scaling break the true-distance property, producing a bound rather than a distance. Overstepping artefacts follow, so step conservatively after them.",
-      "Cost scales with scene complexity per pixel, not per triangle. Large scenes need spatial acceleration.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate.",
     ],
     references: [
       {
@@ -330,22 +330,22 @@ float opSubtract(float a, float b) { return max(-a, b); }`,
     title: "Client-Side Prediction and Server Reconciliation",
     area: "Netcode",
     summary:
-      "Hide latency by simulating locally, then correct without visible snapping when the authoritative server disagrees.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu.",
     readingMinutes: 17,
     progress: 0,
     prerequisites: ["fixed-timestep"],
     sections: [
       {
         heading: "The problem",
-        body: "If the client waits for the server to acknowledge an input before moving, every action costs a round trip. At 80 ms that is unplayable for anything twitch-based.",
+        body: "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui.",
       },
       {
         heading: "Predict locally",
-        body: "Apply input immediately on the client and simulate the result, while sending the input to the server tagged with a sequence number. The player sees an instant response. The server remains authoritative.",
+        body: "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor.",
       },
       {
         heading: "Reconcile on disagreement",
-        body: "The server's state snapshot names the last input it processed. Discard acknowledged inputs from the local buffer, snap to the server state, then re-apply every unacknowledged input in order. If the client's prediction was right, the replay lands on the same place and nothing visibly moves.",
+        body: "Elit eiusmod ut dolore enim veniam exercitation nisi ea. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt.",
         code: {
           lang: "typescript",
           source: `function reconcile(server: Snapshot, pending: Input[], state: State) {
@@ -361,9 +361,9 @@ float opSubtract(float a, float b) { return max(-a, b); }`,
       },
     ],
     caveats: [
-      "Reconciliation requires a deterministic step function. Any non-determinism turns every replay into a visible correction.",
-      "Prediction only works for what the client controls. Other players need interpolation, which renders them slightly in the past.",
-      "Correcting by snapping is honest but harsh; smoothing the visual offset over a few frames hides small errors without lying about the authoritative state.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure.",
     ],
     references: [
       {
@@ -381,22 +381,22 @@ float opSubtract(float a, float b) { return max(-a, b); }`,
     title: "Hot-Reloading an Asset Pipeline",
     area: "Tooling",
     summary:
-      "Watch, rebuild and swap assets while the game runs, without leaking GPU resources or invalidating live handles.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt.",
     readingMinutes: 12,
     progress: 0,
     prerequisites: [],
     sections: [
       {
         heading: "Indirection is the whole trick",
-        body: "Systems must never hold a raw pointer to a loaded resource. They hold a handle, which indexes a table the loader owns. Swapping an asset means replacing a table entry; every holder picks up the new version without knowing a reload happened.",
+        body: "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam.",
       },
       {
         heading: "Debounce the watcher",
-        body: "Filesystem events arrive in bursts — editors write atomically via a temporary file and a rename, producing several events per save. Coalesce events per path over a short window before rebuilding, or you will rebuild the same texture four times.",
+        body: "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo.",
       },
       {
         heading: "Fail without breaking the running game",
-        body: "A shader that fails to compile should log the error and keep the previous version bound. Swapping in a broken asset because the reload path assumed success turns a typo into a crash mid-session.",
+        body: "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum.",
         code: {
           lang: "rust",
           source: `match compile(&source) {
@@ -413,8 +413,8 @@ float opSubtract(float a, float b) { return max(-a, b); }`,
       },
     ],
     caveats: [
-      "Do not free the old GPU resource immediately — frames in flight may still reference it. Defer destruction by the swap-chain depth.",
-      "Reloading changes only data. Anything cached derived from the asset, such as a baked material or a descriptor set, has to be invalidated too.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur.",
     ],
     references: [
       {

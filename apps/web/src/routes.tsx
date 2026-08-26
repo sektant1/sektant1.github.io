@@ -1,13 +1,14 @@
 import type { RouteObject } from "react-router"
 
 import { AppShell } from "@/layout/app-shell"
+import { Codex } from "@/pages/codex"
 import { Stub } from "@/pages/stub"
 
 export const routes: RouteObject[] = [
   {
     element: <AppShell />,
     children: [
-      { path: "/", element: <Stub name="Codex" /> },
+      { path: "/", element: <Codex /> },
       { path: "/topic/:slug", element: <Stub name="Topic" /> },
       { path: "/courses", element: <Stub name="Courses" /> },
       { path: "/courses/:slug", element: <Stub name="Lesson" /> },

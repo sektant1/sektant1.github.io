@@ -62,8 +62,11 @@ function AsciiSolid({
     <pre
       data-slot="ascii-solid"
       aria-hidden="true"
+      // A monospace cell is 0.6em wide, so leading of 1.2em makes it exactly
+      // twice as tall as it is wide — the aspect the renderer assumes when it
+      // derives rows from columns. Any other leading skews the solid.
       className={cn(
-        "overflow-hidden font-mono text-[0.5rem] leading-[0.85] text-primary select-none",
+        "overflow-hidden font-mono text-[0.5rem] leading-[1.2] text-primary select-none text-glow-soft",
         className
       )}
       {...props}

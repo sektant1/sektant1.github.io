@@ -28,7 +28,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL", "C++"],
     estimateMinutes: 90,
     summary:
-      "Fit albedo, octahedral normals, roughness, metalness and a shading model ID into 12 bytes per pixel. Reconstruct position from depth.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do.",
   },
   {
     id: "ex-002",
@@ -38,7 +38,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL", "WGSL"],
     estimateMinutes: 35,
     summary:
-      "Given depth and the inverse view-projection matrix, recover world position. Verify against a position target you then delete.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim.",
   },
   {
     id: "ex-003",
@@ -48,7 +48,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "TypeScript"],
     estimateMinutes: 25,
     summary:
-      "Decouple simulation cadence from frame rate, clamp the frame time, and interpolate render state between the last two steps.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip.",
   },
   {
     id: "ex-004",
@@ -58,7 +58,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "Rust"],
     estimateMinutes: 45,
     summary:
-      "Run the same input at 30, 60 and 144 fps and assert the final position matches to within epsilon. Make it fail first.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate.",
   },
   {
     id: "ex-005",
@@ -68,7 +68,7 @@ export const exercises: Exercise[] = [
     languages: ["Rust", "C++"],
     estimateMinutes: 60,
     summary:
-      "One interface, three shapes. This is everything GJK needs to know about geometry.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat.",
   },
   {
     id: "ex-006",
@@ -78,7 +78,7 @@ export const exercises: Exercise[] = [
     languages: ["TypeScript", "Rust"],
     estimateMinutes: 120,
     summary:
-      "Triangles instead of tetrahedra, and you can draw every simplex. Port to 3D once the 2D version is right.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in. Officia anim laborum dolor consectetur sed tempor labore magna.",
   },
   {
     id: "ex-007",
@@ -88,7 +88,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "Rust"],
     estimateMinutes: 70,
     summary:
-      "Dense values, sparse index, O(1) insert and remove with a swap-and-pop. Keep the entity-to-index map correct through removal.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris.",
   },
   {
     id: "ex-008",
@@ -98,7 +98,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "C#"],
     estimateMinutes: 110,
     summary:
-      "Adding a component means relocating the entity's whole row. Get the column copies and the back-reference fixups right.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in.",
   },
   {
     id: "ex-009",
@@ -108,7 +108,7 @@ export const exercises: Exercise[] = [
     languages: ["Rust", "C#"],
     estimateMinutes: 50,
     summary:
-      "Iterate the smallest set first and probe the others. Measure against the naive order and explain the difference.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur.",
   },
   {
     id: "ex-010",
@@ -118,7 +118,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL"],
     estimateMinutes: 40,
     summary:
-      "Sphere trace an SDF and subtract the sphere from the box. No meshes, no vertex buffers.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt.",
   },
   {
     id: "ex-011",
@@ -128,7 +128,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL", "WGSL"],
     estimateMinutes: 30,
     summary:
-      "Central differences around the hit point. Compare the four-tap tetrahedron trick against the six-tap version.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet.",
   },
   {
     id: "ex-012",
@@ -138,7 +138,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL"],
     estimateMinutes: 55,
     summary:
-      "Track the minimum ratio of distance to travelled length toward the light and turn it into a penumbra.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore.",
   },
   {
     id: "ex-013",
@@ -148,7 +148,7 @@ export const exercises: Exercise[] = [
     languages: ["GLSL", "WGSL"],
     estimateMinutes: 80,
     summary:
-      "Distribution, geometry and Fresnel. Verify energy conservation by integrating over the hemisphere numerically.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud.",
   },
   {
     id: "ex-014",
@@ -158,7 +158,7 @@ export const exercises: Exercise[] = [
     languages: ["TypeScript", "C#"],
     estimateMinutes: 30,
     summary:
-      "Fixed capacity, sequence-numbered, no allocation in the hot path. This is the buffer reconciliation replays from.",
+      "Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis.",
   },
   {
     id: "ex-015",
@@ -168,7 +168,7 @@ export const exercises: Exercise[] = [
     languages: ["TypeScript", "C#"],
     estimateMinutes: 100,
     summary:
-      "Replay unacknowledged inputs from the server state, then smooth the residual visual offset over a few frames.",
+      "Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat.",
   },
   {
     id: "ex-016",
@@ -178,7 +178,7 @@ export const exercises: Exercise[] = [
     languages: ["TypeScript", "C++"],
     estimateMinutes: 60,
     summary:
-      "Render remote players 100 ms in the past and interpolate. Handle a missing snapshot without teleporting anyone.",
+      "Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa.",
   },
   {
     id: "ex-017",
@@ -188,7 +188,7 @@ export const exercises: Exercise[] = [
     languages: ["Rust", "C++"],
     estimateMinutes: 65,
     summary:
-      "A test transport that drops, duplicates and reorders. Most netcode bugs only appear once you can reproduce a bad network.",
+      "Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum.",
   },
   {
     id: "ex-018",
@@ -198,7 +198,7 @@ export const exercises: Exercise[] = [
     languages: ["Rust", "TypeScript"],
     estimateMinutes: 25,
     summary:
-      "Coalesce the burst of events an atomic save produces into one rebuild per path.",
+      "Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor.",
   },
   {
     id: "ex-019",
@@ -208,7 +208,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "Rust"],
     estimateMinutes: 75,
     summary:
-      "Generational handles so a stale one is detected rather than dereferenced, and destruction deferred by frames in flight.",
+      "Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim.",
   },
   {
     id: "ex-020",
@@ -218,7 +218,7 @@ export const exercises: Exercise[] = [
     languages: ["C++", "Rust"],
     estimateMinutes: 95,
     summary:
-      "Compile off-thread, swap on success, keep the last good version on failure. Prove a syntax error cannot crash the session.",
+      "Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do. Nisi ea duis in velit eu pariatur occaecat proident.",
   },
   {
     id: "ex-021",
@@ -228,7 +228,7 @@ export const exercises: Exercise[] = [
     languages: ["C++"],
     estimateMinutes: 60,
     summary:
-      "GPU timestamps around each pass, CPU spans around each system. Write down your guess first, then check it.",
+      "Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum.",
   },
   {
     id: "ex-022",
@@ -238,6 +238,6 @@ export const exercises: Exercise[] = [
     languages: ["C++", "GLSL"],
     estimateMinutes: 130,
     summary:
-      "Split the frustum, fit each cascade, and snap the light matrix to texel boundaries so shadows stop shimmering as the camera moves.",
+      "Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do.",
   },
 ]

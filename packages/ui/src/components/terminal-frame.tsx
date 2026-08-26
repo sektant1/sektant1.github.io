@@ -7,7 +7,7 @@ import { cn } from "@workspace/ui/lib/utils"
 type Status = "online" | "standby" | "fault"
 
 const STATUS_CLASS: Record<Status, string> = {
-  online: "bg-primary",
+  online: "bg-primary shadow-[0_0_6px_var(--primary)]",
   standby: "bg-muted-foreground",
   fault: "bg-destructive motion-safe:animate-pulse",
 }
