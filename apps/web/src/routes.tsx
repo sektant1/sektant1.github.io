@@ -1,10 +1,7 @@
 import type { RouteObject } from "react-router"
 
 import { AppShell } from "@/layout/app-shell"
-
-function Stub({ name }: { name: string }) {
-  return <h1 className="font-mono text-sm">{name}</h1>
-}
+import { Stub } from "@/pages/stub"
 
 export const routes: RouteObject[] = [
   {
