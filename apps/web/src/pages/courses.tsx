@@ -6,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@workspace/ui/components/accordion"
 import { AspectRatio } from "@workspace/ui/components/aspect-ratio"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Badge } from "@workspace/ui/components/badge"
 import {
   Carousel,
@@ -22,6 +21,7 @@ import {
 import { Progress } from "@workspace/ui/components/progress"
 import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 
+import { PageHeader } from "@/layout/page-header"
 import { allLessons, courses, lessonCount } from "@/data/courses"
 import { useLocalState } from "@/lib/use-local-state"
 
@@ -30,13 +30,10 @@ export function Courses() {
 
   return (
     <div className="flex min-w-0 flex-col gap-8">
-      <header className="flex flex-col gap-2">
-        <AsciiBanner text="COURSES" size="default" />
-        <p className="max-w-prose text-xs leading-relaxed text-terminal-ink">
-          Guided tracks. Each lesson opens in the runner with a brief, an editor
-          pane and its checks.
-        </p>
-      </header>
+      <PageHeader
+        title="COURSES"
+        description="Guided tracks. Each lesson opens in the runner with a brief, an editor pane and its checks."
+      />
 
       <section className="flex min-w-0 flex-col gap-3">
         <h2 className="font-mono text-xs tracking-widest text-primary uppercase crt-glow-soft">

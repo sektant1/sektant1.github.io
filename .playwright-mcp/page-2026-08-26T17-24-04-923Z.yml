@@ -1,0 +1,276 @@
+- generic [ref=f16e3]:
+  - generic [ref=f16e6]:
+    - generic [ref=f16e8]:
+      - generic [ref=f16e9]: SK
+      - generic [ref=f16e10]: skt codex
+    - navigation "Site sections" [ref=f16e12]:
+      - generic [ref=f16e13]:
+        - generic [ref=f16e14]: "[nav]"
+        - generic [ref=f16e17]: ~/CODEX
+        - generic [ref=f16e18]: // local
+      - generic [ref=f16e20]:
+        - generic [ref=f16e21]:
+          - button "learn/ (3)" [expanded] [ref=f16e22]:
+            - generic [ref=f16e23]: ▾
+            - generic [ref=f16e24]: learn/
+            - generic [ref=f16e25]: (3)
+          - list [ref=f16e26]:
+            - listitem [ref=f16e27]:
+              - generic [ref=f16e28]: ├─
+              - link "codex" [ref=f16e29] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/
+            - listitem [ref=f16e30]:
+              - generic [ref=f16e31]: ├─
+              - link "courses" [ref=f16e32] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/courses
+            - listitem [ref=f16e33]:
+              - generic [ref=f16e34]: └─
+              - link "practice" [ref=f16e35] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/practice
+        - generic [ref=f16e36]:
+          - button "workspace/ (3)" [expanded] [ref=f16e37]:
+            - generic [ref=f16e38]: ▾
+            - generic [ref=f16e39]: workspace/
+            - generic [ref=f16e40]: (3)
+          - list [ref=f16e41]:
+            - listitem [ref=f16e42]:
+              - generic [ref=f16e43]: ├─
+              - link "tasks" [ref=f16e44] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/tasks
+            - listitem [ref=f16e45]:
+              - generic [ref=f16e46]: ├─
+              - link "notes" [ref=f16e47] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/notes
+            - listitem [ref=f16e48]:
+              - generic [ref=f16e49]: └─
+              - link "snippets" [ref=f16e50] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/snippets
+        - generic [ref=f16e51]:
+          - button "toolkit/ (2)" [expanded] [ref=f16e52]:
+            - generic [ref=f16e53]: ▾
+            - generic [ref=f16e54]: toolkit/
+            - generic [ref=f16e55]: (2)
+          - list [ref=f16e56]:
+            - listitem [ref=f16e57]:
+              - generic [ref=f16e58]: ├─
+              - link "components" [ref=f16e59] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/components
+            - listitem [ref=f16e60]:
+              - generic [ref=f16e61]: └─
+              - link "submit" [ref=f16e62] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/submit
+    - generic [ref=f16e63]: :NERDTREE
+  - main [ref=f16e65]:
+    - generic [ref=f16e66]:
+      - button "Toggle Sidebar" [ref=f16e67]
+      - separator [ref=f16e69]
+      - generic [ref=f16e70]: ~/snippets
+      - button "Change display face" [ref=f16e71]
+      - button "Dark theme. Switch to system theme" [ref=f16e72]
+    - generic [ref=f16e74]:
+      - generic [ref=f16e75]:
+        - generic [ref=f16e77]:
+          - generic [ref=f16e78]: SNIPPETS
+          - generic [ref=f16e79]: _____ _ __________ ____ _________________ / ___// | / / _/ __ \/ __ \/ ____/_ __/ ___/ \__ \/ |/ // // /_/ / /_/ / __/ / / \__ \ ___/ / /| // // ____/ ____/ /___ / / ___/ / /____/_/ |_/___/_/ /_/ /_____/ /_/ /____/
+          - generic: _____ _ __________ ____ _________________ / ___// | / / _/ __ \/ __ \/ ____/_ __/ ___/ \__ \/ |/ // // /_/ / /_/ / __/ / / \__ \ ___/ / /| // // ____/ ____/ /___ / / ___/ / /____/_/ |_/___/_/ /_/ /_____/ /_/ /____/
+          - generic: _____ _ __________ ____ _________________ / ___// | / / _/ __ \/ __ \/ ____/_ __/ ___/ \__ \/ |/ // // /_/ / /_/ / __/ / / \__ \ ___/ / /| // // ____/ ____/ /___ / / ___/ / /____/_/ |_/___/_/ /_/ /_____/ /_/ /____/
+        - generic [ref=f16e80]:
+          - paragraph [ref=f16e81]:
+            - text: 14 fragments. Press
+            - generic: ctrl
+            - generic: k
+            - text: to search.
+          - button "Search snippets" [ref=f16e82]
+      - generic [ref=f16e83]:
+        - tablist [ref=f16e84]:
+          - tab "All" [selected] [ref=f16e85]
+          - tab "GLSL" [ref=f16e86]
+          - tab "C++" [ref=f16e87]
+          - tab "Rust" [ref=f16e88]
+          - tab "TypeScript" [ref=f16e89]
+          - tab "WGSL" [ref=f16e90]
+          - tab "C#" [ref=f16e91]
+        - tabpanel "All" [ref=f16e92]:
+          - generic [ref=f16e93]:
+            - generic [ref=f16e94]:
+              - generic [ref=f16e95]:
+                - generic [ref=f16e97]: "[ GLSL // Shaders ]"
+                - generic [ref=f16e99]: standby
+              - generic [ref=f16e101]:
+                - generic [ref=f16e102]:
+                  - generic [ref=f16e103]:
+                    - generic [ref=f16e104]: GGX normal distribution
+                    - generic [ref=f16e105]: Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa.
+                  - button "Copy GGX normal distribution" [ref=f16e106]
+                  - button "Actions for GGX normal distribution" [ref=f16e107]
+                - generic [ref=f16e108]: "float D_GGX(float NoH, float roughness) { float a = roughness * roughness; float a2 = a * a; float d = (NoH * a2 - NoH) * NoH + 1.0; return a2 / (PI * d * d); }"
+              - generic [ref=f16e110]: GGX normal distribution
+            - generic [ref=f16e111]:
+              - generic [ref=f16e112]:
+                - generic [ref=f16e114]: "[ GLSL // Shaders ]"
+                - generic [ref=f16e116]: standby
+              - generic [ref=f16e118]:
+                - generic [ref=f16e119]:
+                  - generic [ref=f16e120]:
+                    - generic [ref=f16e121]: Height-correlated Smith visibility
+                    - generic [ref=f16e122]: Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate cillum. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum.
+                  - button "Copy Height-correlated Smith visibility" [ref=f16e123]
+                  - button "Actions for Height-correlated Smith visibility" [ref=f16e124]
+                - generic [ref=f16e125]: "float V_SmithGGXCorrelated(float NoV, float NoL, float roughness) { float a2 = pow(roughness, 4.0); float lv = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2); float ll = NoV * sqrt(NoL * NoL * (1.0 - a2) + a2); return 0.5 / max(lv + ll, 1e-5); }"
+              - generic [ref=f16e127]: Height-correlated Smith visibility
+            - generic [ref=f16e128]:
+              - generic [ref=f16e129]:
+                - generic [ref=f16e131]: "[ GLSL // Rendering ]"
+                - generic [ref=f16e133]: standby
+              - generic [ref=f16e135]:
+                - generic [ref=f16e136]:
+                  - generic [ref=f16e137]:
+                    - generic [ref=f16e138]: Octahedral normal encode and decode
+                    - generic [ref=f16e139]: Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat proident. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor.
+                  - button "Copy Octahedral normal encode and decode" [ref=f16e140]
+                  - button "Actions for Octahedral normal encode and decode" [ref=f16e141]
+                - generic [ref=f16e142]: "vec2 encodeOct(vec3 n) { n /= abs(n.x) + abs(n.y) + abs(n.z); vec2 e = n.z >= 0.0 ? n.xy : (1.0 - abs(n.yx)) * sign(n.xy); return e * 0.5 + 0.5; } vec3 decodeOct(vec2 e) { e = e * 2.0 - 1.0; vec3 n = vec3(e.xy, 1.0 - abs(e.x) - abs(e.y)); float t = max(-n.z, 0.0); n.xy += vec2(n.x >= 0.0 ? -t : t, n.y >= 0.0 ? -t : t); return normalize(n); }"
+              - generic [ref=f16e144]: Octahedral normal encode and decode
+            - generic [ref=f16e145]:
+              - generic [ref=f16e146]:
+                - generic [ref=f16e148]: "[ C++ // Physics ]"
+                - generic [ref=f16e150]: standby
+              - generic [ref=f16e152]:
+                - generic [ref=f16e153]:
+                  - generic [ref=f16e154]:
+                    - generic [ref=f16e155]: Fixed timestep loop with spiral-of-death guard
+                    - generic [ref=f16e156]: Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim.
+                  - button "Copy Fixed timestep loop with spiral-of-death guard" [ref=f16e157]
+                  - button "Actions for Fixed timestep loop with spiral-of-death guard" [ref=f16e158]
+                - generic [ref=f16e159]: "constexpr double kStep = 1.0 / 60.0; constexpr double kMaxFrame = 0.25; // never simulate more than 15 steps at once double accumulator = 0.0; while (running) { accumulator += std::min(clock.Tick(), kMaxFrame); while (accumulator >= kStep) { previous = current; Integrate(current, kStep); accumulator -= kStep; } Render(Lerp(previous, current, accumulator / kStep)); }"
+              - generic [ref=f16e161]: Fixed timestep loop with spiral-of-death guard
+            - generic [ref=f16e162]:
+              - generic [ref=f16e163]:
+                - generic [ref=f16e165]: "[ C++ // Physics ]"
+                - generic [ref=f16e167]: standby
+              - generic [ref=f16e169]:
+                - generic [ref=f16e170]:
+                  - generic [ref=f16e171]:
+                    - generic [ref=f16e172]: Semi-implicit Euler
+                    - generic [ref=f16e173]: Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing do. Nisi ea duis in velit eu pariatur occaecat proident.
+                  - button "Copy Semi-implicit Euler" [ref=f16e174]
+                  - button "Actions for Semi-implicit Euler" [ref=f16e175]
+                - generic [ref=f16e176]: "void Integrate(Body& body, double dt) { body.velocity += body.acceleration * dt; // velocity first — body.position += body.velocity * dt; // — position uses the new value }"
+              - generic [ref=f16e178]: Semi-implicit Euler
+            - generic [ref=f16e179]:
+              - generic [ref=f16e180]:
+                - generic [ref=f16e182]: "[ Rust // Physics ]"
+                - generic [ref=f16e184]: standby
+              - generic [ref=f16e186]:
+                - generic [ref=f16e187]:
+                  - generic [ref=f16e188]:
+                    - generic [ref=f16e189]: Support function for a convex hull
+                    - generic [ref=f16e190]: Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum.
+                  - button "Copy Support function for a convex hull" [ref=f16e191]
+                  - button "Actions for Support function for a convex hull" [ref=f16e192]
+                - generic [ref=f16e193]: "fn furthest_in(&self, dir: Vec3) -> Vec3 { self.vertices .iter() .copied() .max_by(|a, b| a.dot(dir).partial_cmp(&b.dot(dir)).unwrap()) .expect(\"hull must have at least one vertex\") }"
+              - generic [ref=f16e195]: Support function for a convex hull
+            - generic [ref=f16e196]:
+              - generic [ref=f16e197]:
+                - generic [ref=f16e199]: "[ Rust // ECS ]"
+                - generic [ref=f16e201]: standby
+              - generic [ref=f16e203]:
+                - generic [ref=f16e204]:
+                  - generic [ref=f16e205]:
+                    - generic [ref=f16e206]: Sparse set removal by swap and pop
+                    - generic [ref=f16e207]: Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do.
+                  - button "Copy Sparse set removal by swap and pop" [ref=f16e208]
+                  - button "Actions for Sparse set removal by swap and pop" [ref=f16e209]
+                - generic [ref=f16e210]: "pub fn remove(&mut self, entity: Entity) -> Option<T> { let dense_index = self.sparse.get(entity.index())?.to_owned()?; let moved = *self.entities.last()?; let value = self.dense.swap_remove(dense_index); self.entities.swap_remove(dense_index); // The entity that got swapped into this slot needs its index repaired. if moved != entity { self.sparse[moved.index()] = Some(dense_index); } self.sparse[entity.index()] = None; Some(value) }"
+              - generic [ref=f16e212]: Sparse set removal by swap and pop
+            - generic [ref=f16e213]:
+              - generic [ref=f16e214]:
+                - generic [ref=f16e216]: "[ Rust // ECS ]"
+                - generic [ref=f16e218]: standby
+              - generic [ref=f16e220]:
+                - generic [ref=f16e221]:
+                  - generic [ref=f16e222]:
+                    - generic [ref=f16e223]: Generational entity handle
+                    - generic [ref=f16e224]: Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim.
+                  - button "Copy Generational entity handle" [ref=f16e225]
+                  - button "Actions for Generational entity handle" [ref=f16e226]
+                - generic [ref=f16e227]: "#[derive(Copy, Clone, PartialEq, Eq, Hash)] pub struct Entity(u64); impl Entity { pub fn new(index: u32, generation: u32) -> Self { Entity(((generation as u64) << 32) | index as u64) } pub fn index(self) -> usize { (self.0 & 0xFFFF_FFFF) as usize } pub fn generation(self) -> u32 { (self.0 >> 32) as u32 } }"
+              - generic [ref=f16e229]: Generational entity handle
+            - generic [ref=f16e230]:
+              - generic [ref=f16e231]:
+                - generic [ref=f16e233]: "[ TypeScript // Netcode ]"
+                - generic [ref=f16e235]: standby
+              - generic [ref=f16e237]:
+                - generic [ref=f16e238]:
+                  - generic [ref=f16e239]:
+                    - generic [ref=f16e240]: Input ring buffer for prediction
+                    - generic [ref=f16e241]: Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip.
+                  - button "Copy Input ring buffer for prediction" [ref=f16e242]
+                  - button "Actions for Input ring buffer for prediction" [ref=f16e243]
+                - generic [ref=f16e244]: "export class InputBuffer { private readonly items: (Input | undefined)[] constructor(private readonly capacity: number) { this.items = new Array(capacity) } push(input: Input) { this.items[input.seq % this.capacity] = input } since(seq: number): Input[] { const out: Input[] = [] for (const item of this.items) { if (item && item.seq > seq) out.push(item) } return out.sort((a, b) => a.seq - b.seq) } }"
+              - generic [ref=f16e246]: Input ring buffer for prediction
+            - generic [ref=f16e247]:
+              - generic [ref=f16e248]:
+                - generic [ref=f16e250]: "[ TypeScript // Netcode ]"
+                - generic [ref=f16e252]: standby
+              - generic [ref=f16e254]:
+                - generic [ref=f16e255]:
+                  - generic [ref=f16e256]:
+                    - generic [ref=f16e257]: Snapshot interpolation for remote entities
+                    - generic [ref=f16e258]: Officia anim laborum dolor consectetur sed tempor labore magna. Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat irure voluptate.
+                  - button "Copy Snapshot interpolation for remote entities" [ref=f16e259]
+                  - button "Actions for Snapshot interpolation for remote entities" [ref=f16e260]
+                - generic [ref=f16e261]: "const RENDER_DELAY_MS = 100 export function interpolate(buffer: Snapshot[], now: number): State | null { const target = now - RENDER_DELAY_MS const after = buffer.findIndex((snapshot) => snapshot.time >= target) if (after <= 0) return buffer.at(after === 0 ? 0 : -1)?.state ?? null const a = buffer[after - 1] const b = buffer[after] const t = (target - a.time) / (b.time - a.time) return lerpState(a.state, b.state, t) }"
+              - generic [ref=f16e263]: Snapshot interpolation for remote entities
+            - generic [ref=f16e264]:
+              - generic [ref=f16e265]:
+                - generic [ref=f16e267]: "[ TypeScript // Tooling ]"
+                - generic [ref=f16e269]: standby
+              - generic [ref=f16e271]:
+                - generic [ref=f16e272]:
+                  - generic [ref=f16e273]:
+                    - generic [ref=f16e274]: Debounced filesystem watcher
+                    - generic [ref=f16e275]: Lorem sit adipiscing do incididunt et aliqua minim nostrud laboris. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur occaecat.
+                  - button "Copy Debounced filesystem watcher" [ref=f16e276]
+                  - button "Actions for Debounced filesystem watcher" [ref=f16e277]
+                - generic [ref=f16e278]: "const pending = new Map<string, ReturnType<typeof setTimeout>>() watcher.on(\"change\", (path: string) => { clearTimeout(pending.get(path)) pending.set(path, setTimeout(() => { pending.delete(path) rebuild(path) }, 40)) })"
+              - generic [ref=f16e280]: Debounced filesystem watcher
+            - generic [ref=f16e281]:
+              - generic [ref=f16e282]:
+                - generic [ref=f16e284]: "[ C++ // Tooling ]"
+                - generic [ref=f16e286]: standby
+              - generic [ref=f16e288]:
+                - generic [ref=f16e289]:
+                  - generic [ref=f16e290]:
+                    - generic [ref=f16e291]: Deferred GPU resource destruction
+                    - generic [ref=f16e292]: Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim.
+                  - button "Copy Deferred GPU resource destruction" [ref=f16e293]
+                  - button "Actions for Deferred GPU resource destruction" [ref=f16e294]
+                - generic [ref=f16e295]: "struct PendingDelete { GpuHandle handle; uint64_t retire_frame; }; std::vector<PendingDelete> pending; void DestroyAfterFramesInFlight(GpuHandle handle) { pending.push_back({handle, current_frame + kFramesInFlight}); } void CollectRetired() { std::erase_if(pending, [&](const PendingDelete& p) { if (p.retire_frame > current_frame) return false; gpu.Destroy(p.handle); return true; }); }"
+              - generic [ref=f16e297]: Deferred GPU resource destruction
+            - generic [ref=f16e298]:
+              - generic [ref=f16e299]:
+                - generic [ref=f16e301]: "[ WGSL // Rendering ]"
+                - generic [ref=f16e303]: standby
+              - generic [ref=f16e305]:
+                - generic [ref=f16e306]:
+                  - generic [ref=f16e307]:
+                    - generic [ref=f16e308]: Compute shader workgroup dispatch sizing
+                    - generic [ref=f16e309]: Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit adipiscing.
+                  - button "Copy Compute shader workgroup dispatch sizing" [ref=f16e310]
+                  - button "Actions for Compute shader workgroup dispatch sizing" [ref=f16e311]
+                - generic [ref=f16e312]: "@compute @workgroup_size(8, 8, 1) fn main(@builtin(global_invocation_id) id: vec3<u32>) { // Dispatch rounds up, so the tail workgroup overruns. Always guard. if (id.x >= uniforms.width || id.y >= uniforms.height) { return; } let index = id.y * uniforms.width + id.x; output[index] = shade(id.xy); }"
+              - generic [ref=f16e314]: Compute shader workgroup dispatch sizing
+            - generic [ref=f16e315]:
+              - generic [ref=f16e316]:
+                - generic [ref=f16e318]: "[ C# // Tooling ]"
+                - generic [ref=f16e320]: standby
+              - generic [ref=f16e322]:
+                - generic [ref=f16e323]:
+                  - generic [ref=f16e324]:
+                    - generic [ref=f16e325]: Frame-scoped profiling span
+                    - generic [ref=f16e326]: Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore.
+                  - button "Copy Frame-scoped profiling span" [ref=f16e327]
+                  - button "Actions for Frame-scoped profiling span" [ref=f16e328]
+                - generic [ref=f16e329]: "public readonly struct ProfileScope : IDisposable { private readonly string _label; private readonly long _start; public ProfileScope(string label) { _label = label; _start = Stopwatch.GetTimestamp(); } public void Dispose() => Profiler.Record(_label, Stopwatch.GetTimestamp() - _start); }"
+              - generic [ref=f16e331]: Frame-scoped profiling span

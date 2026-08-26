@@ -10,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
@@ -50,6 +49,7 @@ import {
   type Task,
   type TaskState,
 } from "@/data/tasks"
+import { PageHeader } from "@/layout/page-header"
 import { useLocalState } from "@/lib/use-local-state"
 
 // Fixed so "overdue" is stable in the fixtures rather than drifting with the
@@ -91,12 +91,10 @@ export function Tasks() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <header className="flex flex-col gap-2">
-        <AsciiBanner text="TASKS" size="default" />
-        <p className="max-w-prose text-xs leading-relaxed text-terminal-ink">
-          Your queue. Completion is stored in this browser only.
-        </p>
-      </header>
+      <PageHeader
+        title="TASKS"
+        description="Your queue. Completion is stored in this browser only."
+      />
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">

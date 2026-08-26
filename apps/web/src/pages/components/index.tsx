@@ -1,6 +1,5 @@
 import * as React from "react"
 import { IconCheck, IconCopy } from "@tabler/icons-react"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
@@ -10,6 +9,7 @@ import {
   EmptyTitle,
 } from "@workspace/ui/components/empty"
 
+import { PageHeader } from "@/layout/page-header"
 import { addCommand } from "@/lib/registry-url"
 import type { SectionMap } from "@/pages/components/section"
 import { forms } from "@/pages/components/sections/forms"
@@ -58,25 +58,24 @@ export function ComponentsIndex() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <header className="flex flex-col gap-3">
-        <AsciiBanner text="COMPONENTS" size="default" />
-        <p className="max-w-prose text-xs leading-relaxed text-terminal-ink">
-          Every registered component with its variants. This page is the
-          coverage gate: if something is in the registry, it renders here.
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Input
-            aria-label="Filter components"
-            placeholder="Filter"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            className="w-56 text-xs"
-          />
-          <span className="font-mono text-[0.65rem] tabular-nums opacity-60">
-            {shown.length} / {NAMES.length}
-          </span>
-        </div>
-      </header>
+      <PageHeader
+        title="COMPONENTS"
+        description="Every registered component with its variants. This page is the coverage gate: if something is in the registry, it renders here."
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <Input
+              aria-label="Filter components"
+              placeholder="Filter"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              className="w-56 text-xs"
+            />
+            <span className="font-mono text-[0.65rem] tabular-nums opacity-60">
+              {shown.length} / {NAMES.length}
+            </span>
+          </div>
+        }
+      />
 
       {shown.length === 0 ? (
         <Empty className="py-12">

@@ -1,6 +1,5 @@
 import * as React from "react"
 import { IconSearch } from "@tabler/icons-react"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
@@ -47,6 +46,7 @@ import {
   ToggleGroupItem,
 } from "@workspace/ui/components/toggle-group"
 
+import { PageHeader } from "@/layout/page-header"
 import { exercises, LANGUAGES } from "@/data/exercises"
 import { AREAS, type Difficulty } from "@/data/topics"
 
@@ -113,51 +113,52 @@ export function Practice() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="flex flex-col gap-2">
-          <AsciiBanner text="PRACTICE" size="default" />
-          <p className="text-xs text-terminal-ink">
+      <PageHeader
+        title="PRACTICE"
+        description={
+          <>
             {exercises.length} exercises. Press <Kbd>ctrl</Kbd>
             <Kbd>k</Kbd> to jump to one.
-          </p>
-        </div>
-
-        <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
-          <Button variant="outline" size="sm">
-            <IconSearch />
-            Jump to
-          </Button>
-          <Popover className="w-[min(28rem,90vw)] p-0">
-            <Command>
-              <CommandInput placeholder="Search exercises…" />
-              <CommandList aria-label="Exercise results">
-                <CommandEmpty>No exercise matches.</CommandEmpty>
-                <CommandGroup>
-                  {exercises.map((exercise) => (
-                    <CommandItem
-                      key={exercise.id}
-                      textValue={exercise.title}
-                      onAction={() => {
-                        setPaletteOpen(false)
-                        resetFilters()
-                        setQuery(exercise.title)
-                      }}
-                    >
-                      <span className="truncate">{exercise.title}</span>
-                      <Badge
-                        variant="outline"
-                        className="ms-auto font-mono text-[0.65rem]"
+          </>
+        }
+        actions={
+          <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
+            <Button variant="outline" size="sm">
+              <IconSearch />
+              Jump to
+            </Button>
+            <Popover className="w-[min(28rem,90vw)] p-0">
+              <Command>
+                <CommandInput placeholder="Search exercises…" />
+                <CommandList aria-label="Exercise results">
+                  <CommandEmpty>No exercise matches.</CommandEmpty>
+                  <CommandGroup>
+                    {exercises.map((exercise) => (
+                      <CommandItem
+                        key={exercise.id}
+                        textValue={exercise.title}
+                        onAction={() => {
+                          setPaletteOpen(false)
+                          resetFilters()
+                          setQuery(exercise.title)
+                        }}
                       >
-                        {exercise.area}
-                      </Badge>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </Popover>
-        </PopoverTrigger>
-      </header>
+                        <span className="truncate">{exercise.title}</span>
+                        <Badge
+                          variant="outline"
+                          className="ms-auto font-mono text-[0.65rem]"
+                        >
+                          {exercise.area}
+                        </Badge>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </Popover>
+          </PopoverTrigger>
+        }
+      />
 
       <TerminalFrame title="filters" footer={`${filtered.length} matching`}>
         <div className="grid gap-4 p-3 lg:grid-cols-3">

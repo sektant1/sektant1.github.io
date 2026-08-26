@@ -1,0 +1,5 @@
+- generic [active] [ref=f15e1]:
+  - text: The server is configured with a public base URL of /skt-ui-toolkit/ - did you mean to visit
+  - link "/skt-ui-toolkit/snippets" [ref=f15e2] [cursor=pointer]:
+    - /url: /skt-ui-toolkit/snippets
+  - text: instead?

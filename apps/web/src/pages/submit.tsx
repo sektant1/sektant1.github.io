@@ -2,7 +2,6 @@ import * as React from "react"
 import { IconCalendar, IconEye } from "@tabler/icons-react"
 import { toast, Toaster } from "sonner"
 import { z } from "zod"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Button } from "@workspace/ui/components/button"
 import { ButtonGroup } from "@workspace/ui/components/button-group"
 import { Calendar } from "@workspace/ui/components/calendar"
@@ -38,6 +37,7 @@ import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile"
 
+import { PageHeader } from "@/layout/page-header"
 import { AREAS, type Difficulty } from "@/data/topics"
 
 const DIFFICULTIES: Difficulty[] = ["intro", "working", "deep"]
@@ -136,12 +136,10 @@ export function Submit() {
 
   return (
     <div className="flex max-w-3xl min-w-0 flex-col gap-6">
-      <header className="flex flex-col gap-2">
-        <AsciiBanner text="SUBMIT" size="default" />
-        <p className="text-xs text-terminal-ink">
-          Propose a technique or exercise for the codex.
-        </p>
-      </header>
+      <PageHeader
+        title="SUBMIT"
+        description="Propose a technique or exercise for the codex."
+      />
 
       <TerminalFrame title="new submission" footer="draft">
         <form

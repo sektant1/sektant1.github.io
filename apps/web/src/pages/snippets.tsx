@@ -1,6 +1,5 @@
 import * as React from "react"
 import { IconCheck, IconCopy, IconDotsVertical } from "@tabler/icons-react"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -29,6 +28,7 @@ import {
 import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 import { Tooltip, TooltipTrigger } from "@workspace/ui/components/tooltip"
 
+import { PageHeader } from "@/layout/page-header"
 import { snippets, type Snippet } from "@/data/snippets"
 
 const LANGUAGES = [...new Set(snippets.map((snippet) => snippet.language))]
@@ -71,51 +71,52 @@ export function Snippets() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="flex flex-col gap-2">
-          <AsciiBanner text="SNIPPETS" size="default" />
-          <p className="text-xs text-terminal-ink">
+      <PageHeader
+        title="SNIPPETS"
+        description={
+          <>
             {snippets.length} fragments. Press <Kbd>ctrl</Kbd>
             <Kbd>k</Kbd> to search.
-          </p>
-        </div>
-
-        <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
-          <Button variant="outline" size="sm">
-            Search snippets
-          </Button>
-          <Popover className="w-[min(28rem,90vw)] p-0">
-            <Command aria-label="Search snippets">
-              <CommandInput placeholder="Search title, description or source…" />
-              <CommandList aria-label="Snippet results">
-                <CommandEmpty>No snippet matches.</CommandEmpty>
-                <CommandGroup>
-                  {snippets.map((snippet) => (
-                    <CommandItem
-                      key={snippet.id}
-                      textValue={`${snippet.title} ${snippet.language} ${snippet.source}`}
-                      onAction={() => {
-                        setPaletteOpen(false)
-                        document
-                          .getElementById(snippet.id)
-                          ?.scrollIntoView({ block: "center" })
-                      }}
-                    >
-                      <span className="truncate">{snippet.title}</span>
-                      <Badge
-                        variant="outline"
-                        className="ms-auto font-mono text-[0.65rem]"
+          </>
+        }
+        actions={
+          <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
+            <Button variant="outline" size="sm">
+              Search snippets
+            </Button>
+            <Popover className="w-[min(28rem,90vw)] p-0">
+              <Command aria-label="Search snippets">
+                <CommandInput placeholder="Search title, description or source…" />
+                <CommandList aria-label="Snippet results">
+                  <CommandEmpty>No snippet matches.</CommandEmpty>
+                  <CommandGroup>
+                    {snippets.map((snippet) => (
+                      <CommandItem
+                        key={snippet.id}
+                        textValue={`${snippet.title} ${snippet.language} ${snippet.source}`}
+                        onAction={() => {
+                          setPaletteOpen(false)
+                          document
+                            .getElementById(snippet.id)
+                            ?.scrollIntoView({ block: "center" })
+                        }}
                       >
-                        {snippet.language}
-                      </Badge>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </Popover>
-        </PopoverTrigger>
-      </header>
+                        <span className="truncate">{snippet.title}</span>
+                        <Badge
+                          variant="outline"
+                          className="ms-auto font-mono text-[0.65rem]"
+                        >
+                          {snippet.language}
+                        </Badge>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </Popover>
+          </PopoverTrigger>
+        }
+      />
 
       <Tabs aria-label="Filter by language" defaultSelectedKey="All">
         <TabsList variant="line" className="flex-wrap">

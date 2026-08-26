@@ -1,6 +1,5 @@
 import * as React from "react"
 import { IconInfoCircle, IconPlus, IconSearch } from "@tabler/icons-react"
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import { Button } from "@workspace/ui/components/button"
 import {
   Collapsible,
@@ -25,6 +24,7 @@ import { Sheet, SheetTrigger } from "@workspace/ui/components/sheet"
 import { Textarea } from "@workspace/ui/components/textarea"
 
 import { AREAS, topics, type Area } from "@/data/topics"
+import { PageHeader } from "@/layout/page-header"
 import { useLocalState } from "@/lib/use-local-state"
 
 type Note = {
@@ -136,19 +136,21 @@ export function Notes() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="flex flex-col gap-2">
-          <AsciiBanner text="NOTES" size="default" />
-          <p className="text-xs text-terminal-ink">
+      <PageHeader
+        title="NOTES"
+        description={
+          <>
             Kept in this browser. Press <Kbd>n</Kbd> for a new note,{" "}
             <Kbd>/</Kbd> to search.
-          </p>
-        </div>
-        <Button size="sm" onPress={createNote}>
-          <IconPlus />
-          New note
-        </Button>
-      </header>
+          </>
+        }
+        actions={
+          <Button size="sm" onPress={createNote}>
+            <IconPlus />
+            New note
+          </Button>
+        }
+      />
 
       {notes.length === 0 ? (
         <Empty className="py-16">
