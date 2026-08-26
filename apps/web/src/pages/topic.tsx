@@ -156,7 +156,7 @@ export function Topic() {
 
       <Separator />
 
-      <Tabs defaultSelectedKey="reference">
+      <Tabs aria-label="Topic sections" defaultSelectedKey="reference">
         <TabsList>
           <TabsTrigger id="reference">Reference</TabsTrigger>
           <TabsTrigger id="caveats">

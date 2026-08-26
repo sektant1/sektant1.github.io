@@ -160,7 +160,11 @@ export function Lesson() {
         <ResizableHandle withHandle />
 
         <ResizablePanel defaultSize={62} minSize={30}>
-          <Tabs defaultSelectedKey="editor" className="h-full p-3">
+          <Tabs
+            aria-label="Lesson panes"
+            defaultSelectedKey="editor"
+            className="h-full p-3"
+          >
             <TabsList variant="line">
               <TabsTrigger id="editor">Editor</TabsTrigger>
               <TabsTrigger id="checks">

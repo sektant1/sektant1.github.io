@@ -43,46 +43,51 @@ export function Codex() {
 
   return (
     <div className="flex flex-col gap-8">
-      <CrtScreen
-        intensity="subtle"
-        sweep
-        className="border border-primary/25 bg-[color-mix(in_oklch,var(--card),var(--primary)_6%)]"
-      >
+      <CrtScreen intensity="subtle" sweep className="border border-border">
         {/* Corner ticks — the frame reads as an instrument rather than a card. */}
-        <span
-          aria-hidden="true"
-          className="absolute start-0 top-0 size-3 border-s border-t border-primary/50"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute end-0 top-0 size-3 border-e border-t border-primary/50"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute start-0 bottom-0 size-3 border-s border-b border-primary/50"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute end-0 bottom-0 size-3 border-e border-b border-primary/50"
-        />
+        {[
+          "start-0 top-0 border-s border-t",
+          "end-0 top-0 border-e border-t",
+          "start-0 bottom-0 border-s border-b",
+          "end-0 bottom-0 border-e border-b",
+        ].map((position) => (
+          <span
+            key={position}
+            aria-hidden="true"
+            className={`absolute size-2.5 border-primary/40 ${position}`}
+          />
+        ))}
 
-        <div className="grid gap-6 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-8">
-          <div className="flex min-w-0 flex-col gap-4">
-            <div className="flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] text-primary/90 uppercase crt-glow-soft">
-              <span className="size-1 bg-primary shadow-[0_0_6px_var(--primary)]" />
-              <ScrambleText text="terminal // sektant systems" speed={18} />
-            </div>
+        {/* Instrument header: the readings a terminal would print on connect. */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border/60 px-5 py-2 font-mono text-[0.65rem] tracking-widest text-foreground/45 uppercase md:px-8">
+          <span className="flex items-center gap-1.5 text-primary/90">
+            <span
+              aria-hidden="true"
+              className="size-1 bg-primary shadow-[0_0_6px_var(--primary)]"
+            />
+            skt://codex
+          </span>
+          <span aria-hidden="true">│</span>
+          <span>build 0.1.0</span>
+          <span aria-hidden="true">│</span>
+          <span>{topics.length} topics</span>
+          <span aria-hidden="true">│</span>
+          <span>{courses.length} tracks</span>
+          <span aria-hidden="true" className="ms-auto hidden sm:inline">
+            <ScrambleText text="link established" speed={22} />
+          </span>
+        </div>
 
+        <div className="grid gap-8 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:p-8">
+          <div className="flex min-w-0 flex-col gap-5">
             <AsciiBanner text="SKT CODEX" size="lg" />
 
-            <p className="max-w-prose text-xs leading-relaxed text-foreground/80">
-              <ScrambleText
-                text="Reference and practice for real-time graphics, engine architecture and network simulation."
-                speed={12}
-              />
+            <p className="max-w-[46ch] text-xs leading-relaxed text-foreground/80">
+              Reference and practice for real-time graphics, engine architecture
+              and network simulation.
             </p>
 
-            <div className="flex flex-col gap-1.5 border-t border-border/60 pt-3">
+            <div className="flex flex-col gap-2 border-t border-border/60 pt-4">
               <AsciiMeter
                 label="topics"
                 value={completed / topics.length}
@@ -101,18 +106,23 @@ export function Codex() {
             </div>
 
             <div className="flex items-center gap-1.5 font-mono text-[0.72rem] text-primary crt-glow">
-              <span className="text-foreground/75">~/codex</span>
+              <span className="text-foreground/50">~/codex</span>
               <span>$</span>
               <ScrambleText text="resume --last" speed={40} />
-              <span className="motion-safe:animate-pulse">_</span>
+              <span aria-hidden="true" className="motion-safe:animate-pulse">
+                _
+              </span>
             </div>
           </div>
 
-          <AsciiSolid
-            shape="sphere"
-            columns={60}
-            className="mx-auto hidden shrink-0 md:block"
-          />
+          {/* Captioned like a figure, because it is one: the sphere is a live
+              renderer, not an ornament. */}
+          <figure className="mx-auto hidden shrink-0 flex-col items-center gap-2 md:flex">
+            <AsciiSolid shape="sphere" columns={48} />
+            <figcaption className="font-mono text-[0.6rem] tracking-widest text-foreground/35 uppercase">
+              fig. 1 — lambert sphere, 48 col
+            </figcaption>
+          </figure>
         </div>
       </CrtScreen>
 

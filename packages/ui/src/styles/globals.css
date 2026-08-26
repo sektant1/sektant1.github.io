@@ -34,13 +34,31 @@
   }
 }
 
+/* Scanlines painted *inside* the glyphs rather than over them. The gradient
+   is the text's fill via background-clip, so there is no rectangle covering
+   the block and the effect follows the letterforms exactly.
+
+   --ascii-ink carries the colour, because background-image cannot read
+   currentColor the way text-shadow can. */
+@utility crt-scanfill {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--ascii-ink) 0 3px,
+    color-mix(in oklch, var(--ascii-ink) 40%, transparent) 3px 4px
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 /* Phosphor bloom for a block of glyphs. drop-shadow follows the rendered
    shapes, so unlike text-shadow it haloes ASCII art as one mass rather than
    per character. Two layers: a tight core and a wide, faint spill. */
 @utility crt-bloom {
   @variant dark {
-    filter: drop-shadow(0 0 8px color-mix(in oklch, currentColor 28%, transparent))
-      drop-shadow(0 0 22px color-mix(in oklch, currentColor 18%, transparent));
+    /* Tight, or the halo swallows the strokes and the art reads as blur. */
+    filter: drop-shadow(0 0 1px color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent))
+      drop-shadow(0 0 5px color-mix(in oklch, var(--ascii-ink, currentColor) 22%, transparent));
   }
 }
 

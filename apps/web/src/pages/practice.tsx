@@ -130,7 +130,7 @@ export function Practice() {
           <Popover className="w-[min(28rem,90vw)] p-0">
             <Command>
               <CommandInput placeholder="Search exercises…" />
-              <CommandList>
+              <CommandList aria-label="Exercise results">
                 <CommandEmpty>No exercise matches.</CommandEmpty>
                 <CommandGroup>
                   {exercises.map((exercise) => (
@@ -178,6 +178,7 @@ export function Practice() {
                 Area
               </span>
               <ToggleGroup
+                aria-label="Filter by area"
                 selectionMode="multiple"
                 selectedKeys={areas}
                 onSelectionChange={(keys) => {
@@ -196,6 +197,7 @@ export function Practice() {
           </div>
 
           <RadioGroup
+            aria-label="Filter by difficulty"
             value={difficulty}
             onChange={(value) => {
               setDifficulty(value)

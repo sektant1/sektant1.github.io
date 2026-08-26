@@ -7,7 +7,11 @@ import { Button } from "@workspace/ui/components/button"
 import { ButtonGroup } from "@workspace/ui/components/button-group"
 import { Calendar } from "@workspace/ui/components/calendar"
 import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog"
-import { Drawer, DrawerTrigger } from "@workspace/ui/components/drawer"
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+} from "@workspace/ui/components/drawer"
 import {
   Field,
   FieldDescription,
@@ -265,13 +269,17 @@ export function Submit() {
             {/* A dialog is wrong on a phone-sized viewport, so the same
                 preview opens as a drawer there. */}
             {isMobile ? (
-              <DrawerTrigger>
-                <Button type="button" variant="outline" size="sm">
-                  <IconEye />
-                  Preview
-                </Button>
-                <Drawer>{preview}</Drawer>
-              </DrawerTrigger>
+              <Drawer>
+                <DrawerTrigger
+                  render={
+                    <Button type="button" variant="outline" size="sm">
+                      <IconEye />
+                      Preview
+                    </Button>
+                  }
+                />
+                <DrawerContent>{preview}</DrawerContent>
+              </Drawer>
             ) : (
               <DialogTrigger>
                 <Button type="button" variant="outline" size="sm">

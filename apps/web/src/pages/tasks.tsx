@@ -104,6 +104,7 @@ export function Tasks() {
             Group
           </span>
           <ToggleGroup
+            aria-label="Group tasks by"
             selectionMode="single"
             selectedKeys={[groupBy]}
             onSelectionChange={(keys) => {

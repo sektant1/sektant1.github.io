@@ -85,9 +85,9 @@ export function Snippets() {
             Search snippets
           </Button>
           <Popover className="w-[min(28rem,90vw)] p-0">
-            <Command>
+            <Command aria-label="Search snippets">
               <CommandInput placeholder="Search title, description or source…" />
-              <CommandList>
+              <CommandList aria-label="Snippet results">
                 <CommandEmpty>No snippet matches.</CommandEmpty>
                 <CommandGroup>
                   {snippets.map((snippet) => (
@@ -117,7 +117,7 @@ export function Snippets() {
         </PopoverTrigger>
       </header>
 
-      <Tabs defaultSelectedKey="All">
+      <Tabs aria-label="Filter by language" defaultSelectedKey="All">
         <TabsList variant="line" className="flex-wrap">
           {TABS.map((tab) => (
             <TabsTrigger key={tab} id={tab}>

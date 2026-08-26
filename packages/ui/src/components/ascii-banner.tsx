@@ -39,18 +39,21 @@ function ensureFontsRegistered() {
 }
 
 const bannerVariants = cva(
-  "w-full overflow-x-auto font-mono leading-[0.95] whitespace-pre select-none",
+  "w-full overflow-x-auto crt-scanfill font-mono leading-[0.95] whitespace-pre select-none",
   {
     variants: {
+      // The tone sets --ascii-ink rather than `color`: the glyph fill is a
+      // gradient clipped to the text, and background-image cannot read
+      // currentColor.
       tone: {
-        default: "text-primary",
-        muted: "text-muted-foreground",
-        foreground: "text-foreground",
+        default: "[--ascii-ink:var(--primary)]",
+        muted: "[--ascii-ink:var(--muted-foreground)]",
+        foreground: "[--ascii-ink:var(--foreground)]",
       },
       size: {
         sm: "text-[0.4rem]",
         default: "text-[0.55rem] sm:text-[0.7rem]",
-        lg: "text-[0.7rem] sm:text-[1rem]",
+        lg: "text-[0.8rem] sm:text-[1.15rem]",
       },
     },
     defaultVariants: { tone: "default", size: "default" },
@@ -92,7 +95,10 @@ function AsciiBanner({
     <div
       data-slot="ascii-banner"
       data-effect={effect}
-      className={cn("group/ascii-banner relative crt-bloom", className)}
+      className={cn(
+        "group/ascii-banner relative w-fit max-w-full crt-bloom",
+        className
+      )}
       {...props}
     >
       <span className="sr-only">{text}</span>
@@ -106,7 +112,8 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 translate-x-[2px] -translate-y-[1px] text-destructive opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-70"
+              "pointer-events-none absolute inset-0 translate-x-[2px] -translate-y-[1px] opacity-0 mix-blend-screen [--ascii-ink:var(--destructive)] group-hover/ascii-banner:opacity-70",
+              "motion-safe:animate-[crt-tear-a_7s_ease-in-out_infinite]"
             )}
           >
             {art}
@@ -115,27 +122,13 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60",
+              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] opacity-0 mix-blend-screen [--ascii-ink:var(--color-cyan-400)] group-hover/ascii-banner:opacity-60",
               "motion-safe:animate-[crt-tear-b_7s_ease-in-out_infinite]"
             )}
           >
             {art}
           </pre>
         </>
-      ) : null}
-
-      {effect !== "none" ? (
-        <div
-          aria-hidden="true"
-          // Dark lines cut through the glyphs, which is what a scanline
-          // does. Tinting with currentColor lightened them into stripes that
-          // fought the art for legibility.
-          className="pointer-events-none absolute inset-0 opacity-45"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(to bottom, var(--background) 0 1px, transparent 1px 4px)",
-          }}
-        />
       ) : null}
     </div>
   )
