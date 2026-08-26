@@ -68,10 +68,10 @@ up with skt components rendering under default shadcn styling.
 
 The theme item also declares its font packages as `dependencies`:
 
-- `@fontsource-variable/chakra-petch`
-- `@fontsource-variable/ibm-plex-mono`
+- `@fontsource/chakra-petch` (weights 400/500/600/700)
+- `@fontsource/ibm-plex-mono` (weights 400/500)
 
-Both are imported at the top of `globals.css`, above the `@import "tailwindcss"` line so
+Neither typeface ships a variable build, so specific weights are imported. Both are imported at the top of `globals.css`, above the `@import "tailwindcss"` line so
 Tailwind's layers win the cascade. `@fontsource-variable/geist-mono` is removed — it is
 an orphan and the wrong typeface.
 

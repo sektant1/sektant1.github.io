@@ -80,7 +80,7 @@ The theme currently declares two typefaces that are not installed. This task is 
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: a `globals.css` whose first three lines are the two `@fontsource-variable` imports followed by `@import "tailwindcss"`. Task 3 copies the `cssVars` out of this file.
+- Produces: a `globals.css` whose first six lines are the `@fontsource` imports followed by `@import "tailwindcss"`. Task 3 copies the `cssVars` out of this file.
 
 - [ ] **Step 1: Confirm the defect before fixing it**
 
@@ -94,7 +94,7 @@ Expected: no matches. That is the bug — `globals.css` asks for fonts nobody in
 - [ ] **Step 2: Install the two typefaces, remove the orphan**
 
 ```bash
-npm install --workspace @workspace/ui @fontsource-variable/chakra-petch @fontsource-variable/ibm-plex-mono
+npm install --workspace @workspace/ui @fontsource/chakra-petch @fontsource/ibm-plex-mono
 npm uninstall --workspace @workspace/ui @fontsource-variable/geist-mono
 ```
 
@@ -105,8 +105,12 @@ The imports must sit **above** `@import "tailwindcss"`. CSS `@import` rules must
 Replace line 1 of `packages/ui/src/styles/globals.css`:
 
 ```css
-@import "@fontsource-variable/chakra-petch";
-@import "@fontsource-variable/ibm-plex-mono";
+@import "@fontsource/chakra-petch/400.css";
+@import "@fontsource/chakra-petch/500.css";
+@import "@fontsource/chakra-petch/600.css";
+@import "@fontsource/chakra-petch/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 ```
 
@@ -428,8 +432,8 @@ const themeItem = {
   description:
     "The skt-ui-toolkit visual identity: colors, zero radius, flat shadows and typefaces.",
   dependencies: [
-    "@fontsource-variable/chakra-petch",
-    "@fontsource-variable/ibm-plex-mono",
+    "@fontsource/chakra-petch",
+    "@fontsource/ibm-plex-mono",
   ],
   cssVars: JSON.parse(readFileSync("scripts/theme-vars.json", "utf8")),
 }
