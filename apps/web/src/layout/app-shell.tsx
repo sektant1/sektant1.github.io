@@ -11,6 +11,7 @@ import {
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar"
 
+import { FontPicker } from "@/layout/font-picker"
 import { NavTree, type NavNode } from "@/layout/nav-tree"
 import { ThemeToggle } from "@/layout/theme-toggle"
 
@@ -74,8 +75,8 @@ export function AppShell() {
           </SidebarContent>
 
           <SidebarFooter className="p-0">
-            <div className="border-t border-border/60 px-3 py-1.5">
-              <span className="font-mono text-[0.65rem] tracking-widest text-primary/60">
+            <div className="border-t border-terminal-rule px-3 py-1.5">
+              <span className="font-mono text-[0.65rem] tracking-widest text-terminal-chrome-dim">
                 :NERDTREE
               </span>
             </div>
@@ -86,9 +87,10 @@ export function AppShell() {
           <header className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-2 border-b bg-background px-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-4" />
-            <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem] text-foreground/50">
+            <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem] text-terminal-ink-dim">
               {toPath(pathname)}
             </span>
+            <FontPicker />
             <ThemeToggle />
           </header>
           <div className="min-w-0 flex-1 p-4 md:p-6">

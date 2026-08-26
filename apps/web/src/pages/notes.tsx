@@ -139,7 +139,7 @@ export function Notes() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-2">
           <AsciiBanner text="NOTES" size="default" />
-          <p className="text-xs text-foreground/75">
+          <p className="text-xs text-terminal-ink">
             Kept in this browser. Press <Kbd>n</Kbd> for a new note,{" "}
             <Kbd>/</Kbd> to search.
           </p>
@@ -170,7 +170,7 @@ export function Notes() {
         >
           <ResizablePanel defaultSize={32} minSize={20}>
             <div className="flex h-full flex-col">
-              <div className="border-b border-border/60 p-2">
+              <div className="border-b border-terminal-rule p-2">
                 <div className="relative">
                   <IconSearch className="pointer-events-none absolute start-2 top-1/2 size-3.5 -translate-y-1/2 opacity-50" />
                   <Input

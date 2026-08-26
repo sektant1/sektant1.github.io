@@ -54,13 +54,13 @@ export function Codex() {
           <span
             key={position}
             aria-hidden="true"
-            className={`absolute size-2.5 border-primary/40 ${position}`}
+            className={`absolute size-2.5 border-terminal-edge ${position}`}
           />
         ))}
 
         {/* Instrument header: the readings a terminal would print on connect. */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border/60 px-5 py-2 font-mono text-[0.65rem] tracking-widest text-foreground/45 uppercase md:px-8">
-          <span className="flex items-center gap-1.5 text-primary/90">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-terminal-rule px-5 py-2 font-mono text-[0.65rem] tracking-widest text-terminal-ink-faint uppercase md:px-8">
+          <span className="flex items-center gap-1.5 text-terminal-chrome">
             <span
               aria-hidden="true"
               className="size-1 bg-primary shadow-[0_0_6px_var(--primary)]"
@@ -82,12 +82,12 @@ export function Codex() {
           <div className="flex min-w-0 flex-col gap-5">
             <AsciiBanner text="SKT CODEX" size="lg" />
 
-            <p className="max-w-[46ch] text-xs leading-relaxed text-foreground/80">
+            <p className="max-w-[46ch] text-xs leading-relaxed text-terminal-ink">
               Reference and practice for real-time graphics, engine architecture
               and network simulation.
             </p>
 
-            <div className="flex flex-col gap-2 border-t border-border/60 pt-4">
+            <div className="flex flex-col gap-2 border-t border-terminal-rule pt-4">
               <AsciiMeter
                 label="topics"
                 value={completed / topics.length}
@@ -106,7 +106,7 @@ export function Codex() {
             </div>
 
             <div className="flex items-center gap-1.5 font-mono text-[0.72rem] text-primary crt-glow">
-              <span className="text-foreground/50">~/codex</span>
+              <span className="text-terminal-ink-dim">~/codex</span>
               <span>$</span>
               <ScrambleText text="resume --last" speed={40} />
               <span aria-hidden="true" className="motion-safe:animate-pulse">
@@ -119,7 +119,7 @@ export function Codex() {
               renderer, not an ornament. */}
           <figure className="mx-auto hidden shrink-0 flex-col items-center gap-2 md:flex">
             <AsciiSolid shape="sphere" columns={48} />
-            <figcaption className="font-mono text-[0.6rem] tracking-widest text-foreground/35 uppercase">
+            <figcaption className="font-mono text-[0.6rem] tracking-widest text-terminal-ink-faint uppercase">
               fig. 1 — lambert sphere, 48 col
             </figcaption>
           </figure>
@@ -133,14 +133,14 @@ export function Codex() {
           footer={`${inProgress.length} open`}
         >
           {inProgress.length ? (
-            <ul className="divide-y divide-border">
+            <ul className="divide-y divide-terminal-rule">
               {inProgress.map((topic) => (
                 <li key={topic.slug}>
                   <Link
                     to={`/topic/${topic.slug}`}
                     className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50"
                   >
-                    <IconBook className="size-4 shrink-0 text-foreground/75" />
+                    <IconBook className="size-4 shrink-0 text-terminal-ink" />
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-xs font-medium">
                         {topic.title}
@@ -151,10 +151,10 @@ export function Codex() {
                         aria-label={`${topic.title} progress`}
                       />
                     </div>
-                    <span className="shrink-0 font-mono text-[0.65rem] text-foreground/75 tabular-nums">
+                    <span className="shrink-0 font-mono text-[0.65rem] text-terminal-ink tabular-nums">
                       {topic.progress}%
                     </span>
-                    <IconArrowRight className="size-3.5 shrink-0 text-foreground/75" />
+                    <IconArrowRight className="size-3.5 shrink-0 text-terminal-ink" />
                   </Link>
                 </li>
               ))}
@@ -201,7 +201,7 @@ export function Codex() {
               {areaTopics.map((topic) => (
                 <Card
                   key={topic.slug}
-                  className="min-w-0 transition-colors hover:border-primary/50"
+                  className="min-w-0 transition-colors hover:border-terminal-edge"
                 >
                   <CardContent className="flex min-w-0 flex-col gap-2 p-3">
                     <Link
@@ -210,11 +210,11 @@ export function Codex() {
                     >
                       {topic.title}
                     </Link>
-                    <p className="line-clamp-3 text-[0.72rem] leading-relaxed text-foreground/75">
+                    <p className="line-clamp-3 text-[0.72rem] leading-relaxed text-terminal-ink">
                       {topic.summary}
                     </p>
                     <div className="mt-auto flex items-center gap-2 pt-1">
-                      <span className="font-mono text-[0.65rem] text-foreground/75">
+                      <span className="font-mono text-[0.65rem] text-terminal-ink">
                         {topic.readingMinutes} min
                       </span>
                       <Progress
@@ -222,7 +222,7 @@ export function Codex() {
                         className="h-0.5 flex-1"
                         aria-label={`${topic.title} progress`}
                       />
-                      <span className="font-mono text-[0.65rem] text-foreground/75 tabular-nums">
+                      <span className="font-mono text-[0.65rem] text-terminal-ink tabular-nums">
                         {topic.progress}%
                       </span>
                     </div>

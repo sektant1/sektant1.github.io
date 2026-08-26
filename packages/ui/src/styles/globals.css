@@ -1,3 +1,17 @@
+/* Display faces, each with a Cyrillic subset so the glyph set holds up
+   beyond Latin. Play is the default: geometric, technical, and the closest
+   freely-licensed relative of Bender, which is not distributed on npm. */
+@import "@fontsource/play/400.css";
+@import "@fontsource/play/700.css";
+@import "@fontsource/play/cyrillic-400.css";
+@import "@fontsource/play/cyrillic-700.css";
+@import "@fontsource/jura/400.css";
+@import "@fontsource/jura/600.css";
+@import "@fontsource/jura/cyrillic-400.css";
+@import "@fontsource/oswald/400.css";
+@import "@fontsource/oswald/600.css";
+@import "@fontsource/oswald/cyrillic-400.css";
+@import "@fontsource/ibm-plex-mono/cyrillic-400.css";
 @import "@fontsource/chakra-petch/400.css";
 @import "@fontsource/chakra-petch/500.css";
 @import "@fontsource/chakra-petch/600.css";
@@ -34,6 +48,17 @@
   }
 }
 
+/* Diagonal hazard banding, for surfaces that are reporting a fault. It is
+   industrial signage vocabulary, so it says "something here is wrong" without
+   a word of copy. */
+@utility hazard-stripe {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklch, var(--destructive) 55%, transparent) 0 4px,
+    transparent 4px 9px
+  );
+}
+
 /* Fluid sizing for fixed-column ASCII art.
    A monospace advance is ~0.6em, so art N columns wide needs
    font-size = containerWidth / (N * 0.6) to fit exactly. Container query
@@ -58,10 +83,13 @@
    --ascii-ink carries the colour, because background-image cannot read
    currentColor the way text-shadow can. */
 @utility crt-scanfill {
+  /* Sized in em, not px: the art scales with its container, and a fixed
+     line thickness that reads as a scanline at 20px chews diagonal strokes
+     to pieces at 9px. */
   background-image: repeating-linear-gradient(
     to bottom,
-    var(--ascii-ink) 0 3px,
-    color-mix(in oklch, var(--ascii-ink) 40%, transparent) 3px 4px
+    var(--ascii-ink) 0 0.14em,
+    color-mix(in oklch, var(--ascii-ink) 62%, transparent) 0.14em 0.2em
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -147,7 +175,7 @@
   --sidebar-accent-foreground: oklch(0.5799 0.2203 25.1911);
   --sidebar-border: oklch(0.9310 0 0);
   --sidebar-ring: oklch(0.5799 0.2203 25.1911);
-  --font-sans: Chakra Petch, ui-sans-serif, sans-serif, system-ui;
+  --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-serif: Georgia, serif;
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
   --radius: 0rem;
@@ -170,6 +198,19 @@
   --shadow-offset-x: 0px;
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
+
+  /* Terminal palette. The base shadcn tokens cover the component library;
+     these name the roles the terminal idiom keeps reaching for, so the same
+     intent is not spelled as a different opacity in every file. */
+  --terminal-chrome: color-mix(in oklch, var(--primary) 92%, transparent);
+  --terminal-chrome-dim: color-mix(in oklch, var(--primary) 58%, transparent);
+  --terminal-ink: color-mix(in oklch, var(--foreground) 82%, transparent);
+  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 58%, transparent);
+  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 34%, transparent);
+  --terminal-rule: color-mix(in oklch, var(--border) 55%, transparent);
+  --terminal-edge: color-mix(in oklch, var(--primary) 32%, transparent);
+  --terminal-wash: color-mix(in oklch, var(--primary) 7%, transparent);
+
 }
 
 .dark {
@@ -205,7 +246,7 @@
   --sidebar-accent-foreground: oklch(0.6331 0.1896 20.4467);
   --sidebar-border: oklch(0.2686 0 0);
   --sidebar-ring: oklch(0.5799 0.2203 25.1911);
-  --font-sans: Chakra Petch, ui-sans-serif, sans-serif, system-ui;
+  --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-serif: Georgia, serif;
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
   --radius: 0rem;
@@ -227,6 +268,19 @@
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
   --spacing: 0.25rem;
+
+  /* Terminal palette. The base shadcn tokens cover the component library;
+     these name the roles the terminal idiom keeps reaching for, so the same
+     intent is not spelled as a different opacity in every file. */
+  --terminal-chrome: color-mix(in oklch, var(--primary) 92%, transparent);
+  --terminal-chrome-dim: color-mix(in oklch, var(--primary) 58%, transparent);
+  --terminal-ink: color-mix(in oklch, var(--foreground) 82%, transparent);
+  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 58%, transparent);
+  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 34%, transparent);
+  --terminal-rule: color-mix(in oklch, var(--border) 55%, transparent);
+  --terminal-edge: color-mix(in oklch, var(--primary) 32%, transparent);
+  --terminal-wash: color-mix(in oklch, var(--primary) 7%, transparent);
+
 }
 
 @theme inline {
@@ -263,7 +317,16 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: Chakra Petch, ui-sans-serif, sans-serif, system-ui;
+  --color-terminal-chrome: var(--terminal-chrome);
+  --color-terminal-chrome-dim: var(--terminal-chrome-dim);
+  --color-terminal-ink: var(--terminal-ink);
+  --color-terminal-ink-dim: var(--terminal-ink-dim);
+  --color-terminal-ink-faint: var(--terminal-ink-faint);
+  --color-terminal-rule: var(--terminal-rule);
+  --color-terminal-edge: var(--terminal-edge);
+  --color-terminal-wash: var(--terminal-wash);
+
+  --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
   --font-serif: Georgia, serif;
 
@@ -346,5 +409,18 @@
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
+  }
+
+  /* A film grain over everything, at the threshold of visibility. It keeps
+     large flat panels from reading as flat vector fill, the way a photograph
+     of a real screen never is. Dark only — over white it is just noise. */
+  .dark body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

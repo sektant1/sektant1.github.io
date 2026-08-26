@@ -38,19 +38,19 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
             aria-hidden="true"
             className="size-1 shrink-0 bg-primary shadow-[0_0_6px_var(--primary)]"
           />
-          <span className="tracking-[0.25em] text-primary/70 uppercase">
+          <span className="tracking-[0.25em] text-terminal-chrome-dim uppercase">
             [nav]
           </span>
         </div>
         <span className="truncate tracking-wide text-primary crt-glow">
           ~/{root.toUpperCase()}
         </span>
-        <span className="text-[0.65rem] text-foreground/40 italic">
+        <span className="text-[0.65rem] text-terminal-ink-faint italic">
           // {branch}
         </span>
       </div>
 
-      <div aria-hidden="true" className="mx-2 border-t border-border/60" />
+      <div aria-hidden="true" className="mx-2 border-t border-terminal-rule" />
 
       <div className="flex flex-col gap-1.5">
         {tree.map((node) => {
@@ -72,12 +72,12 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
               >
                 <span
                   aria-hidden="true"
-                  className="w-2 shrink-0 text-primary/70"
+                  className="w-2 shrink-0 text-terminal-chrome-dim"
                 >
                   {isCollapsed ? "▸" : "▾"}
                 </span>
                 <span className="truncate text-primary">{node.dir}/</span>
-                <span className="shrink-0 text-[0.65rem] text-foreground/35">
+                <span className="shrink-0 text-[0.65rem] text-terminal-ink-faint">
                   ({node.children.length})
                 </span>
               </button>
@@ -97,7 +97,7 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
                         {/* Box-drawing guides, purely decorative. */}
                         <span
                           aria-hidden="true"
-                          className="ps-3 text-foreground/20 select-none"
+                          className="ps-3 text-terminal-ink-faint select-none"
                         >
                           {isLast ? "└─" : "├─"}
                         </span>
@@ -106,8 +106,8 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
                           className={cn(
                             "min-w-0 flex-1 truncate px-1.5 py-0.5 transition-colors",
                             isActive
-                              ? "bg-primary/10 text-primary crt-glow-soft"
-                              : "text-foreground/70 hover:bg-muted/40 hover:text-foreground"
+                              ? "bg-terminal-wash text-primary crt-glow-soft"
+                              : "text-terminal-ink-dim hover:bg-muted/40 hover:text-foreground"
                           )}
                         >
                           {child.label}

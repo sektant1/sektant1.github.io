@@ -116,7 +116,7 @@ export function Practice() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-2">
           <AsciiBanner text="PRACTICE" size="default" />
-          <p className="text-xs text-foreground/75">
+          <p className="text-xs text-terminal-ink">
             {exercises.length} exercises. Press <Kbd>ctrl</Kbd>
             <Kbd>k</Kbd> to jump to one.
           </p>
@@ -291,7 +291,7 @@ export function Practice() {
                       <span className="text-xs font-medium">
                         {exercise.title}
                       </span>
-                      <span className="line-clamp-1 text-[0.72rem] text-foreground/60">
+                      <span className="line-clamp-1 text-[0.72rem] text-terminal-ink-dim">
                         {exercise.summary}
                       </span>
                     </div>

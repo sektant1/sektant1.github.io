@@ -128,7 +128,7 @@ export function Submit() {
         <Row label="Publish" value={date ?? "—"} />
         <Row label="Notify" value={notify ? "yes" : "no"} />
       </dl>
-      <p className="text-[0.72rem] leading-relaxed text-foreground/70">
+      <p className="text-[0.72rem] leading-relaxed text-terminal-ink-dim">
         {values.summary || "No summary yet."}
       </p>
     </div>
@@ -138,7 +138,7 @@ export function Submit() {
     <div className="flex max-w-3xl min-w-0 flex-col gap-6">
       <header className="flex flex-col gap-2">
         <AsciiBanner text="SUBMIT" size="default" />
-        <p className="text-xs text-foreground/75">
+        <p className="text-xs text-terminal-ink">
           Propose a technique or exercise for the codex.
         </p>
       </header>
@@ -260,7 +260,7 @@ export function Submit() {
             </Field>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-4">
+          <div className="flex flex-wrap items-center gap-2 border-t border-terminal-rule pt-4">
             <Button type="submit" size="sm" isDisabled={submitting}>
               {submitting ? <Spinner /> : null}
               {submitting ? "Sending" : "Submit"}
@@ -290,7 +290,7 @@ export function Submit() {
               </DialogTrigger>
             )}
 
-            <span className="ms-auto text-[0.65rem] text-foreground/60">
+            <span className="ms-auto text-[0.65rem] text-terminal-ink-dim">
               Nothing is sent anywhere.
             </span>
           </div>

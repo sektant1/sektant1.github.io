@@ -32,7 +32,7 @@ export function Courses() {
     <div className="flex min-w-0 flex-col gap-8">
       <header className="flex flex-col gap-2">
         <AsciiBanner text="COURSES" size="default" />
-        <p className="max-w-prose text-xs leading-relaxed text-foreground/75">
+        <p className="max-w-prose text-xs leading-relaxed text-terminal-ink">
           Guided tracks. Each lesson opens in the runner with a brief, an editor
           pane and its checks.
         </p>
@@ -60,7 +60,7 @@ export function Courses() {
                   >
                     <AspectRatio
                       ratio={16 / 9}
-                      className="border-b border-border/60"
+                      className="border-b border-terminal-rule"
                     >
                       <div className="flex size-full items-end bg-gradient-to-br from-primary/25 to-transparent p-3">
                         <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-70">
@@ -72,7 +72,7 @@ export function Courses() {
                       <span className="text-xs font-medium text-balance">
                         {course.title}
                       </span>
-                      <span className="line-clamp-2 text-[0.72rem] leading-relaxed text-foreground/70">
+                      <span className="line-clamp-2 text-[0.72rem] leading-relaxed text-terminal-ink-dim">
                         {course.summary}
                       </span>
                     </div>
@@ -158,7 +158,7 @@ export function Courses() {
                                   </span>
                                 </Link>
                                 <HoverCard className="max-w-xs">
-                                  <span className="text-[0.72rem] leading-relaxed text-foreground/80">
+                                  <span className="text-[0.72rem] leading-relaxed text-terminal-ink">
                                     {lesson.brief}
                                   </span>
                                 </HoverCard>

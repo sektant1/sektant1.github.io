@@ -202,7 +202,7 @@ export function Lesson() {
                 </span>
                 {/* Say plainly that nothing is executed. A green tick that
                     implies real evaluation would be a lie. */}
-                <span className="ms-auto text-[0.65rem] text-foreground/60">
+                <span className="ms-auto text-[0.65rem] text-terminal-ink-dim">
                   Checks are illustrative — no code is executed.
                 </span>
               </div>
@@ -225,7 +225,7 @@ export function Lesson() {
         status={isComplete ? "online" : "standby"}
         footer={`${course.title} — ${lesson.lang}`}
       >
-        <div className="p-3 font-mono text-[0.72rem] text-foreground/70">
+        <div className="p-3 font-mono text-[0.72rem] text-terminal-ink-dim">
           {lesson.slug}
         </div>
       </TerminalFrame>

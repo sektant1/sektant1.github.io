@@ -39,6 +39,15 @@ function TerminalFrame({
       className={cn("relative border border-border", className)}
       {...props}
     >
+      {/* A fault gets hazard banding across the top edge, so the state is
+          legible from across the room rather than only at the lamp. */}
+      {status === "fault" ? (
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-[3px] hazard-stripe"
+        />
+      ) : null}
+
       <div className="flex items-center gap-2 border-b border-border px-2 py-1">
         <span
           aria-hidden="true"
@@ -51,7 +60,7 @@ function TerminalFrame({
           aria-hidden="true"
           className="ms-auto hidden h-px flex-1 border-t border-border sm:block"
         />
-        <span className="hidden shrink-0 font-mono text-[0.65rem] tracking-widest text-primary/90 uppercase sm:inline">
+        <span className="hidden shrink-0 font-mono text-[0.65rem] tracking-widest text-terminal-chrome uppercase sm:inline">
           {status}
         </span>
       </div>
@@ -59,7 +68,7 @@ function TerminalFrame({
       <div className="min-w-0">{children}</div>
 
       {footer ? (
-        <div className="truncate border-t border-border px-2 py-1 font-mono text-[0.65rem] tracking-wider text-primary/80 uppercase">
+        <div className="truncate border-t border-border px-2 py-1 font-mono text-[0.65rem] tracking-wider text-terminal-chrome uppercase">
           {footer}
         </div>
       ) : null}

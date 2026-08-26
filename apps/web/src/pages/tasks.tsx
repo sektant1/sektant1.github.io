@@ -93,7 +93,7 @@ export function Tasks() {
     <div className="flex min-w-0 flex-col gap-6">
       <header className="flex flex-col gap-2">
         <AsciiBanner text="TASKS" size="default" />
-        <p className="max-w-prose text-xs leading-relaxed text-foreground/75">
+        <p className="max-w-prose text-xs leading-relaxed text-terminal-ink">
           Your queue. Completion is stored in this browser only.
         </p>
       </header>

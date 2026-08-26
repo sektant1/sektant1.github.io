@@ -1,0 +1,173 @@
+- main [ref=f8e4]:
+  - generic [ref=f8e5]:
+    - button "Toggle Sidebar" [ref=f8e6]
+    - separator [ref=f8e8]
+    - generic [ref=f8e9]: ~/codex
+    - button "Dark theme. Switch to system theme" [ref=f8e10]
+  - generic [ref=f8e12]:
+    - generic [ref=f8e13]:
+      - generic [ref=f8e18]:
+        - generic [ref=f8e19]: skt://codex
+        - generic [ref=f8e21]: │
+        - generic [ref=f8e22]: build 0.1.0
+        - generic [ref=f8e23]: │
+        - generic [ref=f8e24]: 8 topics
+        - generic [ref=f8e25]: │
+        - generic [ref=f8e26]: 4 tracks
+      - generic [ref=f8e28]:
+        - generic [ref=f8e29]:
+          - generic [ref=f8e30]: SKT CODEX
+          - generic [ref=f8e31]: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+          - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+          - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+        - paragraph [ref=f8e32]: Reference and practice for real-time graphics, engine architecture and network simulation.
+        - generic [ref=f8e33]:
+          - progressbar "topics" [ref=f8e34]:
+            - generic [ref=f8e36]: "[##..............]"
+            - generic [ref=f8e37]: 13% 1/8
+          - progressbar "lessons" [ref=f8e38]:
+            - generic [ref=f8e40]: "[###.............]"
+            - generic [ref=f8e41]: 18% of 17
+          - progressbar "snippets" [ref=f8e42]:
+            - generic [ref=f8e44]: "[###########.....]"
+            - generic [ref=f8e45]: 70% indexed
+        - generic [ref=f8e46]:
+          - generic [ref=f8e47]: ~/codex
+          - generic [ref=f8e48]: $
+          - generic [ref=f8e49]:
+            - generic [ref=f8e50]: resume --last
+            - text: "!\\}^__ {*__-]"
+          - generic [ref=f8e51]: _
+    - generic [ref=f8e52]:
+      - generic [ref=f8e53]:
+        - generic [ref=f8e54]: "[ resume ]"
+        - list [ref=f8e58]:
+          - listitem [ref=f8e59]:
+            - link "Deferred Shading and the G-Buffer 62% 62%" [ref=f8e60] [cursor=pointer]:
+              - /url: /topic/deferred-shading
+              - generic [ref=f8e64]:
+                - generic [ref=f8e65]: Deferred Shading and the G-Buffer
+                - progressbar "Deferred Shading and the G-Buffer progress" [ref=f8e66]
+              - generic [ref=f8e69]: 62%
+          - listitem [ref=f8e73]:
+            - link "GJK Collision Detection 24% 24%" [ref=f8e74] [cursor=pointer]:
+              - /url: /topic/gjk-collision
+              - generic [ref=f8e78]:
+                - generic [ref=f8e79]: GJK Collision Detection
+                - progressbar "GJK Collision Detection progress" [ref=f8e80]
+              - generic [ref=f8e83]: 24%
+          - listitem [ref=f8e87]:
+            - link "Archetype vs Sparse Set ECS Storage 45% 45%" [ref=f8e88] [cursor=pointer]:
+              - /url: /topic/ecs-storage
+              - generic [ref=f8e92]:
+                - generic [ref=f8e93]: Archetype vs Sparse Set ECS Storage
+                - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f8e94]
+              - generic [ref=f8e97]: 45%
+          - listitem [ref=f8e101]:
+            - link "Signed Distance Fields 8% 8%" [ref=f8e102] [cursor=pointer]:
+              - /url: /topic/signed-distance-fields
+              - generic [ref=f8e106]:
+                - generic [ref=f8e107]: Signed Distance Fields
+                - progressbar "Signed Distance Fields progress" [ref=f8e108]
+              - generic [ref=f8e111]: 8%
+        - generic [ref=f8e115]: 4 open
+      - generic [ref=f8e116]:
+        - generic [ref=f8e117]: "[ sys/boot ]"
+        - generic [ref=f8e120]: mounting /codex ok. indexing 8 reference topics ok. loading 22 practice sets ok. calibrating phosphor output ok. gpu capability probe warn. telemetry uplink skip
+        - generic [ref=f8e123]: last cold start
+    - generic [ref=f8e124]:
+      - generic [ref=f8e125]:
+        - heading "Rendering" [level=2] [ref=f8e126]
+        - generic [ref=f8e127]: "2"
+        - separator [ref=f8e128]
+      - generic [ref=f8e129]:
+        - generic [ref=f8e131]:
+          - link "Deferred Shading and the G-Buffer" [ref=f8e132] [cursor=pointer]:
+            - /url: /topic/deferred-shading
+          - paragraph [ref=f8e133]: Lorem sit adipiscing do incididunt et aliqua minim nostrud. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur.
+          - generic [ref=f8e134]:
+            - generic [ref=f8e135]: 14 min
+            - progressbar "Deferred Shading and the G-Buffer progress" [ref=f8e136]
+            - generic [ref=f8e139]: 62%
+        - generic [ref=f8e141]:
+          - link "The Rendering Equation, Read Slowly" [ref=f8e142] [cursor=pointer]:
+            - /url: /topic/rendering-equation
+          - paragraph [ref=f8e143]: Elit eiusmod ut dolore enim veniam exercitation nisi ea duis. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia.
+          - generic [ref=f8e144]:
+            - generic [ref=f8e145]: 18 min
+            - progressbar "The Rendering Equation, Read Slowly progress" [ref=f8e146]
+            - generic [ref=f8e148]: 0%
+    - generic [ref=f8e149]:
+      - generic [ref=f8e150]:
+        - heading "Physics" [level=2] [ref=f8e151]
+        - generic [ref=f8e152]: "2"
+        - separator [ref=f8e153]
+      - generic [ref=f8e154]:
+        - generic [ref=f8e156]:
+          - link "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent" [ref=f8e157] [cursor=pointer]:
+            - /url: /topic/fixed-timestep
+          - paragraph [ref=f8e158]: Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit.
+          - generic [ref=f8e159]:
+            - generic [ref=f8e160]: 11 min
+            - progressbar "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent progress" [ref=f8e161]
+            - generic [ref=f8e164]: 100%
+        - generic [ref=f8e166]:
+          - link "GJK Collision Detection" [ref=f8e167] [cursor=pointer]:
+            - /url: /topic/gjk-collision
+          - paragraph [ref=f8e168]: Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut.
+          - generic [ref=f8e169]:
+            - generic [ref=f8e170]: 16 min
+            - progressbar "GJK Collision Detection progress" [ref=f8e171]
+            - generic [ref=f8e174]: 24%
+    - generic [ref=f8e175]:
+      - generic [ref=f8e176]:
+        - heading "ECS" [level=2] [ref=f8e177]
+        - generic [ref=f8e178]: "1"
+        - separator [ref=f8e179]
+      - generic [ref=f8e182]:
+        - link "Archetype vs Sparse Set ECS Storage" [ref=f8e183] [cursor=pointer]:
+          - /url: /topic/ecs-storage
+        - paragraph [ref=f8e184]: Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis.
+        - generic [ref=f8e185]:
+          - generic [ref=f8e186]: 15 min
+          - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f8e187]
+          - generic [ref=f8e190]: 45%
+    - generic [ref=f8e191]:
+      - generic [ref=f8e192]:
+        - heading "Shaders" [level=2] [ref=f8e193]
+        - generic [ref=f8e194]: "1"
+        - separator [ref=f8e195]
+      - generic [ref=f8e198]:
+        - link "Signed Distance Fields" [ref=f8e199] [cursor=pointer]:
+          - /url: /topic/signed-distance-fields
+        - paragraph [ref=f8e200]: Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat.
+        - generic [ref=f8e201]:
+          - generic [ref=f8e202]: 13 min
+          - progressbar "Signed Distance Fields progress" [ref=f8e203]
+          - generic [ref=f8e206]: 8%
+    - generic [ref=f8e207]:
+      - generic [ref=f8e208]:
+        - heading "Netcode" [level=2] [ref=f8e209]
+        - generic [ref=f8e210]: "1"
+        - separator [ref=f8e211]
+      - generic [ref=f8e214]:
+        - link "Client-Side Prediction and Server Reconciliation" [ref=f8e215] [cursor=pointer]:
+          - /url: /topic/client-prediction
+        - paragraph [ref=f8e216]: Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu.
+        - generic [ref=f8e217]:
+          - generic [ref=f8e218]: 17 min
+          - progressbar "Client-Side Prediction and Server Reconciliation progress" [ref=f8e219]
+          - generic [ref=f8e221]: 0%
+    - generic [ref=f8e222]:
+      - generic [ref=f8e223]:
+        - heading "Tooling" [level=2] [ref=f8e224]
+        - generic [ref=f8e225]: "1"
+        - separator [ref=f8e226]
+      - generic [ref=f8e229]:
+        - link "Hot-Reloading an Asset Pipeline" [ref=f8e230] [cursor=pointer]:
+          - /url: /topic/hot-reload-assets
+        - paragraph [ref=f8e231]: Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt.
+        - generic [ref=f8e232]:
+          - generic [ref=f8e233]: 12 min
+          - progressbar "Hot-Reloading an Asset Pipeline progress" [ref=f8e234]
+          - generic [ref=f8e236]: 0%

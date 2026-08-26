@@ -20,9 +20,9 @@ const STATUS_TEXT: Record<NonNullable<BootLine["status"]>, string> = {
 
 const STATUS_CLASS: Record<NonNullable<BootLine["status"]>, string> = {
   ok: "text-primary crt-glow-soft",
-  warn: "text-foreground/90",
+  warn: "text-terminal-ink",
   fail: "text-destructive",
-  skip: "text-foreground/60",
+  skip: "text-terminal-ink-dim",
 }
 
 type BootLogProps = Omit<React.ComponentProps<"div">, "children"> & {
@@ -86,7 +86,7 @@ function BootLog({
       <div aria-hidden="true" className="flex flex-col">
         {lines.slice(0, visible).map((line, index) => (
           <div key={`${line.label}-${index}`} className="flex gap-2">
-            <span className="shrink-0 text-primary/80">
+            <span className="shrink-0 text-terminal-chrome">
               [{line.status ? STATUS_TEXT[line.status] : "······"}]
             </span>
             <span

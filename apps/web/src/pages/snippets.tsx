@@ -74,7 +74,7 @@ export function Snippets() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-2">
           <AsciiBanner text="SNIPPETS" size="default" />
-          <p className="text-xs text-foreground/75">
+          <p className="text-xs text-terminal-ink">
             {snippets.length} fragments. Press <Kbd>ctrl</Kbd>
             <Kbd>k</Kbd> to search.
           </p>
@@ -150,7 +150,7 @@ export function Snippets() {
                             <span className="text-xs font-medium">
                               {snippet.title}
                             </span>
-                            <span className="text-[0.72rem] leading-relaxed text-foreground/70">
+                            <span className="text-[0.72rem] leading-relaxed text-terminal-ink-dim">
                               {snippet.description}
                             </span>
                           </div>
@@ -203,7 +203,7 @@ export function Snippets() {
                         </div>
 
                         {/* Long lines scroll inside this box, never the page. */}
-                        <ScrollArea className="w-full border-t border-border/60 pt-2">
+                        <ScrollArea className="w-full border-t border-terminal-rule pt-2">
                           <pre className="overflow-x-auto font-mono text-[0.72rem] leading-relaxed">
                             {snippet.source}
                           </pre>

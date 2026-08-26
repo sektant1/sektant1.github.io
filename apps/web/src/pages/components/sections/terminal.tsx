@@ -29,7 +29,7 @@ export const terminal: SectionMap = {
   "ascii-banner": () => (
     <div className="flex w-full max-w-lg flex-col gap-4">
       <Row label="fonts">
-        <span className="text-xs text-foreground/50">
+        <span className="text-xs text-terminal-ink-dim">
           Slant, Standard, Small, Big, Banner3
         </span>
       </Row>
@@ -100,7 +100,7 @@ export const terminal: SectionMap = {
           <div className="p-3 text-xs">status: {status}</div>
         </div>
       ))}
-      <span className="text-xs text-foreground/50">
+      <span className="text-xs text-terminal-ink-dim">
         Every frame on this page is a TerminalFrame.
       </span>
     </div>
@@ -140,7 +140,7 @@ export const terminal: SectionMap = {
     <div className="h-48 w-full max-w-md overflow-hidden border border-border">
       <SidebarProvider className="min-h-0">
         <Sidebar collapsible="none" className="w-40">
-          <div className="p-3 font-mono text-xs text-foreground/70">
+          <div className="p-3 font-mono text-xs text-terminal-ink-dim">
             The shell's own sidebar is the live example.
           </div>
         </Sidebar>

@@ -196,7 +196,7 @@ export const overlays: SectionMap = {
   "context-menu": () => (
     <Row label="right-click">
       <ContextMenuTrigger>
-        <div className="flex h-16 w-56 items-center justify-center border border-dashed border-border text-xs text-foreground/60">
+        <div className="flex h-16 w-56 items-center justify-center border border-dashed border-border text-xs text-terminal-ink-dim">
           Right-click here
         </div>
         <ContextMenu>

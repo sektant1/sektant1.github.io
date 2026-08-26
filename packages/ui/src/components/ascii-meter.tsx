@@ -7,7 +7,7 @@ const meterVariants = cva("font-mono whitespace-pre tabular-nums", {
   variants: {
     tone: {
       default: "text-primary crt-glow-soft",
-      muted: "text-primary/85",
+      muted: "text-terminal-chrome",
       warning: "text-destructive",
     },
     size: {
@@ -71,7 +71,7 @@ function AsciiMeter({
       </span>
       <span aria-hidden="true" className="shrink-0">
         [{"#".repeat(filled)}
-        <span className="text-muted-foreground/60">
+        <span className="text-terminal-ink-faint">
           {".".repeat(cells - filled)}
         </span>
         ]

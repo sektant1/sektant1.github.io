@@ -184,7 +184,7 @@ export const layout: SectionMap = {
           Toggle the panel
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <span className="text-xs text-foreground/70">
+          <span className="text-xs text-terminal-ink-dim">
             Hidden until expanded.
           </span>
         </CollapsibleContent>
