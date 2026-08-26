@@ -1,13 +1,3 @@
-import {
-  IconBook,
-  IconChecklist,
-  IconCode,
-  IconComponents,
-  IconNotebook,
-  IconSchool,
-  IconSend,
-  IconTargetArrow,
-} from "@tabler/icons-react"
 import { RouterProvider as AriaRouterProvider } from "react-aria-components"
 import { Outlet, useHref, useLocation, useNavigate } from "react-router"
 import { Separator } from "@workspace/ui/components/separator"
@@ -15,49 +5,44 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar"
 
+import { NavTree, type NavNode } from "@/layout/nav-tree"
 import { ThemeToggle } from "@/layout/theme-toggle"
 
-const NAV = [
+const TREE: NavNode[] = [
   {
-    label: "Learn",
-    items: [
-      { title: "Codex", href: "/", icon: IconBook },
-      { title: "Courses", href: "/courses", icon: IconSchool },
-      { title: "Practice", href: "/practice", icon: IconTargetArrow },
+    dir: "learn",
+    children: [
+      { label: "codex", href: "/" },
+      { label: "courses", href: "/courses" },
+      { label: "practice", href: "/practice" },
     ],
   },
   {
-    label: "Workspace",
-    items: [
-      { title: "Tasks", href: "/tasks", icon: IconChecklist },
-      { title: "Notes", href: "/notes", icon: IconNotebook },
-      { title: "Snippets", href: "/snippets", icon: IconCode },
+    dir: "workspace",
+    children: [
+      { label: "tasks", href: "/tasks" },
+      { label: "notes", href: "/notes" },
+      { label: "snippets", href: "/snippets" },
     ],
   },
   {
-    label: "Toolkit",
-    items: [
-      { title: "Components", href: "/components", icon: IconComponents },
-      { title: "Submit", href: "/submit", icon: IconSend },
+    dir: "toolkit",
+    children: [
+      { label: "components", href: "/components" },
+      { label: "submit", href: "/submit" },
     ],
   },
 ]
 
-function isActiveHref(pathname: string, href: string) {
-  if (href === "/") return pathname === "/"
-  return pathname === href || pathname.startsWith(`${href}/`)
+// Shown in the header rule, so the current location reads like a path.
+function toPath(pathname: string) {
+  return pathname === "/" ? "~/codex" : `~${pathname}`
 }
 
 export function AppShell() {
@@ -69,51 +54,41 @@ export function AppShell() {
     // so links navigate client-side instead of reloading the document.
     <AriaRouterProvider navigate={navigate} useHref={useHref}>
       <SidebarProvider>
-        <Sidebar collapsible="icon">
-          <SidebarHeader>
-            <div className="flex items-center gap-2 px-2 py-1.5">
-              <div className="flex size-6 shrink-0 items-center justify-center bg-primary font-mono text-[11px] font-semibold text-primary-foreground">
+        <Sidebar>
+          <SidebarHeader className="p-0 pt-3">
+            <div className="flex items-center gap-2 px-3 pb-2">
+              <span
+                aria-hidden="true"
+                className="flex size-5 shrink-0 items-center justify-center bg-primary font-mono text-[10px] font-semibold text-primary-foreground"
+              >
                 SK
-              </div>
-              <span className="truncate font-mono text-xs font-semibold tracking-wide text-primary uppercase crt-glow group-data-[collapsible=icon]:hidden">
-                SKT Codex
+              </span>
+              <span className="truncate font-mono text-xs font-semibold tracking-wide text-primary uppercase crt-glow">
+                skt codex
               </span>
             </div>
           </SidebarHeader>
-          <SidebarContent>
-            {NAV.map((group) => (
-              <SidebarGroup key={group.label}>
-                <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {group.items.map((item) => (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                          href={item.href}
-                          tooltip={item.title}
-                          isActive={isActiveHref(pathname, item.href)}
-                        >
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            ))}
+
+          <SidebarContent className="px-1">
+            <NavTree tree={TREE} root="codex" branch="local" />
           </SidebarContent>
-          <SidebarFooter>
-            <div className="px-2 py-1 font-mono text-[10px] text-primary/70 group-data-[collapsible=icon]:hidden">
-              skt-ui-toolkit
+
+          <SidebarFooter className="p-0">
+            <div className="border-t border-border/60 px-3 py-1.5">
+              <span className="font-mono text-[10px] tracking-widest text-primary/60">
+                :NERDTREE
+              </span>
             </div>
           </SidebarFooter>
         </Sidebar>
+
         <SidebarInset>
           <header className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-2 border-b bg-background px-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-4" />
-            <div id="shell-breadcrumb" className="min-w-0 flex-1" />
+            <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-foreground/50">
+              {toPath(pathname)}
+            </span>
             <ThemeToggle />
           </header>
           <div className="min-w-0 flex-1 p-4 md:p-6">

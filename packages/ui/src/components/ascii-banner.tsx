@@ -61,7 +61,10 @@ type AsciiBannerProps = Omit<React.ComponentProps<"div">, "children"> &
   VariantProps<typeof bannerVariants> & {
     text: string
     font?: AsciiBannerFont
-    /** Adds scanlines, or scanlines plus a chromatic split on hover. */
+    /**
+     * "scanlines" is the CRT line pattern alone. "glitch" adds a chromatic
+     * split that fires on its own every few seconds, and holds while hovered.
+     */
     effect?: "none" | "scanlines" | "glitch"
   }
 
@@ -112,7 +115,8 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60"
+              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60",
+              "motion-safe:animate-[ascii-glitch-b_7s_ease-in-out_infinite]"
             )}
           >
             {art}
@@ -133,8 +137,30 @@ function AsciiBanner({
           }}
         />
       ) : null}
+      {effect === "glitch" ? <style>{GLITCH_KEYFRAMES}</style> : null}
     </div>
   )
 }
+
+// Long quiet stretches with two brief tears, so the banner reads as a stable
+// display that occasionally drops sync rather than as a constant animation.
+const GLITCH_KEYFRAMES = `
+@keyframes ascii-glitch-a {
+  0%, 86%, 100% { opacity: 0; transform: translate(2px, -1px); }
+  87% { opacity: 0.75; transform: translate(5px, -1px); }
+  89% { opacity: 0.4; transform: translate(-3px, 1px); }
+  91% { opacity: 0; transform: translate(2px, -1px); }
+  96% { opacity: 0.6; transform: translate(4px, 0); }
+  98% { opacity: 0; transform: translate(2px, -1px); }
+}
+@keyframes ascii-glitch-b {
+  0%, 86%, 100% { opacity: 0; transform: translate(-2px, 1px); }
+  87% { opacity: 0.65; transform: translate(-5px, 1px); }
+  89% { opacity: 0.35; transform: translate(3px, -1px); }
+  91% { opacity: 0; transform: translate(-2px, 1px); }
+  96% { opacity: 0.5; transform: translate(-4px, 0); }
+  98% { opacity: 0; transform: translate(-2px, 1px); }
+}
+`
 
 export { AsciiBanner, bannerVariants }
