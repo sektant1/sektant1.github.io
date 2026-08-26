@@ -8,6 +8,7 @@ import { Notes } from "@/pages/notes"
 import { Snippets } from "@/pages/snippets"
 import { Practice } from "@/pages/practice"
 import { Stub } from "@/pages/stub"
+import { Submit } from "@/pages/submit"
 import { Tasks } from "@/pages/tasks"
 import { Topic } from "@/pages/topic"
 
@@ -23,7 +24,7 @@ export const routes: RouteObject[] = [
       { path: "/notes", element: <Notes /> },
       { path: "/snippets", element: <Snippets /> },
       { path: "/practice", element: <Practice /> },
-      { path: "/submit", element: <Stub name="Submit" /> },
+      { path: "/submit", element: <Submit /> },
       { path: "/components", element: <Stub name="Components" /> },
     ],
   },
