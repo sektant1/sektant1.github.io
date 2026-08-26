@@ -219,14 +219,12 @@ export function Topic() {
         <TabsContent id="references" className="pt-4">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Source</TableHead>
-                <TableHead className="w-24 text-end">Link</TableHead>
-              </TableRow>
+              <TableHead isRowHeader>Source</TableHead>
+              <TableHead className="w-24 text-end">Link</TableHead>
             </TableHeader>
             <TableBody>
               {topic.references.map((reference) => (
-                <TableRow key={reference.href}>
+                <TableRow key={reference.href} id={reference.href}>
                   <TableCell className="text-xs">{reference.label}</TableCell>
                   <TableCell className="text-end">
                     <a

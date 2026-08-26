@@ -135,29 +135,36 @@ export function Tasks() {
           >
             {group.items.length ? (
               <Table>
+                {/* react-aria's TableHeader takes Columns directly — a Row
+                    here makes the collection see one column, not five. */}
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-10" />
-                    <TableHead>Task</TableHead>
-                    <TableHead className="w-28">Area</TableHead>
-                    <TableHead className="w-28">Due</TableHead>
-                    <TableHead className="w-10" />
-                  </TableRow>
+                  <TableHead className="w-10">
+                    <span className="sr-only">Done</span>
+                  </TableHead>
+                  <TableHead isRowHeader>Task</TableHead>
+                  <TableHead className="w-28">Area</TableHead>
+                  <TableHead className="w-28">Due</TableHead>
+                  <TableHead className="w-10">
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
                 </TableHeader>
                 <TableBody>
                   {group.items.map((task) => (
-                    <ContextMenuTrigger key={task.id}>
-                      <TableRow>
-                        <TableCell>
-                          <Checkbox
-                            aria-label={`Mark ${task.title} complete`}
-                            isSelected={task.state === "done"}
-                            onChange={(selected) =>
-                              setState(task.id, selected ? "done" : "todo")
-                            }
-                          />
-                        </TableCell>
-                        <TableCell className="min-w-0">
+                    <TableRow key={task.id} id={task.id}>
+                      <TableCell>
+                        <Checkbox
+                          aria-label={`Mark ${task.title} complete`}
+                          isSelected={task.state === "done"}
+                          onChange={(selected) =>
+                            setState(task.id, selected ? "done" : "todo")
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="min-w-0">
+                        {/* react-aria's Table is a collection: rows must be
+                              direct children of TableBody, so the context menu
+                              wraps the cell's content instead of the row. */}
+                        <ContextMenuTrigger>
                           <span
                             className={
                               task.state === "done"
@@ -176,81 +183,80 @@ export function Tasks() {
                               task.title
                             )}
                           </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className="font-mono text-[10px]"
-                          >
-                            {task.area}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="font-mono text-[10px]">
-                          {task.due ? (
-                            isOverdue(task) ? (
-                              <Badge
-                                variant="destructive"
-                                className="font-mono text-[10px]"
+                          <ContextMenu>
+                            {TASK_STATES.map((state) => (
+                              <ContextMenuItem
+                                key={state}
+                                onAction={() => setState(task.id, state)}
                               >
-                                {task.due}
-                              </Badge>
-                            ) : (
-                              <span className="opacity-70">{task.due}</span>
-                            )
-                          ) : (
-                            <span className="opacity-30">—</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {/* The context menu is not reachable by keyboard or
-                              touch, so the same actions get a real trigger. */}
-                          <DropdownMenuTrigger>
-                            <Button
-                              variant="ghost"
-                              size="icon-xs"
-                              aria-label={`Actions for ${task.title}`}
+                                Move to {STATE_LABEL[state]}
+                              </ContextMenuItem>
+                            ))}
+                            <ContextMenuSeparator />
+                            <ContextMenuItem
+                              onAction={() => setPendingDelete(task)}
                             >
-                              <IconDotsVertical />
-                            </Button>
-                            <DropdownMenu>
-                              {TASK_STATES.map((state) => (
-                                <DropdownMenuItem
-                                  key={state}
-                                  onAction={() => setState(task.id, state)}
-                                >
-                                  Move to {STATE_LABEL[state]}
-                                </DropdownMenuItem>
-                              ))}
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onAction={() => setPendingDelete(task)}
-                              >
-                                <IconTrash />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenu>
-                          </DropdownMenuTrigger>
-                        </TableCell>
-                      </TableRow>
-
-                      <ContextMenu>
-                        {TASK_STATES.map((state) => (
-                          <ContextMenuItem
-                            key={state}
-                            onAction={() => setState(task.id, state)}
-                          >
-                            Move to {STATE_LABEL[state]}
-                          </ContextMenuItem>
-                        ))}
-                        <ContextMenuSeparator />
-                        <ContextMenuItem
-                          onAction={() => setPendingDelete(task)}
+                              <IconTrash />
+                              Delete
+                            </ContextMenuItem>
+                          </ContextMenu>
+                        </ContextMenuTrigger>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className="font-mono text-[10px]"
                         >
-                          <IconTrash />
-                          Delete
-                        </ContextMenuItem>
-                      </ContextMenu>
-                    </ContextMenuTrigger>
+                          {task.area}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-mono text-[10px]">
+                        {task.due ? (
+                          isOverdue(task) ? (
+                            <Badge
+                              variant="destructive"
+                              className="font-mono text-[10px]"
+                            >
+                              {task.due}
+                            </Badge>
+                          ) : (
+                            <span className="opacity-70">{task.due}</span>
+                          )
+                        ) : (
+                          <span className="opacity-30">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {/* The context menu is not reachable by keyboard or
+                              touch, so the same actions get a real trigger. */}
+                        <DropdownMenuTrigger>
+                          <Button
+                            variant="ghost"
+                            size="icon-xs"
+                            aria-label={`Actions for ${task.title}`}
+                          >
+                            <IconDotsVertical />
+                          </Button>
+                          <DropdownMenu>
+                            {TASK_STATES.map((state) => (
+                              <DropdownMenuItem
+                                key={state}
+                                onAction={() => setState(task.id, state)}
+                              >
+                                Move to {STATE_LABEL[state]}
+                              </DropdownMenuItem>
+                            ))}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onAction={() => setPendingDelete(task)}
+                            >
+                              <IconTrash />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenu>
+                        </DropdownMenuTrigger>
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>
