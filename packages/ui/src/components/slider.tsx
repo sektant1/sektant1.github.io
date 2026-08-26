@@ -25,7 +25,7 @@ function Slider<T extends SliderValue = SliderValue>({
   return (
     <SliderPrimitive
       className={cn(
-        "group relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col",
+        "group relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-40 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col",
         className
       )}
       data-slot="slider"
@@ -36,11 +36,11 @@ function Slider<T extends SliderValue = SliderValue>({
           <>
             <SliderTrack
               data-slot="slider-track"
-              className="relative grow overflow-hidden rounded-none bg-muted select-none data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+              className="relative grow overflow-hidden rounded-none bg-muted select-none data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1"
             >
               <SliderFill
                 data-slot="slider-range"
-                className="absolute bg-primary select-none data-horizontal:h-full data-vertical:w-full"
+                className="absolute bg-primary select-none data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
               />
             </SliderTrack>
             {state.values.map((_, index) => (
@@ -48,7 +48,7 @@ function Slider<T extends SliderValue = SliderValue>({
                 data-slot="slider-thumb"
                 key={index}
                 index={index}
-                className="relative block size-3 shrink-0 rounded-none border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none group-data-horizontal:top-[50%] group-data-vertical:start-[50%] after:absolute after:-inset-2 hover:ring-1 focus-visible:ring-1 focus-visible:outline-hidden active:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                className="relative block size-3 shrink-0 rounded-none border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none group-data-[orientation=horizontal]:top-[50%] group-data-[orientation=vertical]:start-[50%] after:absolute after:-inset-2 hover:ring-1 focus-visible:ring-1 focus-visible:outline-hidden active:ring-1 disabled:pointer-events-none disabled:opacity-50"
               />
             ))}
           </>
