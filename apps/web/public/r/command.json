@@ -4,7 +4,9 @@
   "title": "Command",
   "description": "Command component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "dialog",
+    "input-group"
   ],
   "files": [
     {

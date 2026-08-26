@@ -4,7 +4,8 @@
   "title": "Toggle Group",
   "description": "Toggle Group component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "toggle"
   ],
   "files": [
     {

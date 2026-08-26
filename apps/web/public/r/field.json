@@ -4,7 +4,9 @@
   "title": "Field",
   "description": "Field component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "label",
+    "separator"
   ],
   "files": [
     {

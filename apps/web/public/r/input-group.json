@@ -4,7 +4,10 @@
   "title": "Input Group",
   "description": "Input Group component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "button",
+    "input",
+    "textarea"
   ],
   "files": [
     {

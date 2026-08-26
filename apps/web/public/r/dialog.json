@@ -4,7 +4,8 @@
   "title": "Dialog",
   "description": "Dialog component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "button"
   ],
   "files": [
     {

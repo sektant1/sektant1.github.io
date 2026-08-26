@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scramble-text",
+  "title": "Scramble Text",
+  "description": "Scramble Text component, themed for skt-ui-toolkit.",
+  "registryDependencies": [
+    "skt-theme"
+  ],
+  "files": [
+    {
+      "path": "packages/ui/src/components/scramble-text.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@workspace/ui/lib/utils\"\nimport { usePrefersReducedMotion } from \"@workspace/ui/hooks/use-reduced-motion\"\n\nconst NOISE = \"!<>-_\\\\/[]{}—=+*^?#________\"\n\ntype ScrambleTextProps = Omit<React.ComponentProps<\"span\">, \"children\"> & {\n  text: string\n  /** Milliseconds per character resolved. */\n  speed?: number\n  /** Re-run whenever the pointer enters. */\n  scrambleOnHover?: boolean\n}\n\n/**\n * Resolves text out of noise, one character at a time. The final string is\n * always in the DOM for assistive tech; only the visible layer scrambles.\n *\n * Under prefers-reduced-motion the text renders resolved immediately.\n */\nfunction ScrambleText({\n  text,\n  speed = 28,\n  scrambleOnHover = false,\n  className,\n  ...props\n}: ScrambleTextProps) {\n  const reduceMotion = usePrefersReducedMotion()\n  const [run, setRun] = React.useState(0)\n  const [resolved, setResolved] = React.useState(0)\n\n  // Reset during render when the run changes, rather than from an effect —\n  // an effect would set state during commit and cascade a second render.\n  const [seenRun, setSeenRun] = React.useState(run)\n  if (seenRun !== run) {\n    setSeenRun(run)\n    setResolved(0)\n  }\n\n  React.useEffect(() => {\n    if (reduceMotion) return\n\n    const id = setInterval(() => {\n      setResolved((current) => {\n        if (current >= text.length) {\n          clearInterval(id)\n          return current\n        }\n        return current + 1\n      })\n    }, speed)\n\n    return () => clearInterval(id)\n  }, [text, speed, reduceMotion, run])\n\n  const display = reduceMotion ? text : scramble(text, resolved)\n\n  return (\n    <span\n      data-slot=\"scramble-text\"\n      className={cn(\"font-mono\", className)}\n      onPointerEnter={scrambleOnHover ? () => setRun((n) => n + 1) : undefined}\n      {...props}\n    >\n      <span className=\"sr-only\">{text}</span>\n      <span aria-hidden=\"true\">{display}</span>\n    </span>\n  )\n}\n\nfunction scramble(text: string, resolved: number) {\n  let out = \"\"\n  for (let i = 0; i < text.length; i++) {\n    if (i < resolved || text[i] === \" \") {\n      out += text[i]\n      continue\n    }\n    // Index by position and progress so neighbouring characters differ\n    // without a random source, which would break server rendering.\n    const seed = (i * 31 + resolved * 17) % NOISE.length\n    out += NOISE[seed]\n  }\n  return out\n}\n\nexport { ScrambleText }\n",
+      "type": "registry:ui",
+      "target": "components/ui/scramble-text.tsx"
+    },
+    {
+      "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+      "content": "import * as React from \"react\"\n\nconst QUERY = \"(prefers-reduced-motion: reduce)\"\n\nfunction subscribe(onStoreChange: () => void) {\n  const mql = window.matchMedia(QUERY)\n  mql.addEventListener(\"change\", onStoreChange)\n  return () => mql.removeEventListener(\"change\", onStoreChange)\n}\n\n/**\n * True when the viewer has asked for reduced motion. Animated components\n * should render a meaningful static state rather than simply freezing.\n */\nexport function usePrefersReducedMotion() {\n  return React.useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false\n  )\n}\n",
+      "type": "registry:hook",
+      "target": "hooks/use-reduced-motion.ts"
+    }
+  ],
+  "type": "registry:ui"
+}

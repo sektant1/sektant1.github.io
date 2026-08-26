@@ -9,15 +9,41 @@ export function componentNames(dir) {
     .sort()
 }
 
-export function buildItem(name, dependenciesByComponent) {
+/**
+ * Finds the workspace modules a component imports. A component that imports a
+ * sibling or a hook is not self-contained, so the registry item has to carry
+ * that along or the consumer installs code that cannot resolve its imports.
+ *
+ * `lib/utils` is excluded: `shadcn init` writes it into every project.
+ */
+export function parseImports(source) {
+  const components = new Set()
+  const hooks = new Set()
+
+  const pattern = /["']@workspace\/ui\/(components|hooks)\/([\w-]+)["']/g
+  let match
+  while ((match = pattern.exec(source)) !== null) {
+    if (match[1] === "components") components.add(match[2])
+    else hooks.add(match[2])
+  }
+
+  return { components: [...components], hooks: [...hooks] }
+}
+
+export function buildItem(name, dependenciesByComponent, imports) {
   const dependencies = dependenciesByComponent[name]
+  const { components = [], hooks = [] } = imports ?? {}
   const title = toTitle(name)
+
   return {
     name,
     type: "registry:ui",
     title,
     description: `${title} component, themed for skt-ui-toolkit.`,
-    registryDependencies: [THEME_ITEM_NAME],
+    registryDependencies: [
+      THEME_ITEM_NAME,
+      ...components.filter((component) => component !== name),
+    ],
     ...(dependencies ? { dependencies } : {}),
     files: [
       {
@@ -25,6 +51,11 @@ export function buildItem(name, dependenciesByComponent) {
         type: "registry:ui",
         target: `components/ui/${name}.tsx`,
       },
+      ...hooks.map((hook) => ({
+        path: `packages/ui/src/hooks/${hook}.ts`,
+        type: "registry:hook",
+        target: `hooks/${hook}.ts`,
+      })),
     ],
   }
 }

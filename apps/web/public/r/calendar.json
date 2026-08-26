@@ -4,7 +4,9 @@
   "title": "Calendar",
   "description": "Calendar component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "button",
+    "select"
   ],
   "files": [
     {

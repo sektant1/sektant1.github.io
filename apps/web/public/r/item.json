@@ -4,7 +4,8 @@
   "title": "Item",
   "description": "Item component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "separator"
   ],
   "files": [
     {

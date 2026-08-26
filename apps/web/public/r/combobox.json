@@ -4,7 +4,9 @@
   "title": "Combobox",
   "description": "Combobox component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "button",
+    "input-group"
   ],
   "files": [
     {

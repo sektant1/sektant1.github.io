@@ -166,13 +166,67 @@
       "title": "Alert Dialog",
       "description": "Alert Dialog component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button"
       ],
       "files": [
         {
           "path": "packages/ui/src/components/alert-dialog.tsx",
           "type": "registry:ui",
           "target": "components/ui/alert-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-banner",
+      "type": "registry:ui",
+      "title": "Ascii Banner",
+      "description": "Ascii Banner component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/ascii-banner.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ascii-banner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-meter",
+      "type": "registry:ui",
+      "title": "Ascii Meter",
+      "description": "Ascii Meter component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/ascii-meter.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ascii-meter.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-solid",
+      "type": "registry:ui",
+      "title": "Ascii Solid",
+      "description": "Ascii Solid component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/ascii-solid.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ascii-solid.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-reduced-motion.ts"
         }
       ]
     },
@@ -225,6 +279,27 @@
       ]
     },
     {
+      "name": "boot-log",
+      "type": "registry:ui",
+      "title": "Boot Log",
+      "description": "Boot Log component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/boot-log.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/boot-log.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-reduced-motion.ts"
+        }
+      ]
+    },
+    {
       "name": "breadcrumb",
       "type": "registry:ui",
       "title": "Breadcrumb",
@@ -262,7 +337,8 @@
       "title": "Button Group",
       "description": "Button Group component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "separator"
       ],
       "files": [
         {
@@ -278,7 +354,9 @@
       "title": "Calendar",
       "description": "Calendar component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button",
+        "select"
       ],
       "files": [
         {
@@ -310,7 +388,8 @@
       "title": "Carousel",
       "description": "Carousel component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button"
       ],
       "dependencies": [
         "embla-carousel-react"
@@ -380,7 +459,9 @@
       "title": "Combobox",
       "description": "Combobox component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button",
+        "input-group"
       ],
       "files": [
         {
@@ -396,7 +477,9 @@
       "title": "Command",
       "description": "Command component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "dialog",
+        "input-group"
       ],
       "files": [
         {
@@ -423,12 +506,29 @@
       ]
     },
     {
+      "name": "crt-screen",
+      "type": "registry:ui",
+      "title": "Crt Screen",
+      "description": "Crt Screen component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/crt-screen.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/crt-screen.tsx"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
       "description": "Dialog component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button"
       ],
       "files": [
         {
@@ -492,7 +592,9 @@
       "title": "Field",
       "description": "Field component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "label",
+        "separator"
       ],
       "files": [
         {
@@ -540,7 +642,10 @@
       "title": "Input Group",
       "description": "Input Group component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button",
+        "input",
+        "textarea"
       ],
       "files": [
         {
@@ -575,7 +680,8 @@
       "title": "Item",
       "description": "Item component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "separator"
       ],
       "files": [
         {
@@ -639,7 +745,8 @@
       "title": "Pagination",
       "description": "Pagination component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button"
       ],
       "files": [
         {
@@ -717,6 +824,27 @@
       ]
     },
     {
+      "name": "scramble-text",
+      "type": "registry:ui",
+      "title": "Scramble Text",
+      "description": "Scramble Text component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/scramble-text.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/scramble-text.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-reduced-motion.ts"
+        }
+      ]
+    },
+    {
       "name": "scroll-area",
       "type": "registry:ui",
       "title": "Scroll Area",
@@ -738,7 +866,8 @@
       "title": "Select",
       "description": "Select component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "input-group"
       ],
       "files": [
         {
@@ -770,7 +899,8 @@
       "title": "Sheet",
       "description": "Sheet component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button"
       ],
       "files": [
         {
@@ -786,13 +916,24 @@
       "title": "Sidebar",
       "description": "Sidebar component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "button",
+        "input",
+        "separator",
+        "sheet",
+        "skeleton",
+        "tooltip"
       ],
       "files": [
         {
           "path": "packages/ui/src/components/sidebar.tsx",
           "type": "registry:ui",
           "target": "components/ui/sidebar.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-mobile.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-mobile.ts"
         }
       ]
     },
@@ -913,6 +1054,22 @@
       ]
     },
     {
+      "name": "terminal-frame",
+      "type": "registry:ui",
+      "title": "Terminal Frame",
+      "description": "Terminal Frame component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/terminal-frame.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/terminal-frame.tsx"
+        }
+      ]
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
@@ -950,7 +1107,8 @@
       "title": "Toggle Group",
       "description": "Toggle Group component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "toggle"
       ],
       "files": [
         {

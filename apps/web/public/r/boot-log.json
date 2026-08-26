@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "boot-log",
+  "title": "Boot Log",
+  "description": "Boot Log component, themed for skt-ui-toolkit.",
+  "registryDependencies": [
+    "skt-theme"
+  ],
+  "files": [
+    {
+      "path": "packages/ui/src/components/boot-log.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@workspace/ui/lib/utils\"\nimport { usePrefersReducedMotion } from \"@workspace/ui/hooks/use-reduced-motion\"\n\nexport type BootLine = {\n  label: string\n  status?: \"ok\" | \"warn\" | \"fail\" | \"skip\"\n  detail?: string\n}\n\nconst STATUS_TEXT: Record<NonNullable<BootLine[\"status\"]>, string> = {\n  ok: \"  OK  \",\n  warn: \" WARN \",\n  fail: \" FAIL \",\n  skip: \" SKIP \",\n}\n\nconst STATUS_CLASS: Record<NonNullable<BootLine[\"status\"]>, string> = {\n  ok: \"text-primary\",\n  warn: \"text-muted-foreground\",\n  fail: \"text-destructive\",\n  skip: \"text-muted-foreground/60\",\n}\n\ntype BootLogProps = Omit<React.ComponentProps<\"div\">, \"children\"> & {\n  lines: BootLine[]\n  /** Milliseconds between lines. */\n  interval?: number\n  /** Keep a blinking block after the last line. */\n  cursor?: boolean\n}\n\n/**\n * Prints lines one at a time, like a POST sequence. All lines are present for\n * assistive tech from the first render; only the visual reveal is staged, and\n * prefers-reduced-motion shows the whole log at once.\n */\nfunction BootLog({\n  lines,\n  interval = 140,\n  cursor = true,\n  className,\n  ...props\n}: BootLogProps) {\n  const reduceMotion = usePrefersReducedMotion()\n  const [shown, setShown] = React.useState(0)\n  // Derived rather than stored, so no effect writes state during commit.\n  const visible = reduceMotion ? lines.length : shown\n\n  // Reset during render when the log changes, rather than from an effect.\n  const [seenLines, setSeenLines] = React.useState(lines)\n  if (seenLines !== lines) {\n    setSeenLines(lines)\n    setShown(0)\n  }\n\n  React.useEffect(() => {\n    if (reduceMotion) return\n\n    const id = setInterval(() => {\n      setShown((current) => {\n        if (current >= lines.length) {\n          clearInterval(id)\n          return current\n        }\n        return current + 1\n      })\n    }, interval)\n\n    return () => clearInterval(id)\n  }, [lines, interval, reduceMotion])\n\n  return (\n    <div\n      data-slot=\"boot-log\"\n      className={cn(\"font-mono text-[11px] leading-relaxed\", className)}\n      {...props}\n    >\n      <span className=\"sr-only\">\n        {lines.map((line) => `${line.label} ${line.status ?? \"\"}`).join(\". \")}\n      </span>\n\n      <div aria-hidden=\"true\" className=\"flex flex-col\">\n        {lines.slice(0, visible).map((line, index) => (\n          <div key={`${line.label}-${index}`} className=\"flex gap-2\">\n            <span className=\"text-muted-foreground shrink-0\">\n              [{line.status ? STATUS_TEXT[line.status] : \"······\"}]\n            </span>\n            <span\n              className={cn(\n                \"min-w-0 truncate\",\n                line.status ? STATUS_CLASS[line.status] : \"text-foreground\"\n              )}\n            >\n              {line.label}\n            </span>\n            {line.detail ? (\n              <span className=\"text-muted-foreground ms-auto hidden shrink-0 sm:inline\">\n                {line.detail}\n              </span>\n            ) : null}\n          </div>\n        ))}\n\n        {cursor && visible >= lines.length ? (\n          <span className=\"text-primary motion-safe:animate-pulse\">█</span>\n        ) : null}\n      </div>\n    </div>\n  )\n}\n\n\nexport { BootLog }\n",
+      "type": "registry:ui",
+      "target": "components/ui/boot-log.tsx"
+    },
+    {
+      "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+      "content": "import * as React from \"react\"\n\nconst QUERY = \"(prefers-reduced-motion: reduce)\"\n\nfunction subscribe(onStoreChange: () => void) {\n  const mql = window.matchMedia(QUERY)\n  mql.addEventListener(\"change\", onStoreChange)\n  return () => mql.removeEventListener(\"change\", onStoreChange)\n}\n\n/**\n * True when the viewer has asked for reduced motion. Animated components\n * should render a meaningful static state rather than simply freezing.\n */\nexport function usePrefersReducedMotion() {\n  return React.useSyncExternalStore(\n    subscribe,\n    () => window.matchMedia(QUERY).matches,\n    () => false\n  )\n}\n",
+      "type": "registry:hook",
+      "target": "hooks/use-reduced-motion.ts"
+    }
+  ],
+  "type": "registry:ui"
+}

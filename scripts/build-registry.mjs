@@ -1,6 +1,11 @@
 import { readFileSync, writeFileSync } from "node:fs"
 import { argv, exit } from "node:process"
-import { buildItem, componentNames, diffManifest } from "./lib/registry-items.mjs"
+import {
+  buildItem,
+  componentNames,
+  diffManifest,
+  parseImports,
+} from "./lib/registry-items.mjs"
 
 const COMPONENTS_DIR = "packages/ui/src/components"
 const MANIFEST_PATH = "registry.json"
@@ -30,7 +35,16 @@ const manifest = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
   name: "skt-ui-toolkit",
   homepage: "https://<GITHUB_USER>.github.io/skt-ui-toolkit",
-  items: [themeItem, ...names.map((name) => buildItem(name, DEPENDENCIES))],
+  items: [
+    themeItem,
+    ...names.map((name) =>
+      buildItem(
+        name,
+        DEPENDENCIES,
+        parseImports(readFileSync(`${COMPONENTS_DIR}/${name}.tsx`, "utf8"))
+      )
+    ),
+  ],
 }
 
 if (argv.includes("--check")) {

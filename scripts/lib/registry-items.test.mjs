@@ -1,5 +1,30 @@
 import { describe, expect, it } from "vitest"
-import { buildItem, diffManifest } from "./registry-items.mjs"
+import { buildItem, diffManifest, parseImports } from "./registry-items.mjs"
+
+describe("parseImports", () => {
+  it("finds sibling components a component depends on", () => {
+    const source = `import { Button } from "@workspace/ui/components/button"`
+    expect(parseImports(source)).toEqual({ components: ["button"], hooks: [] })
+  })
+
+  it("finds hooks a component depends on", () => {
+    const source = `import { useIsMobile } from "@workspace/ui/hooks/use-mobile"`
+    expect(parseImports(source)).toEqual({ components: [], hooks: ["use-mobile"] })
+  })
+
+  it("ignores lib/utils, which shadcn init already provides", () => {
+    const source = `import { cn } from "@workspace/ui/lib/utils"`
+    expect(parseImports(source)).toEqual({ components: [], hooks: [] })
+  })
+
+  it("deduplicates repeated imports of the same module", () => {
+    const source = `
+      import { Button } from "@workspace/ui/components/button"
+      import { buttonVariants } from "@workspace/ui/components/button"
+    `
+    expect(parseImports(source).components).toEqual(["button"])
+  })
+})
 
 describe("buildItem", () => {
   it("names the item after the component file", () => {
@@ -8,6 +33,27 @@ describe("buildItem", () => {
 
   it("always depends on the theme so consumers cannot miss it", () => {
     expect(buildItem("accordion", {}).registryDependencies).toEqual(["skt-theme"])
+  })
+
+  it("declares sibling components it imports, so they install too", () => {
+    const item = buildItem("sidebar", {}, { components: ["button"], hooks: [] })
+    expect(item.registryDependencies).toEqual(["skt-theme", "button"])
+  })
+
+  it("ships the hook files it imports alongside the component", () => {
+    const item = buildItem("sidebar", {}, { components: [], hooks: ["use-mobile"] })
+    expect(item.files).toEqual([
+      {
+        path: "packages/ui/src/components/sidebar.tsx",
+        type: "registry:ui",
+        target: "components/ui/sidebar.tsx",
+      },
+      {
+        path: "packages/ui/src/hooks/use-mobile.ts",
+        type: "registry:hook",
+        target: "hooks/use-mobile.ts",
+      },
+    ])
   })
 
   it("points at the component's source path with type registry:ui", () => {

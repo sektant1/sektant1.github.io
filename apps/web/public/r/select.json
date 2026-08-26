@@ -4,7 +4,8 @@
   "title": "Select",
   "description": "Select component, themed for skt-ui-toolkit.",
   "registryDependencies": [
-    "skt-theme"
+    "skt-theme",
+    "input-group"
   ],
   "files": [
     {
