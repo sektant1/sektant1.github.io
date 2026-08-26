@@ -16,6 +16,8 @@ type AsciiSolidProps = Omit<React.ComponentProps<"pre">, "children"> & {
   columns?: number
   /** Radians per second. */
   speed?: number
+  /** Adds the phosphor bloom and an occasional sync tear. */
+  effect?: "none" | "glitch"
 }
 
 /**
@@ -29,6 +31,7 @@ function AsciiSolid({
   shape = "sphere",
   columns = 64,
   speed = 0.6,
+  effect = "glitch",
   className,
   ...props
 }: AsciiSolidProps) {
@@ -66,7 +69,9 @@ function AsciiSolid({
       // twice as tall as it is wide — the aspect the renderer assumes when it
       // derives rows from columns. Any other leading skews the solid.
       className={cn(
-        "overflow-hidden font-mono text-[0.5rem] leading-[1.2] text-primary select-none crt-glow-soft",
+        "overflow-hidden font-mono text-[0.5rem] leading-[1.2] text-primary select-none",
+        effect === "glitch" &&
+          "crt-bloom motion-safe:animate-[crt-jitter_9s_ease-in-out_infinite]",
         className
       )}
       {...props}

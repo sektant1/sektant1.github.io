@@ -88,7 +88,7 @@ export function Topic() {
       </Breadcrumb>
 
       <header className="flex min-w-0 flex-col gap-3">
-        <AsciiBanner text={topic.area} size="sm" tone="muted" effect="none" />
+        <AsciiBanner text={topic.area} size="sm" tone="muted" />
         <h1 className="text-xl font-medium text-balance">{topic.title}</h1>
         <p className="max-w-prose text-xs leading-relaxed text-muted-foreground">
           {topic.summary}

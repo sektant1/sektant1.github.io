@@ -73,7 +73,7 @@ export function Codex() {
               <ScrambleText text="terminal // sektant systems" speed={18} />
             </div>
 
-            <AsciiBanner text="SKT CODEX" effect="glitch" size="lg" />
+            <AsciiBanner text="SKT CODEX" size="lg" />
 
             <p className="max-w-prose text-xs leading-relaxed text-foreground/80">
               <ScrambleText
