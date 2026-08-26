@@ -111,18 +111,27 @@ Mono read as technical tooling, which is what this content is.
 
 The site has two layers:
 
-**1. The product layer** — four routes, each chosen to exercise a different component
-cluster under realistic density:
+**1. The product layer** — the site is a simplified boot.dev for graphics and engine
+work: you follow a course, work through tasks, keep notes, and collect snippets. Eight
+routes, each chosen to exercise a different component cluster under realistic density:
 
 | Route | Content | Components exercised |
 | --- | --- | --- |
-| `/` — Codex | Topic index: Rendering, Physics, ECS, Shaders, Netcode, Tooling | sidebar, navigation-menu, card, item, badge, avatar, separator, empty, skeleton |
+| `/` — Codex | Topic index and progress dashboard | sidebar, navigation-menu, card, item, badge, avatar, separator, empty, skeleton, chart |
 | `/topic/:slug` — Reference article | A technique write-up with code, math, caveats, and related links | breadcrumb, tabs, accordion, alert, table, kbd, tooltip, hover-card, scroll-area, collapsible, progress |
+| `/courses` — Course tracks | Guided tracks broken into modules and lessons, with completion state | accordion, progress, card, aspect-ratio, carousel, hover-card, avatar, badge |
+| `/courses/:slug` — Lesson runner | One lesson: brief, editor pane, checks | resizable, tabs, alert, spinner, kbd, scroll-area, progress |
+| `/tasks` — Task board | The learner's own queue, grouped by state, with per-row actions | checkbox, table, context-menu, dropdown-menu, menubar, alert-dialog, toggle, badge, skeleton |
+| `/notes` — Notebook | Personal notes per topic, edited in a split pane | resizable, textarea, scroll-area, collapsible, sheet, separator, kbd, empty |
+| `/snippets` — Snippet library | Reusable code fragments, searchable, tagged by language | command, tabs, scroll-area, kbd, tooltip, dropdown-menu, badge, popover |
 | `/practice` — Exercise catalogue | Filterable list of practice problems by topic, difficulty, and language | input, combobox, select, checkbox, radio-group, slider, toggle-group, pagination, command, popover, native-select |
 | `/submit` — Contribute a resource | Form to submit a technique or exercise to the codex | form, field, label, textarea, input-group, input-otp, switch, button-group, dialog, drawer, sheet, sonner, calendar, spinner |
 
 Content is static fixture data in `apps/web/src/data/` — enough to make the layouts
-honest (long titles, empty states, overflow), with no backend.
+honest (long titles, empty states, overflow), with no backend. State that a learner would
+expect to persist — task completion, note bodies, lesson progress — is held in React state
+and mirrored to `localStorage`, wrapped in `try`/`catch` so private-mode browsing degrades
+to session-only rather than crashing. There is no server and none is planned for v1.
 
 **2. The verification layer** — `/components`, an exhaustive index rendering every
 registered item with every variant and size it exposes, plus a copyable
@@ -132,8 +141,8 @@ proves composition; this layer proves coverage. Both are required.
 
 A dark/light toggle persists in `localStorage` and applies across both layers.
 
-Routing uses `react-router` — four product routes plus the verification index is past
-what conditional rendering handles cleanly, and consumers of the registry will use a
+Routing uses `react-router` — eight product routes plus the verification index is well
+past what conditional rendering handles cleanly, and consumers of the registry will use a
 router anyway.
 
 ## Data flow
