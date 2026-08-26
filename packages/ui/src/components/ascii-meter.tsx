@@ -11,7 +11,7 @@ const meterVariants = cva("font-mono whitespace-pre tabular-nums", {
       warning: "text-destructive",
     },
     size: {
-      sm: "text-[10px]",
+      sm: "text-[0.65rem]",
       default: "text-xs",
     },
   },

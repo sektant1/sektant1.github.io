@@ -100,7 +100,7 @@ export function Tasks() {
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+          <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
             Group
           </span>
           <ToggleGroup
@@ -120,7 +120,7 @@ export function Tasks() {
           Overdue only
         </Toggle>
 
-        <span className="ms-auto font-mono text-[10px] tabular-nums opacity-60">
+        <span className="ms-auto font-mono text-[0.65rem] tabular-nums opacity-60">
           {visible.length} of {tasks.length}
         </span>
       </div>
@@ -205,17 +205,17 @@ export function Tasks() {
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className="font-mono text-[10px]"
+                          className="font-mono text-[0.65rem]"
                         >
                           {task.area}
                         </Badge>
                       </TableCell>
-                      <TableCell className="font-mono text-[10px]">
+                      <TableCell className="font-mono text-[0.65rem]">
                         {task.due ? (
                           isOverdue(task) ? (
                             <Badge
                               variant="destructive"
-                              className="font-mono text-[10px]"
+                              className="font-mono text-[0.65rem]"
                             >
                               {task.due}
                             </Badge>

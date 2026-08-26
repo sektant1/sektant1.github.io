@@ -192,7 +192,7 @@ export function Notes() {
 
                     return (
                       <Collapsible key={area} defaultExpanded>
-                        <CollapsibleTrigger className="w-full font-mono text-[10px] tracking-widest uppercase opacity-60">
+                        <CollapsibleTrigger className="w-full font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
                           {area} ({inArea.length})
                         </CollapsibleTrigger>
                         <CollapsibleContent>
@@ -204,8 +204,8 @@ export function Notes() {
                                   onClick={() => setSelectedId(note.id)}
                                   className={
                                     note.id === selectedId
-                                      ? "w-full truncate bg-muted px-2 py-1.5 text-start text-[11px] text-primary"
-                                      : "w-full truncate px-2 py-1.5 text-start text-[11px] hover:bg-muted/50"
+                                      ? "w-full truncate bg-muted px-2 py-1.5 text-start text-[0.72rem] text-primary"
+                                      : "w-full truncate px-2 py-1.5 text-start text-[0.72rem] hover:bg-muted/50"
                                   }
                                 >
                                   {note.title}
@@ -220,7 +220,7 @@ export function Notes() {
 
                   {filtered.length === 0 ? (
                     <Empty className="py-8">
-                      <EmptyTitle className="font-mono text-[11px] uppercase">
+                      <EmptyTitle className="font-mono text-[0.72rem] uppercase">
                         No match
                       </EmptyTitle>
                     </Empty>
@@ -243,8 +243,8 @@ export function Notes() {
                     aria-live="polite"
                     className={
                       saved
-                        ? "font-mono text-[10px] text-primary opacity-100 transition-opacity"
-                        : "font-mono text-[10px] opacity-0 transition-opacity"
+                        ? "font-mono text-[0.65rem] text-primary opacity-100 transition-opacity"
+                        : "font-mono text-[0.65rem] opacity-0 transition-opacity"
                     }
                   >
                     saved
@@ -265,7 +265,7 @@ export function Notes() {
                           Details
                         </span>
                         <Separator />
-                        <dl className="flex flex-col gap-2 text-[11px]">
+                        <dl className="flex flex-col gap-2 text-[0.72rem]">
                           <div className="flex justify-between gap-4">
                             <dt className="opacity-60">Area</dt>
                             <dd>{selected.area}</dd>
@@ -299,7 +299,7 @@ export function Notes() {
                   value={selected.body}
                   onChange={(event) => updateBody(event.target.value)}
                   placeholder="Start typing…"
-                  className="min-h-[18rem] flex-1 resize-none font-mono text-[11px] leading-relaxed"
+                  className="min-h-[18rem] flex-1 resize-none font-mono text-[0.72rem] leading-relaxed"
                 />
               </div>
             ) : (

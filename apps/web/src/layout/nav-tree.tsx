@@ -30,7 +30,7 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
   return (
     <nav
       aria-label="Site sections"
-      className="flex min-w-0 flex-col gap-3 font-mono text-[11px]"
+      className="flex min-w-0 flex-col gap-3 font-mono text-[0.72rem]"
     >
       <div className="flex flex-col gap-0.5 px-2">
         <div className="flex items-center gap-1.5">
@@ -45,7 +45,7 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
         <span className="truncate tracking-wide text-primary crt-glow">
           ~/{root.toUpperCase()}
         </span>
-        <span className="text-[10px] text-foreground/40 italic">
+        <span className="text-[0.65rem] text-foreground/40 italic">
           // {branch}
         </span>
       </div>
@@ -77,7 +77,7 @@ export function NavTree({ tree, root, branch = "local" }: NavTreeProps) {
                   {isCollapsed ? "▸" : "▾"}
                 </span>
                 <span className="truncate text-primary">{node.dir}/</span>
-                <span className="shrink-0 text-[10px] text-foreground/35">
+                <span className="shrink-0 text-[0.65rem] text-foreground/35">
                   ({node.children.length})
                 </span>
               </button>

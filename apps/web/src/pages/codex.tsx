@@ -68,7 +68,7 @@ export function Codex() {
 
         <div className="grid gap-6 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:p-8">
           <div className="flex min-w-0 flex-col gap-4">
-            <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-primary/90 uppercase crt-glow-soft">
+            <div className="flex items-center gap-2 font-mono text-[0.65rem] tracking-[0.3em] text-primary/90 uppercase crt-glow-soft">
               <span className="size-1 bg-primary shadow-[0_0_6px_var(--primary)]" />
               <ScrambleText text="terminal // sektant systems" speed={18} />
             </div>
@@ -100,7 +100,7 @@ export function Codex() {
               />
             </div>
 
-            <div className="flex items-center gap-1.5 font-mono text-[11px] text-primary crt-glow">
+            <div className="flex items-center gap-1.5 font-mono text-[0.72rem] text-primary crt-glow">
               <span className="text-foreground/75">~/codex</span>
               <span>$</span>
               <ScrambleText text="resume --last" speed={40} />
@@ -141,7 +141,7 @@ export function Codex() {
                         aria-label={`${topic.title} progress`}
                       />
                     </div>
-                    <span className="shrink-0 font-mono text-[10px] text-foreground/75 tabular-nums">
+                    <span className="shrink-0 font-mono text-[0.65rem] text-foreground/75 tabular-nums">
                       {topic.progress}%
                     </span>
                     <IconArrowRight className="size-3.5 shrink-0 text-foreground/75" />
@@ -180,7 +180,7 @@ export function Codex() {
               </h2>
               <Badge
                 variant="outline"
-                className="shrink-0 font-mono text-[10px]"
+                className="shrink-0 font-mono text-[0.65rem]"
               >
                 {areaTopics.length}
               </Badge>
@@ -200,11 +200,11 @@ export function Codex() {
                     >
                       {topic.title}
                     </Link>
-                    <p className="line-clamp-3 text-[11px] leading-relaxed text-foreground/75">
+                    <p className="line-clamp-3 text-[0.72rem] leading-relaxed text-foreground/75">
                       {topic.summary}
                     </p>
                     <div className="mt-auto flex items-center gap-2 pt-1">
-                      <span className="font-mono text-[10px] text-foreground/75">
+                      <span className="font-mono text-[0.65rem] text-foreground/75">
                         {topic.readingMinutes} min
                       </span>
                       <Progress
@@ -212,7 +212,7 @@ export function Codex() {
                         className="h-0.5 flex-1"
                         aria-label={`${topic.title} progress`}
                       />
-                      <span className="font-mono text-[10px] text-foreground/75 tabular-nums">
+                      <span className="font-mono text-[0.65rem] text-foreground/75 tabular-nums">
                         {topic.progress}%
                       </span>
                     </div>

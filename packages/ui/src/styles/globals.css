@@ -131,7 +131,7 @@
   --shadow-xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 8px 10px -1px hsl(0 0% 10.1961% / 0.00);
   --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
   --tracking-normal: 0em;
-  --spacing: 0.22rem;
+  --spacing: 0.25rem;
   --shadow-offset-x: 0px;
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
@@ -191,7 +191,7 @@
   --shadow-offset-x: 0px;
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
-  --spacing: 0.22rem;
+  --spacing: 0.25rem;
 }
 
 @theme inline {
@@ -266,6 +266,13 @@
 }
 
 @layer base {
+  /* The theme's type scale is built for dense terminal UI, which lands too
+     small at a 16px root. Everything downstream is in rem, so one value here
+     scales the whole system coherently. */
+  html {
+    font-size: 17px;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }

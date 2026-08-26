@@ -95,7 +95,7 @@ export function Topic() {
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
-          <Badge variant="outline" className="font-mono text-[10px]">
+          <Badge variant="outline" className="font-mono text-[0.65rem]">
             {topic.area}
           </Badge>
 
@@ -119,14 +119,14 @@ export function Topic() {
               className="h-1 flex-1"
               aria-label="Reading progress"
             />
-            <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+            <span className="font-mono text-[0.65rem] text-muted-foreground tabular-nums">
               {topic.progress}%
             </span>
           </div>
         </div>
 
         {prerequisites.length ? (
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 text-[0.72rem]">
             <span className="font-mono tracking-widest text-muted-foreground uppercase">
               Requires
             </span>
@@ -143,7 +143,7 @@ export function Topic() {
                     <span className="text-xs font-medium">
                       {prerequisite.title}
                     </span>
-                    <span className="text-[11px] leading-relaxed text-muted-foreground">
+                    <span className="text-[0.72rem] leading-relaxed text-muted-foreground">
                       {prerequisite.summary}
                     </span>
                   </div>
@@ -161,7 +161,10 @@ export function Topic() {
           <TabsTrigger id="reference">Reference</TabsTrigger>
           <TabsTrigger id="caveats">
             Caveats
-            <Badge variant="secondary" className="ms-1.5 font-mono text-[10px]">
+            <Badge
+              variant="secondary"
+              className="ms-1.5 font-mono text-[0.65rem]"
+            >
               {topic.caveats.length}
             </Badge>
           </TabsTrigger>
@@ -190,7 +193,7 @@ export function Topic() {
                   {/* The code scrolls inside its own box; the page never
                       scrolls sideways because of a long line. */}
                   <ScrollArea className="w-full">
-                    <pre className="overflow-x-auto p-3 font-mono text-[11px] leading-relaxed">
+                    <pre className="overflow-x-auto p-3 font-mono text-[0.72rem] leading-relaxed">
                       {section.code.source}
                     </pre>
                   </ScrollArea>
@@ -199,7 +202,7 @@ export function Topic() {
             </section>
           ))}
 
-          <footer className="flex items-center gap-2 pt-2 text-[11px] text-muted-foreground">
+          <footer className="flex items-center gap-2 pt-2 text-[0.72rem] text-muted-foreground">
             Press <Kbd>j</Kbd> and <Kbd>k</Kbd> to move between sections.
           </footer>
         </TabsContent>
@@ -231,7 +234,7 @@ export function Topic() {
                       href={reference.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-primary underline underline-offset-4"
+                      className="inline-flex items-center gap-1 text-[0.72rem] text-primary underline underline-offset-4"
                     >
                       open
                       <IconExternalLink className="size-3" />

@@ -104,7 +104,7 @@ export function Snippets() {
                       <span className="truncate">{snippet.title}</span>
                       <Badge
                         variant="outline"
-                        className="ms-auto font-mono text-[10px]"
+                        className="ms-auto font-mono text-[0.65rem]"
                       >
                         {snippet.language}
                       </Badge>
@@ -150,7 +150,7 @@ export function Snippets() {
                             <span className="text-xs font-medium">
                               {snippet.title}
                             </span>
-                            <span className="text-[11px] leading-relaxed text-foreground/70">
+                            <span className="text-[0.72rem] leading-relaxed text-foreground/70">
                               {snippet.description}
                             </span>
                           </div>
@@ -204,7 +204,7 @@ export function Snippets() {
 
                         {/* Long lines scroll inside this box, never the page. */}
                         <ScrollArea className="w-full border-t border-border/60 pt-2">
-                          <pre className="overflow-x-auto font-mono text-[11px] leading-relaxed">
+                          <pre className="overflow-x-auto font-mono text-[0.72rem] leading-relaxed">
                             {snippet.source}
                           </pre>
                         </ScrollArea>

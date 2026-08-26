@@ -125,7 +125,7 @@ export function Lesson() {
       <header className="flex flex-wrap items-center gap-3">
         <h1 className="text-lg font-medium">{lesson.title}</h1>
         {isComplete ? (
-          <Badge className="gap-1 font-mono text-[10px]">
+          <Badge className="gap-1 font-mono text-[0.65rem]">
             <IconCheck className="size-3" />
             complete
           </Badge>
@@ -136,7 +136,7 @@ export function Lesson() {
             className="h-1 flex-1"
             aria-label={`${course.title} progress`}
           />
-          <span className="font-mono text-[10px] tabular-nums opacity-70">
+          <span className="font-mono text-[0.65rem] tabular-nums opacity-70">
             {done}/{lessons.length}
           </span>
         </div>
@@ -149,7 +149,7 @@ export function Lesson() {
         <ResizablePanel defaultSize={38} minSize={22}>
           <ScrollArea className="h-full">
             <div className="flex flex-col gap-3 p-4">
-              <span className="font-mono text-[10px] tracking-widest text-primary uppercase crt-glow-soft">
+              <span className="font-mono text-[0.65rem] tracking-widest text-primary uppercase crt-glow-soft">
                 Brief
               </span>
               <p className="text-xs leading-relaxed">{lesson.brief}</p>
@@ -167,7 +167,7 @@ export function Lesson() {
                 Checks
                 <Badge
                   variant="secondary"
-                  className="ms-1.5 font-mono text-[10px]"
+                  className="ms-1.5 font-mono text-[0.65rem]"
                 >
                   {lesson.checks.length}
                 </Badge>
@@ -185,20 +185,20 @@ export function Lesson() {
                     [lesson.slug]: event.target.value,
                   }))
                 }
-                className="min-h-[16rem] resize-none font-mono text-[11px] leading-relaxed"
+                className="min-h-[16rem] resize-none font-mono text-[0.72rem] leading-relaxed"
               />
               <div className="flex flex-wrap items-center gap-2">
                 <Button size="sm" onPress={run} isDisabled={running}>
                   {running ? <Spinner /> : <IconPlayerPlay />}
                   {running ? "Running" : "Run checks"}
                 </Button>
-                <span className="flex items-center gap-1.5 text-[10px] opacity-60">
+                <span className="flex items-center gap-1.5 text-[0.65rem] opacity-60">
                   <Kbd>ctrl</Kbd>
                   <Kbd>enter</Kbd>
                 </span>
                 {/* Say plainly that nothing is executed. A green tick that
                     implies real evaluation would be a lie. */}
-                <span className="ms-auto text-[10px] text-foreground/60">
+                <span className="ms-auto text-[0.65rem] text-foreground/60">
                   Checks are illustrative — no code is executed.
                 </span>
               </div>
@@ -221,7 +221,7 @@ export function Lesson() {
         status={isComplete ? "online" : "standby"}
         footer={`${course.title} — ${lesson.lang}`}
       >
-        <div className="p-3 font-mono text-[11px] text-foreground/70">
+        <div className="p-3 font-mono text-[0.72rem] text-foreground/70">
           {lesson.slug}
         </div>
       </TerminalFrame>

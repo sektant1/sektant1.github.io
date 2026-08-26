@@ -146,7 +146,7 @@ export function Practice() {
                       <span className="truncate">{exercise.title}</span>
                       <Badge
                         variant="outline"
-                        className="ms-auto font-mono text-[10px]"
+                        className="ms-auto font-mono text-[0.65rem]"
                       >
                         {exercise.area}
                       </Badge>
@@ -174,7 +174,7 @@ export function Practice() {
             />
 
             <div className="flex flex-col gap-1.5">
-              <span className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+              <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
                 Area
               </span>
               <ToggleGroup
@@ -203,7 +203,7 @@ export function Practice() {
             }}
             className="gap-1.5"
           >
-            <span className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
               Difficulty
             </span>
             {/* RadioGroupItem is the indicator alone — the label is a
@@ -222,7 +222,7 @@ export function Practice() {
 
           <div className="flex flex-col gap-3">
             <fieldset className="flex flex-col gap-1.5">
-              <legend className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+              <legend className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
                 Language
               </legend>
               <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -249,10 +249,10 @@ export function Practice() {
             </fieldset>
 
             <div className="flex items-center justify-between gap-2">
-              <span className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+              <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
                 Max minutes
               </span>
-              <span className="font-mono text-[10px] tabular-nums opacity-70">
+              <span className="font-mono text-[0.65rem] tabular-nums opacity-70">
                 {maxMinutes}m
               </span>
             </div>
@@ -289,13 +289,16 @@ export function Practice() {
                       <span className="text-xs font-medium">
                         {exercise.title}
                       </span>
-                      <span className="line-clamp-1 text-[11px] text-foreground/60">
+                      <span className="line-clamp-1 text-[0.72rem] text-foreground/60">
                         {exercise.summary}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="font-mono text-[10px]">
+                    <Badge
+                      variant="outline"
+                      className="font-mono text-[0.65rem]"
+                    >
                       {exercise.area}
                     </Badge>
                   </TableCell>
@@ -306,15 +309,15 @@ export function Practice() {
                           ? "destructive"
                           : "secondary"
                       }
-                      className="font-mono text-[10px]"
+                      className="font-mono text-[0.65rem]"
                     >
                       {exercise.difficulty}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-[10px]">
+                  <TableCell className="font-mono text-[0.65rem]">
                     {exercise.languages.join(", ")}
                   </TableCell>
-                  <TableCell className="text-end font-mono text-[10px] tabular-nums">
+                  <TableCell className="text-end font-mono text-[0.65rem] tabular-nums">
                     {exercise.estimateMinutes}m
                   </TableCell>
                 </TableRow>
@@ -331,7 +334,7 @@ export function Practice() {
                 />
               </PaginationItem>
               <PaginationItem>
-                <span className="px-2 font-mono text-[11px] tabular-nums">
+                <span className="px-2 font-mono text-[0.72rem] tabular-nums">
                   {currentPage} / {pageCount}
                 </span>
               </PaginationItem>

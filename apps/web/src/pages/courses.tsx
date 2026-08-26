@@ -63,7 +63,7 @@ export function Courses() {
                       className="border-b border-border/60"
                     >
                       <div className="flex size-full items-end bg-gradient-to-br from-primary/25 to-transparent p-3">
-                        <span className="font-mono text-[10px] tracking-widest uppercase opacity-70">
+                        <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-70">
                           {course.level}
                         </span>
                       </div>
@@ -72,7 +72,7 @@ export function Courses() {
                       <span className="text-xs font-medium text-balance">
                         {course.title}
                       </span>
-                      <span className="line-clamp-2 text-[11px] leading-relaxed text-foreground/70">
+                      <span className="line-clamp-2 text-[0.72rem] leading-relaxed text-foreground/70">
                         {course.summary}
                       </span>
                     </div>
@@ -108,7 +108,7 @@ export function Courses() {
                       </span>
                       <Badge
                         variant="outline"
-                        className="shrink-0 font-mono text-[10px]"
+                        className="shrink-0 font-mono text-[0.65rem]"
                       >
                         {course.area}
                       </Badge>
@@ -119,7 +119,7 @@ export function Courses() {
                         className="h-0.5 w-32"
                         aria-label={`${course.title} progress`}
                       />
-                      <span className="font-mono text-[10px] tabular-nums opacity-70">
+                      <span className="font-mono text-[0.65rem] tabular-nums opacity-70">
                         {done}/{lessons.length}
                       </span>
                     </div>
@@ -130,7 +130,7 @@ export function Courses() {
                   <div className="flex flex-col gap-4 pt-1">
                     {course.modules.map((mod) => (
                       <div key={mod.title} className="flex flex-col gap-1.5">
-                        <span className="font-mono text-[10px] tracking-widest uppercase opacity-60">
+                        <span className="font-mono text-[0.65rem] tracking-widest uppercase opacity-60">
                           {mod.title}
                         </span>
                         <ul className="flex flex-col">
@@ -139,7 +139,7 @@ export function Courses() {
                               <HoverCardTrigger>
                                 <Link
                                   to={`/courses/${lesson.slug}`}
-                                  className="flex items-center gap-2 px-2 py-1.5 text-[11px] transition-colors hover:bg-muted/50"
+                                  className="flex items-center gap-2 px-2 py-1.5 text-[0.72rem] transition-colors hover:bg-muted/50"
                                 >
                                   <span
                                     aria-hidden="true"
@@ -158,7 +158,7 @@ export function Courses() {
                                   </span>
                                 </Link>
                                 <HoverCard className="max-w-xs">
-                                  <span className="text-[11px] leading-relaxed text-foreground/80">
+                                  <span className="text-[0.72rem] leading-relaxed text-foreground/80">
                                     {lesson.brief}
                                   </span>
                                 </HoverCard>

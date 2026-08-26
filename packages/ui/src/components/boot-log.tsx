@@ -76,7 +76,7 @@ function BootLog({
   return (
     <div
       data-slot="boot-log"
-      className={cn("font-mono text-[11px] leading-relaxed", className)}
+      className={cn("font-mono text-[0.72rem] leading-relaxed", className)}
       {...props}
     >
       <span className="sr-only">

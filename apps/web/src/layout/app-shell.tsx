@@ -59,7 +59,7 @@ export function AppShell() {
             <div className="flex items-center gap-2 px-3 pb-2">
               <span
                 aria-hidden="true"
-                className="flex size-5 shrink-0 items-center justify-center bg-primary font-mono text-[10px] font-semibold text-primary-foreground"
+                className="flex size-5 shrink-0 items-center justify-center bg-primary font-mono text-[0.65rem] font-semibold text-primary-foreground"
               >
                 SK
               </span>
@@ -75,7 +75,7 @@ export function AppShell() {
 
           <SidebarFooter className="p-0">
             <div className="border-t border-border/60 px-3 py-1.5">
-              <span className="font-mono text-[10px] tracking-widest text-primary/60">
+              <span className="font-mono text-[0.65rem] tracking-widest text-primary/60">
                 :NERDTREE
               </span>
             </div>
@@ -86,7 +86,7 @@ export function AppShell() {
           <header className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-2 border-b bg-background px-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-4" />
-            <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-foreground/50">
+            <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem] text-foreground/50">
               {toPath(pathname)}
             </span>
             <ThemeToggle />
