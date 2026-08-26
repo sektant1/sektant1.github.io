@@ -78,14 +78,9 @@ export function Codex() {
           </span>
         </div>
 
-        <div className="grid gap-8 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:p-8">
+        <div className="grid gap-8 p-5 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:items-start md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
           <div className="flex min-w-0 flex-col gap-5">
             <AsciiBanner text="SKT CODEX" size="lg" />
-
-            <p className="max-w-[46ch] text-xs leading-relaxed text-terminal-ink">
-              Reference and practice for real-time graphics, engine architecture
-              and network simulation.
-            </p>
 
             <div className="flex flex-col gap-2 border-t border-terminal-rule pt-4">
               <AsciiMeter
@@ -117,10 +112,10 @@ export function Codex() {
 
           {/* Captioned like a figure, because it is one: the sphere is a live
               renderer, not an ornament. */}
-          <figure className="mx-auto hidden shrink-0 flex-col items-center gap-2 md:flex">
-            <AsciiSolid shape="sphere" columns={48} />
+          <figure className="mx-auto hidden w-full min-w-0 flex-col items-center gap-2 md:flex">
+            <AsciiSolid shape="sphere" columns={80} />
             <figcaption className="font-mono text-[0.6rem] tracking-widest text-terminal-ink-faint uppercase">
-              fig. 1 — lambert sphere, 48 col
+              fig. 1 — lambert sphere, 80 col
             </figcaption>
           </figure>
         </div>

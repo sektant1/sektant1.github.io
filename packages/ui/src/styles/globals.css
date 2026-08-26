@@ -70,9 +70,14 @@
 }
 
 @utility ascii-fit-text {
-  font-size: min(
-    var(--ascii-max, 1rem),
-    calc(100cqi / (var(--ascii-cols, 40) * 0.6))
+  /* Clamped, not just capped: a container-query container cannot size itself
+     from its own content, so a parent that leaves the width to the content
+     resolves 100cqi to 0 — and the art silently disappears. The floor keeps
+     it visible while the layout is fixed. */
+  font-size: clamp(
+    0.3rem,
+    calc(100cqi / (var(--ascii-cols, 40) * 0.6)),
+    var(--ascii-max, 1rem)
   );
 }
 

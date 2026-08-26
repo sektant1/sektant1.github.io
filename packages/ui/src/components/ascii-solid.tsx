@@ -79,7 +79,7 @@ function AsciiSolid({
         style={
           {
             "--ascii-cols": columns,
-            "--ascii-max": "0.6rem",
+            "--ascii-max": "1rem",
           } as React.CSSProperties
         }
         {...props}

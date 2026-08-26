@@ -39,7 +39,7 @@ function ensureFontsRegistered() {
 }
 
 const bannerVariants = cva(
-  "w-full crt-scanfill font-mono ascii-fit-text leading-[0.95] whitespace-pre select-none",
+  "w-full pb-[0.12em] font-mono ascii-fit-text leading-[1] whitespace-pre select-none",
   {
     variants: {
       // The tone sets --ascii-ink rather than `color`: the glyph fill is a
@@ -110,7 +110,10 @@ function AsciiBanner({
       style={{ "--ascii-cols": columns, ...props.style } as React.CSSProperties}
     >
       <span className="sr-only">{text}</span>
-      <pre aria-hidden="true" className={cn(bannerVariants({ tone, size }))}>
+      <pre
+        aria-hidden="true"
+        className={cn("crt-scanfill", bannerVariants({ tone, size }))}
+      >
         {art}
       </pre>
 
@@ -120,7 +123,7 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 translate-x-[2px] -translate-y-[1px] opacity-0 mix-blend-screen [--ascii-ink:var(--destructive)] group-hover/ascii-banner:opacity-70",
+              "pointer-events-none absolute inset-0 translate-x-[2px] -translate-y-[1px] text-destructive opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-70",
               "motion-safe:animate-[crt-tear-a_7s_ease-in-out_infinite]"
             )}
           >
@@ -130,7 +133,7 @@ function AsciiBanner({
             aria-hidden="true"
             className={cn(
               bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] opacity-0 mix-blend-screen [--ascii-ink:var(--color-cyan-400)] group-hover/ascii-banner:opacity-60",
+              "pointer-events-none absolute inset-0 -translate-x-[2px] translate-y-[1px] text-cyan-400 opacity-0 mix-blend-screen group-hover/ascii-banner:opacity-60",
               "motion-safe:animate-[crt-tear-b_7s_ease-in-out_infinite]"
             )}
           >

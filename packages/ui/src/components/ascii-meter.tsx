@@ -40,7 +40,7 @@ type AsciiMeterProps = Omit<React.ComponentProps<"div">, "children"> &
 function AsciiMeter({
   label,
   value,
-  cells = 16,
+  cells = 14,
   unit,
   tone,
   size,
@@ -60,7 +60,7 @@ function AsciiMeter({
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        "flex min-w-0 items-center gap-2 overflow-hidden",
+        "flex min-w-0 flex-wrap items-center gap-x-2",
         meterVariants({ tone, size }),
         className
       )}
