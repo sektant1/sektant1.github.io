@@ -1,0 +1,250 @@
+- generic [ref=f20e3]:
+  - generic [ref=f20e6]:
+    - generic [ref=f20e7]: skt codex
+    - navigation "Site sections" [ref=f20e10]:
+      - generic [ref=f20e11]:
+        - generic [ref=f20e12]:
+          - button "learn/ (3)" [expanded] [ref=f20e13]:
+            - generic [ref=f20e14]: ▾
+            - generic [ref=f20e15]: learn/
+            - generic [ref=f20e16]: (3)
+          - list [ref=f20e17]:
+            - listitem [ref=f20e18]:
+              - generic [ref=f20e19]: ├─
+              - link "codex" [ref=f20e20] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/
+            - listitem [ref=f20e21]:
+              - generic [ref=f20e22]: ├─
+              - link "courses" [ref=f20e23] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/courses
+            - listitem [ref=f20e24]:
+              - generic [ref=f20e25]: └─
+              - link "practice" [ref=f20e26] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/practice
+        - generic [ref=f20e27]:
+          - button "workspace/ (3)" [expanded] [ref=f20e28]:
+            - generic [ref=f20e29]: ▾
+            - generic [ref=f20e30]: workspace/
+            - generic [ref=f20e31]: (3)
+          - list [ref=f20e32]:
+            - listitem [ref=f20e33]:
+              - generic [ref=f20e34]: ├─
+              - link "tasks" [ref=f20e35] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/tasks
+            - listitem [ref=f20e36]:
+              - generic [ref=f20e37]: ├─
+              - link "notes" [ref=f20e38] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/notes
+            - listitem [ref=f20e39]:
+              - generic [ref=f20e40]: └─
+              - link "snippets" [ref=f20e41] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/snippets
+        - generic [ref=f20e42]:
+          - button "toolkit/ (2)" [expanded] [ref=f20e43]:
+            - generic [ref=f20e44]: ▾
+            - generic [ref=f20e45]: toolkit/
+            - generic [ref=f20e46]: (2)
+          - list [ref=f20e47]:
+            - listitem [ref=f20e48]:
+              - generic [ref=f20e49]: ├─
+              - link "components" [ref=f20e50] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/components
+            - listitem [ref=f20e51]:
+              - generic [ref=f20e52]: └─
+              - link "submit" [ref=f20e53] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/submit
+    - button ":NERDTREE Collapse the sidebar" [ref=f20e56]:
+      - text: :NERDTREE«
+      - generic [ref=f20e57]: Collapse the sidebar
+    - button "Toggle Sidebar" [ref=f20e62]
+  - main [ref=f20e63]:
+    - generic [ref=f20e64]:
+      - generic [ref=f20e65]: ~/codex
+      - button "Change display face" [ref=f20e66]
+      - button "Dark theme. Switch to system theme" [ref=f20e67]
+    - tablist "Open buffers" [ref=f20e68]:
+      - generic [ref=f20e69]:
+        - tab "codex.md" [selected] [ref=f20e71]
+        - button "Close codex.md" [ref=f20e72]
+    - generic [ref=f20e77]:
+      - generic [ref=f20e78]:
+        - generic [ref=f20e83]:
+          - generic [ref=f20e84]: skt://codex
+          - generic [ref=f20e86]: │
+          - generic [ref=f20e87]: build 0.1.0
+          - generic [ref=f20e88]: │
+          - generic [ref=f20e89]: 8 topics
+          - generic [ref=f20e90]: │
+          - generic [ref=f20e91]: 4 tracks
+          - generic [ref=f20e93]:
+            - generic [ref=f20e94]: link established
+            - text: "!\\}^ __{*__-]+__"
+        - generic [ref=f20e95]:
+          - generic [ref=f20e96]:
+            - generic [ref=f20e97]:
+              - generic [ref=f20e98]: SKT CODEX
+              - generic [ref=f20e99]: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+              - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+              - generic: _____ __ ________ __________ ____ _______ __ / ___// //_/_ __/ / ____/ __ \/ __ \/ ____/ |/ / \__ \/ ,< / / / / / / / / / / / __/ | / ___/ / /| | / / / /___/ /_/ / /_/ / /___ / | /____/_/ |_|/_/ \____/\____/_____/_____//_/|_|
+            - generic [ref=f20e100]:
+              - progressbar "topics" [ref=f20e101]:
+                - generic [ref=f20e103]: "[##............]"
+                - generic [ref=f20e104]: 13% 1/8
+              - progressbar "lessons" [ref=f20e105]:
+                - generic [ref=f20e107]: "[###...........]"
+                - generic [ref=f20e108]: 18% of 17
+              - progressbar "snippets" [ref=f20e109]:
+                - generic [ref=f20e111]: "[##########....]"
+                - generic [ref=f20e112]: 70% indexed
+            - generic [ref=f20e113]:
+              - generic [ref=f20e114]: ~/codex
+              - generic [ref=f20e115]: $
+              - generic [ref=f20e116]:
+                - generic [ref=f20e117]: resume --last
+                - text: "!\\}^__ {*__-]"
+              - generic [ref=f20e118]: _
+          - figure "fig. 1 — lambert sphere, 80 col" [ref=f20e119]
+      - generic [ref=f20e121]:
+        - generic [ref=f20e122]:
+          - generic [ref=f20e123]:
+            - generic [ref=f20e125]: "[ resume ]"
+            - generic [ref=f20e127]: online
+          - list [ref=f20e129]:
+            - listitem [ref=f20e130]:
+              - link "Deferred Shading and the G-Buffer 62% 62%" [ref=f20e131] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/deferred-shading
+                - generic [ref=f20e135]:
+                  - generic [ref=f20e136]: Deferred Shading and the G-Buffer
+                  - progressbar "Deferred Shading and the G-Buffer progress" [ref=f20e137]
+                - generic [ref=f20e140]: 62%
+            - listitem [ref=f20e144]:
+              - link "GJK Collision Detection 24% 24%" [ref=f20e145] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/gjk-collision
+                - generic [ref=f20e149]:
+                  - generic [ref=f20e150]: GJK Collision Detection
+                  - progressbar "GJK Collision Detection progress" [ref=f20e151]
+                - generic [ref=f20e154]: 24%
+            - listitem [ref=f20e158]:
+              - link "Archetype vs Sparse Set ECS Storage 45% 45%" [ref=f20e159] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/ecs-storage
+                - generic [ref=f20e163]:
+                  - generic [ref=f20e164]: Archetype vs Sparse Set ECS Storage
+                  - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f20e165]
+                - generic [ref=f20e168]: 45%
+            - listitem [ref=f20e172]:
+              - link "Signed Distance Fields 8% 8%" [ref=f20e173] [cursor=pointer]:
+                - /url: /skt-ui-toolkit/topic/signed-distance-fields
+                - generic [ref=f20e177]:
+                  - generic [ref=f20e178]: Signed Distance Fields
+                  - progressbar "Signed Distance Fields progress" [ref=f20e179]
+                - generic [ref=f20e182]: 8%
+          - generic [ref=f20e186]: 4 open
+        - generic [ref=f20e187]:
+          - generic [ref=f20e188]:
+            - generic [ref=f20e190]: "[ sys/boot ]"
+            - generic [ref=f20e192]: online
+          - generic [ref=f20e193]: mounting /codex ok. indexing 8 reference topics ok. loading 22 practice sets ok. calibrating phosphor output ok. gpu capability probe warn. telemetry uplink skip
+          - generic [ref=f20e196]: last cold start
+      - generic [ref=f20e197]:
+        - generic [ref=f20e198]:
+          - heading "Rendering" [level=2] [ref=f20e199]
+          - generic [ref=f20e200]: "2"
+          - separator [ref=f20e201]
+        - generic [ref=f20e202]:
+          - generic [ref=f20e204]:
+            - link "Deferred Shading and the G-Buffer" [ref=f20e205] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/deferred-shading
+            - paragraph [ref=f20e206]: Lorem sit adipiscing do incididunt et aliqua minim nostrud. Elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu pariatur.
+            - generic [ref=f20e207]:
+              - generic [ref=f20e208]: 14 min
+              - progressbar "Deferred Shading and the G-Buffer progress" [ref=f20e209]
+              - generic [ref=f20e212]: 62%
+          - generic [ref=f20e214]:
+            - link "The Rendering Equation, Read Slowly" [ref=f20e215] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/rendering-equation
+            - paragraph [ref=f20e216]: Elit eiusmod ut dolore enim veniam exercitation nisi ea duis. Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt officia.
+            - generic [ref=f20e217]:
+              - generic [ref=f20e218]: 18 min
+              - progressbar "The Rendering Equation, Read Slowly progress" [ref=f20e219]
+              - generic [ref=f20e221]: 0%
+      - generic [ref=f20e222]:
+        - generic [ref=f20e223]:
+          - heading "Physics" [level=2] [ref=f20e224]
+          - generic [ref=f20e225]: "2"
+          - separator [ref=f20e226]
+        - generic [ref=f20e227]:
+          - generic [ref=f20e229]:
+            - link "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent" [ref=f20e230] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/fixed-timestep
+            - paragraph [ref=f20e231]: Labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat. Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa deserunt id lorem sit.
+            - generic [ref=f20e232]:
+              - generic [ref=f20e233]: 11 min
+              - progressbar "The Fixed Timestep Accumulator and Why Your Physics Is Frame-Rate Dependent progress" [ref=f20e234]
+              - generic [ref=f20e237]: 100%
+          - generic [ref=f20e239]:
+            - link "GJK Collision Detection" [ref=f20e240] [cursor=pointer]:
+              - /url: /skt-ui-toolkit/topic/gjk-collision
+            - paragraph [ref=f20e241]: Minim nostrud laboris ex consequat irure voluptate cillum nulla sint non culpa. Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum amet elit eiusmod ut.
+            - generic [ref=f20e242]:
+              - generic [ref=f20e243]: 16 min
+              - progressbar "GJK Collision Detection progress" [ref=f20e244]
+              - generic [ref=f20e247]: 24%
+      - generic [ref=f20e248]:
+        - generic [ref=f20e249]:
+          - heading "ECS" [level=2] [ref=f20e250]
+          - generic [ref=f20e251]: "1"
+          - separator [ref=f20e252]
+        - generic [ref=f20e255]:
+          - link "Archetype vs Sparse Set ECS Storage" [ref=f20e256] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/ecs-storage
+          - paragraph [ref=f20e257]: Nisi ea duis in velit eu pariatur occaecat proident qui mollit est ipsum. Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor labore magna ad quis.
+          - generic [ref=f20e258]:
+            - generic [ref=f20e259]: 15 min
+            - progressbar "Archetype vs Sparse Set ECS Storage progress" [ref=f20e260]
+            - generic [ref=f20e263]: 45%
+      - generic [ref=f20e264]:
+        - generic [ref=f20e265]:
+          - heading "Shaders" [level=2] [ref=f20e266]
+          - generic [ref=f20e267]: "1"
+          - separator [ref=f20e268]
+        - generic [ref=f20e271]:
+          - link "Signed Distance Fields" [ref=f20e272] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/signed-distance-fields
+          - paragraph [ref=f20e273]: Aute reprehenderit esse fugiat excepteur cupidatat sunt officia anim laborum dolor consectetur sed tempor. Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim nostrud laboris ex consequat.
+          - generic [ref=f20e274]:
+            - generic [ref=f20e275]: 13 min
+            - progressbar "Signed Distance Fields progress" [ref=f20e276]
+            - generic [ref=f20e279]: 8%
+      - generic [ref=f20e280]:
+        - generic [ref=f20e281]:
+          - heading "Netcode" [level=2] [ref=f20e282]
+          - generic [ref=f20e283]: "1"
+          - separator [ref=f20e284]
+        - generic [ref=f20e287]:
+          - link "Client-Side Prediction and Server Reconciliation" [ref=f20e288] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/client-prediction
+          - paragraph [ref=f20e289]: Cillum nulla sint non culpa deserunt id lorem sit adipiscing do incididunt et aliqua minim. Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea duis in velit eu.
+          - generic [ref=f20e290]:
+            - generic [ref=f20e291]: 17 min
+            - progressbar "Client-Side Prediction and Server Reconciliation progress" [ref=f20e292]
+            - generic [ref=f20e294]: 0%
+      - generic [ref=f20e295]:
+        - generic [ref=f20e296]:
+          - heading "Tooling" [level=2] [ref=f20e297]
+          - generic [ref=f20e298]: "1"
+          - separator [ref=f20e299]
+        - generic [ref=f20e302]:
+          - link "Hot-Reloading an Asset Pipeline" [ref=f20e303] [cursor=pointer]:
+            - /url: /skt-ui-toolkit/topic/hot-reload-assets
+          - paragraph [ref=f20e304]: Occaecat proident qui mollit est ipsum amet elit eiusmod ut dolore enim veniam exercitation nisi ea. Officia anim laborum dolor consectetur sed tempor labore magna ad quis ullamco aliquip commodo aute reprehenderit esse fugiat excepteur cupidatat sunt.
+          - generic [ref=f20e305]:
+            - generic [ref=f20e306]: 12 min
+            - progressbar "Hot-Reloading an Asset Pipeline progress" [ref=f20e307]
+            - generic [ref=f20e309]: 0%
+    - generic [ref=f20e310]:
+      - generic [ref=f20e311]: read
+      - generic [ref=f20e312]: codex.md
+      - generic [ref=f20e313]: utf-8
+      - generic [ref=f20e314]: lf
+      - generic [ref=f20e315]: dark
+      - generic [ref=f20e316]: local

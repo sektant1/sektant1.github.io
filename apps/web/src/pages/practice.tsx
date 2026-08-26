@@ -18,7 +18,6 @@ import {
   EmptyTitle,
 } from "@workspace/ui/components/empty"
 import { Input } from "@workspace/ui/components/input"
-import { Kbd } from "@workspace/ui/components/kbd"
 import {
   Pagination,
   PaginationContent,
@@ -63,17 +62,6 @@ export function Practice() {
   const [page, setPage] = React.useState(1)
   const [paletteOpen, setPaletteOpen] = React.useState(false)
 
-  React.useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault()
-        setPaletteOpen((open) => !open)
-      }
-    }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [])
-
   const filtered = exercises.filter((exercise) => {
     if (
       query &&
@@ -116,10 +104,7 @@ export function Practice() {
       <PageHeader
         title="PRACTICE"
         description={
-          <>
-            {exercises.length} exercises. Press <Kbd>ctrl</Kbd>
-            <Kbd>k</Kbd> to jump to one.
-          </>
+          <>{exercises.length} exercises, searchable from the palette.</>
         }
         actions={
           <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>

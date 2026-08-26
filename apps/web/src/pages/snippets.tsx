@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 import { Empty, EmptyTitle } from "@workspace/ui/components/empty"
-import { Kbd } from "@workspace/ui/components/kbd"
 import { Popover, PopoverTrigger } from "@workspace/ui/components/popover"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
 import {
@@ -38,17 +37,6 @@ export function Snippets() {
   const [paletteOpen, setPaletteOpen] = React.useState(false)
   const [copied, setCopied] = React.useState<string | null>(null)
   const copiedTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  React.useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault()
-        setPaletteOpen((open) => !open)
-      }
-    }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [])
 
   React.useEffect(
     () => () => {
@@ -74,10 +62,7 @@ export function Snippets() {
       <PageHeader
         title="SNIPPETS"
         description={
-          <>
-            {snippets.length} fragments. Press <Kbd>ctrl</Kbd>
-            <Kbd>k</Kbd> to search.
-          </>
+          <>{snippets.length} fragments, searchable from the palette.</>
         }
         actions={
           <PopoverTrigger isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
