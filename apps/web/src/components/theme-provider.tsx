@@ -31,6 +31,25 @@ function isTheme(value: string | null): value is Theme {
   return THEME_VALUES.includes(value as Theme)
 }
 
+// Storage throws outright in some privacy modes. A theme preference is not
+// worth crashing the app for, so a failed read means "no preference" and a
+// failed write means "this session only".
+function readStoredTheme(storageKey: string) {
+  try {
+    return localStorage.getItem(storageKey)
+  } catch {
+    return null
+  }
+}
+
+function writeStoredTheme(storageKey: string, theme: Theme) {
+  try {
+    localStorage.setItem(storageKey, theme)
+  } catch {
+    // Session-only.
+  }
+}
+
 function getSystemTheme(): ResolvedTheme {
   if (window.matchMedia(COLOR_SCHEME_QUERY).matches) {
     return "dark"
@@ -85,7 +104,7 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setThemeState] = React.useState<Theme>(() => {
-    const storedTheme = localStorage.getItem(storageKey)
+    const storedTheme = readStoredTheme(storageKey)
     if (isTheme(storedTheme)) {
       return storedTheme
     }
@@ -95,7 +114,7 @@ export function ThemeProvider({
 
   const setTheme = React.useCallback(
     (nextTheme: Theme) => {
-      localStorage.setItem(storageKey, nextTheme)
+      writeStoredTheme(storageKey, nextTheme)
       setThemeState(nextTheme)
     },
     [storageKey]
@@ -167,7 +186,7 @@ export function ThemeProvider({
                 ? "light"
                 : "dark"
 
-        localStorage.setItem(storageKey, nextTheme)
+        writeStoredTheme(storageKey, nextTheme)
         return nextTheme
       })
     }

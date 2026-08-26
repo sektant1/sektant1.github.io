@@ -6,6 +6,15 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 
+/* Tailwind's automatic source detection is rooted at the consuming app, so
+   this package's own components are outside it and must be named. */
+@source "..";
+
+/* The generated registry inlines each component's source as JSON. Tailwind
+   scans it like any other file, so stale copies of a component would keep
+   emitting classes the source no longer uses. */
+@source not "../../../../apps/web/public/r";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
