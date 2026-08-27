@@ -33,7 +33,7 @@ install: ## Install dependencies for every workspace
 
 .PHONY: clean
 clean: ## Remove build output and caches (keeps node_modules)
-	rm -rf apps/web/dist apps/hideout/.next apps/hideout/out .turbo
+	rm -rf apps/web/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
 	find . -name '*.tsbuildinfo' -not -path './node_modules/*' -delete
 
 .PHONY: reset
@@ -100,6 +100,15 @@ build-site: ## Build sektant.dev as a standalone Node server
 build-pages: ## Build sektant.dev as a static export, CMS stripped out
 	npm run build:pages --workspace hideout
 
+.PHONY: pages
+pages: ## Assemble exactly what GitHub Pages serves, into dist-pages/
+	npm run pages:build
+
+.PHONY: pages-serve
+pages-serve: pages ## Assemble the Pages artifact and serve it on :8000
+	@echo "hideout /  ·  registry /r  ·  showcase /showcase"
+	npx --yes serve dist-pages
+
 .PHONY: image
 image: ## Build the container image locally
 	docker build -f apps/hideout/Dockerfile -t hideout:local .
@@ -128,6 +137,13 @@ deploy: ## Pull the published image and restart (override with DIR=)
 	$(COMPOSE) up -d
 	docker image prune -f >/dev/null
 
+.PHONY: deploy-staging
+deploy-staging: ## Deploy the image built from development, not master
+	@test -f $(DIR)/.env || { \
+		echo "No install at $(DIR). Run scripts/install.sh first."; exit 1; }
+	HIDEOUT_IMAGE=ghcr.io/sektant1/hideout:development $(COMPOSE) pull
+	HIDEOUT_IMAGE=ghcr.io/sektant1/hideout:development $(COMPOSE) up -d
+
 .PHONY: deploy-logs
 deploy-logs: ## Follow the deployed site's logs
 	$(COMPOSE) logs -f
@@ -140,13 +156,36 @@ deploy-status: ## Show what the deployed site is running
 		'image: {{.Config.Image}}{{"\n"}}started: {{.State.StartedAt}}' hideout
 
 .PHONY: release
-release: ## Merge development into master, which publishes a new image
-	@git diff --quiet || { echo "Working tree is dirty. Commit first."; exit 1; }
+release: release-preflight ## Merge development into master, which publishes image and site
 	git checkout master
 	git pull --ff-only
 	git merge --no-ff development
 	git push
 	@echo
-	@echo "Pushed. CI is building the image; watch it with:"
+	@echo "Pushed. Release is building the image and the Pages site; watch it with:"
 	@echo "  gh run watch"
 	@echo "Then update the server with: make deploy"
+
+# Every failure below is one git would report too, but only halfway through —
+# after a checkout or a merge has already moved the working copy.
+.PHONY: release-preflight
+release-preflight: ## Check that a release can run, without changing anything
+	@git rev-parse --git-dir >/dev/null 2>&1 \
+		|| { echo "Not a git repository."; exit 1; }
+	@git diff --quiet && git diff --cached --quiet \
+		|| { echo "Working tree is dirty. Commit or stash first."; exit 1; }
+	@git remote get-url origin >/dev/null 2>&1 || { \
+		echo "No 'origin' remote. Releasing pushes to GitHub, so add one:"; \
+		echo "  git remote add origin git@github.com:sektant1/skt-ui-toolkit.git"; \
+		exit 1; }
+	@git show-ref --verify --quiet refs/heads/development || { \
+		echo "No 'development' branch. Work lands there before it reaches master:"; \
+		echo "  git switch -c development"; \
+		exit 1; }
+	@git show-ref --verify --quiet refs/heads/master \
+		|| { echo "No 'master' branch."; exit 1; }
+	@test -z "$$(git log master..development --oneline 2>/dev/null)" \
+		&& { echo "Nothing to release: development has no commits master lacks."; \
+		exit 1; } || true
+	@echo "Ready to release:"
+	@git log master..development --oneline | sed 's/^/  /'

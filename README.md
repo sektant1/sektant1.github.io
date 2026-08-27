@@ -18,7 +18,7 @@ npx shadcn@latest init
 Then add whatever you need:
 
 ```bash
-npx shadcn@latest add https://<GITHUB_USER>.github.io/skt-ui-toolkit/r/button.json
+npx shadcn@latest add https://sektant.dev/r/button.json
 ```
 
 The theme installs itself with the first component. Every component declares
@@ -28,23 +28,46 @@ shadows, and the type scale. Components that import siblings (`sidebar` pulls
 `button`, `input`, `separator`, `sheet`, `skeleton`, `tooltip` and a hook)
 declare those too.
 
-Browse everything at `/components` on the deployed site: each entry shows its
-variants and the exact `add` command.
+Browse everything at <https://sektant.dev/showcase/components>: each entry
+shows its variants and the exact `add` command.
 
-## Before the first deploy
+## What is deployed where
 
-The repository has no git remote yet, so the published URL is a placeholder.
-Replace `<GITHUB_USER>` in:
+Pages serves one artifact, assembled by `npm run pages:build` (`make pages`)
+and deployed on every push to `master`:
 
-- `apps/web/src/lib/registry-url.ts` — the single definition consumed by the app
-- `scripts/build-registry.mjs` — the `homepage` field
-- this file
+| Path         | Comes from                             |
+| ------------ | -------------------------------------- |
+| `/`          | `apps/hideout` static export, CMS off  |
+| `/r/*.json`  | the shadcn registry                    |
+| `/showcase/` | `apps/web`, the component showcase     |
 
-Then set the Pages source to **GitHub Actions** in repository settings. The
-workflow deploys on push to `master`.
+The hideout sits at the root because the custom domain belongs to it — its
+`public/CNAME` is what keeps `sektant.dev` pointed here across deploys. Serve
+the exact artifact locally with `make pages-serve`.
 
-If the repository is renamed, `base` in `apps/web/vite.config.ts` has to match
-the new name.
+The published URLs are defined in two places, and both have to agree with the
+domain: `apps/web/src/lib/registry-url.ts` (the `add` command) and the
+`homepage` field in `scripts/build-registry.mjs`. If the showcase ever moves,
+`base` in `apps/web/vite.config.ts` has to match its new path.
+
+Repository settings need the Pages source set to **GitHub Actions**.
+
+## Branches
+
+`development` is where work lands; `master` is what the world runs.
+
+| Push to       | Workflow | Result                                                     |
+| ------------- | -------- | ---------------------------------------------------------- |
+| any branch/PR | CI       | registry check, tests, typecheck, lint, both builds, image  |
+| `development` | Staging  | image `ghcr.io/sektant1/hideout:development`               |
+| `master`      | Release  | image `:latest` + the Pages deploy                          |
+
+`make release` merges `development` into `master` and pushes, which is the
+deploy. It refuses to start when the tree is dirty, when there is no `origin`,
+or when there is nothing to release — run `make release-preflight` to check
+without touching anything. A staging server follows the development image with
+`make deploy-staging`.
 
 ## Developing the toolkit
 
@@ -125,7 +148,7 @@ a Debian or Ubuntu box, via Docker Compose where Docker is present and a
 systemd unit where it is not:
 
 ```bash
-curl -fsSL https://<raw-url>/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sektant1/skt-ui-toolkit/master/scripts/install.sh | bash
 ```
 
 ## Consuming from RSC

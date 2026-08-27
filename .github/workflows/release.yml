@@ -65,6 +65,9 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     permissions:
+      # A permissions block replaces the defaults wholesale, so checkout's
+      # contents:read has to be spelled out alongside the Pages scopes.
+      contents: read
       pages: write
       id-token: write
     environment:
@@ -78,14 +81,14 @@ jobs:
           cache: npm
       - run: npm ci
 
-      # Emits apps/web/public/r/*.json, so the registry ships inside the same
-      # deploy that serves the showcase.
-      - run: npm run registry:build
-      - run: npm run build --workspace web
+      # Builds the registry, the showcase and the hideout's static export, then
+      # assembles them into dist-pages: hideout at the root (it carries the
+      # CNAME), registry at /r, showcase at /showcase.
+      - run: npm run pages:build
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/web/dist
+          path: dist-pages
       - id: deployment
         uses: actions/deploy-pages@v4

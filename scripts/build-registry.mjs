@@ -35,7 +35,7 @@ const names = componentNames(COMPONENTS_DIR)
 const manifest = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
   name: "skt-ui-toolkit",
-  homepage: "https://<GITHUB_USER>.github.io/skt-ui-toolkit",
+  homepage: "https://sektant.dev/showcase",
   items: [
     themeItem,
     ...names.map((name) =>

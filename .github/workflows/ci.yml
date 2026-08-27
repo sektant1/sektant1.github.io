@@ -5,9 +5,11 @@ name: CI
 # anything that reaches it has already been through this.
 on:
   push:
-    branches: [master, development]
+    # `master` is absent on purpose: Release fires there and calls this same
+    # workflow, so listing it would run the gate twice per merge.
+    branches: [development]
   pull_request:
-  # Release runs this same gate before it publishes anything.
+  # Release and Staging run this same gate before they publish anything.
   workflow_call:
 
 permissions:
@@ -36,6 +38,22 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
+
+  # The static export is a different shape from the standalone build above —
+  # CMS routes moved aside, `output: export`, no server. It breaks on its own,
+  # so it gets checked before master tries to publish it. Not deployed.
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run pages:build
+      # A missing CNAME silently drops the custom domain on the next deploy.
+      - run: test -f dist-pages/CNAME && test -f dist-pages/r/button.json
 
   # Proves the image the installer will pull actually builds, before master
   # ever tries to publish it. Not pushed: this runs on branches and PRs.

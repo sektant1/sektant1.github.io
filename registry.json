@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "skt-ui-toolkit",
-  "homepage": "https://<GITHUB_USER>.github.io/skt-ui-toolkit",
+  "homepage": "https://sektant.dev/showcase",
   "items": [
     {
       "name": "skt-theme",

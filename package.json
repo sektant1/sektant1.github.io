@@ -9,6 +9,7 @@
     "format": "turbo format",
     "typecheck": "turbo typecheck",
     "test": "vitest run",
+    "pages:build": "node scripts/build-pages.mjs",
     "registry:build": "node scripts/build-registry.mjs && shadcn build --output apps/web/public/r",
     "registry:check": "node scripts/build-registry.mjs --check"
   },

@@ -135,4 +135,12 @@ try {
   })
 } finally {
   await restore(moved)
+
+  // The export ran with the CMS routes moved aside, so the route types Next
+  // left in .next describe an app that is no longer on disk — tsconfig
+  // includes them, and typecheck would fail on routes it cannot see. Next
+  // regenerates both on the next dev or build.
+  for (const dir of [".next/types", ".next/dev/types"]) {
+    await fs.rm(path.join(root, dir), { recursive: true, force: true })
+  }
 }
