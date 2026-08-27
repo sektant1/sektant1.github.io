@@ -1,5 +1,6 @@
 import { RouterProvider as AriaRouterProvider } from "react-aria-components"
 import { Outlet, useHref, useLocation, useNavigate } from "react-router"
+import { FontPicker } from "@workspace/ui/components/font-picker"
 import { Separator } from "@workspace/ui/components/separator"
 import {
   Sidebar,
@@ -16,7 +17,6 @@ import { BuffersProvider, useBuffers } from "@/layout/buffers"
 import { CommandPalette } from "@/layout/command-palette"
 import { EditorTabs } from "@/layout/editor-tabs"
 import { EmptyBuffer } from "@/layout/empty-buffer"
-import { FontPicker } from "@/layout/font-picker"
 import { NavTree, type NavNode } from "@/layout/nav-tree"
 import { SidebarCollapseCommand } from "@/layout/sidebar-collapse-command"
 import { StatusBar } from "@/layout/status-bar"

@@ -608,6 +608,25 @@
       ]
     },
     {
+      "name": "font-picker",
+      "type": "registry:ui",
+      "title": "Font Picker",
+      "description": "Font Picker component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme",
+        "button",
+        "dropdown-menu",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/font-picker.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/font-picker.tsx"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
@@ -723,6 +742,23 @@
           "path": "packages/ui/src/components/label.tsx",
           "type": "registry:ui",
           "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "log-console",
+      "type": "registry:ui",
+      "title": "Log Console",
+      "description": "Log Console component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/log-console.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/log-console.tsx"
         }
       ]
     },

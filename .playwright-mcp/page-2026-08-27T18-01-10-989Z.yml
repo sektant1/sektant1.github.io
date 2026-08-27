@@ -1,0 +1,18 @@
+- generic [active] [ref=f8e1]:
+  - main [ref=f8e2]:
+    - generic [ref=f8e3]:
+      - generic [ref=f8e4]:
+        - generic [ref=f8e6]: "[ cms.local ]"
+        - generic [ref=f8e8]: online
+      - generic [ref=f8e10]:
+        - paragraph [ref=f8e11]: Sign in to edit the MDX files in this working copy.
+        - generic [ref=f8e12]:
+          - generic [ref=f8e13]: username
+          - textbox "username" [ref=f8e14]
+        - generic [ref=f8e15]:
+          - generic [ref=f8e16]: password
+          - textbox "password" [ref=f8e17]
+        - button "Sign in" [ref=f8e18]
+      - generic [ref=f8e19]: credentials come from .env.local
+  - button "Open Next.js Dev Tools" [ref=f8e25] [cursor=pointer]
+  - alert [ref=f8e29]

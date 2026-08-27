@@ -1,0 +1,17 @@
+- generic [active] [ref=f14e1]:
+  - main [ref=f14e2]:
+    - generic [ref=f14e3]:
+      - generic [ref=f14e4]:
+        - generic [ref=f14e6]: "[ cms.local ]"
+        - generic [ref=f14e8]: online
+      - generic [ref=f14e10]:
+        - paragraph [ref=f14e11]: Sign in to edit the MDX files in this working copy.
+        - generic [ref=f14e12]:
+          - generic [ref=f14e13]: username
+          - textbox "username" [ref=f14e14]
+        - generic [ref=f14e15]:
+          - generic [ref=f14e16]: password
+          - textbox "password" [ref=f14e17]
+        - button "Sign in" [ref=f14e18]
+      - generic [ref=f14e19]: credentials come from .env.local
+  - alert [ref=f14e20]

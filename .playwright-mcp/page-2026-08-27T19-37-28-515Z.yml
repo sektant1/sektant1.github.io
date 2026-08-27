@@ -1,0 +1,143 @@
+- generic [active] [ref=f76e1]:
+  - generic [ref=f76e2]: // unclassified // personal //
+  - generic [ref=f76e4]:
+    - generic [ref=f76e7]:
+      - link "sektant hideout // fld" [ref=f76e9]:
+        - /url: /
+        - generic [ref=f76e10]: sektant
+        - generic [ref=f76e11]: hideout // fld
+      - generic [ref=f76e12]:
+        - navigation "Sections" [ref=f76e13]:
+          - link "posts" [ref=f76e14]:
+            - /url: /posts
+            - generic [ref=f76e15]: ">"
+            - text: posts
+          - link "projects" [ref=f76e16]:
+            - /url: /projects
+            - generic [ref=f76e17]: ">"
+            - text: projects
+          - link "games" [ref=f76e18]:
+            - /url: /games
+            - generic [ref=f76e19]: ">"
+            - text: games
+          - link "about" [ref=f76e20]:
+            - /url: /about
+            - generic [ref=f76e21]: ">"
+            - text: about
+        - navigation "Content" [ref=f76e22]:
+          - list [ref=f76e23]:
+            - listitem [ref=f76e24]:
+              - button "content/ (5)" [expanded] [ref=f76e25]:
+                - generic [ref=f76e26]: "[-]"
+                - generic [ref=f76e27]: content/
+                - generic [ref=f76e28]: (5)
+              - list [ref=f76e29]:
+                - listitem [ref=f76e30]:
+                  - link "home" [ref=f76e31]:
+                    - /url: /
+                    - generic [ref=f76e32]: "-"
+                - listitem [ref=f76e34]:
+                  - button "pages/ (1)" [expanded] [ref=f76e35]:
+                    - generic [ref=f76e36]: "[-]"
+                    - generic [ref=f76e37]: pages/
+                    - generic [ref=f76e38]: (1)
+                  - list [ref=f76e39]:
+                    - listitem [ref=f76e40]:
+                      - link "About" [ref=f76e41]:
+                        - /url: /about
+                        - generic [ref=f76e42]: "-"
+                - listitem [ref=f76e44]:
+                  - button "posts/ (3)" [expanded] [ref=f76e45]:
+                    - generic [ref=f76e46]: "[-]"
+                    - generic [ref=f76e47]: posts/
+                    - generic [ref=f76e48]: (3)
+                  - list [ref=f76e49]:
+                    - listitem [ref=f76e50]:
+                      - link "How to Learn with Claude" [ref=f76e51]:
+                        - /url: /posts/how-to-learn-with-claude-code
+                        - generic [ref=f76e52]: "-"
+                    - listitem [ref=f76e54]:
+                      - link "How to setup AI CLI tools that do not act stupid" [ref=f76e55]:
+                        - /url: /posts/how-to-setup-ai-cli-tools
+                        - generic [ref=f76e56]: "-"
+                    - listitem [ref=f76e58]:
+                      - link "How to use Neovim as your IDE" [ref=f76e59]:
+                        - /url: /posts/how-to-setup-neovim
+                        - generic [ref=f76e60]: "-"
+                - listitem [ref=f76e62]:
+                  - button "projects/ (7)" [expanded] [ref=f76e63]:
+                    - generic [ref=f76e64]: "[-]"
+                    - generic [ref=f76e65]: projects/
+                    - generic [ref=f76e66]: (7)
+                  - list [ref=f76e67]:
+                    - listitem [ref=f76e68]:
+                      - link "executioner.nvim" [ref=f76e69]:
+                        - /url: /projects/executioner-nvim
+                        - generic [ref=f76e70]: "-"
+                    - listitem [ref=f76e72]:
+                      - link "monad-engine" [ref=f76e73]:
+                        - /url: /projects/monad-game-engine
+                        - generic [ref=f76e74]: "-"
+                    - listitem [ref=f76e76]:
+                      - link "phosphor-ui" [ref=f76e77]:
+                        - /url: /projects/phosphor-ui
+                        - generic [ref=f76e78]: "-"
+                    - listitem [ref=f76e80]:
+                      - link "ram.nvim" [ref=f76e81]:
+                        - /url: /projects/ram-nvim
+                        - generic [ref=f76e82]: "-"
+                    - listitem [ref=f76e84]:
+                      - link "raven-engine" [ref=f76e85]:
+                        - /url: /projects/raven-engine
+                        - generic [ref=f76e86]: "-"
+                    - listitem [ref=f76e88]:
+                      - link "react-warcraft-build-order-tool" [ref=f76e89]:
+                        - /url: /projects/warcraft-build-order-tools
+                        - generic [ref=f76e90]: "-"
+                    - listitem [ref=f76e92]:
+                      - link "react-warcraft-ui" [ref=f76e93]:
+                        - /url: /projects/react-warcraft-ui
+                        - generic [ref=f76e94]: "-"
+                - listitem [ref=f76e96]:
+                  - link "cms.local" [ref=f76e97]:
+                    - /url: /admin
+                    - generic [ref=f76e98]: "-"
+      - generic [ref=f76e101]:
+        - link "github" [ref=f76e102]:
+          - /url: https://github.com/sektant1
+        - link "youtube" [ref=f76e103]:
+          - /url: https://youtube.com/@sektant1swe
+        - link "rss" [ref=f76e104]:
+          - /url: /rss.xml
+      - button "Toggle Sidebar" [ref=f76e105]
+    - main [ref=f76e106]:
+      - generic [ref=f76e107]:
+        - generic [ref=f76e108]: ~/content/games
+        - button "find" [ref=f76e109]
+        - button "Change display face" [ref=f76e111]
+      - generic [ref=f76e113]:
+        - generic [ref=f76e115]:
+          - generic [ref=f76e116]: content/games
+          - heading "games" [level=2] [ref=f76e117]
+          - paragraph [ref=f76e118]: Things I built to be played. Where there is a browser build, the first button starts it.
+        - generic [ref=f76e120]:
+          - generic [ref=f76e121]: No games here yet
+          - generic [ref=f76e122]:
+            - text: Games live in
+            - code [ref=f76e123]: content/games/
+            - text: . Add one from the CMS, or drop a folder with an
+            - code [ref=f76e124]: index.mdx
+            - text: in it.
+      - generic [ref=f76e125]:
+        - generic [ref=f76e126]: "[ read ]"
+        - button "0 0 0 errors and 0 warnings. Open the log panel." [ref=f76e127]:
+          - generic [ref=f76e128]: "0"
+          - generic [ref=f76e132]: "0"
+          - generic [ref=f76e136]: 0 errors and 0 warnings. Open the log panel.
+        - generic [ref=f76e137]:
+          - generic [ref=f76e138]: games
+          - generic [ref=f76e139]: "0"
+        - generic "Connected" [ref=f76e140]: lnk
+        - generic [ref=f76e143]: "------Z"
+        - generic [ref=f76e144]: utf-8
+  - button "Open Next.js Dev Tools" [ref=f76e150] [cursor=pointer]

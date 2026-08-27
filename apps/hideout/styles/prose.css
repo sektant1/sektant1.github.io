@@ -1,0 +1,275 @@
+/* Article body.
+ *
+ * One rule set rather than a utility class on every MDX element: the map in
+ * mdx-components.tsx only wraps the tags that need behaviour, and everything
+ * else is a plain tag styled from here.
+ *
+ * Headings carry the marker they were written with — `##`, `###` — instead of
+ * a decorative glyph. The source is Markdown, the reader can see the level,
+ * and the depth of a section is legible without counting font sizes. */
+
+.prose {
+  max-width: 72ch;
+  color: var(--terminal-ink);
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+
+.prose > * + * {
+  margin-block-start: 1rem;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5 {
+  position: relative;
+  margin-block: 2.25rem 0.75rem;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.065em;
+  scroll-margin-top: 5rem;
+  text-transform: uppercase;
+}
+
+/* The marker lives in the margin, so headings of every depth start on the
+   same left edge as the body — the level is read from the mark, not from an
+   indent that shifts the text under it. It is also the section's anchor, so
+   the one structural mark on the page does something.
+
+   Below the breakpoint there is no margin to put it in, so it falls back into
+   the line rather than being cut off. */
+.prose .prose-anchor {
+  display: inline-block;
+  padding: 0.08em 0.32em;
+  border: 1px solid var(--terminal-edge);
+  background: var(--terminal-wash);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.62em;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-shadow: 0 0 6px color-mix(in oklch, var(--primary) 40%, transparent);
+}
+
+.prose .prose-anchor:hover,
+.prose .prose-anchor:focus-visible {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  text-shadow: none;
+}
+
+@media (min-width: 40rem) {
+  .prose .prose-anchor {
+    position: absolute;
+    /* Right-aligned against the text edge, so #, ## and ### all end where the
+       heading begins and the marks form a column down the margin. */
+    right: calc(100% + 0.65em);
+    white-space: nowrap;
+    /* Quiet until wanted: the mark is structure, not content. */
+    opacity: 0.7;
+    transition: opacity 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .prose :is(h1, h2, h3, h4, h5):hover .prose-anchor,
+  .prose .prose-anchor:focus-visible {
+    opacity: 1;
+    transition-duration: 40ms;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .prose .prose-anchor {
+    margin-inline-end: 0.5em;
+  }
+}
+
+.prose h1 {
+  font-size: 1.6rem;
+}
+
+.prose h2 {
+  font-size: 1.3rem;
+  /* A rule running out from the title: in a long walkthrough it is what makes
+     the top-level sections findable while scrolling past. Only h2 gets one —
+     a rule at every level would flatten the hierarchy it is meant to mark. */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.prose h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--terminal-edge);
+}
+
+.prose h3 {
+  font-size: 1.05rem;
+  color: var(--foreground);
+}
+
+.prose h4,
+.prose h5 {
+  color: var(--terminal-ink);
+  font-size: 0.95rem;
+}
+
+.prose :is(h1, h2) {
+  text-shadow: 0 0 9px color-mix(in oklch, var(--primary) 32%, transparent);
+}
+
+/* A heading that is linked to gets the beam. */
+.prose :target {
+  color: var(--primary);
+}
+
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.25em;
+}
+
+.prose a:hover {
+  text-decoration-style: solid;
+  text-shadow:
+    0 0 4px color-mix(in oklch, var(--primary) 55%, transparent),
+    0 0 14px color-mix(in oklch, var(--primary) 30%, transparent);
+}
+
+.prose strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 2rem;
+}
+
+.prose li + li {
+  margin-block-start: 0.35rem;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+/* The selector turns an unordered list into a terminal menu without implying
+   an order that the source does not contain. */
+.prose ul > li::before {
+  content: ">";
+  position: absolute;
+  inset-inline-start: -1.65rem;
+  color: var(--primary);
+  font-weight: 700;
+  text-shadow: 0 0 6px color-mix(in oklch, var(--primary) 45%, transparent);
+}
+
+.prose :is(ul, ol) > li {
+  position: relative;
+}
+
+.prose ol {
+  list-style: none;
+}
+
+.prose ol > li::before {
+  content: "[" counter(list-item, decimal-leading-zero) "]";
+  position: absolute;
+  inset-inline-start: -2rem;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  line-height: 2.05;
+  text-shadow: 0 0 6px color-mix(in oklch, var(--primary) 35%, transparent);
+}
+
+.prose blockquote {
+  position: relative;
+  padding-inline-start: 1.75rem;
+  border-inline-start: 2px solid var(--terminal-edge);
+  color: var(--terminal-ink-dim);
+}
+
+.prose blockquote::before {
+  content: ">";
+  position: absolute;
+  inset-inline-start: 0.55rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Inline code, not a fence: a chip, so it does not read as a block. */
+.prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--terminal-rule);
+  background: color-mix(in oklch, var(--primary) 8%, transparent);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.prose hr {
+  margin-block: 2rem;
+  border: 0;
+  border-top: 1px solid var(--terminal-rule);
+}
+
+.prose img,
+.prose video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+}
+
+.prose figure {
+  margin-block: 1.5rem;
+}
+
+.prose figcaption {
+  margin-block-start: 0.5rem;
+  color: var(--terminal-ink-faint);
+  font-size: 0.75rem;
+}
+
+/* A table wide enough to overflow scrolls in its own box rather than pushing
+   the page sideways. */
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--terminal-rule);
+  text-align: start;
+}
+
+.prose th {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prose kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}

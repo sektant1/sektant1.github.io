@@ -1,0 +1,47 @@
+{
+  "name": "hideout",
+  "version": "0.1.10",
+  "private": true,
+  "type": "module",
+  "description": "sektant.dev — devlog, project index and local MDX CMS.",
+  "scripts": {
+    "sync:content-assets": "node scripts/sync-content-assets.mjs",
+    "predev": "npm run sync:content-assets && node scripts/generate-search-index.mjs",
+    "dev": "next dev",
+    "prebuild": "npm run sync:content-assets && node scripts/generate-search-index.mjs",
+    "build": "next build --webpack",
+    "build:pages": "node scripts/build-pages.mjs",
+    "start": "next start",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mdx-js/react": "^3.1.0",
+    "@workspace/ui": "*",
+    "gray-matter": "^4.0.3",
+    "next": "^16.2.6",
+    "next-mdx-remote": "^6.0.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "shiki": "^3.23.0",
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
+    "postcss": "^8.5.14",
+    "raw-loader": "^4.0.2",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

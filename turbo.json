@@ -11,7 +11,10 @@
         ".env*"
       ],
       "outputs": [
-        "dist/**"
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "out/**"
       ]
     },
     "lint": {

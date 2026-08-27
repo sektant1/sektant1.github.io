@@ -1,0 +1,165 @@
+/* Phosphor — the green-tube variant of the toolkit identity.
+ *
+ * The base theme in globals.css is the red one. This file only restates the
+ * colour tokens, so everything else the identity owns — zero radius, flat
+ * shadows, the type scale, the terminal-* roles, the crt-* utilities — keeps
+ * coming from one place. A project opts in by importing this after
+ * globals.css.
+ *
+ * The palette is the tube itself: one green hue from deep forest to paper
+ * mint, a near-black with a green undertone behind it, and red kept for
+ * faults only. Values are the sektant.dev tube, converted to oklch.
+ *
+ * A phosphor tube has no light mode — a green-on-white terminal is a
+ * simulation of paper, not of a screen — so the tokens are declared once and
+ * repeated under .dark rather than split into two schemes. */
+
+:root,
+.dark {
+  color-scheme: dark;
+
+  /* The ramp is deliberately green all the way through, not a neutral scheme
+     with green accents. Body text at chroma 0.11 rather than near-white is
+     what makes the page read as a lit tube instead of a dark UI — the beam
+     only ever emitted one colour, so nothing on screen can be greyer than it.
+     Contrast is 15.7:1 on the ground, well past what long-form text needs. */
+
+  --background: oklch(0.184 0.0349 156.8812); /* #04170c */
+  --foreground: oklch(0.931 0.1116 155.9673); /* #a9ffc9 */
+
+  /* Raised, not equal to the background: on this site a card is a panel cut
+     into the tube face, and it has to read as one without a shadow to help. */
+  --card: oklch(0.2625 0.0537 153.6473); /* #0b2c18 */
+  --card-foreground: oklch(0.931 0.1116 155.9673);
+  --popover: oklch(0.2625 0.0537 153.6473);
+  --popover-foreground: oklch(0.931 0.1116 155.9673);
+
+  --primary: oklch(0.8791 0.2285 150.0267); /* #35ff80 — the beam */
+  --primary-foreground: oklch(0.1433 0.0264 157.8684); /* #020d06 */
+
+  --secondary: oklch(0.2625 0.0537 153.6473);
+  --secondary-foreground: oklch(0.9644 0.0537 158.4613); /* #d6ffe6 */
+
+  --muted: oklch(0.2625 0.0537 153.6473);
+  /* Secondary text still glows. A desaturated grey here would be the one
+     thing on screen the tube could not have produced. */
+  --muted-foreground: oklch(0.797 0.2084 149.6977); /* #2ee06e */
+
+  --accent: oklch(0.3205 0.0713 152.083); /* #0f3d20 */
+  --accent-foreground: oklch(0.9644 0.0537 158.4613);
+
+  /* The one hue that is not green, so a fault cannot be mistaken for
+     anything else on the screen. */
+  --destructive: oklch(0.6544 0.2317 26.4739); /* #ff3a3a */
+  --destructive-foreground: oklch(0.931 0.1116 155.9673);
+
+  --border: oklch(0.4373 0.1104 150.3163); /* #12622f */
+  --input: oklch(0.4373 0.1104 150.3163);
+  --ring: oklch(0.8791 0.2285 150.0267);
+
+  /* Charts read as one beam at decreasing intensity rather than as five
+     unrelated colours — a single-gun tube cannot do hue variety. */
+  --chart-1: oklch(0.8791 0.2285 150.0267);
+  --chart-2: oklch(0.7688 0.1323 191.0468); /* #00cec8 — the cyan gun */
+  --chart-3: oklch(0.797 0.2084 149.6977);
+  --chart-4: oklch(0.5098 0.131 150.3234);
+  --chart-5: oklch(0.4373 0.1104 150.3163);
+
+  /* The sidebar is the deepest surface: chassis behind the glass. */
+  --sidebar: oklch(0.1433 0.0264 157.8684);
+  --sidebar-foreground: oklch(0.9644 0.0537 158.4613);
+  --sidebar-primary: oklch(0.8791 0.2285 150.0267);
+  --sidebar-primary-foreground: oklch(0.1433 0.0264 157.8684);
+  --sidebar-accent: oklch(0.2625 0.0537 153.6473);
+  --sidebar-accent-foreground: oklch(0.8791 0.2285 150.0267);
+  --sidebar-border: oklch(0.3205 0.0713 152.083);
+  --sidebar-ring: oklch(0.8791 0.2285 150.0267);
+}
+
+/* The terminal roles are defined against --primary and --foreground in
+   globals.css, but they resolve where they are written — so they still carry
+   the red theme's values here and have to be restated against the new ones. */
+:root,
+.dark {
+  --terminal-chrome: color-mix(in oklch, var(--primary) 96%, transparent);
+  --terminal-chrome-dim: color-mix(in oklch, var(--primary) 68%, transparent);
+  --terminal-ink: color-mix(in oklch, var(--foreground) 90%, transparent);
+  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 70%, transparent);
+  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 46%, transparent);
+  --terminal-rule: color-mix(in oklch, var(--border) 70%, transparent);
+  --terminal-edge: color-mix(in oklch, var(--primary) 45%, transparent);
+  --terminal-wash: color-mix(in oklch, var(--primary) 10%, transparent);
+}
+
+/* Selection reads as a terminal's block cursor: the beam inverts rather than
+   tinting, which is what a real tube does when it highlights. */
+::selection {
+  background: var(--primary);
+  color: var(--background);
+}
+
+/* Pointers: one arrow, drawn in the tube's own colours.
+ *
+ * The plain mouse arrow rather than a reticle or a hand — it is the shape
+ * every pointer has been for forty years, and nothing here is served by
+ * making people learn a new one. Hovering something clickable fills the same
+ * arrow with the beam instead of swapping it for a different drawing.
+ *
+ * Inline SVG data URIs: no asset pipeline, no request. Each names a real
+ * cursor keyword as its fallback, so if the image fails the pointer still
+ * says what it does. Colours are literal hex because cursor: url() cannot
+ * read a custom property — they are the ramp above.
+ */
+:root,
+.dark {
+  /* Hotspot at the tip, 1 1 — the point of the arrow is what is pointing. */
+  --cursor-default:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1.2' stroke-linejoin='miter'/%3E%3C/svg%3E")
+      1 1,
+    default;
+  --cursor-pointer:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
+      1 1,
+    pointer;
+  --cursor-text:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2v12' stroke='%23a9ffc9' stroke-width='1'/%3E%3C/svg%3E")
+      8 8,
+    text;
+  --cursor-disabled:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1.2' opacity='.45' stroke-linejoin='miter'/%3E%3C/svg%3E")
+      1 1,
+    not-allowed;
+}
+
+@layer base {
+  html {
+    cursor: var(--cursor-default);
+  }
+
+  /* Matched on role, not on class: anything the browser already treats as a
+     link, a button or a text field picks the right pointer up on its own. */
+  a[href],
+  button,
+  [role="button"],
+  [role="link"],
+  summary,
+  label,
+  select,
+  option {
+    cursor: var(--cursor-pointer);
+  }
+
+  input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not(
+      [type="radio"]
+    ),
+  textarea,
+  [contenteditable="true"] {
+    cursor: var(--cursor-text);
+  }
+
+  :disabled,
+  [aria-disabled="true"],
+  [data-disabled] {
+    cursor: var(--cursor-disabled);
+  }
+}

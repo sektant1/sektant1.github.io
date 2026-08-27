@@ -71,6 +71,7 @@ imports, so importing a sibling or a hook is enough — the manifest follows.
 | `registry.json` | Generated manifest, one entry per distributable item |
 | `scripts/` | The generator, its pure helpers, and their tests |
 | `apps/web` | SKT Codex — the showcase, and the host for `/r/*.json` |
+| `apps/hideout` | sektant.dev — the personal site, built on the toolkit |
 | `docs/superpowers/` | The design spec and implementation plan |
 
 ## Theme
@@ -81,11 +82,54 @@ code. Beyond the standard shadcn tokens, the theme adds:
 - `terminal-chrome`, `terminal-chrome-dim` — frame titles, status, brand
 - `terminal-ink`, `terminal-ink-dim`, `terminal-ink-faint` — body and metadata
 - `terminal-rule`, `terminal-edge`, `terminal-wash` — dividers, edges, fills
-- `crt-glow`, `crt-bloom`, `crt-scanfill`, `hazard-stripe`, `ascii-fit` —
-  utilities for the terminal idiom
+- `crt-glow`, `crt-glow-soft`, `crt-bloom`, `crt-breathe`, `crt-scanfill`,
+  `hazard-stripe`, `ascii-fit` — utilities for the terminal idiom
 
 Use those rather than one-off opacities, so the same intent reads the same way
 everywhere.
 
-The display face can be switched at runtime from the header; every option
-carries a Cyrillic subset.
+The display face can be switched at runtime with the `font-picker` component.
+Bender is the face the identity was drawn against and ships with the package;
+it leads the list but is not the default, because it carries no Cyrillic and
+every other option does.
+
+### Variants
+
+`globals.css` is the red tube. A project that wants a different one imports a
+variant after it, which restates only the colour tokens — radius, shadows, type
+and the `terminal-*` roles keep coming from one place:
+
+```css
+@import "@workspace/ui/globals.css";
+@import "@workspace/ui/themes/phosphor.css";  /* green, dark-only */
+```
+
+`phosphor.css` also carries the phosphor pointers: a crosshair reticle for the
+default cursor, an arrow for links, drawn as inline SVG.
+
+## sektant.dev
+
+`apps/hideout` is the personal site — devlog, project index, and a local MDX
+CMS at `/admin` that writes files under `content/`. It consumes the toolkit as
+a workspace dependency and compiles it from source, so an edit in
+`packages/ui` shows up there with no publish step.
+
+```bash
+npm run dev --workspace hideout    # localhost:3000
+```
+
+It builds two ways from the same source. `build:pages` produces a static
+export with the CMS stripped out, for GitHub Pages. A plain `build` produces a
+standalone Node bundle for self-hosting — `scripts/install.sh` sets that up on
+a Debian or Ubuntu box, via Docker Compose where Docker is present and a
+systemd unit where it is not:
+
+```bash
+curl -fsSL https://<raw-url>/scripts/install.sh | bash
+```
+
+## Consuming from RSC
+
+Every component that holds state or context is marked `"use client"`, so the
+library can be imported directly from a React Server Component. Presentational
+components stay server-renderable.

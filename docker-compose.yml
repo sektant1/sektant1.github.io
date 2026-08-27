@@ -1,0 +1,38 @@
+# sektant.dev, self-hosted.
+#
+# By default this runs the image CI publishes on every push to master, so the
+# server pulls a finished build instead of compiling Next on a laptop.
+#
+# CasaOS can import this file directly (Apps → Custom Install → Import), or run
+# it with `docker compose up -d`.
+#
+# To run your own working copy instead of the published image:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+
+services:
+  hideout:
+    image: ${HIDEOUT_IMAGE:-ghcr.io/sektant1/hideout:latest}
+    container_name: hideout
+    restart: unless-stopped
+    # `docker compose up` alone would keep running a stale local copy forever.
+    pull_policy: always
+    ports:
+      - "${HIDEOUT_PORT:-3000}:3000"
+    environment:
+      # Credentials for the local CMS at /admin. Set these in .env next to this
+      # file — with the CMS reachable, they are the only thing between the
+      # network and writes to content/.
+      ADMIN_USERNAME: ${ADMIN_USERNAME:?set ADMIN_USERNAME in .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+      # Set to true to serve the public site with /admin and /api/admin off.
+      NEXT_PUBLIC_HIDE_ADMIN: ${HIDE_ADMIN:-false}
+    volumes:
+      # Posts and projects live on the host, so a post written in the CMS
+      # survives the next image pull and can be committed to git.
+      - ./content:/app/apps/hideout/content
+    labels:
+      # CasaOS reads these when the compose file is imported.
+      icon: https://raw.githubusercontent.com/sektant1/skt-ui-toolkit/master/apps/hideout/public/apple-icon.png
+      name: "Sektant's Hideout"

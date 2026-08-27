@@ -1,0 +1,473 @@
+/* The globe is drawn imperatively — three.js renders to characters, and the
+ * location markers are DOM built in markers.ts and positioned every frame. So
+ * this is plain CSS rather than utility classes: there is no JSX to put them
+ * on. Every colour reads a toolkit token, so the phosphor theme drives it. */
+
+html[data-cold-boot="skip"] .cold-boot {
+  display: none;
+}
+
+.ascii-planet-scene {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
+  overflow: hidden;
+  color: var(--primary);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 0;
+}
+
+.ascii-planet-scene[data-model-ready="true"] {
+  animation:
+    planet-boot 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 80ms forwards,
+    planet-flicker 3.6s ease-in-out 1.8s infinite;
+}
+
+.cold-boot {
+  contain: layout paint;
+  transform-origin: center;
+  animation: cold-boot-ground 420ms cubic-bezier(0.16, 0.8, 0.28, 1) both;
+}
+
+.cold-boot::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    to bottom,
+    transparent 0 42%,
+    color-mix(in oklch, var(--primary) 16%, transparent) 48%,
+    color-mix(in oklch, var(--primary) 38%, transparent) 50%,
+    color-mix(in oklch, var(--primary) 16%, transparent) 52%,
+    transparent 58% 100%
+  );
+  transform: translateY(-100%);
+  will-change: transform, opacity;
+  animation: cold-boot-sweep 860ms cubic-bezier(0.18, 0.72, 0.25, 1) 80ms both;
+}
+
+.cold-boot-panel {
+  position: relative;
+  z-index: 1;
+  animation: cold-boot-panel 300ms steps(4, end) 120ms both;
+}
+
+.cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
+  will-change: transform, opacity;
+  animation: cold-boot-line 80ms steps(2, end) both;
+}
+
+.cold-boot .ascii-planet-scene pre,
+.cold-boot .ascii-planet-scene table {
+  animation: none;
+  text-shadow:
+    0 0 4px var(--primary),
+    0 0 14px color-mix(in oklch, var(--primary) 45%, transparent);
+}
+
+.ascii-planet-scene:active {
+  cursor: grabbing;
+}
+
+.ascii-planet-scene * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.ascii-planet-scene canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(
+      0 0 2px color-mix(in oklch, var(--primary) 52%, transparent)
+    )
+    drop-shadow(0 0 8px color-mix(in oklch, var(--primary) 20%, transparent));
+}
+
+/* The effect renders into a <table> or <pre> sized by the character grid, not
+   by the host, so it is centred rather than stretched. */
+.ascii-planet-scene pre,
+.ascii-planet-scene table {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  animation: planet-glow 2.8s ease-in-out infinite;
+}
+
+/* ── Location markers ──────────────────────────────────────────────────
+   A callout pinned to a point on the globe, drawn as a survey annotation:
+   a bracket, a leader line, and a target reticle. */
+
+.ascii-planet-location-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 41;
+  display: grid;
+  min-width: 8rem;
+  max-width: min(11.5rem, calc(100vw - 1.3rem));
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  /* A spine down the left edge, the way a dimension line is drawn. */
+  box-shadow: -0.45rem 0 0 -0.38rem var(--primary);
+  /* The label sits over the globe's own characters, so it needs a ground of
+     its own or the two sets of glyphs interleave into noise. */
+  text-shadow:
+    1px 1px 0 var(--background),
+    -1px 1px 0 var(--background),
+    1px -1px 0 var(--background),
+    -1px -1px 0 var(--background);
+  opacity: var(--marker-visibility, 1);
+  will-change: transform, opacity;
+}
+
+.ascii-planet-location-label::before,
+.ascii-planet-location-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 2.25rem;
+  height: 0.42rem;
+  border-left: 1px solid var(--terminal-chrome-dim);
+}
+
+.ascii-planet-location-label::before {
+  top: -0.12rem;
+  border-top: 1px solid var(--primary);
+}
+
+.ascii-planet-location-label::after {
+  bottom: -0.12rem;
+  border-bottom: 1px solid var(--primary);
+}
+
+.ascii-planet-location-label[data-visible="false"]::before {
+  opacity: 0;
+}
+
+.ascii-planet-location-label__eyebrow {
+  color: var(--muted-foreground);
+  font-size: 0.6rem;
+}
+
+.ascii-planet-location-label__name {
+  color: var(--foreground);
+}
+
+.ascii-planet-location-label__country,
+.ascii-planet-location-label__coords {
+  font-size: 0.6rem;
+  color: var(--terminal-chrome);
+}
+
+/* The visitor's own pin is quieter and shorter than the fixed ones: it is a
+   greeting, not a data point competing with them. */
+.ascii-planet-location-label--user {
+  min-width: 5.8rem;
+  padding-left: 0.5rem;
+}
+
+.ascii-planet-location-label--user .ascii-planet-location-label__country,
+.ascii-planet-location-label--user .ascii-planet-location-label__coords {
+  display: none;
+}
+
+.ascii-planet-location-label--user::before,
+.ascii-planet-location-label--user::after {
+  width: 1.25rem;
+}
+
+.ascii-planet-location-connectors {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ascii-planet-location-connectors__line {
+  stroke: var(--primary);
+  stroke-width: 1.25;
+  /* Long-short-dot: a leader line, not a border. */
+  stroke-dasharray: 7 4 1 4;
+  transition: opacity 150ms ease-out;
+}
+
+.ascii-planet-location-connectors__endpoint {
+  fill: var(--primary);
+  transition: opacity 150ms ease-out;
+}
+
+.ascii-planet-location-target {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 42;
+  width: 1.45rem;
+  height: 1.45rem;
+  /* Crosshair, centre dot and ring, composed from four backgrounds so the
+     reticle is one element with no extra nodes per frame. */
+  background:
+    linear-gradient(var(--primary), var(--primary)) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(var(--primary), var(--primary)) 0 50% / 100% 1px no-repeat,
+    radial-gradient(circle, var(--primary) 0 2px, transparent 2.7px),
+    radial-gradient(
+      circle,
+      transparent 0 42%,
+      var(--terminal-chrome-dim) 43% 48%,
+      transparent 50%
+    );
+  animation: planet-pin 1.8s ease-in-out infinite;
+  transition: opacity 150ms ease-out;
+  will-change: transform, opacity;
+}
+
+/* Corner ticks, so the reticle reads as a target box rather than a plus. */
+.ascii-planet-location-target::before,
+.ascii-planet-location-target::after {
+  content: "";
+  position: absolute;
+  width: 0.52rem;
+  height: 0.52rem;
+}
+
+.ascii-planet-location-target::before {
+  top: -0.35rem;
+  left: -0.35rem;
+  border-top: 1px solid var(--primary);
+  border-left: 1px solid var(--primary);
+}
+
+.ascii-planet-location-target::after {
+  right: -0.35rem;
+  bottom: -0.35rem;
+  border-right: 1px solid var(--primary);
+  border-bottom: 1px solid var(--primary);
+}
+
+.ascii-planet-location-target--user {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.ascii-planet-location-target--user::before {
+  top: -0.24rem;
+  left: -0.24rem;
+  width: 0.38rem;
+  height: 0.38rem;
+}
+
+.ascii-planet-location-target--user::after {
+  right: -0.24rem;
+  bottom: -0.24rem;
+  width: 0.38rem;
+  height: 0.38rem;
+}
+
+@keyframes planet-boot {
+  0% {
+    opacity: 0;
+    transform: scaleX(1.08) scaleY(0.04);
+    filter: blur(3px) brightness(3.2) contrast(1.6);
+  }
+
+  16% {
+    opacity: 0.9;
+    transform: scaleX(1.04) scaleY(0.06);
+  }
+
+  28% {
+    opacity: 0.35;
+    transform: scaleX(1.02) scaleY(1.03);
+    filter: blur(2px) brightness(2.6) contrast(1.4);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translateX(0.8%) scale(1.01);
+    filter: blur(0) brightness(1.7) contrast(1.2);
+  }
+
+  49% {
+    opacity: 0.68;
+    transform: translateX(-0.3%) scale(1.005);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+  }
+}
+
+@keyframes cold-boot-ground {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.72) scaleY(0.015);
+  }
+
+  45% {
+    opacity: 1;
+    transform: scaleX(1.03) scaleY(0.025);
+  }
+
+  75% {
+    transform: scaleX(1) scaleY(1.015);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cold-boot-panel {
+  0% {
+    opacity: 0;
+    transform: translateX(-0.6rem);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translateX(0.15rem);
+  }
+
+  60% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cold-boot-sweep {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  82% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes cold-boot-line {
+  0% {
+    opacity: 0.25;
+    transform: translateX(0.4rem);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(-0.08rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Two brief dropouts in a long quiet stretch: a tube that occasionally loses
+   a little brightness, not a strobe. */
+@keyframes planet-flicker {
+  0%,
+  92%,
+  100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.78;
+  }
+  94% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0.6;
+  }
+  97% {
+    opacity: 1;
+  }
+}
+
+@keyframes planet-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 3px color-mix(in oklch, var(--primary) 80%, transparent),
+      0 0 10px color-mix(in oklch, var(--primary) 45%, transparent),
+      0 0 24px color-mix(in oklch, var(--primary) 28%, transparent);
+  }
+  50% {
+    text-shadow:
+      0 0 5px var(--primary),
+      0 0 16px color-mix(in oklch, var(--primary) 60%, transparent),
+      0 0 36px color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+}
+
+@keyframes planet-pin {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ascii-planet-scene[data-model-ready="true"],
+  .ascii-planet-scene pre,
+  .ascii-planet-scene table,
+  .ascii-planet-location-target {
+    animation: none;
+  }
+
+  .cold-boot,
+  .cold-boot::before,
+  .cold-boot-panel,
+  .cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
+    animation: none;
+  }
+
+  .cold-boot::before {
+    display: none;
+  }
+
+  .ascii-planet-scene {
+    opacity: 1;
+  }
+}

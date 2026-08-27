@@ -1,0 +1,5 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - status "Loading" [ref=f15e3]
+    - text: Reading content from disk…
+  - alert [ref=f15e12]

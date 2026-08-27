@@ -1,0 +1,250 @@
+---
+title: "How to use Neovim as your IDE"
+slug: "how-to-setup-neovim"
+description: "How to setup neovim from zero to full working web dev ide"
+date: "2026-03-31"
+status: "published"
+tags:
+  - "vim"
+  - "setup"
+  - "plugin"
+thumbnail: "thumb.gif"
+---
+
+# First, Why Use Neovim as your IDE?
+
+When you compare the out-of-the-box Neovim experience with, lets say, Vscode, your first impression would probably be: 
+>*"How tf will I be more productive with this?"* 
+
+![vim-logo](/content-assets/posts/how-to-setup-neovim/chad.jpg)
+
+For non-users, Vim and Neovim are often perceived as an ancient, outdated and cryptic text editor. Alongside that, the steep learning curve allegedly gives the impression thats not worth the time investment, especially when other text editors are much more *straightforward*. All of this started the common claim among programmers that Vim cannot compete with modern IDEs. During this article, I'll prove to you thats a wrong take.
+
+## Quick Vim Background
+
+Before we deep into the Vim rabbit hole, let's make brief rundown in the Vim/Neovim history.
+
+Vi was created in 1976 by Bill Joy. Then, in 1991, Vim was created by Bram Moolenaar. Vim’s purpose can be found in its name: Vi IMproved. It was intended to be a better Vi. Finally, in 2014, Neovim was created. It is a fork of Vim, which makes it a “drop-in replacement that is 99% identical for basic usage”
+
+Between many other differences, the main one I would say its that Neovim uses Lua as the first-class language for configuration and plugin development, which is faster and easier than Vim’s traditional VimScript(and its brazilian made, lesgooo).
+
+# Why do I use Vim?
+
+A bit more than a year ago, when I was researching about how can I decrease me wrist pain while typing/coding, I found the touch typing/quick typing niche, also I really hate the need to move my hand from keyboard -> mouse and vice versa. After a couple days practicing touch typing at [keybr.com](https://keybr.com),I've found out the PrimeAgen channel(big Vim preacher). After a few videos, he made my mind into trying Vim.
+
+<YouTube id="D4YTJ2W5q4Y" />
+
+After a week  I decided to learn how to use Vim motions to avoid future wrist pain from using the mouse way too much, as I wanted to spend as much time on the keyboard as possible. I also wanted to be more efficient with my tools, so I thought using Vim motions would help me tremendously(and it did, A LOT).
+
+# How to Install Neovim
+
+The Ubuntu package originally is a pretty old package, so in order to install a newer one you need to add the unstable apt repo.
+
+### Any other Linux distro other than Ubuntu, in this case Arch(btw):
+```sh 
+sudo pacman -S neovim
+
+```
+### Ubuntu/Debian:
+```sh
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt-get update
+sudo apt-get install neovim
+```
+
+### Build from source(chad way to do)
+```sh
+git clone https://github.com/neovim/neovim
+cd neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo  
+sudo make install # this will put the `nvim` command in your path
+
+```
+The default install location is `/usr/local`
+
+Then you can open neovim with:
+```sh
+nvim
+
+```
+Neovim is nothing special at all if we don’t start adding a few plugins. This is the part that scares most people away when they first start using Neovim. So Let’s try break it down in easy steps.
+
+Close Neovim and let's add some plugins. In order to close Neovim, press `SHIFT + :` to enter **command mode** and type `:q` to quit.
+
+
+# Adding some flavor
+
+Let's add a clean starting point for your config that is easy and well documented if you want to customize further.
+
+## Clone kickstart.nvim
+
+[kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) is a minimal Neovim config and its purposeis to be a starting point(its NOT a full distro, which I dont recommend either). It comes pre-configured with LSP(if you are coming from vscode, its like the Intelissence for language related edits/search), autocompletion, fuzzy finding, and more without the bloat and weird keybinds of a full distro like LazyVim.
+
+Then clone the repo directly into your Neovim config folder:
+```sh
+git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim
+```
+You can also fork this repo and clone from it, so if you want to backup your nvim config to use it in another machine, thats a pretty good way.
+
+Now open Neovim and it will automatically install all plugins on the first launch:
+```sh
+nvim
+```
+
+Kickstart.nvim uses the `Lazy` plugin manager, which download and install all the plugins in the config files automatically the first time you open nvim, so just wait for the installation to finish, then restart Neovim. 
+
+You now have a fully working setup with:
+- **LSP** (language server support)
+- **nvim-cmp** (autocompletion)
+- **Telescope** (fuzzy finder)
+- **Treesitter** (better syntax highlighting)
+- **Tokyonight theme** (default colorscheme)
+
+From here you can edit `~/.config/nvim/init.lua` to customize everything to your liking.
+
+## Setting up kickstart.nvim for web dev (JS/TS/React/Node)
+
+### Installing the language servers
+
+Kickstart comes out-of-the-box with `mason.nvim`, which is a package manager for LSP servers, linters, and formatters. Open Neovim, open the command bar(`SHIFT+:`) and type:
+
+```
+:Mason
+```
+
+From the Mason UI, install the following:
+- `typescript-language-server` - JS/TS/React/Node LSP
+- `eslint-lsp` - linting
+- `prettierd` - formatting
+
+Or install them all at once without opening the UI:
+```
+:MasonInstall typescript-language-server eslint-lsp prettierd
+```
+
+### Enabling the servers in init.lua
+
+In `~/.config/nvim/init.lua`, find the `servers` table search with the key `/` and type `/servers =` then hit enter and add:
+
+```lua filename='init.lua'
+servers = {
+  ts_ls = {},
+  eslint = {},
+},
+```
+
+### Setting up formatting on save
+
+Find the `conform.nvim` section in `init.lua` and configure prettierd for web filetypes:
+```lua
+formatters_by_ft = {
+  javascript = { 'prettierd' },
+  typescript = { 'prettierd' },
+  javascriptreact = { 'prettierd' },
+  typescriptreact = { 'prettierd' },
+},
+format_on_save = { timeout_ms = 500, lsp_fallback = true },
+```
+
+The `format_on_save` part will probably already be there as a comment, so just put the cursor in the same line and hit the keys `gcc`, which comment/uncomment the current line. 
+
+Restart Neovim and open any `.js`, `.ts`, or `.tsx` file - you should have autocompletion, go-to-definition, error diagnostics, and format on save working out of the box.
+
+## Testing and debugging with Jest and DAP
+
+### Running Jest tests with neotest
+
+`neotest` is a plugin that integrates test runners directly into Neovim. Add it to your plugins in `init.lua`:
+
+```lua
+return = {
+    {
+      'nvim-neotest/neotest',
+      dependencies = {
+        'nvim-neotest/nvim-nio',
+        'nvim-lua/plenary.nvim',
+        'nvim-treesitter/nvim-treesitter',
+        'haydenmeade/neotest-jest',
+      },
+      config = function()
+        require('neotest').setup({
+          adapters = {
+            require('neotest-jest')({
+              jestCommand = 'npx jest',
+            }),
+          },
+        })
+      end,
+    },
+}
+```
+
+Save and restart Neovim. Lazy will install the plugins automatically. You can now run tests with:
+- `<leader>tr` - run the nearest test
+- `<leader>tf` - run all tests in the current file
+- `<leader>to` - open the test output panel
+
+### Debugging with nvim-dap
+
+DAP stands for Debug Adapter Protocol, it's the same protocol VSCode uses under the hood. Add `nvim-dap` and the JS debug adapter to your plugins below the neotest one:
+
+```lua
+{
+  'mfussenegger/nvim-dap',
+  dependencies = {
+    'rcarriga/nvim-dap-ui',
+    'nvim-neotest/nvim-nio',
+    'microsoft/vscode-js-debug',
+  },
+  config = function()
+    local dap = require('dap')
+    local dapui = require('dapui')
+
+    dapui.setup()
+    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+
+    dap.adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}',
+      executable = {
+        command = 'node',
+        args = { vim.fn.stdpath('data') .. '/lazy/vscode-js-debug/dist/src/dapDebugServer.js', '${port}' },
+      },
+    }
+
+    for _, lang in ipairs({ 'javascript', 'typescript' }) do
+      dap.configurations[lang] = {
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+        },
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach to process',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
+        },
+      }
+    end
+  end,
+},
+```
+
+### Debugging keymaps
+
+Add these keymaps to your `init.lua` so you can control the debugger without leaving the keyboard:
+
+```lua
+vim.keymap.set('n', '<F5>', require('dap').continue, { desc = 'Debug: Start/Continue' })
+vim.keymap.set('n', '<F10>', require('dap').step_over, { desc = 'Debug: Step over' })
+vim.keymap.set('n', '<F11>', require('dap').step_into, { desc = 'Debug: Step into' })
+vim.keymap.set('n', '<F12>', require('dap').step_out, { desc = 'Debug: Step out' })
+vim.keymap.set('n', '<leader>b', require('dap').toggle_breakpoint, { desc = 'Debug: Toggle breakpoint' })
+```
+
+Set a breakpoint with `<leader>b`, then hit `<F5>` to start the debugger. The DAP UI will open automatically showing locals, the call stack, and a REPL.

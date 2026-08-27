@@ -1,0 +1,510 @@
+---
+title: "How to setup AI CLI tools that do not act stupid"
+slug: "how-to-setup-ai-cli-tools"
+description: "A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code."
+date: "2026-06-29"
+status: "published"
+tags:
+  - "ai"
+  - "cli"
+  - "codex"
+  - "claude-code"
+  - "mcp"
+thumbnail: "./thumb.gif"
+---
+
+Most AI coding setups fail in the same cheap, humiliating way: the tool is powerful, the model is expensive, and the context is garbage.
+
+So the assistant guesses. It writes React 18 code in a React 19 project. It imports from private package internals because one blog post from 2021 did that. It edits files before reading the repo. It invents a testing command. Then you, tragic little foreman of the machine age, spend the evening reviewing confident nonsense instead of doing the work.
+
+This post is about setting up AI CLI tools, mainly Codex and Claude Code, so they stop walking into every repo like a golden retriever in a server room.
+
+The goal is not magic. Magic is for conference talks, LinkedIn founders, and people who say "agentic" because nobody loved them enough. The goal is a boring, repeatable setup that makes the assistant ask fewer stupid questions and make fewer expensive mistakes.
+
+## The model is not the setup
+
+A good model with bad context behaves like a senior engineer who woke up in your repo after a minor head injury.
+
+It can reason. It can write code. It can even smell a bug sometimes. But it does not know your rules unless you write them down. It does not know your design system unless you point it at the public API. It does not know whether you prefer Vitest, Jest, Playwright, server components, snake case, kebab case, or some company-specific superstition passed down from the engineer who left in 2019 and somehow still ruins your Tuesdays.
+
+You need four layers:
+
+1. Global instructions for how the agent should behave everywhere.
+2. Project instructions for how this repo works.
+3. MCP servers for fresh docs and real code search.
+4. Skills for task-specific behavior that you do not want to rewrite in every prompt.
+
+Once those exist, your prompts get smaller. The assistant gets less theatrical. The work gets more boring, which is where professional software lives after the dream dies.
+
+## Start with global instructions
+
+Codex and OpenCode-style agents read `AGENTS.md`. Claude Code uses `CLAUDE.md`. This is annoying, yes. You are allowed to sigh. Then make both files and move on with your life.
+
+Put global rules in your home directory:
+
+```text filename="$HOME/AGENTS.md"
+You are a pragmatic software engineer working in my local workspace.
+
+Before editing:
+- Inspect the codebase first.
+- Prefer small correct patches over broad rewrites.
+- Do not invent commands. Read package scripts first.
+- Never revert user changes unless I explicitly ask.
+- Use current library docs when APIs matter.
+- Search real code examples when syntax or patterns are unclear.
+
+When coding:
+- Follow existing project conventions.
+- Keep changes minimal.
+- Add tests only where they prove the behavior being changed.
+- Run relevant checks before claiming success.
+
+When responding:
+- Be direct.
+- State what changed.
+- State what was verified.
+- State what was not verified.
+```
+
+Then give Claude Code the same policy:
+
+```sh
+cp "$HOME/AGENTS.md" "$HOME/CLAUDE.md"
+```
+
+You can also keep one canonical file and symlink it if your tools behave well with symlinks:
+
+```sh
+ln -s "$HOME/AGENTS.md" "$HOME/CLAUDE.md"
+```
+
+The point is not the filename. The point is that every new session starts with the same rules before you have to type your sad little paragraph again.
+
+## Add project instructions that actually matter
+
+Global rules are manners. Project rules are survival.
+
+At the root of each repo, write an `AGENTS.md` that tells the assistant what this project is, what it must preserve, and what it must never do. If you use Claude Code heavily, add a matching `CLAUDE.md`, or copy the same important parts into it.
+
+For a Next.js app, I would write something like this:
+
+````markdown filename="AGENTS.md"
+# Project rules
+
+This is a Next.js App Router project using React 19 and TypeScript.
+
+## Architecture
+
+- Keep route files as server components unless interactivity requires a small client component.
+- Put shared UI in `components/`.
+- Put server-safe parsing and content logic in `lib/`.
+- Do not deep import from design-system internals. Use public package exports only.
+
+## Styling
+
+- Use SCSS modules for component-local styles.
+- Prefer design tokens over hardcoded colors.
+- Preserve mobile layout and keyboard accessibility.
+
+## Validation
+
+Before finishing substantial changes, run:
+
+```sh
+npm run typecheck
+npm run lint
+npm run build
+```
+
+If touching content indexes, also run:
+
+```sh
+npm run prebuild
+```
+````
+
+Do not fill this file with corporate incense. "Write clean code" means nothing. "Do not deep import from `phosphor-ui/src`" means something. The assistant can obey a concrete constraint. It cannot obey your vibes, unless your vibes have filenames.
+
+## Use Context7 for docs before the model gets nostalgic
+
+Library APIs rot. Frameworks mutate. Blog posts lie by aging.
+
+Context7 fixes one specific problem: it pulls current, version-aware docs into the assistant's context. The Context7 docs say the quiet part plainly: add `use context7` to your prompt, or configure your assistant so it always uses Context7 for library documentation, API references, and package examples. Revolutionary stuff, apparently. Reading the manual before writing code. Civilization may yet recover.
+
+That belongs in your global instructions:
+
+```markdown filename="$HOME/AGENTS.md"
+## Documentation policy
+
+When a prompt involves a library, framework, SDK, CLI, cloud service, or external package:
+
+1. Use Context7 first.
+2. Resolve the library by name.
+3. Fetch docs for the exact task.
+4. Use those docs instead of memory.
+```
+
+Now your prompt can be short:
+
+```text
+Upgrade this route to the current Next.js metadata pattern. Use context7.
+```
+
+Without Context7, the model may remember three different Next.js eras at once, like a drunk uncle explaining JavaScript modules at Christmas. With Context7, it has a better chance of seeing the actual API before touching your app.
+
+## Add gh-grep for real code patterns
+
+Docs tell you what the library claims. Real repositories tell you how people survive with it on a Tuesday.
+
+`gh-grep` is useful when you need production-ish examples from public GitHub code. Use it for patterns, not for answers. Search actual code that would appear in a file:
+
+```text
+Search GitHub for `getServerSession(` in TypeScript and TSX files. Show common Next.js App Router patterns.
+```
+
+Bad search:
+
+```text
+best auth practices nextjs
+```
+
+Good search:
+
+```text
+getServerSession(
+```
+
+Add this to global instructions:
+
+```markdown filename="$HOME/AGENTS.md"
+## Real code examples
+
+Use gh-grep when implementation details are unclear or when docs do not show enough realistic usage.
+
+Rules:
+- Search for literal code patterns, not vague keywords.
+- Prefer examples from active, reputable repositories.
+- Treat examples as evidence, not gospel.
+- Adapt to this project's conventions before editing.
+```
+
+This matters because public code is full of cursed archaeology. You are asking the assistant to learn from it, not worship it.
+
+## Wire MCP servers into Codex
+
+Codex supports MCP servers through config. Project config can live under `.codex/config.toml`; global config usually lives under your Codex config directory.
+
+A local stdio MCP server looks like this:
+
+```toml filename="$HOME/.codex/config.toml"
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.gh-grep]
+command = "gh-grep-mcp"
+args = ["--stdio"]
+```
+
+Your exact command may differ depending on how you install each server. Do not copy commands from a stranger's dotfiles while pretending that is engineering. Read the install docs for the MCP server you are using, then put the command in config.
+
+For project-specific MCPs, use `.codex/config.toml` inside the repo:
+
+```toml filename=".codex/config.toml"
+[mcp_servers.project-docs]
+command = "docs-server"
+args = ["--stdio"]
+cwd = "/absolute/path/to/this/repo"
+```
+
+Keep secrets out of config files. Use environment variables. If your agent needs a token, pass the variable name, not the value. Nobody needs your API key preserved forever in a repo so future-you can feel shame with line numbers.
+
+## Wire MCP servers into Claude Code
+
+Claude Code supports MCP through project/plugin configuration. The common shape is a `.mcp.json` file with server commands.
+
+Example:
+
+```json filename=".mcp.json"
+{
+  "context7": {
+    "command": "npx",
+    "args": ["-y", "@upstash/context7-mcp"]
+  },
+  "gh-grep": {
+    "command": "gh-grep-mcp",
+    "args": ["--stdio"]
+  }
+}
+```
+
+Then put the behavior rule in `CLAUDE.md`:
+
+```markdown filename="CLAUDE.md"
+Use Context7 for current library docs whenever a prompt mentions a framework, SDK, CLI, API, or external package.
+
+Use gh-grep when you need real-world examples of an API or pattern. Search for literal code, not vague keywords.
+```
+
+Restart the CLI after changing MCP config. Yes, this is the part everybody forgets. Then they complain that the tool is broken. Sometimes the tool is broken. Usually the human is just tired and proud.
+
+## Add a find-skills skill
+
+The best agent setup has reusable behaviors. You do not want to paste a 900-word prompt every time you need a security review, a Next.js refactor, a FastAPI endpoint, or a PostgreSQL migration.
+
+A `find-skills` skill solves the discovery problem. Its job is simple: given a project stack and task, it tells the assistant which existing skill to load or create.
+
+Create a skill like this:
+
+```markdown filename="$HOME/.agents/skills/find-skills/SKILL.md"
+# find-skills
+
+Use this skill when the user asks how to improve AI context for a project, choose skills for a stack, or discover task-specific agent behavior.
+
+## Workflow
+
+1. Inspect the project stack from files like `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `docker-compose.yml`, and framework config.
+2. Identify the project purpose: app, library, CLI, infrastructure, docs, data pipeline, or mixed.
+3. Recommend existing skills that match the stack and purpose.
+4. If no skill exists, propose a small new skill with trigger phrases and rules.
+5. Explain when each skill should be used and when it should not be used.
+
+## Output
+
+- Project stack detected.
+- Useful skills.
+- Missing skills worth creating.
+- Suggested global or project instruction updates.
+```
+
+Now use it like this:
+
+```text
+Use find-skills. Inspect this repo and recommend skills for its stack and purpose. Then update AGENTS.md with only the rules that would help future coding sessions.
+```
+
+It reads the stack, matches it against what you already have, and points you at the right skill for the task in front of you.
+
+The skill is not supposed to be clever. It is supposed to stop you from asking a generalist agent to do specialist work while blindfolded, which is apparently our industry's preferred management style.
+
+## Use find-skills when you enter a new project
+
+The first prompt in a new repo should not be "fix this." That is how you get an assistant confidently editing CMake like a raccoon trying to defuse a landmine.
+
+Start by making the assistant classify the project, then ask it to install or recommend skills for that exact stack, purpose, and tone. Make it do the boring reconnaissance first. That is the difference between tooling and another expensive autocomplete séance.
+
+For a C++ game engine project, I would open the repo and run something like:
+
+```text
+Use find-skills.
+
+This is a C++ game engine project. Keywords: C++20, CMake, Ninja, Vulkan, SDL3, ECS, renderer, asset pipeline, memory arenas, job system, editor tools, Linux, performance, low-level debugging.
+
+Inspect the repo first. Detect the actual stack from CMakeLists.txt, source folders, scripts, docs, and tests. Recommend skills for this project context, stack, and tone. If skills can be installed with npx from the skill registry I use, give me the exact install commands. If no matching skill exists, draft a project-local skill and update AGENTS.md with the smallest useful rules.
+```
+
+That prompt gives the agent search terms with teeth. "Game engine" is too broad. "C++20, CMake, Vulkan, SDL3, ECS, memory arenas" tells it what kind of ugly little kingdom it has walked into.
+
+If your skill registry has an `npx` installer, the output might look like this after the agent has inspected the repo:
+
+```sh
+npx agent-skill-installer add cpp-cmake
+npx agent-skill-installer add vulkan-rendering
+npx agent-skill-installer add game-engine-architecture
+npx agent-skill-installer add performance-profiling
+npx agent-skill-installer add technical-writing-humanizer
+```
+
+Do not copy those package names like scripture. They are examples. Use the installer and registry your setup actually provides, unless you enjoy debugging npm errors at 01:30 while your life continues to narrow into a single glowing rectangle.
+
+After installing skills, make the assistant write the project rules:
+
+```text
+Use find-skills again. Now that the project skills are installed, update AGENTS.md for this repo.
+
+Rules to include:
+- Build commands discovered from the repo.
+- Test commands discovered from the repo.
+- Coding standards for C++ files.
+- Renderer boundaries and forbidden shortcuts.
+- Performance assumptions.
+- Tone for docs and comments: terse, technical, no marketing copy.
+
+Do not invent commands. If something is unknown, write UNKNOWN and tell me how to verify it.
+```
+
+For this kind of project, a useful `AGENTS.md` might say:
+
+```markdown filename="AGENTS.md"
+# Game engine agent rules
+
+This is a C++ game engine project.
+
+## Stack
+
+- C++20
+- CMake and Ninja
+- Vulkan renderer
+- SDL3 platform layer
+- ECS runtime
+
+## Behavior
+
+- Inspect engine boundaries before editing.
+- Do not rewrite renderer architecture to make a small fix.
+- Do not allocate in hot paths unless the existing code already does.
+- Prefer explicit ownership and simple data layouts.
+- Use project build scripts instead of inventing compiler commands.
+- For Vulkan, check current docs before using API details.
+- For unfamiliar patterns, search real code examples before patching.
+
+## Tone
+
+- Comments explain constraints, not obvious code.
+- Docs are terse, technical, and mildly hostile to hand-waving.
+```
+
+This is the part people skip because it feels like paperwork. Then they spend six hours arguing with an AI that thinks a renderer is just React with triangles. Write the context once. Make the machine carry it. That is the only respectable use of automation left to us.
+
+## Build prompts that force context before code
+
+Once global instructions, project rules, MCPs, and skills exist, your prompts should change.
+
+Bad prompt:
+
+```text
+Add auth
+```
+
+Better prompt:
+
+```text
+Use find-skills first. Then inspect the existing auth/session code and package scripts. Use Context7 for any framework APIs. Use gh-grep if you need real examples. Implement the smallest correct auth guard for admin routes and run relevant checks.
+```
+
+Bad prompt:
+
+```text
+Fix the build
+```
+
+Better prompt:
+
+```text
+Run the build, diagnose the first real failure, inspect related files, then patch only the cause. Do not rewrite unrelated code. Use Context7 if the error involves Next.js, React, TypeScript, or package APIs.
+```
+
+Bad prompt:
+
+```text
+Make this page better
+```
+
+Better prompt:
+
+```text
+Use frontend-design and existing project styles. Inspect the route and CSS module first. Preserve the current visual language. Improve layout and mobile behavior without changing content or URLs.
+```
+
+This is the difference between hiring help and releasing a raccoon into the electrical room.
+
+## Keep secrets and permissions boring
+
+MCP tools can be powerful. That is useful. It is also how you wake up to a terminal session that has done something creative with production.
+
+Use boring rules:
+
+- Do not put secrets in `AGENTS.md`, `CLAUDE.md`, `.mcp.json`, or `.codex/config.toml`.
+- Prefer read-only tokens where possible.
+- Keep destructive actions behind explicit approval.
+- Do not let a code-search MCP write files.
+- Do not give every project every MCP just because you like a big toolbox.
+- Review generated config before committing it.
+
+The assistant does not need god mode to fix your button component. If it asks for god mode, treat it like you would treat a contractor asking for your house keys and a notarized apology from your father.
+
+## A usable baseline setup
+
+Here is the short version I would actually run on a new machine:
+
+```sh
+mkdir -p "$HOME/.codex"
+mkdir -p "$HOME/.agents/skills/find-skills"
+touch "$HOME/AGENTS.md"
+cp "$HOME/AGENTS.md" "$HOME/CLAUDE.md"
+```
+
+Then I would fill `AGENTS.md` with:
+
+```markdown filename="$HOME/AGENTS.md"
+# Global AI CLI rules
+
+You are a pragmatic software engineer in my local workspace.
+
+## Before editing
+
+- Inspect files before changing them.
+- Read project instructions first.
+- Prefer small patches.
+- Never revert changes I did not ask you to revert.
+- Check package scripts before inventing commands.
+
+## Docs and examples
+
+- Use Context7 for libraries, frameworks, SDKs, APIs, CLIs, and cloud services.
+- Use gh-grep for real code examples when implementation patterns are unclear.
+- Treat docs as authority and public code as evidence.
+
+## Skills
+
+- Use find-skills when entering a new project or unfamiliar stack.
+- Use task-specific skills before specialist work.
+
+## Verification
+
+- Run relevant checks when feasible.
+- Never claim a check passed unless it ran.
+- If a check was skipped, say why.
+```
+
+Then each repo gets its own `AGENTS.md` with its stack, commands, architecture boundaries, style rules, and forbidden moves.
+
+That is the whole machine. It is not glamorous. It will not make your screenshots go viral on Hacker News. It will, however, save you from explaining the same repo rules to a stochastic intern every morning until death or management finds a new way to measure productivity.
+
+## If you want the lazy version
+
+I put an installer in this repo because apparently even copying files has become too much ceremony for men with standing desks and no lumbar strength.
+
+Read it first if you still have a working survival instinct:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/sektant1/sektant-blog/master/scripts/install-ai-cli-context.sh -o /tmp/install-ai-cli-context.sh
+less /tmp/install-ai-cli-context.sh
+sh /tmp/install-ai-cli-context.sh
+```
+
+If you are determined to live dangerously, the one-liner is:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/sektant1/sektant-blog/master/scripts/install-ai-cli-context.sh | sh
+```
+
+That installs the global setup: `~/AGENTS.md`, `~/CLAUDE.md`, `~/.codex/config.toml`, a Claude MCP example at `~/.mcp.ai-cli-tools.json`, and `~/.agents/skills/find-skills/SKILL.md`.
+
+If you want it to also create project-local files in the current repo, run:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/sektant1/sektant-blog/master/scripts/install-ai-cli-context.sh | sh -s -- --project
+```
+
+The script does not store secrets. It backs up existing files before appending marker blocks, unless you pass `--force`, which you should not do while emotionally compromised or wearing a conference badge.
+
+It does not magically install every MCP binary on earth. Context7 uses `npx`. The gh-grep entry assumes `gh-grep-mcp` exists on your `PATH`; if your install uses another command, edit the generated config like an adult who still owns a chair.
+
+## Final rule: context beats prompt poetry
+
+Long prompts feel responsible. They are often just panic with bullet points.
+
+A better setup makes the boring context permanent: global rules, project rules, docs through Context7, code examples through gh-grep, and skills for repeatable behavior. Then your prompt can focus on the actual task.
+
+If the assistant still fails, good. Now it fails inside a smaller box. Smaller boxes are easier to debug. That is software engineering, in the end: building cages for chaos, labeling them, and pretending this was the plan all along.

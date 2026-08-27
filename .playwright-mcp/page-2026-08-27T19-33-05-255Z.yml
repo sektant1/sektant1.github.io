@@ -1,0 +1,264 @@
+- generic [active] [ref=f73e1]:
+  - generic [ref=f73e2]: // unclassified // personal //
+  - generic [ref=f73e4]:
+    - generic [ref=f73e7]:
+      - link "sektant hideout // fld" [ref=f73e9]:
+        - /url: /
+        - generic [ref=f73e10]: sektant
+        - generic [ref=f73e11]: hideout // fld
+      - generic [ref=f73e12]:
+        - navigation "Sections" [ref=f73e13]:
+          - link "posts" [ref=f73e14]:
+            - /url: /posts
+            - generic [ref=f73e15]: ">"
+            - text: posts
+          - link "projects" [ref=f73e16]:
+            - /url: /projects
+            - generic [ref=f73e17]: ">"
+            - text: projects
+          - link "games" [ref=f73e18]:
+            - /url: /games
+            - generic [ref=f73e19]: ">"
+            - text: games
+          - link "about" [ref=f73e20]:
+            - /url: /about
+            - generic [ref=f73e21]: ">"
+            - text: about
+        - navigation "Content" [ref=f73e22]:
+          - list [ref=f73e23]:
+            - listitem [ref=f73e24]:
+              - button "content/ (5)" [expanded] [ref=f73e25]:
+                - generic [ref=f73e26]: "[-]"
+                - generic [ref=f73e27]: content/
+                - generic [ref=f73e28]: (5)
+              - list [ref=f73e29]:
+                - listitem [ref=f73e30]:
+                  - link "home" [ref=f73e31]:
+                    - /url: /
+                    - generic [ref=f73e32]: "-"
+                - listitem [ref=f73e34]:
+                  - button "pages/ (1)" [expanded] [ref=f73e35]:
+                    - generic [ref=f73e36]: "[-]"
+                    - generic [ref=f73e37]: pages/
+                    - generic [ref=f73e38]: (1)
+                  - list [ref=f73e39]:
+                    - listitem [ref=f73e40]:
+                      - link "About" [ref=f73e41]:
+                        - /url: /about
+                        - generic [ref=f73e42]: "-"
+                - listitem [ref=f73e44]:
+                  - button "posts/ (3)" [expanded] [ref=f73e45]:
+                    - generic [ref=f73e46]: "[-]"
+                    - generic [ref=f73e47]: posts/
+                    - generic [ref=f73e48]: (3)
+                  - list [ref=f73e49]:
+                    - listitem [ref=f73e50]:
+                      - link "How to Learn with Claude" [ref=f73e51]:
+                        - /url: /posts/how-to-learn-with-claude-code
+                        - generic [ref=f73e52]: "-"
+                    - listitem [ref=f73e54]:
+                      - link "How to setup AI CLI tools that do not act stupid" [ref=f73e55]:
+                        - /url: /posts/how-to-setup-ai-cli-tools
+                        - generic [ref=f73e56]: "-"
+                    - listitem [ref=f73e58]:
+                      - link "How to use Neovim as your IDE" [ref=f73e59]:
+                        - /url: /posts/how-to-setup-neovim
+                        - generic [ref=f73e60]: "-"
+                - listitem [ref=f73e62]:
+                  - button "projects/ (7)" [expanded] [ref=f73e63]:
+                    - generic [ref=f73e64]: "[-]"
+                    - generic [ref=f73e65]: projects/
+                    - generic [ref=f73e66]: (7)
+                  - list [ref=f73e67]:
+                    - listitem [ref=f73e68]:
+                      - link "executioner.nvim" [ref=f73e69]:
+                        - /url: /projects/executioner-nvim
+                        - generic [ref=f73e70]: "-"
+                    - listitem [ref=f73e72]:
+                      - link "monad-engine" [ref=f73e73]:
+                        - /url: /projects/monad-game-engine
+                        - generic [ref=f73e74]: "-"
+                    - listitem [ref=f73e76]:
+                      - link "phosphor-ui" [ref=f73e77]:
+                        - /url: /projects/phosphor-ui
+                        - generic [ref=f73e78]: "-"
+                    - listitem [ref=f73e80]:
+                      - link "ram.nvim" [ref=f73e81]:
+                        - /url: /projects/ram-nvim
+                        - generic [ref=f73e82]: "-"
+                    - listitem [ref=f73e84]:
+                      - link "raven-engine" [ref=f73e85]:
+                        - /url: /projects/raven-engine
+                        - generic [ref=f73e86]: "-"
+                    - listitem [ref=f73e88]:
+                      - link "react-warcraft-build-order-tool" [ref=f73e89]:
+                        - /url: /projects/warcraft-build-order-tools
+                        - generic [ref=f73e90]: "-"
+                    - listitem [ref=f73e92]:
+                      - link "react-warcraft-ui" [ref=f73e93]:
+                        - /url: /projects/react-warcraft-ui
+                        - generic [ref=f73e94]: "-"
+                - listitem [ref=f73e96]:
+                  - link "cms.local" [ref=f73e97]:
+                    - /url: /admin
+                    - generic [ref=f73e98]: "-"
+      - generic [ref=f73e101]:
+        - link "github" [ref=f73e102]:
+          - /url: https://github.com/sektant1
+        - link "youtube" [ref=f73e103]:
+          - /url: https://youtube.com/@sektant1swe
+        - link "rss" [ref=f73e104]:
+          - /url: /rss.xml
+      - button "Toggle Sidebar" [ref=f73e105]
+    - main [ref=f73e106]:
+      - generic [ref=f73e107]:
+        - generic [ref=f73e108]: ~/content/projects
+        - button "find" [ref=f73e109]
+        - button "Change display face" [ref=f73e111]
+      - generic [ref=f73e113]:
+        - generic [ref=f73e115]:
+          - generic [ref=f73e116]: content/projects
+          - heading "projects" [level=2] [ref=f73e117]
+          - paragraph [ref=f73e118]: Everything I have shipped or am still building. Each one links to its write-up, its source and its site, wherever those exist.
+        - list [ref=f73e119]:
+          - listitem [ref=f73e120]:
+            - generic [ref=f73e123]:
+              - generic [ref=f73e124]:
+                - heading [level=3] [ref=f73e125]:
+                  - link "raven-engine" [ref=f73e126]:
+                    - /url: /projects/raven-engine
+                - generic [ref=f73e127]: active
+              - paragraph [ref=f73e128]: Simple 3D game engine with retro/PSX aesthetics and quirks written in C++ with Vulkan API
+              - generic [ref=f73e129]:
+                - generic [ref=f73e130]: entt
+                - generic [ref=f73e131]: jolt
+                - generic [ref=f73e132]: imgui
+                - generic [ref=f73e133]: vulkan
+              - generic [ref=f73e134]:
+                - link "Write-up →" [ref=f73e135]:
+                  - /url: /projects/raven-engine
+                - link "Repo ↗" [ref=f73e136]:
+                  - /url: https://github.com/sektant1/raven-engine
+          - listitem [ref=f73e137]:
+            - generic [ref=f73e140]:
+              - generic [ref=f73e141]:
+                - heading [level=3] [ref=f73e142]:
+                  - link "phosphor-ui" [ref=f73e143]:
+                    - /url: /projects/phosphor-ui
+                - generic [ref=f73e144]: published
+              - paragraph [ref=f73e145]: My own React UI Component Library with s.t.a.l.k.e.r vibes
+              - generic [ref=f73e146]:
+                - generic [ref=f73e147]: vim
+                - generic [ref=f73e148]: plugin
+                - generic [ref=f73e149]: note
+              - generic [ref=f73e150]:
+                - link "Site ↗" [ref=f73e151]:
+                  - /url: https://sektant.dev/phosphor-ui/
+                - link "Write-up →" [ref=f73e152]:
+                  - /url: /projects/phosphor-ui
+                - link "Repo ↗" [ref=f73e153]:
+                  - /url: https://github.com/sektant1/phosphor-ui
+          - listitem [ref=f73e154]:
+            - generic [ref=f73e157]:
+              - generic [ref=f73e158]:
+                - heading [level=3] [ref=f73e159]:
+                  - link "ram.nvim" [ref=f73e160]:
+                    - /url: /projects/ram-nvim
+                - generic [ref=f73e161]: published
+              - paragraph [ref=f73e162]: Simple persistent note buffer plugin for neovim
+              - generic [ref=f73e163]:
+                - generic [ref=f73e164]: vim
+                - generic [ref=f73e165]: plugin
+                - generic [ref=f73e166]: note
+              - generic [ref=f73e167]:
+                - link "Repo ↗" [ref=f73e168]:
+                  - /url: https://github.com/sektant1/ram.nvim
+                - link "Write-up →" [ref=f73e169]:
+                  - /url: /projects/ram-nvim
+          - listitem [ref=f73e170]:
+            - generic [ref=f73e173]:
+              - generic [ref=f73e174]:
+                - heading [level=3] [ref=f73e175]:
+                  - link "executioner.nvim" [ref=f73e176]:
+                    - /url: /projects/executioner-nvim
+                - generic [ref=f73e177]: published
+              - paragraph [ref=f73e178]: Telescope-powered script runner plugin for Neovim 0.10+
+              - generic [ref=f73e179]:
+                - generic [ref=f73e180]: vim
+                - generic [ref=f73e181]: script
+                - generic [ref=f73e182]: plugin
+              - generic [ref=f73e183]:
+                - link "Repo ↗" [ref=f73e184]:
+                  - /url: https://github.com/sektant1/executioner.nvim
+                - link "Write-up →" [ref=f73e185]:
+                  - /url: /projects/executioner-nvim
+          - listitem [ref=f73e186]:
+            - generic [ref=f73e189]:
+              - generic [ref=f73e190]:
+                - heading [level=3] [ref=f73e191]:
+                  - link "monad-engine" [ref=f73e192]:
+                    - /url: /projects/monad-game-engine
+                - generic [ref=f73e193]: published
+              - paragraph [ref=f73e194]: Small C++17 game engine for learning. OpenGL 3.3 and Vulkan
+              - generic [ref=f73e195]:
+                - generic [ref=f73e196]: 3d
+                - generic [ref=f73e197]: opengl
+                - generic [ref=f73e198]: vulkan
+                - generic [ref=f73e199]: graphics
+              - generic [ref=f73e200]:
+                - link "Site ↗" [ref=f73e201]:
+                  - /url: https://sektant.dev/monad-engine
+                - link "Write-up →" [ref=f73e202]:
+                  - /url: /projects/monad-game-engine
+                - link "Repo ↗" [ref=f73e203]:
+                  - /url: https://github.com/sektant1/monad-engine
+          - listitem [ref=f73e204]:
+            - generic [ref=f73e207]:
+              - generic [ref=f73e208]:
+                - heading [level=3] [ref=f73e209]:
+                  - link "react-warcraft-ui" [ref=f73e210]:
+                    - /url: /projects/react-warcraft-ui
+                - generic [ref=f73e211]: published
+              - paragraph [ref=f73e212]: "A React component library that faithfully recreates Warcraft III: Reforged UI elements using original BLP textures and MDX models"
+              - generic [ref=f73e213]:
+                - generic [ref=f73e214]: react
+                - generic [ref=f73e215]: ui
+                - generic [ref=f73e216]: warcraft
+              - generic [ref=f73e217]:
+                - link "Site ↗" [ref=f73e218]:
+                  - /url: https://sektant.dev/warcraft-ui/
+                - link "Write-up →" [ref=f73e219]:
+                  - /url: /projects/react-warcraft-ui
+                - link "Repo ↗" [ref=f73e220]:
+                  - /url: https://github.com/sektant1/warcraft-ui
+          - listitem [ref=f73e221]:
+            - generic [ref=f73e224]:
+              - generic [ref=f73e225]:
+                - heading [level=3] [ref=f73e226]:
+                  - link "react-warcraft-build-order-tool" [ref=f73e227]:
+                    - /url: /projects/warcraft-build-order-tools
+                - generic [ref=f73e228]: published
+              - paragraph [ref=f73e229]: A Warcraft III build order practice tool with a fully themed WC3 interface.
+              - generic [ref=f73e230]:
+                - generic [ref=f73e231]: warcraft
+                - generic [ref=f73e232]: react
+              - generic [ref=f73e233]:
+                - link "Site ↗" [ref=f73e234]:
+                  - /url: https://sektant.dev/warcraft-tools/
+                - link "Write-up →" [ref=f73e235]:
+                  - /url: /projects/warcraft-build-order-tools
+                - link "Repo ↗" [ref=f73e236]:
+                  - /url: https://github.com/sektant1/warcraft-tools
+      - generic [ref=f73e237]:
+        - generic [ref=f73e238]: "[ read ]"
+        - button "0 0 0 errors and 0 warnings. Open the log panel." [ref=f73e239]:
+          - generic [ref=f73e240]: "0"
+          - generic [ref=f73e244]: "0"
+          - generic [ref=f73e248]: 0 errors and 0 warnings. Open the log panel.
+        - generic [ref=f73e249]:
+          - generic [ref=f73e250]: projects
+          - generic [ref=f73e251]: "7"
+        - generic "Connected" [ref=f73e252]: lnk
+        - generic [ref=f73e255]: "------Z"
+        - generic [ref=f73e256]: utf-8
+  - button "Open Next.js Dev Tools" [ref=f73e262] [cursor=pointer]

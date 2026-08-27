@@ -1,0 +1,13 @@
+{
+  "name": "Sektant's Hideout",
+  "short_name": "Sektant",
+  "description": "Field reports, anomaly notes and faction transmissions from the Exclusion Zone.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04140a",
+  "theme_color": "#04140a",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

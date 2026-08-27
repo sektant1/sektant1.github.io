@@ -1,0 +1,95 @@
+- generic [active] [ref=f14e1]:
+  - alert [ref=f14e20]: Content on disk
+  - generic [ref=f14e21]:
+    - generic [ref=f14e24]:
+      - generic [ref=f14e25]: cms.local
+      - navigation "CMS sections" [ref=f14e28]:
+        - generic [ref=f14e29]:
+          - generic [ref=f14e30]: cms/
+          - link "dashboard" [ref=f14e31]:
+            - /url: /admin
+            - generic [ref=f14e32]: ◈
+            - text: dashboard
+          - link "posts" [ref=f14e33]:
+            - /url: /admin/posts
+            - generic [ref=f14e34]: ◈
+            - text: posts
+          - link "projects" [ref=f14e35]:
+            - /url: /admin/projects
+            - generic [ref=f14e36]: ◈
+            - text: projects
+        - generic [ref=f14e37]:
+          - generic [ref=f14e38]: new/
+          - link "post" [ref=f14e39]:
+            - /url: /admin/posts/new
+            - generic [ref=f14e40]: ◈
+            - text: post
+          - link "project" [ref=f14e41]:
+            - /url: /admin/projects/new
+            - generic [ref=f14e42]: ◈
+            - text: project
+      - generic [ref=f14e44]:
+        - link "view site" [ref=f14e45]:
+          - /url: /
+        - button "sign out" [ref=f14e46]
+      - button "Toggle Sidebar" [ref=f14e47]
+    - main [ref=f14e48]:
+      - generic [ref=f14e49]:
+        - generic [ref=f14e50]: ~/cms
+        - button "Change display face" [ref=f14e51]
+      - generic [ref=f14e53]:
+        - generic [ref=f14e54]:
+          - heading "Content on disk" [level=1] [ref=f14e55]
+          - paragraph [ref=f14e56]:
+            - text: Everything here writes MDX files under
+            - code [ref=f14e57]: content/
+            - text: . Commit them to publish.
+        - generic [ref=f14e58]:
+          - heading "posts" [level=2] [ref=f14e59]
+          - generic [ref=f14e60]:
+            - generic [ref=f14e61]:
+              - term [ref=f14e62]: total
+              - definition [ref=f14e64]: "5"
+            - generic [ref=f14e65]:
+              - term [ref=f14e66]: published
+              - definition [ref=f14e68]: "3"
+            - generic [ref=f14e69]:
+              - term [ref=f14e70]: drafts
+              - definition [ref=f14e72]: "2"
+            - generic [ref=f14e73]:
+              - term [ref=f14e74]: series
+              - definition [ref=f14e76]: "0"
+        - generic [ref=f14e77]:
+          - heading "projects" [level=2] [ref=f14e78]
+          - generic [ref=f14e79]:
+            - generic [ref=f14e80]:
+              - term [ref=f14e81]: total
+              - definition [ref=f14e83]: "7"
+            - generic [ref=f14e84]:
+              - term [ref=f14e85]: published
+              - definition [ref=f14e87]: "7"
+            - generic [ref=f14e88]:
+              - term [ref=f14e89]: drafts
+              - definition [ref=f14e91]: "0"
+        - generic [ref=f14e92]:
+          - heading "unfinished" [level=2] [ref=f14e93]
+          - list [ref=f14e94]:
+            - listitem [ref=f14e95]:
+              - link "post test post loll" [ref=f14e96]:
+                - /url: /admin/posts/test-post-1/edit
+                - generic [ref=f14e97]: post
+                - generic [ref=f14e98]: test post loll
+            - listitem [ref=f14e99]:
+              - link "post z" [ref=f14e100]:
+                - /url: /admin/posts/z/edit
+                - generic [ref=f14e101]: post
+                - generic [ref=f14e102]: z
+      - generic [ref=f14e103]:
+        - generic [ref=f14e104]: browse
+        - generic [ref=f14e105]:
+          - generic [ref=f14e106]: posts
+          - generic [ref=f14e107]: "5"
+        - generic [ref=f14e108]:
+          - generic [ref=f14e109]: projects
+          - generic [ref=f14e110]: "7"
+        - generic [ref=f14e111]: local

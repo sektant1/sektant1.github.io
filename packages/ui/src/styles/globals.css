@@ -20,6 +20,33 @@
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "tailwindcss";
 
+/* Bender, the face the identity was drawn against. It is not on npm, so the
+   files ship with the package rather than as a @fontsource dependency; Play
+   stays the default because Bender has no Cyrillic. */
+@font-face {
+  font-family: "Bender";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("./fonts/bender/Bender-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Bender";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/bender/Bender.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Bender";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/bender/Bender-Bold.woff") format("woff");
+}
+
 /* Tailwind's automatic source detection is rooted at the consuming app, so
    this package's own components are outside it and must be named. */
 @source "..";
@@ -75,10 +102,34 @@
      resolves 100cqi to 0 — and the art silently disappears. The floor keeps
      it visible while the layout is fixed. */
   font-size: clamp(
-    0.3rem,
-    calc(100cqi / (var(--ascii-cols, 40) * 0.6)),
+    var(--ascii-min, 0.42rem),
+    calc(100cqi / (var(--ascii-cols, 40) * 0.61)),
     var(--ascii-max, 1rem)
   );
+}
+
+@utility ascii-raster {
+  font-variant-ligatures: none;
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: none;
+}
+
+@utility ascii-phosphor-ink {
+  color: var(--ascii-ink);
+}
+
+@utility crt-terminal-fill {
+  color: transparent;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--ascii-ink) 0 0.62em,
+    color-mix(in oklch, var(--ascii-ink) 72%, transparent) 0.62em 0.78em,
+    var(--ascii-ink) 0.78em 1em
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0 0 1px color-mix(in oklch, var(--ascii-ink) 35%, transparent);
 }
 
 /* Scanlines painted *inside* the glyphs rather than over them. The gradient
@@ -106,39 +157,88 @@
    per character. Two layers: a tight core and a wide, faint spill. */
 @utility crt-bloom {
   @variant dark {
-    /* Tight, or the halo swallows the strokes and the art reads as blur. */
-    filter: drop-shadow(0 0 1px color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent))
-      drop-shadow(0 0 5px color-mix(in oklch, var(--ascii-ink, currentColor) 22%, transparent));
+    filter: drop-shadow(
+        0 0 1px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 65%, transparent)
+      )
+      drop-shadow(
+        0 0 3px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 18%, transparent)
+      );
   }
 }
 
-/* Chromatic tear. Long quiet stretches with two brief breaks, so a surface
-   reads as a stable display that occasionally drops sync rather than as a
-   constant animation. */
-@keyframes crt-tear-a {
-  0%, 86%, 100% { opacity: 0; transform: translate(2px, -1px); }
-  87% { opacity: 0.75; transform: translate(5px, -1px); }
-  89% { opacity: 0.4; transform: translate(-3px, 1px); }
-  91% { opacity: 0; transform: translate(2px, -1px); }
-  96% { opacity: 0.6; transform: translate(4px, 0); }
-  98% { opacity: 0; transform: translate(2px, -1px); }
+@keyframes field-sync-loss {
+  0%,
+  88%,
+  92%,
+  96%,
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translateX(0);
+  }
+  89% {
+    opacity: 0.46;
+    clip-path: inset(16% 0 58% 0);
+    transform: translateX(0.42em);
+  }
+  90% {
+    opacity: 0.28;
+    clip-path: inset(61% 0 19% 0);
+    transform: translateX(-0.24em);
+  }
+  91% {
+    opacity: 0.38;
+    clip-path: inset(39% 0 43% 0);
+    transform: translateX(0.16em);
+  }
+  97% {
+    opacity: 0.3;
+    clip-path: inset(72% 0 11% 0);
+    transform: translateX(0.3em);
+  }
+  98% {
+    opacity: 0;
+    clip-path: inset(72% 0 11% 0);
+    transform: translateX(-0.12em);
+  }
 }
 
-@keyframes crt-tear-b {
-  0%, 86%, 100% { opacity: 0; transform: translate(-2px, 1px); }
-  87% { opacity: 0.65; transform: translate(-5px, 1px); }
-  89% { opacity: 0.35; transform: translate(3px, -1px); }
-  91% { opacity: 0; transform: translate(-2px, 1px); }
-  96% { opacity: 0.5; transform: translate(-4px, 0); }
-  98% { opacity: 0; transform: translate(-2px, 1px); }
+@utility ascii-signal-echo {
+  opacity: 0;
+  animation: field-sync-loss 8s steps(1, end) infinite;
+
+  .group\/ascii-banner:hover & {
+    opacity: 0.32;
+    clip-path: inset(42% 0 36% 0);
+    transform: translateX(0.2em);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 /* A whole-element jitter, for art that is not layered into colour channels. */
 @keyframes crt-jitter {
-  0%, 92%, 100% { transform: translate(0, 0); opacity: 1; }
-  93% { transform: translate(-2px, 1px); opacity: 0.7; }
-  94% { transform: translate(3px, -1px); opacity: 1; }
-  95% { transform: translate(0, 0); }
+  0%,
+  92%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  93% {
+    transform: translate(-2px, 1px);
+    opacity: 0.7;
+  }
+  94% {
+    transform: translate(3px, -1px);
+    opacity: 1;
+  }
+  95% {
+    transform: translate(0, 0);
+  }
 }
 
 @utility crt-glow-soft {
@@ -147,38 +247,110 @@
   }
 }
 
+/* Phosphor persistence.
+ *
+ * The single most characteristic thing about a green tube, and the one most
+ * CRT pastiches miss: the beam lights a pixel almost instantly, then the
+ * coating keeps glowing as it decays. So the transition is asymmetric —
+ * snap on, fade off — rather than the same duration in both directions.
+ *
+ * Applied to anything that lights up under a pointer. It animates colour and
+ * text-shadow only, so it costs nothing a hover state was not already paying.
+ */
+@utility crt-persist {
+  transition-property:
+    color, background-color, border-color, text-shadow, opacity;
+  /* The decay: slow out, and long enough to see. */
+  transition-duration: 600ms;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  &:hover,
+  &:focus-visible {
+    /* The strike: immediate. */
+    transition-duration: 40ms;
+    transition-timing-function: linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0ms;
+  }
+}
+
+/* A tube that is driven hard: the beam brightens and dims on a slow cycle
+   rather than sitting at a fixed level. Built on drop-shadow so it haloes a
+   block of ASCII as one mass, the way crt-bloom does — this is that effect
+   with a pulse, for the one piece of art a page is built around. */
+@keyframes crt-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(
+        0 0 1px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent)
+      )
+      drop-shadow(
+        0 0 3px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 18%, transparent)
+      );
+  }
+  50% {
+    filter: drop-shadow(
+        0 0 1px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 85%, transparent)
+      )
+      drop-shadow(
+        0 0 7px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 30%, transparent)
+      )
+      drop-shadow(
+        0 0 14px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 12%, transparent)
+      );
+  }
+}
+
+@utility crt-breathe {
+  @variant dark {
+    /* Overrides crt-bloom's static filter, so the two are not combined. */
+    animation: crt-breathe 2.8s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
 :root {
-  --background: oklch(1.0000 0 0);
+  --background: oklch(1 0 0);
   --foreground: oklch(0.2178 0 0);
-  --card: oklch(1.0000 0 0);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.2178 0 0);
-  --popover: oklch(1.0000 0 0);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2178 0 0);
   --primary: oklch(0.5799 0.2203 25.1911);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.9271 0.0040 106.4775);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.9271 0.004 106.4775);
   --secondary-foreground: oklch(0.2686 0 0);
   --muted: oklch(0.9699 0.0013 106.4238);
   --muted-foreground: oklch(0.5555 0 0);
   --accent: oklch(0.9495 0.0208 13.8603);
   --accent-foreground: oklch(0.4931 0.1859 24.8319);
   --destructive: oklch(0.6358 0.2088 25.4126);
-  --destructive-foreground: oklch(1.0000 0 0);
+  --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.3211 0 0);
   --input: oklch(0.3211 0 0);
   --ring: oklch(0.5799 0.2203 25.1911);
   --chart-1: oklch(0.5799 0.2203 25.1911);
   --chart-2: oklch(0.3211 0 0);
   --chart-3: oklch(0.5103 0 0);
-  --chart-4: oklch(0.6830 0 0);
+  --chart-4: oklch(0.683 0 0);
   --chart-5: oklch(0.8452 0 0);
   --sidebar: oklch(0.9851 0 0);
   --sidebar-foreground: oklch(0.3211 0 0);
   --sidebar-primary: oklch(0.5799 0.2203 25.1911);
-  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.9401 0 0);
   --sidebar-accent-foreground: oklch(0.5799 0.2203 25.1911);
-  --sidebar-border: oklch(0.9310 0 0);
+  --sidebar-border: oklch(0.931 0 0);
   --sidebar-ring: oklch(0.5799 0.2203 25.1911);
   --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-serif: Georgia, serif;
@@ -190,14 +362,24 @@
   --shadow-spread: 0px;
   --shadow-opacity: 0;
   --shadow-color: #1a1a1a;
-  --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
-  --shadow-xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
-  --shadow-sm: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-md: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 2px 4px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-lg: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 4px 6px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 8px 10px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
+  --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
+  --shadow-xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
+  --shadow-sm:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
+  --shadow:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-md:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 2px 4px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-lg:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 4px 6px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-xl:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 8px 10px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   --shadow-offset-x: 0px;
@@ -215,7 +397,6 @@
   --terminal-rule: color-mix(in oklch, var(--border) 55%, transparent);
   --terminal-edge: color-mix(in oklch, var(--primary) 32%, transparent);
   --terminal-wash: color-mix(in oklch, var(--primary) 7%, transparent);
-
 }
 
 .dark {
@@ -226,27 +407,27 @@
   --popover: oklch(0.2178 0 0);
   --popover-foreground: oklch(0.9612 0 0);
   --primary: oklch(0.5799 0.2203 25.1911);
-  --primary-foreground: oklch(1.0000 0 0);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.2393 0 0);
   --secondary-foreground: oklch(0.9851 0 0);
   --muted: oklch(0.2393 0 0);
   --muted-foreground: oklch(0.7252 0 0);
-  --accent: oklch(0.2230 0.0725 21.8281);
+  --accent: oklch(0.223 0.0725 21.8281);
   --accent-foreground: oklch(0.6331 0.1896 20.4467);
   --destructive: oklch(0.3901 0.1298 25.5873);
-  --destructive-foreground: oklch(1.0000 0 0);
+  --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.3715 0 0);
   --input: oklch(0.3715 0 0);
   --ring: oklch(0.5799 0.2203 25.1911);
   --chart-1: oklch(0.5799 0.2203 25.1911);
   --chart-2: oklch(0.8853 0 0);
-  --chart-3: oklch(0.6830 0 0);
+  --chart-3: oklch(0.683 0 0);
   --chart-4: oklch(0.5103 0 0);
   --chart-5: oklch(0.3211 0 0);
   --sidebar: oklch(0.2178 0 0);
   --sidebar-foreground: oklch(0.8853 0 0);
   --sidebar-primary: oklch(0.5799 0.2203 25.1911);
-  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.2178 0 0);
   --sidebar-accent-foreground: oklch(0.6331 0.1896 20.4467);
   --sidebar-border: oklch(0.2686 0 0);
@@ -261,14 +442,24 @@
   --shadow-spread: 0px;
   --shadow-opacity: 0;
   --shadow-color: #1a1a1a;
-  --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
-  --shadow-xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
-  --shadow-sm: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 1px 2px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-md: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 2px 4px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-lg: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 4px 6px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00), 0px 8px 10px -1px hsl(0 0% 10.1961% / 0.00);
-  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.00);
+  --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
+  --shadow-xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
+  --shadow-sm:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
+  --shadow:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-md:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 2px 4px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-lg:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 4px 6px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-xl:
+    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
+    0px 8px 10px -1px hsl(0 0% 10.1961% / 0);
+  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
   --shadow-offset-x: 0px;
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
@@ -285,7 +476,6 @@
   --terminal-rule: color-mix(in oklch, var(--border) 55%, transparent);
   --terminal-edge: color-mix(in oklch, var(--primary) 32%, transparent);
   --terminal-wash: color-mix(in oklch, var(--primary) 7%, transparent);
-
 }
 
 @theme inline {

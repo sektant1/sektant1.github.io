@@ -29,6 +29,10 @@ type BootLogProps = Omit<React.ComponentProps<"div">, "children"> & {
   lines: BootLine[]
   /** Milliseconds between lines. */
   interval?: number
+  /** Lines revealed together on each interval. */
+  batchSize?: number
+  /** Keep only this many latest lines visible. */
+  windowSize?: number
   /** Keep a blinking block after the last line. */
   cursor?: boolean
 }
@@ -41,6 +45,8 @@ type BootLogProps = Omit<React.ComponentProps<"div">, "children"> & {
 function BootLog({
   lines,
   interval = 140,
+  batchSize = 1,
+  windowSize,
   cursor = true,
   className,
   ...props
@@ -49,6 +55,10 @@ function BootLog({
   const [shown, setShown] = React.useState(0)
   // Derived rather than stored, so no effect writes state during commit.
   const visible = reduceMotion ? lines.length : shown
+  const firstVisible = windowSize
+    ? Math.max(0, visible - Math.max(1, windowSize))
+    : 0
+  const visibleLines = lines.slice(firstVisible, visible)
 
   // Reset during render when the log changes, rather than from an effect.
   const [seenLines, setSeenLines] = React.useState(lines)
@@ -60,18 +70,29 @@ function BootLog({
   React.useEffect(() => {
     if (reduceMotion) return
 
-    const id = setInterval(() => {
-      setShown((current) => {
-        if (current >= lines.length) {
-          clearInterval(id)
-          return current
-        }
-        return current + 1
-      })
-    }, interval)
+    const startedAt = performance.now()
+    const pace = Math.max(1, interval)
+    const batch = Math.max(1, Math.floor(batchSize))
+    let id: ReturnType<typeof setTimeout>
 
-    return () => clearInterval(id)
-  }, [lines, interval, reduceMotion])
+    const tick = () => {
+      const elapsed = performance.now() - startedAt
+      const completedBatches = Math.floor(elapsed / pace)
+      const next = Math.min(lines.length, completedBatches * batch)
+      setShown(next)
+
+      if (next < lines.length) {
+        id = setTimeout(
+          tick,
+          Math.max(0, (completedBatches + 1) * pace - elapsed)
+        )
+      }
+    }
+
+    id = setTimeout(tick, pace)
+
+    return () => clearTimeout(id)
+  }, [lines, interval, batchSize, reduceMotion])
 
   return (
     <div
@@ -84,8 +105,11 @@ function BootLog({
       </span>
 
       <div aria-hidden="true" className="flex flex-col">
-        {lines.slice(0, visible).map((line, index) => (
-          <div key={`${line.label}-${index}`} className="flex gap-2">
+        {visibleLines.map((line, index) => (
+          <div
+            key={`${line.label}-${firstVisible + index}`}
+            className="flex gap-2"
+          >
             <span className="shrink-0 text-terminal-chrome">
               [{line.status ? STATUS_TEXT[line.status] : "······"}]
             </span>

@@ -1,0 +1,219 @@
+- generic [ref=e2]:
+  - generic [ref=e5]:
+    - link "sektant's hideout" [ref=e7] [cursor=pointer]:
+      - /url: /
+    - navigation "Content" [ref=e9]:
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "content/ (5)" [expanded] [ref=e12]:
+            - generic [ref=e13]: ▾
+            - generic [ref=e14]: content/
+            - generic [ref=e15]: (5)
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - link "home" [ref=e18] [cursor=pointer]:
+                - /url: /
+                - generic [ref=e19]: ◈
+            - listitem [ref=e21]:
+              - button "pages/ (1)" [expanded] [ref=e22]:
+                - generic [ref=e23]: ▾
+                - generic [ref=e24]: pages/
+                - generic [ref=e25]: (1)
+              - list [ref=e26]:
+                - listitem [ref=e27]:
+                  - link "About" [ref=e28] [cursor=pointer]:
+                    - /url: /about
+                    - generic [ref=e29]: ◈
+            - listitem [ref=e31]:
+              - button "posts/ (3)" [expanded] [ref=e32]:
+                - generic [ref=e33]: ▾
+                - generic [ref=e34]: posts/
+                - generic [ref=e35]: (3)
+              - list [ref=e36]:
+                - listitem [ref=e37]:
+                  - link "How to Learn with Claude" [ref=e38] [cursor=pointer]:
+                    - /url: /posts/how-to-learn-with-claude-code
+                    - generic [ref=e39]: ◈
+                - listitem [ref=e41]:
+                  - link "How to setup AI CLI tools that do not act stupid" [ref=e42] [cursor=pointer]:
+                    - /url: /posts/how-to-setup-ai-cli-tools
+                    - generic [ref=e43]: ◈
+                - listitem [ref=e45]:
+                  - link "How to use Neovim as your IDE" [ref=e46] [cursor=pointer]:
+                    - /url: /posts/how-to-setup-neovim
+                    - generic [ref=e47]: ◈
+            - listitem [ref=e49]:
+              - button "projects/ (7)" [expanded] [ref=e50]:
+                - generic [ref=e51]: ▾
+                - generic [ref=e52]: projects/
+                - generic [ref=e53]: (7)
+              - list [ref=e54]:
+                - listitem [ref=e55]:
+                  - link "executioner.nvim" [ref=e56] [cursor=pointer]:
+                    - /url: /projects/executioner-nvim
+                    - generic [ref=e57]: ◈
+                - listitem [ref=e59]:
+                  - link "monad-engine" [ref=e60] [cursor=pointer]:
+                    - /url: /projects/monad-game-engine
+                    - generic [ref=e61]: ◈
+                - listitem [ref=e63]:
+                  - link "phosphor-ui" [ref=e64] [cursor=pointer]:
+                    - /url: /projects/phosphor-ui
+                    - generic [ref=e65]: ◈
+                - listitem [ref=e67]:
+                  - link "ram.nvim" [ref=e68] [cursor=pointer]:
+                    - /url: /projects/ram-nvim
+                    - generic [ref=e69]: ◈
+                - listitem [ref=e71]:
+                  - link "raven-engine" [ref=e72] [cursor=pointer]:
+                    - /url: /projects/raven-engine
+                    - generic [ref=e73]: ◈
+                - listitem [ref=e75]:
+                  - link "react-warcraft-build-order-tool" [ref=e76] [cursor=pointer]:
+                    - /url: /projects/warcraft-build-order-tools
+                    - generic [ref=e77]: ◈
+                - listitem [ref=e79]:
+                  - link "react-warcraft-ui" [ref=e80] [cursor=pointer]:
+                    - /url: /projects/react-warcraft-ui
+                    - generic [ref=e81]: ◈
+            - listitem [ref=e83]:
+              - link "cms.local" [ref=e84] [cursor=pointer]:
+                - /url: /admin
+                - generic [ref=e85]: ◈
+    - generic [ref=e88]:
+      - link "github" [ref=e89] [cursor=pointer]:
+        - /url: https://github.com/sektant1
+      - link "youtube" [ref=e90] [cursor=pointer]:
+        - /url: https://youtube.com/@sektant1swe
+      - link "rss" [ref=e91] [cursor=pointer]:
+        - /url: /rss.xml
+    - button "Toggle Sidebar" [ref=e92]
+  - main [ref=e93]:
+    - generic [ref=e94]: ~/index
+    - generic [ref=e97]:
+      - region [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - heading "Sektant's Hideout" [level=1] [ref=e101]
+            - generic [ref=e103]:
+              - generic [ref=e104]: SEKTANT
+              - generic [ref=e105]: _____ ________ ___________ _ ________ / ___// ____/ //_/_ __/ | / | / /_ __/ \__ \/ __/ / ,< / / / /| | / |/ / / / ___/ / /___/ /| | / / / ___ |/ /| / / / /____/_____/_/ |_|/_/ /_/ |_/_/ |_/ /_/
+            - paragraph [ref=e106]: i make computer do cool stuff
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - term [ref=e109]: posts
+              - definition [ref=e111]: "003"
+            - generic [ref=e112]:
+              - term [ref=e113]: projects
+              - definition [ref=e115]: "007"
+            - generic [ref=e116]:
+              - term [ref=e117]: minutes
+              - definition [ref=e119]: "032"
+          - blockquote [ref=e120]:
+            - text: The struggle itself towards the heights is enough to fill a man's heart. One must imagine Sisyphus happy.
+            - generic [ref=e121]: Camus
+        - img "Rotating ASCII globe. Drag to spin it." [ref=e123]
+      - generic [ref=e124]:
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: content/posts
+            - heading "latest" [level=2] [ref=e128]
+          - link "all posts →" [ref=e129] [cursor=pointer]:
+            - /url: /posts
+        - list [ref=e130]:
+          - listitem [ref=e131]:
+            - 'link "2026-06-29 How to setup AI CLI tools that do not act stupid A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code. 14m read #ai #cli #codex" [ref=e132] [cursor=pointer]':
+              - /url: /posts/how-to-setup-ai-cli-tools
+              - generic [ref=e134]:
+                - generic [ref=e135]:
+                  - time [ref=e136]: 2026-06-29
+                  - heading "How to setup AI CLI tools that do not act stupid" [level=3] [ref=e137]
+                - paragraph [ref=e138]: A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code.
+                - generic [ref=e139]:
+                  - generic [ref=e140]: 14m read
+                  - generic [ref=e141]: "#ai"
+                  - generic [ref=e142]: "#cli"
+                  - generic [ref=e143]: "#codex"
+          - listitem [ref=e144]:
+            - 'link "2026-04-07 How to Learn with Claude How to not let Claude fry your brain 11m read #learning #ai #claude-code" [ref=e145] [cursor=pointer]':
+              - /url: /posts/how-to-learn-with-claude-code
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - time [ref=e149]: 2026-04-07
+                  - heading "How to Learn with Claude" [level=3] [ref=e150]
+                - paragraph [ref=e151]: How to not let Claude fry your brain
+                - generic [ref=e152]:
+                  - generic [ref=e153]: 11m read
+                  - generic [ref=e154]: "#learning"
+                  - generic [ref=e155]: "#ai"
+                  - generic [ref=e156]: "#claude-code"
+          - listitem [ref=e157]:
+            - 'link "2026-03-31 How to use Neovim as your IDE How to setup neovim from zero to full working web dev ide 7m read #vim #setup #plugin" [ref=e158] [cursor=pointer]':
+              - /url: /posts/how-to-setup-neovim
+              - generic [ref=e160]:
+                - generic [ref=e161]:
+                  - time [ref=e162]: 2026-03-31
+                  - heading "How to use Neovim as your IDE" [level=3] [ref=e163]
+                - paragraph [ref=e164]: How to setup neovim from zero to full working web dev ide
+                - generic [ref=e165]:
+                  - generic [ref=e166]: 7m read
+                  - generic [ref=e167]: "#vim"
+                  - generic [ref=e168]: "#setup"
+                  - generic [ref=e169]: "#plugin"
+      - generic [ref=e170]:
+        - generic [ref=e171]:
+          - generic [ref=e172]:
+            - generic [ref=e173]: content/projects
+            - heading "things I built" [level=2] [ref=e174]
+          - link "all projects →" [ref=e175] [cursor=pointer]:
+            - /url: /projects
+        - list [ref=e176]:
+          - listitem [ref=e177]:
+            - link "raven-engine active Simple 3D game engine with retro/PSX aesthetics and quirks written in C++ with Vulkan API entt jolt imgui vulkan ↗ github.com" [ref=e178] [cursor=pointer]:
+              - /url: https://github.com/sektant1/raven-engine
+              - generic [ref=e181]:
+                - heading "raven-engine" [level=3] [ref=e182]
+                - generic [ref=e183]: active
+              - paragraph [ref=e184]: Simple 3D game engine with retro/PSX aesthetics and quirks written in C++ with Vulkan API
+              - generic [ref=e185]:
+                - generic [ref=e186]: entt
+                - generic [ref=e187]: jolt
+                - generic [ref=e188]: imgui
+                - generic [ref=e189]: vulkan
+              - generic [ref=e190]: ↗ github.com
+          - listitem [ref=e191]:
+            - link "phosphor-ui published My own React UI Component Library with s.t.a.l.k.e.r vibes vim plugin note ↗ sektant.dev" [ref=e192] [cursor=pointer]:
+              - /url: https://sektant.dev/phosphor-ui/
+              - generic [ref=e195]:
+                - heading "phosphor-ui" [level=3] [ref=e196]
+                - generic [ref=e197]: published
+              - paragraph [ref=e198]: My own React UI Component Library with s.t.a.l.k.e.r vibes
+              - generic [ref=e199]:
+                - generic [ref=e200]: vim
+                - generic [ref=e201]: plugin
+                - generic [ref=e202]: note
+              - generic [ref=e203]: ↗ sektant.dev
+          - listitem [ref=e204]:
+            - link "ram.nvim published Simple persistent note buffer plugin for neovim vim plugin note ↗ github.com" [ref=e205] [cursor=pointer]:
+              - /url: https://github.com/sektant1/ram.nvim
+              - generic [ref=e208]:
+                - heading "ram.nvim" [level=3] [ref=e209]
+                - generic [ref=e210]: published
+              - paragraph [ref=e211]: Simple persistent note buffer plugin for neovim
+              - generic [ref=e212]:
+                - generic [ref=e213]: vim
+                - generic [ref=e214]: plugin
+                - generic [ref=e215]: note
+              - generic [ref=e216]: ↗ github.com
+      - generic [ref=e218]:
+        - generic [ref=e219]: HIDEOUT
+        - generic [ref=e220]: __ __________ __________ __ ________ / / / / _/ __ \/ ____/ __ \/ / / /_ __/ / /_/ // // / / / __/ / / / / / / / / / / __ // // /_/ / /___/ /_/ / /_/ / / / /_/ /_/___/_____/_____/\____/\____/ /_/
+    - generic [ref=e221]:
+      - generic [ref=e222]: read
+      - generic [ref=e223]:
+        - generic [ref=e224]: posts
+        - generic [ref=e225]: "3"
+      - generic [ref=e226]:
+        - generic [ref=e227]: projects
+        - generic [ref=e228]: "7"
+      - generic [ref=e229]: utf-8

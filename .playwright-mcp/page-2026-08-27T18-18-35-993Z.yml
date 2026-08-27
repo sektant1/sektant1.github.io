@@ -1,0 +1,128 @@
+- generic [ref=f16e2]:
+  - generic [ref=f16e5]:
+    - link "sektant's hideout" [ref=f16e7]:
+      - /url: /
+    - navigation "Content" [ref=f16e9]:
+      - list [ref=f16e10]:
+        - listitem [ref=f16e11]:
+          - button "content/ (5)" [expanded] [ref=f16e12]:
+            - generic [ref=f16e13]: ▾
+            - generic [ref=f16e14]: content/
+            - generic [ref=f16e15]: (5)
+          - list [ref=f16e16]:
+            - listitem [ref=f16e17]:
+              - link "home" [ref=f16e18]:
+                - /url: /
+                - generic [ref=f16e19]: ◈
+            - listitem [ref=f16e21]:
+              - button "pages/ (1)" [expanded] [ref=f16e22]:
+                - generic [ref=f16e23]: ▾
+                - generic [ref=f16e24]: pages/
+                - generic [ref=f16e25]: (1)
+              - list [ref=f16e26]:
+                - listitem [ref=f16e27]:
+                  - link "About" [ref=f16e28]:
+                    - /url: /about
+                    - generic [ref=f16e29]: ◈
+            - listitem [ref=f16e31]:
+              - button "posts/ (3)" [expanded] [ref=f16e32]:
+                - generic [ref=f16e33]: ▾
+                - generic [ref=f16e34]: posts/
+                - generic [ref=f16e35]: (3)
+              - list [ref=f16e36]:
+                - listitem [ref=f16e37]:
+                  - link "How to Learn with Claude" [ref=f16e38]:
+                    - /url: /posts/how-to-learn-with-claude-code
+                    - generic [ref=f16e39]: ◈
+                - listitem [ref=f16e41]:
+                  - link "How to setup AI CLI tools that do not act stupid" [ref=f16e42]:
+                    - /url: /posts/how-to-setup-ai-cli-tools
+                    - generic [ref=f16e43]: ◈
+                - listitem [ref=f16e45]:
+                  - link "How to use Neovim as your IDE" [ref=f16e46]:
+                    - /url: /posts/how-to-setup-neovim
+                    - generic [ref=f16e47]: ◈
+            - listitem [ref=f16e49]:
+              - button "projects/ (7)" [expanded] [ref=f16e50]:
+                - generic [ref=f16e51]: ▾
+                - generic [ref=f16e52]: projects/
+                - generic [ref=f16e53]: (7)
+              - list [ref=f16e54]:
+                - listitem [ref=f16e55]:
+                  - link "executioner.nvim" [ref=f16e56]:
+                    - /url: /projects/executioner-nvim
+                    - generic [ref=f16e57]: ◈
+                - listitem [ref=f16e59]:
+                  - link "monad-engine" [ref=f16e60]:
+                    - /url: /projects/monad-game-engine
+                    - generic [ref=f16e61]: ◈
+                - listitem [ref=f16e63]:
+                  - link "phosphor-ui" [ref=f16e64]:
+                    - /url: /projects/phosphor-ui
+                    - generic [ref=f16e65]: ◈
+                - listitem [ref=f16e67]:
+                  - link "ram.nvim" [ref=f16e68]:
+                    - /url: /projects/ram-nvim
+                    - generic [ref=f16e69]: ◈
+                - listitem [ref=f16e71]:
+                  - link "raven-engine" [ref=f16e72]:
+                    - /url: /projects/raven-engine
+                    - generic [ref=f16e73]: ◈
+                - listitem [ref=f16e75]:
+                  - link "react-warcraft-build-order-tool" [ref=f16e76]:
+                    - /url: /projects/warcraft-build-order-tools
+                    - generic [ref=f16e77]: ◈
+                - listitem [ref=f16e79]:
+                  - link "react-warcraft-ui" [ref=f16e80]:
+                    - /url: /projects/react-warcraft-ui
+                    - generic [ref=f16e81]: ◈
+            - listitem [ref=f16e83]:
+              - link "cms.local" [ref=f16e84]:
+                - /url: /admin
+                - generic [ref=f16e85]: ◈
+    - generic [ref=f16e88]:
+      - link "github" [ref=f16e89]:
+        - /url: https://github.com/sektant1
+      - link "youtube" [ref=f16e90]:
+        - /url: https://youtube.com/@sektant1swe
+      - link "rss" [ref=f16e91]:
+        - /url: /rss.xml
+    - button "Toggle Sidebar" [ref=f16e92]
+  - main [ref=f16e93]:
+    - generic [ref=f16e94]:
+      - generic [ref=f16e95]: ~/content/pages/about/index.mdx
+      - button "Change display face" [ref=f16e96]
+    - generic [ref=f16e98]:
+      - article [ref=f16e99]:
+        - generic [ref=f16e100]:
+          - heading "About" [level=1] [ref=f16e102]
+          - paragraph [ref=f16e103]:
+            - time [ref=f16e104]: 2026-05-01
+        - generic [ref=f16e105]:
+          - heading "##How to reach me" [level=2] [ref=f16e106]
+          - list [ref=f16e107]:
+            - listitem [ref=f16e108]:
+              - text: "-"
+              - emphasis [ref=f16e109]: "email:"
+              - code [ref=f16e110]: contact@sektant.dev
+            - listitem [ref=f16e111]:
+              - text: "-"
+              - emphasis [ref=f16e112]: "gpg:"
+              - code [ref=f16e113]: "0xDEADBEEF"
+            - listitem [ref=f16e114]:
+              - text: "-"
+              - emphasis [ref=f16e115]: "radio:"
+              - text: CQ on 14.230 MHz, mostly evenings, near Электрозаводск
+          - blockquote [ref=f16e116]:
+            - paragraph [ref=f16e117]:
+              - emphasis [ref=f16e118]: Let them come, frostmourne hungers...
+      - complementary [ref=f16e119]:
+        - navigation "On this page" [ref=f16e121]:
+          - paragraph [ref=f16e122]: on this page
+          - list [ref=f16e123]:
+            - listitem [ref=f16e124]:
+              - link "How to reach me" [ref=f16e125]:
+                - /url: "#how-to-reach-me"
+    - generic [ref=f16e127]:
+      - generic [ref=f16e128]: read
+      - generic [ref=f16e129]: utf-8

@@ -1,0 +1,217 @@
+---
+title: "How to Learn with Claude"
+slug: "how-to-learn-with-claude-code"
+description: "How to not let Claude fry your brain"
+date: "2026-04-07"
+status: "published"
+tags:
+  - "learning"
+  - "ai"
+  - "claude-code"
+thumbnail: "./thumb.gif"
+---
+
+> “Consider the frustration that comes from being bad at something. The feeling is one of stalled progress and simmering anger. But it's actually a sign that you’re moving in the right direction. In fact, that frustration level is increasing the presence in your system of norepinephrine, whose main function is to prime the brain for learning. You need to feel this frustration in order to produce this neurochemical, and you need this neurochemical in order for learning to take place.”
+>
+> [Steven Kotler, The Art of impossible: A Peak Performance Primer](https://www.stevenkotler.com/books/the-art-of-impossible)
+
+For individuals who are deeply committed to personal and intellectual development, especially those on a continuous journey of learning the computer science related fields, claude code can actually improve your learning speed(only if used carefully tho). Navigating this landscape requires more than youtube videos, bootcamps and tutorials, it demands the ability to think critically, ask meaningful questions, understand the fundamentals of that subject, and with then, evaluate ideas with intention to solve that specific problem. 
+
+But if you use claude to just write some code for you without you knowing how to fully understanding the problem and not reaching the solution by yourself, you are literally **burning** your critical thinking and problem solving skills.
+
+# How do we actually learn?
+
+Most people believe that repeated exposure to material, such as “going over” notes, “re-reading” are the main and most important ways to learn and “absorb” information. Such methods are not only highly time-consuming and less than optimally effective, they are often rather boring. There are not only more effective and efficient methods of learning, but alternative approaches are often more engaging, interesting, and enjoyable.
+
+Additionally, most of us conclude that if we are learning easily, we are learning well, however, that effortful learning usually signals not only deeper learning, but more durable long-lasting knowledge. It’s analogous to weight training. Lifting heavier weights which require **more effort** will build **more muscle** in much the same way investing more effort in grappling with new information builds stronger, deeper knowledge. 
+
+So, perhaps surprisingly, sometimes we want to make our learning harder, in order to make it more effective and efficient. It's easy, for instance, to “do” flashcards, re-read highlighted text, and re-copy notes and the like. Whereas, identifying gaps in our knowledge and filling them, practicing applying our knowledge or skills, and synthesizing what we’ve learned is far more **challenging**.
+
+Keep in mind:
+_**Making learning difficult in strategic and desirable ways will enhance retention, retrieval, and transfer of knowledge.**_
+
+For instance, we recognize that teaching someone else that which we are ourselves striving to learn is a highly effective way for deepening our understanding and making our knowledge more retrievable in the future.
+
+## But WHY is it effective?
+
+The theory is that doing so requires that when explaining we instantiate or “reboot” our knowledge structures into working memory, we must elaborate on new information using our own long-term knowledge, we often make new linkages or connections among nodes of knowledge (e.g. topics) when explaining, and we think under new circumstances in new ways when interacting with others in the role of “teacher”. 
+
+That’s not to say that teaching others in, for instance, a study group, is the only way to incorporate desirable difficulties into your self-directed learning; there are many other ways to do so.
+
+## HOW does this apply to learn computer science?
+
+Computer science is one of the most demanding fields when it comes to deliberate practice. Memorizing historical dates is passive. CS demands that you *apply* things under pressure, debug when nothing makes sense, and reason about systems you can’t fully see.
+
+This is why passive consumption, watching a tutorial, copying code from Stack Overflow, or asking Claude to just write the solution, gives you the **illusion** of progress without the actual growth. You feel productive. You aren’t.
+
+The desirable difficulties framework maps directly onto CS learning:
+
+- **Struggling with a bug before asking for help** forces you to build a mental model of the system. That friction is norepinephrine doing its job.
+- **Implementing something from scratch** before looking at reference implementations forces retrival and elaboration, aka the exact mechanisms that deepen memory.
+- **Explaining how a piece of code works** (to yourself, a rubber duck, a classmate, or even to Claude in your own words) reactivates your knowledge structures and exposes the gaps you didn’t know you had.
+
+The hardest part of learning CS is that the feedback loop is brutally honest. Code either runs or it doesn’t. That clarity is actually a gift, it tells you exactly where your understanding breaks down, if you’re willing to sit with the discomfort long enough to find out.
+
+
+# Setting up Claude
+
+> “If you’re not at all interested in performance, shouldn’t you be in the Python room down the hall?”
+>
+> Scott Meyers
+
+Now that we understand how the human brain actually learns, we can step into setting up claude for efficient learning.
+
+The key principle is simple: **Claude should be a thinking partner.** The moment you turn it into a solution machine, you outsource the struggle and the learning goes with it.
+
+## The CLAUDE.md file
+
+Claude Code reads a `CLAUDE.md` file at the root of your project or `$HOME`. This is where you define the rules of engagement. Without it, Claude defaults to being maximally helpful, which for your brain, is maximally harmful.
+
+Create a `CLAUDE.md` in your project with something like:
+
+```markdown
+You are a socratic programming tutor. Do NOT write full solutions.
+
+- Guide me step-by-step.  
+- Ask me clarifying questions before answering
+- Give hints and partial examples, not complete code
+- If I'm stuck, help me identify what I don't understand yet
+- Push back if my reasoning is wrong
+- Only show full code after I've demonstrated understanding
+- Don't try to gaslight or bitch me, always be honest and, if needed, ruthless 
+```
+
+This single file changes everything. Claude will still answer your questions, it just won't do your thinking for you. You are now vibe-coding free!
+
+## Creating a tutor Skill
+
+`CLAUDE.md` sets the default behavior for a project. Claude Code also supports **Skills**, reusable prompt files you can invoke on demand from any session, any project. Useful when you want tutor mode without having to configure every repo.
+
+Create the file `$HOME/.claude/skills/tutor.md`:
+
+```markdown
+---
+name: tutor
+description: Activates Socratic programming tutor mode. Use when learning a new concept, debugging, or solving problems you want to actually understand.
+---
+
+You are now in Socratic programming tutor mode.
+
+Rules:
+- Do NOT write complete solutions. Ever.
+- Ask one clarifying question at a time to guide my thinking.
+- Give hints and partial examples only.
+- If my reasoning is wrong, say so directly. Don't soften it.
+- If I'm stuck, help me identify what I don't understand, don't just fill the gap.
+- Only show full working code after I've demonstrated I understand the approach.
+- Treat me like someone capable of figuring it out, not someone who needs to be carried.
+```
+
+Now, whenever you want tutor mode active, regardless of wich project you're in, just run `/tutor` in the Claude Code prompt. It loads the skill and Claude snaps into that mode for the rest of the session.
+
+This is specially powerful when revisiting old code you wrote with AI help and actually want to understand it this time.
+
+## Using books and PDFs as reference
+
+The best way i think to use Claude is pointing it at the actual material you're studying. Instead of asking generic questions, you feed it the book chapter or paper you're reading and ask it to tutor you from that specific content.
+
+At Claude Code, you can reference any file in your project with the `@` syntax. So if you have a totally legally acquired book copy as PDF or a text article saved locally, just drop it in your project folder and reference it in the prompt:
+
+```
+@books/game-engine-architecture.pdf explain the stack frame concept on page 8, but dont just summarize it. ask me questions until i can explain it back to you as a master at work
+```
+
+Or if you extracted a chapter as plain text:
+
+```
+@notes/sicp-chapter1.txt im on section 1.1.6. walk me through the substitution model without giving me the answer directly
+```
+
+Claude will tutor you from the same source you are reading, using the same terminology and examples. This avoids the situation where Claude explains something in a totally diferent way from the book and you end up with two mental models that dont quite fit together.
+
+**A good workflow**: read a section yourself first, take notes on what you didnt understand, then open Claude and reference that exact section with your specific questions.
+
+## How to ask questions
+
+As **Tony Robbins** once said:
+
+> _"The quality of your questions determines the quality of your learning."_
+
+With this phrase in mind, compare these prompts:
+
+**Bad:**
+```
+Write me a function that reverses a linked list
+```
+
+**Good:**
+```
+I'm trying to reverse a linked list. I think I need to track the previous node
+but I'm not sure how to handle the head. What am I missing in my reasoning?
+```
+
+or
+
+**Bad:**
+```
+teach me ray tracing
+```
+
+**Good:**
+```
+Step 1: explain rays and intersections conceptually
+(wait for me)
+
+Step 2: help me design data structures (no code)
+
+Step 3: guide me to write the intersection function myself
+```
+
+The second prompt forces you to articulate what you already know and by so, finde where the gap actually is. That articulation itself is learning. You are reactivating your knowledge structures before Claude even responds.
+
+If you can't explain what you're confused about, that's a sign you need to go back to fundamentals, not ask Claude to skip them for you. 
+
+Remember bro, **the turtoise beats the hare**.
+
+## After Claude answers
+
+Don't just read the explanation and move on. Close the conversation and try to implement it yourself from **scratch.** If you can't, you didn't learn it, you just read it throught.
+
+Then come back and ask Claude to poke holes in your implementation. Ask it to give you edge cases you haven't considered. Ask it to explain _**why**_ your approach works, not just _**that**_ it works.
+
+That back-and-forth, where you produce something and then stress-test it, is where the actual knowlege gets encoded.
+
+# Conclusion
+
+> "He who cannot obey himself will be commanded. That is the nature of living creatures."
+>
+> Friedrich Nietzsche
+
+AI tools like Claude are genuinly powerful. But power without discipline is just noise and can rot your brain faster than TikTok.
+
+The students who will get the most out of this "AI will replace you" era are not the ones who use AI the most, they're the ones who use it in a wise manner while still moving fast and not burning brain cells. They use it to sharpen their thinking, not replace it. They stay in the struggle long enough for the neurochemistry to do its job, then use Claude to go deeper, not to skip ahead. Also they are the ones who enjoy coding and make it a hobby.
+
+You want to be able to write things from scratch and be comfortable in disconfort, not to just have a portfolio that you can't even explain how the code works. Act accordingly.
+
+# Resources
+
+> “Employ your time in improving yourself by other men's writings so that you shall come easily by what others have labored hard for.”
+>
+> Socrates
+
+These are the books worth your time. Not dumb pokedex tutorials, not bullshit influencer courses, not 2-week javascript bootcamps. These are the kind that take effort to read and give you the foundations that don't expire.
+
+**On how computers actually work**
+- [*Computer Systems: A Programmer's Perspective*](https://csapp.cs.cmu.edu/): Bryant & O'Hallaron. The closest thing to a complete picture of what happens between your code and the hardware. Dense, worth every page.
+- [*The Art of Computer Programming*](https://www-cs-faculty.stanford.edu/~knuth/taocp.html): Knuth. You probably won't read all of it. Read what you can. It will make you think more carefully than almost anything else.
+- [*Structure and Interpretation of Computer Programs*](https://web.mit.edu/6.001/6.037/sicp.pdf): Abelson & Sussman. The Magician book. Free online MIT classes on youtube aswell. Teaches you to think about computation at a level most programmers never reach. Absolute master piece. Will make you think about recursion even on your dreams.
+
+**On algorithms and problem solving**
+- [*Introduction to Algorithms*](https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/): CLRS. The standard reference. Read it alongside actually implementing the algorithms.
+- [*How to Solve It*](https://press.princeton.edu/books/paperback/9780691164076/how-to-solve-it): Pólya. Not a CS book, but a thinking book. Applies directly to debugging and system design.
+- [*Data Structures & Algorithm Analys in C++*](https://www.pearson.com/en-us/subject-catalog/p/Weiss-Data-Structures-and-Algorithm-Analysis-in-C-4th-Edition/P200000003459?view=educator): Mark A. Weiss. Even if you don't know C/C++ yet(skill issue?), it's a goated book to learn about the topic.
+
+**On memory and learning itself**
+- [*Moonwalking with Einstein*](https://joshuafoer.com/moonwalking-with-einstein/): Joshua Foer. A journalist trains for the US Memory Championship. Practical and entertaining introduction to how human memory actually works.
+- [*Writing to Learn*](https://www.harpercollins.com/products/writing-to-learn-william-zinsser): William Zinsser. Writing forces you to organize what you actually know. If you can't write it clearly, you don't understand it yet. Applies directly to documentation, commit messages, and explaining your code.
+- [*The Art of Impossible*](https://www.stevenkotler.com/books/the-art-of-impossible): Steven Kotler. On peak performance and the neurochemistry of learning. Where the opening quote came from.

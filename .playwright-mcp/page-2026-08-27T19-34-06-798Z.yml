@@ -1,0 +1,162 @@
+- generic [active] [ref=f74e1]:
+  - generic [ref=f74e2]: // unclassified // personal //
+  - generic [ref=f74e4]:
+    - generic [ref=f74e7]:
+      - link "sektant hideout // fld" [ref=f74e9]:
+        - /url: /
+        - generic [ref=f74e10]: sektant
+        - generic [ref=f74e11]: hideout // fld
+      - generic [ref=f74e12]:
+        - navigation "Sections" [ref=f74e13]:
+          - link "posts" [ref=f74e14]:
+            - /url: /posts
+            - generic [ref=f74e15]: ">"
+            - text: posts
+          - link "projects" [ref=f74e16]:
+            - /url: /projects
+            - generic [ref=f74e17]: ">"
+            - text: projects
+          - link "games" [ref=f74e18]:
+            - /url: /games
+            - generic [ref=f74e19]: ">"
+            - text: games
+          - link "about" [ref=f74e20]:
+            - /url: /about
+            - generic [ref=f74e21]: ">"
+            - text: about
+        - navigation "Content" [ref=f74e22]:
+          - list [ref=f74e23]:
+            - listitem [ref=f74e24]:
+              - button "content/ (5)" [expanded] [ref=f74e25]:
+                - generic [ref=f74e26]: "[-]"
+                - generic [ref=f74e27]: content/
+                - generic [ref=f74e28]: (5)
+              - list [ref=f74e29]:
+                - listitem [ref=f74e30]:
+                  - link "home" [ref=f74e31]:
+                    - /url: /
+                    - generic [ref=f74e32]: "-"
+                - listitem [ref=f74e34]:
+                  - button "pages/ (1)" [expanded] [ref=f74e35]:
+                    - generic [ref=f74e36]: "[-]"
+                    - generic [ref=f74e37]: pages/
+                    - generic [ref=f74e38]: (1)
+                  - list [ref=f74e39]:
+                    - listitem [ref=f74e40]:
+                      - link "About" [ref=f74e41]:
+                        - /url: /about
+                        - generic [ref=f74e42]: ">"
+                - listitem [ref=f74e44]:
+                  - button "posts/ (3)" [expanded] [ref=f74e45]:
+                    - generic [ref=f74e46]: "[-]"
+                    - generic [ref=f74e47]: posts/
+                    - generic [ref=f74e48]: (3)
+                  - list [ref=f74e49]:
+                    - listitem [ref=f74e50]:
+                      - link "How to Learn with Claude" [ref=f74e51]:
+                        - /url: /posts/how-to-learn-with-claude-code
+                        - generic [ref=f74e52]: "-"
+                    - listitem [ref=f74e54]:
+                      - link "How to setup AI CLI tools that do not act stupid" [ref=f74e55]:
+                        - /url: /posts/how-to-setup-ai-cli-tools
+                        - generic [ref=f74e56]: "-"
+                    - listitem [ref=f74e58]:
+                      - link "How to use Neovim as your IDE" [ref=f74e59]:
+                        - /url: /posts/how-to-setup-neovim
+                        - generic [ref=f74e60]: "-"
+                - listitem [ref=f74e62]:
+                  - button "projects/ (7)" [expanded] [ref=f74e63]:
+                    - generic [ref=f74e64]: "[-]"
+                    - generic [ref=f74e65]: projects/
+                    - generic [ref=f74e66]: (7)
+                  - list [ref=f74e67]:
+                    - listitem [ref=f74e68]:
+                      - link "executioner.nvim" [ref=f74e69]:
+                        - /url: /projects/executioner-nvim
+                        - generic [ref=f74e70]: "-"
+                    - listitem [ref=f74e72]:
+                      - link "monad-engine" [ref=f74e73]:
+                        - /url: /projects/monad-game-engine
+                        - generic [ref=f74e74]: "-"
+                    - listitem [ref=f74e76]:
+                      - link "phosphor-ui" [ref=f74e77]:
+                        - /url: /projects/phosphor-ui
+                        - generic [ref=f74e78]: "-"
+                    - listitem [ref=f74e80]:
+                      - link "ram.nvim" [ref=f74e81]:
+                        - /url: /projects/ram-nvim
+                        - generic [ref=f74e82]: "-"
+                    - listitem [ref=f74e84]:
+                      - link "raven-engine" [ref=f74e85]:
+                        - /url: /projects/raven-engine
+                        - generic [ref=f74e86]: "-"
+                    - listitem [ref=f74e88]:
+                      - link "react-warcraft-build-order-tool" [ref=f74e89]:
+                        - /url: /projects/warcraft-build-order-tools
+                        - generic [ref=f74e90]: "-"
+                    - listitem [ref=f74e92]:
+                      - link "react-warcraft-ui" [ref=f74e93]:
+                        - /url: /projects/react-warcraft-ui
+                        - generic [ref=f74e94]: "-"
+                - listitem [ref=f74e96]:
+                  - link "cms.local" [ref=f74e97]:
+                    - /url: /admin
+                    - generic [ref=f74e98]: "-"
+      - generic [ref=f74e101]:
+        - link "github" [ref=f74e102]:
+          - /url: https://github.com/sektant1
+        - link "youtube" [ref=f74e103]:
+          - /url: https://youtube.com/@sektant1swe
+        - link "rss" [ref=f74e104]:
+          - /url: /rss.xml
+      - button "Toggle Sidebar" [ref=f74e105]
+    - main [ref=f74e106]:
+      - generic [ref=f74e107]:
+        - generic [ref=f74e108]: ~/content/pages/about/index.mdx
+        - button "find" [ref=f74e109]
+        - button "Change display face" [ref=f74e111]
+      - generic [ref=f74e113]:
+        - article [ref=f74e114]:
+          - generic [ref=f74e115]:
+            - heading "About" [level=1] [ref=f74e117]
+            - paragraph [ref=f74e118]:
+              - time [ref=f74e119]: 2026-05-01
+          - generic [ref=f74e120]:
+            - heading [level=2] [ref=f74e121]:
+              - link "Link to this section" [ref=f74e122]:
+                - /url: "#how-to-reach-me"
+                - text: "##"
+              - text: How to reach me
+            - list [ref=f74e123]:
+              - listitem [ref=f74e124]:
+                - text: "-"
+                - emphasis [ref=f74e125]: "email:"
+                - code [ref=f74e126]: contact@sektant.dev
+              - listitem [ref=f74e127]:
+                - text: "-"
+                - emphasis [ref=f74e128]: "gpg:"
+                - code [ref=f74e129]: "0xDEADBEEF"
+              - listitem [ref=f74e130]:
+                - text: "-"
+                - emphasis [ref=f74e131]: "radio:"
+                - text: CQ on 14.230 MHz, mostly evenings, near Электрозаводск
+            - blockquote [ref=f74e132]:
+              - paragraph [ref=f74e133]:
+                - emphasis [ref=f74e134]: Let them come, frostmourne hungers...
+        - complementary [ref=f74e135]:
+          - navigation "On this page" [ref=f74e137]:
+            - paragraph [ref=f74e138]: on this page
+            - list [ref=f74e139]:
+              - listitem [ref=f74e140]:
+                - link "How to reach me" [ref=f74e141]:
+                  - /url: "#how-to-reach-me"
+      - generic [ref=f74e143]:
+        - generic [ref=f74e144]: "[ read ]"
+        - button "0 0 0 errors and 0 warnings. Open the log panel." [ref=f74e145]:
+          - generic [ref=f74e146]: "0"
+          - generic [ref=f74e150]: "0"
+          - generic [ref=f74e154]: 0 errors and 0 warnings. Open the log panel.
+        - generic "Connected" [ref=f74e155]: lnk
+        - generic [ref=f74e158]: "------Z"
+        - generic [ref=f74e159]: utf-8
+  - button "Open Next.js Dev Tools" [ref=f74e165] [cursor=pointer]

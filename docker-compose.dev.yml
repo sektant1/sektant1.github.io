@@ -1,0 +1,17 @@
+# Overlay for running a working copy instead of the published image.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#
+# Useful on a branch, or to try a change on the server before it reaches
+# master and gets published.
+
+services:
+  hideout:
+    build:
+      # The monorepo root: the app compiles the toolkit from source.
+      context: .
+      dockerfile: apps/hideout/Dockerfile
+    image: hideout:local
+    pull_policy: never
+    volumes:
+      - ./apps/hideout/content:/app/apps/hideout/content

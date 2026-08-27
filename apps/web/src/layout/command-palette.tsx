@@ -2,7 +2,6 @@ import * as React from "react"
 import { useNavigate } from "react-router"
 import {
   CommandDialog,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -55,9 +54,7 @@ export function CommandPalette() {
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Go to a page, topic, snippet or exercise…" />
-      <CommandList>
-        <CommandEmpty>Nothing matches.</CommandEmpty>
-
+      <CommandList empty="Nothing matches.">
         <CommandGroup heading="Go to">
           {ROUTES.map((route) => (
             <CommandItem

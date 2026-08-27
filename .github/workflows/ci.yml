@@ -1,9 +1,14 @@
 name: CI
 
+# Every branch and every pull request gets the same gate. `development` is
+# where work lands day to day; `master` is what the installer pulls, so
+# anything that reaches it has already been through this.
 on:
   push:
-    branches: [master]
+    branches: [master, development]
   pull_request:
+  # Release runs this same gate before it publishes anything.
+  workflow_call:
 
 permissions:
   contents: read
@@ -19,9 +24,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
+
       # Fails when a component exists on disk but is not registered, or the
       # other way round — the registry is generated, so drift means someone
       # edited it by hand or forgot to rebuild.
@@ -31,30 +37,17 @@ jobs:
       - run: npm run lint
       - run: npm run build
 
-  deploy:
-    needs: verify
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+  # Proves the image the installer will pull actually builds, before master
+  # ever tries to publish it. Not pushed: this runs on branches and PRs.
+  container:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      # Emits apps/web/public/r/*.json, so the registry ships inside the same
-      # deploy that serves the showcase.
-      - run: npm run registry:build
-      - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: apps/web/dist
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          context: .
+          file: apps/hideout/Dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

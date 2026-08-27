@@ -1,0 +1,200 @@
+- generic [active] [ref=f50e1]:
+  - generic [ref=f50e2]:
+    - generic [ref=f50e5]:
+      - link "sektant's hideout" [ref=f50e7]:
+        - /url: /
+      - generic [ref=f50e8]:
+        - navigation "Sections" [ref=f50e9]:
+          - link "posts" [ref=f50e10]:
+            - /url: /posts
+            - generic [ref=f50e11]: ▸
+            - text: posts
+          - link "projects" [ref=f50e12]:
+            - /url: /projects
+            - generic [ref=f50e13]: ▸
+            - text: projects
+          - link "games" [ref=f50e14]:
+            - /url: /games
+            - generic [ref=f50e15]: ▸
+            - text: games
+          - link "about" [ref=f50e16]:
+            - /url: /about
+            - generic [ref=f50e17]: ▸
+            - text: about
+        - navigation "Content" [ref=f50e18]:
+          - list [ref=f50e19]:
+            - listitem [ref=f50e20]:
+              - button "content/ (5)" [expanded] [ref=f50e21]:
+                - generic [ref=f50e22]: ▾
+                - generic [ref=f50e23]: content/
+                - generic [ref=f50e24]: (5)
+              - list [ref=f50e25]:
+                - listitem [ref=f50e26]:
+                  - link "home" [ref=f50e27]:
+                    - /url: /
+                    - generic [ref=f50e28]: ◈
+                - listitem [ref=f50e30]:
+                  - button "pages/ (1)" [expanded] [ref=f50e31]:
+                    - generic [ref=f50e32]: ▾
+                    - generic [ref=f50e33]: pages/
+                    - generic [ref=f50e34]: (1)
+                  - list [ref=f50e35]:
+                    - listitem [ref=f50e36]:
+                      - link "About" [ref=f50e37]:
+                        - /url: /about
+                        - generic [ref=f50e38]: ◈
+                - listitem [ref=f50e40]:
+                  - button "posts/ (3)" [expanded] [ref=f50e41]:
+                    - generic [ref=f50e42]: ▾
+                    - generic [ref=f50e43]: posts/
+                    - generic [ref=f50e44]: (3)
+                  - list [ref=f50e45]:
+                    - listitem [ref=f50e46]:
+                      - link "How to Learn with Claude" [ref=f50e47]:
+                        - /url: /posts/how-to-learn-with-claude-code
+                        - generic [ref=f50e48]: ◈
+                    - listitem [ref=f50e50]:
+                      - link "How to setup AI CLI tools that do not act stupid" [ref=f50e51]:
+                        - /url: /posts/how-to-setup-ai-cli-tools
+                        - generic [ref=f50e52]: ◈
+                    - listitem [ref=f50e54]:
+                      - link "How to use Neovim as your IDE" [ref=f50e55]:
+                        - /url: /posts/how-to-setup-neovim
+                        - generic [ref=f50e56]: ◈
+                - listitem [ref=f50e58]:
+                  - button "projects/ (7)" [expanded] [ref=f50e59]:
+                    - generic [ref=f50e60]: ▾
+                    - generic [ref=f50e61]: projects/
+                    - generic [ref=f50e62]: (7)
+                  - list [ref=f50e63]:
+                    - listitem [ref=f50e64]:
+                      - link "executioner.nvim" [ref=f50e65]:
+                        - /url: /projects/executioner-nvim
+                        - generic [ref=f50e66]: ◈
+                    - listitem [ref=f50e68]:
+                      - link "monad-engine" [ref=f50e69]:
+                        - /url: /projects/monad-game-engine
+                        - generic [ref=f50e70]: ◈
+                    - listitem [ref=f50e72]:
+                      - link "phosphor-ui" [ref=f50e73]:
+                        - /url: /projects/phosphor-ui
+                        - generic [ref=f50e74]: ◈
+                    - listitem [ref=f50e76]:
+                      - link "ram.nvim" [ref=f50e77]:
+                        - /url: /projects/ram-nvim
+                        - generic [ref=f50e78]: ◈
+                    - listitem [ref=f50e80]:
+                      - link "raven-engine" [ref=f50e81]:
+                        - /url: /projects/raven-engine
+                        - generic [ref=f50e82]: ◈
+                    - listitem [ref=f50e84]:
+                      - link "react-warcraft-build-order-tool" [ref=f50e85]:
+                        - /url: /projects/warcraft-build-order-tools
+                        - generic [ref=f50e86]: ◈
+                    - listitem [ref=f50e88]:
+                      - link "react-warcraft-ui" [ref=f50e89]:
+                        - /url: /projects/react-warcraft-ui
+                        - generic [ref=f50e90]: ◈
+                - listitem [ref=f50e92]:
+                  - link "cms.local" [ref=f50e93]:
+                    - /url: /admin
+                    - generic [ref=f50e94]: ◈
+      - generic [ref=f50e97]:
+        - link "github" [ref=f50e98]:
+          - /url: https://github.com/sektant1
+        - link "youtube" [ref=f50e99]:
+          - /url: https://youtube.com/@sektant1swe
+        - link "rss" [ref=f50e100]:
+          - /url: /rss.xml
+      - button "Toggle Sidebar" [ref=f50e101]
+    - main [ref=f50e102]:
+      - generic [ref=f50e103]:
+        - generic [ref=f50e104]: ~/content/posts
+        - button "find" [ref=f50e105]
+        - button "Change display face" [ref=f50e107]
+      - generic [ref=f50e110]:
+        - generic [ref=f50e111]:
+          - tablist [ref=f50e112]:
+            - tab "posts (3)" [selected] [ref=f50e113]
+            - tab "series (0)" [ref=f50e114]
+          - generic [ref=f50e115]: 3 / 3
+        - tabpanel "posts (3)" [ref=f50e116]:
+          - generic [ref=f50e117]:
+            - generic [ref=f50e118]:
+              - generic [ref=f50e119]:
+                - generic [ref=f50e120]: :find
+                - searchbox "Search posts" [ref=f50e121]
+              - generic [ref=f50e122]:
+                - generic [ref=f50e123]: :sort
+                - combobox "Sort posts" [ref=f50e125]:
+                  - option "newest first" [selected]
+                  - option "oldest first"
+                  - option "short reads"
+                  - option "long reads"
+              - button ":clear" [disabled]
+            - generic [ref=f50e126]:
+              - generic [ref=f50e127]: tags
+              - button "all3" [pressed] [ref=f50e128]
+              - button "ai2" [ref=f50e129]
+              - button "claude-code2" [ref=f50e130]
+              - button "cli1" [ref=f50e131]
+              - button "codex1" [ref=f50e132]
+              - button "learning1" [ref=f50e133]
+              - button "mcp1" [ref=f50e134]
+              - button "plugin1" [ref=f50e135]
+              - button "setup1" [ref=f50e136]
+              - button "vim1" [ref=f50e137]
+          - list [ref=f50e138]:
+            - listitem [ref=f50e139]:
+              - 'link "2026-06-29 How to setup AI CLI tools that do not act stupid A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code. 14m read #ai #cli #codex" [ref=f50e140]':
+                - /url: /posts/how-to-setup-ai-cli-tools
+                - generic [ref=f50e142]:
+                  - generic [ref=f50e143]:
+                    - time [ref=f50e144]: 2026-06-29
+                    - heading "How to setup AI CLI tools that do not act stupid" [level=3] [ref=f50e145]
+                  - paragraph [ref=f50e146]: A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code.
+                  - generic [ref=f50e147]:
+                    - generic [ref=f50e148]: 14m read
+                    - generic [ref=f50e149]: "#ai"
+                    - generic [ref=f50e150]: "#cli"
+                    - generic [ref=f50e151]: "#codex"
+            - listitem [ref=f50e152]:
+              - 'link "2026-04-07 How to Learn with Claude How to not let Claude fry your brain 11m read #learning #ai #claude-code" [ref=f50e153]':
+                - /url: /posts/how-to-learn-with-claude-code
+                - generic [ref=f50e155]:
+                  - generic [ref=f50e156]:
+                    - time [ref=f50e157]: 2026-04-07
+                    - heading "How to Learn with Claude" [level=3] [ref=f50e158]
+                  - paragraph [ref=f50e159]: How to not let Claude fry your brain
+                  - generic [ref=f50e160]:
+                    - generic [ref=f50e161]: 11m read
+                    - generic [ref=f50e162]: "#learning"
+                    - generic [ref=f50e163]: "#ai"
+                    - generic [ref=f50e164]: "#claude-code"
+            - listitem [ref=f50e165]:
+              - 'link "2026-03-31 How to use Neovim as your IDE How to setup neovim from zero to full working web dev ide 7m read #vim #setup #plugin" [ref=f50e166]':
+                - /url: /posts/how-to-setup-neovim
+                - generic [ref=f50e168]:
+                  - generic [ref=f50e169]:
+                    - time [ref=f50e170]: 2026-03-31
+                    - heading "How to use Neovim as your IDE" [level=3] [ref=f50e171]
+                  - paragraph [ref=f50e172]: How to setup neovim from zero to full working web dev ide
+                  - generic [ref=f50e173]:
+                    - generic [ref=f50e174]: 7m read
+                    - generic [ref=f50e175]: "#vim"
+                    - generic [ref=f50e176]: "#setup"
+                    - generic [ref=f50e177]: "#plugin"
+      - generic [ref=f50e178]:
+        - generic [ref=f50e179]: read
+        - button "0 0 0 errors and 0 warnings. Open the log panel." [ref=f50e180]:
+          - generic [ref=f50e181]: "0"
+          - generic [ref=f50e185]: "0"
+          - generic [ref=f50e189]: 0 errors and 0 warnings. Open the log panel.
+        - generic [ref=f50e190]:
+          - generic [ref=f50e191]: posts
+          - generic [ref=f50e192]: "3"
+        - generic [ref=f50e193]:
+          - generic [ref=f50e194]: series
+          - generic [ref=f50e195]: "0"
+        - generic [ref=f50e196]: utf-8
+  - button "Open Next.js Dev Tools" [ref=f50e202] [cursor=pointer]

@@ -1,0 +1,546 @@
+- generic [active] [ref=f33e1]:
+  - generic [ref=f33e2]:
+    - generic [ref=f33e5]:
+      - link "sektant's hideout" [ref=f33e7]:
+        - /url: /
+      - navigation "Content" [ref=f33e9]:
+        - list [ref=f33e10]:
+          - listitem [ref=f33e11]:
+            - button "content/ (5)" [expanded] [ref=f33e12]:
+              - generic [ref=f33e13]: ▾
+              - generic [ref=f33e14]: content/
+              - generic [ref=f33e15]: (5)
+            - list [ref=f33e16]:
+              - listitem [ref=f33e17]:
+                - link "home" [ref=f33e18]:
+                  - /url: /
+                  - generic [ref=f33e19]: ◈
+              - listitem [ref=f33e21]:
+                - button "pages/ (1)" [expanded] [ref=f33e22]:
+                  - generic [ref=f33e23]: ▾
+                  - generic [ref=f33e24]: pages/
+                  - generic [ref=f33e25]: (1)
+                - list [ref=f33e26]:
+                  - listitem [ref=f33e27]:
+                    - link "About" [ref=f33e28]:
+                      - /url: /about
+                      - generic [ref=f33e29]: ◈
+              - listitem [ref=f33e31]:
+                - button "posts/ (3)" [expanded] [ref=f33e32]:
+                  - generic [ref=f33e33]: ▾
+                  - generic [ref=f33e34]: posts/
+                  - generic [ref=f33e35]: (3)
+                - list [ref=f33e36]:
+                  - listitem [ref=f33e37]:
+                    - link "How to Learn with Claude" [ref=f33e38]:
+                      - /url: /posts/how-to-learn-with-claude-code
+                      - generic [ref=f33e39]: ◈
+                  - listitem [ref=f33e41]:
+                    - link "How to setup AI CLI tools that do not act stupid" [ref=f33e42]:
+                      - /url: /posts/how-to-setup-ai-cli-tools
+                      - generic [ref=f33e43]: ◈
+                  - listitem [ref=f33e45]:
+                    - link "How to use Neovim as your IDE" [ref=f33e46]:
+                      - /url: /posts/how-to-setup-neovim
+                      - generic [ref=f33e47]: ◈
+              - listitem [ref=f33e49]:
+                - button "projects/ (7)" [expanded] [ref=f33e50]:
+                  - generic [ref=f33e51]: ▾
+                  - generic [ref=f33e52]: projects/
+                  - generic [ref=f33e53]: (7)
+                - list [ref=f33e54]:
+                  - listitem [ref=f33e55]:
+                    - link "executioner.nvim" [ref=f33e56]:
+                      - /url: /projects/executioner-nvim
+                      - generic [ref=f33e57]: ◈
+                  - listitem [ref=f33e59]:
+                    - link "monad-engine" [ref=f33e60]:
+                      - /url: /projects/monad-game-engine
+                      - generic [ref=f33e61]: ◈
+                  - listitem [ref=f33e63]:
+                    - link "phosphor-ui" [ref=f33e64]:
+                      - /url: /projects/phosphor-ui
+                      - generic [ref=f33e65]: ◈
+                  - listitem [ref=f33e67]:
+                    - link "ram.nvim" [ref=f33e68]:
+                      - /url: /projects/ram-nvim
+                      - generic [ref=f33e69]: ◈
+                  - listitem [ref=f33e71]:
+                    - link "raven-engine" [ref=f33e72]:
+                      - /url: /projects/raven-engine
+                      - generic [ref=f33e73]: ◈
+                  - listitem [ref=f33e75]:
+                    - link "react-warcraft-build-order-tool" [ref=f33e76]:
+                      - /url: /projects/warcraft-build-order-tools
+                      - generic [ref=f33e77]: ◈
+                  - listitem [ref=f33e79]:
+                    - link "react-warcraft-ui" [ref=f33e80]:
+                      - /url: /projects/react-warcraft-ui
+                      - generic [ref=f33e81]: ◈
+              - listitem [ref=f33e83]:
+                - link "cms.local" [ref=f33e84]:
+                  - /url: /admin
+                  - generic [ref=f33e85]: ◈
+      - generic [ref=f33e88]:
+        - link "github" [ref=f33e89]:
+          - /url: https://github.com/sektant1
+        - link "youtube" [ref=f33e90]:
+          - /url: https://youtube.com/@sektant1swe
+        - link "rss" [ref=f33e91]:
+          - /url: /rss.xml
+      - button "Toggle Sidebar" [ref=f33e92]
+    - main [ref=f33e93]:
+      - generic [ref=f33e94]:
+        - generic [ref=f33e95]: ~/content/posts/how-to-setup-neovim/index.mdx
+        - button "find ctrl K" [ref=f33e96]:
+          - generic [ref=f33e97]: find
+          - generic: ctrl K
+        - button "Change display face" [ref=f33e98]
+      - progressbar "Reading progress"
+      - generic [ref=f33e100]:
+        - article [ref=f33e101]:
+          - generic [ref=f33e102]:
+            - generic [ref=f33e103]:
+              - heading "How to use Neovim as your IDE" [level=1] [ref=f33e104]
+              - link "edit" [ref=f33e105]:
+                - /url: /admin/posts/how-to-setup-neovim/edit
+            - paragraph [ref=f33e106]:
+              - time [ref=f33e107]: 2026-03-31
+              - generic [ref=f33e108]: 7m read
+            - list [ref=f33e109]:
+              - listitem [ref=f33e110]:
+                - link "#vim" [ref=f33e111]:
+                  - /url: /posts?tag=vim
+              - listitem [ref=f33e113]:
+                - link "#setup" [ref=f33e114]:
+                  - /url: /posts?tag=setup
+              - listitem [ref=f33e116]:
+                - link "#plugin" [ref=f33e117]:
+                  - /url: /posts?tag=plugin
+          - generic [ref=f33e119]:
+            - heading "#First, Why Use Neovim as your IDE?" [level=1] [ref=f33e120]
+            - paragraph [ref=f33e121]: "When you compare the out-of-the-box Neovim experience with, lets say, Vscode, your first impression would probably be:"
+            - blockquote [ref=f33e122]:
+              - paragraph [ref=f33e123]:
+                - emphasis [ref=f33e124]: "\"How tf will I be more productive with this?\""
+            - paragraph [ref=f33e125]:
+              - img "vim-logo" [ref=f33e126]
+            - paragraph [ref=f33e127]:
+              - text: For non-users, Vim and Neovim are often perceived as an ancient, outdated and cryptic text editor. Alongside that, the steep learning curve allegedly gives the impression thats not worth the time investment, especially when other text editors are much more
+              - emphasis [ref=f33e128]: straightforward
+              - text: . All of this started the common claim among programmers that Vim cannot compete with modern IDEs. During this article, I'll prove to you thats a wrong take.
+            - heading "##Quick Vim Background" [level=2] [ref=f33e129]
+            - paragraph [ref=f33e130]: Before we deep into the Vim rabbit hole, let's make brief rundown in the Vim/Neovim history.
+            - paragraph [ref=f33e131]: "Vi was created in 1976 by Bill Joy. Then, in 1991, Vim was created by Bram Moolenaar. Vim’s purpose can be found in its name: Vi IMproved. It was intended to be a better Vi. Finally, in 2014, Neovim was created. It is a fork of Vim, which makes it a “drop-in replacement that is 99% identical for basic usage”"
+            - paragraph [ref=f33e132]: Between many other differences, the main one I would say its that Neovim uses Lua as the first-class language for configuration and plugin development, which is faster and easier than Vim’s traditional VimScript(and its brazilian made, lesgooo).
+            - heading "#Why do I use Vim?" [level=1] [ref=f33e133]
+            - paragraph [ref=f33e134]:
+              - text: A bit more than a year ago, when I was researching about how can I decrease me wrist pain while typing/coding, I found the touch typing/quick typing niche, also I really hate the need to move my hand from keyboard -> mouse and vice versa. After a couple days practicing touch typing at
+              - link "keybr.com" [ref=f33e135]:
+                - /url: https://keybr.com
+              - text: ",I've found out the PrimeAgen channel(big Vim preacher). After a few videos, he made my mind into trying Vim."
+            - iframe [ref=f33e136]:
+              - generic [ref=f34e1]:
+                - generic "YouTube Video Player" [ref=f34e3]
+                - generic [ref=f34e5]:
+                  - generic:
+                    - generic:
+                      - generic [ref=f34e6] [cursor=pointer]
+                      - button "Play video" [ref=f34e10] [cursor=pointer]
+                      - button "Hide player controls" [ref=f34e12] [cursor=pointer]
+                      - generic [ref=f34e14]:
+                        - generic [ref=f34e19]:
+                          - generic [ref=f34e20]:
+                            - link "Why I use Vim in 2022" [ref=f34e21] [cursor=pointer]:
+                              - /url: https://www.youtube.com/watch?v=D4YTJ2W5q4Y
+                            - link "ThePrimeagen" [ref=f34e22] [cursor=pointer]:
+                              - /url: /channel/UC8ENHE5xdFSwx71u3fDH5Xw
+                          - generic [ref=f34e24]:
+                            - button [ref=f34e25] [cursor=pointer]
+                            - generic [ref=f34e27]:
+                              - generic: ThePrimeagen
+                              - generic: 549K subscribers
+                        - generic [ref=f34e28]:
+                          - button "Copy link" [ref=f34e31] [cursor=pointer]
+                          - link "Watch on YouTube" [ref=f34e42] [cursor=pointer]:
+                            - /url: https://www.youtube.com/watch?v=D4YTJ2W5q4Y
+                            - generic [ref=f34e43]: Watch on
+            - paragraph [ref=f33e137]: After a week I decided to learn how to use Vim motions to avoid future wrist pain from using the mouse way too much, as I wanted to spend as much time on the keyboard as possible. I also wanted to be more efficient with my tools, so I thought using Vim motions would help me tremendously(and it did, A LOT).
+            - heading "#How to Install Neovim" [level=1] [ref=f33e138]
+            - paragraph [ref=f33e139]: The Ubuntu package originally is a pretty old package, so in order to install a newer one you need to add the unstable apt repo.
+            - heading "###Any other Linux distro other than Ubuntu, in this case Arch(btw):" [level=3] [ref=f33e140]
+            - figure "sh Copy" [ref=f33e141]:
+              - generic [ref=f33e142]:
+                - generic [ref=f33e143]: sh
+                - button "Copy" [ref=f33e144]
+              - code [ref=f33e147]:
+                - generic [ref=f33e148]: sudo pacman -S neovim
+            - heading "###Ubuntu/Debian:" [level=3] [ref=f33e149]
+            - figure "sh Copy" [ref=f33e150]:
+              - generic [ref=f33e151]:
+                - generic [ref=f33e152]: sh
+                - button "Copy" [ref=f33e153]
+              - code [ref=f33e156]:
+                - generic [ref=f33e157]: sudo add-apt-repository ppa:neovim-ppa/unstable
+                - generic [ref=f33e158]: sudo apt-get update
+                - generic [ref=f33e159]: sudo apt-get install neovim
+            - heading "###Build from source(chad way to do)" [level=3] [ref=f33e160]
+            - figure "sh Copy" [ref=f33e161]:
+              - generic [ref=f33e162]:
+                - generic [ref=f33e163]: sh
+                - button "Copy" [ref=f33e164]
+              - code [ref=f33e167]:
+                - generic [ref=f33e168]: git clone https://github.com/neovim/neovim
+                - generic [ref=f33e169]: cd neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo
+                - generic [ref=f33e170]: "sudo make install # this will put the `nvim` command in your path"
+            - paragraph [ref=f33e171]:
+              - text: The default install location is
+              - code [ref=f33e172]: /usr/local
+            - paragraph [ref=f33e173]: "Then you can open neovim with:"
+            - figure "sh Copy" [ref=f33e174]:
+              - generic [ref=f33e175]:
+                - generic [ref=f33e176]: sh
+                - button "Copy" [ref=f33e177]
+              - code [ref=f33e180]:
+                - generic [ref=f33e181]: nvim
+            - paragraph [ref=f33e182]: Neovim is nothing special at all if we don’t start adding a few plugins. This is the part that scares most people away when they first start using Neovim. So Let’s try break it down in easy steps.
+            - paragraph [ref=f33e183]:
+              - text: Close Neovim and let's add some plugins. In order to close Neovim, press
+              - code [ref=f33e184]: "SHIFT + :"
+              - text: to enter
+              - strong [ref=f33e185]: command mode
+              - text: and type
+              - code [ref=f33e186]: :q
+              - text: to quit.
+            - heading "#Adding some flavor" [level=1] [ref=f33e187]
+            - paragraph [ref=f33e188]: Let's add a clean starting point for your config that is easy and well documented if you want to customize further.
+            - heading "##Clone kickstart.nvim" [level=2] [ref=f33e189]
+            - paragraph [ref=f33e190]:
+              - link "kickstart.nvim" [ref=f33e191]:
+                - /url: https://github.com/nvim-lua/kickstart.nvim
+              - text: is a minimal Neovim config and its purposeis to be a starting point(its NOT a full distro, which I dont recommend either). It comes pre-configured with LSP(if you are coming from vscode, its like the Intelissence for language related edits/search), autocompletion, fuzzy finding, and more without the bloat and weird keybinds of a full distro like LazyVim.
+            - paragraph [ref=f33e192]: "Then clone the repo directly into your Neovim config folder:"
+            - figure "sh Copy" [ref=f33e193]:
+              - generic [ref=f33e194]:
+                - generic [ref=f33e195]: sh
+                - button "Copy" [ref=f33e196]
+              - code [ref=f33e199]:
+                - generic [ref=f33e200]: git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim
+            - paragraph [ref=f33e201]: You can also fork this repo and clone from it, so if you want to backup your nvim config to use it in another machine, thats a pretty good way.
+            - paragraph [ref=f33e202]: "Now open Neovim and it will automatically install all plugins on the first launch:"
+            - figure "sh Copy" [ref=f33e203]:
+              - generic [ref=f33e204]:
+                - generic [ref=f33e205]: sh
+                - button "Copy" [ref=f33e206]
+              - code [ref=f33e209]:
+                - generic [ref=f33e210]: nvim
+            - paragraph [ref=f33e211]:
+              - text: Kickstart.nvim uses the
+              - code [ref=f33e212]: Lazy
+              - text: plugin manager, which download and install all the plugins in the config files automatically the first time you open nvim, so just wait for the installation to finish, then restart Neovim.
+            - paragraph [ref=f33e213]: "You now have a fully working setup with:"
+            - list [ref=f33e214]:
+              - listitem [ref=f33e215]:
+                - text: "-"
+                - strong [ref=f33e216]: LSP
+                - text: (language server support)
+              - listitem [ref=f33e217]:
+                - text: "-"
+                - strong [ref=f33e218]: nvim-cmp
+                - text: (autocompletion)
+              - listitem [ref=f33e219]:
+                - text: "-"
+                - strong [ref=f33e220]: Telescope
+                - text: (fuzzy finder)
+              - listitem [ref=f33e221]:
+                - text: "-"
+                - strong [ref=f33e222]: Treesitter
+                - text: (better syntax highlighting)
+              - listitem [ref=f33e223]:
+                - text: "-"
+                - strong [ref=f33e224]: Tokyonight theme
+                - text: (default colorscheme)
+            - paragraph [ref=f33e225]:
+              - text: From here you can edit
+              - code [ref=f33e226]: ~/.config/nvim/init.lua
+              - text: to customize everything to your liking.
+            - heading "##Setting up kickstart.nvim for web dev (JS/TS/React/Node)" [level=2] [ref=f33e227]
+            - heading "###Installing the language servers" [level=3] [ref=f33e228]
+            - paragraph [ref=f33e229]:
+              - text: Kickstart comes out-of-the-box with
+              - code [ref=f33e230]: mason.nvim
+              - text: ", which is a package manager for LSP servers, linters, and formatters. Open Neovim, open the command bar("
+              - code [ref=f33e231]: "SHIFT+:"
+              - text: ") and type:"
+            - figure "text Copy" [ref=f33e232]:
+              - generic [ref=f33e233]:
+                - generic [ref=f33e234]: text
+                - button "Copy" [ref=f33e235]
+              - code [ref=f33e238]:
+                - generic [ref=f33e239]: :Mason
+            - paragraph [ref=f33e240]: "From the Mason UI, install the following:"
+            - list [ref=f33e241]:
+              - listitem [ref=f33e242]:
+                - text: "-"
+                - code [ref=f33e243]: typescript-language-server
+                - text: "- JS/TS/React/Node LSP"
+              - listitem [ref=f33e244]:
+                - text: "-"
+                - code [ref=f33e245]: eslint-lsp
+                - text: "- linting"
+              - listitem [ref=f33e246]:
+                - text: "-"
+                - code [ref=f33e247]: prettierd
+                - text: "- formatting"
+            - paragraph [ref=f33e248]: "Or install them all at once without opening the UI:"
+            - figure "text Copy" [ref=f33e249]:
+              - generic [ref=f33e250]:
+                - generic [ref=f33e251]: text
+                - button "Copy" [ref=f33e252]
+              - code [ref=f33e255]:
+                - generic [ref=f33e256]: :MasonInstall typescript-language-server eslint-lsp prettierd
+            - heading "###Enabling the servers in init.lua" [level=3] [ref=f33e257]
+            - paragraph [ref=f33e258]:
+              - text: In
+              - code [ref=f33e259]: ~/.config/nvim/init.lua
+              - text: ", find the"
+              - code [ref=f33e260]: servers
+              - text: table search with the key
+              - code [ref=f33e261]: /
+              - text: and type
+              - code [ref=f33e262]: /servers =
+              - text: "then hit enter and add:"
+            - figure "init.lua lua Copy" [ref=f33e263]:
+              - generic [ref=f33e264]:
+                - generic [ref=f33e265]: init.lua
+                - generic [ref=f33e266]: lua
+                - button "Copy" [ref=f33e267]
+              - code [ref=f33e270]:
+                - generic [ref=f33e271]: "servers = {"
+                - generic [ref=f33e272]: "ts_ls = {},"
+                - generic [ref=f33e273]: "eslint = {},"
+                - generic [ref=f33e274]: "},"
+            - heading "###Setting up formatting on save" [level=3] [ref=f33e275]
+            - paragraph [ref=f33e276]:
+              - text: Find the
+              - code [ref=f33e277]: conform.nvim
+              - text: section in
+              - code [ref=f33e278]: init.lua
+              - text: "and configure prettierd for web filetypes:"
+            - figure "lua Copy" [ref=f33e279]:
+              - generic [ref=f33e280]:
+                - generic [ref=f33e281]: lua
+                - button "Copy" [ref=f33e282]
+              - code [ref=f33e285]:
+                - generic [ref=f33e286]: "formatters_by_ft = {"
+                - generic [ref=f33e287]: "javascript = { 'prettierd' },"
+                - generic [ref=f33e288]: "typescript = { 'prettierd' },"
+                - generic [ref=f33e289]: "javascriptreact = { 'prettierd' },"
+                - generic [ref=f33e290]: "typescriptreact = { 'prettierd' },"
+                - generic [ref=f33e291]: "},"
+                - generic [ref=f33e292]: "format_on_save = { timeout_ms = 500, lsp_fallback = true },"
+            - paragraph [ref=f33e293]:
+              - text: The
+              - code [ref=f33e294]: format_on_save
+              - text: part will probably already be there as a comment, so just put the cursor in the same line and hit the keys
+              - code [ref=f33e295]: gcc
+              - text: ", which comment/uncomment the current line."
+            - paragraph [ref=f33e296]:
+              - text: Restart Neovim and open any
+              - code [ref=f33e297]: .js
+              - text: ","
+              - code [ref=f33e298]: .ts
+              - text: ", or"
+              - code [ref=f33e299]: .tsx
+              - text: file - you should have autocompletion, go-to-definition, error diagnostics, and format on save working out of the box.
+            - heading "##Testing and debugging with Jest and DAP" [level=2] [ref=f33e300]
+            - heading "###Running Jest tests with neotest" [level=3] [ref=f33e301]
+            - paragraph [ref=f33e302]:
+              - code [ref=f33e303]: neotest
+              - text: is a plugin that integrates test runners directly into Neovim. Add it to your plugins in
+              - code [ref=f33e304]: init.lua
+              - text: ":"
+            - figure "lua Copy" [ref=f33e305]:
+              - generic [ref=f33e306]:
+                - generic [ref=f33e307]: lua
+                - button "Copy" [ref=f33e308]
+              - code [ref=f33e311]:
+                - generic [ref=f33e312]: "return = {"
+                - generic [ref=f33e313]: "{"
+                - generic [ref=f33e314]: "'nvim-neotest/neotest',"
+                - generic [ref=f33e315]: "dependencies = {"
+                - generic [ref=f33e316]: "'nvim-neotest/nvim-nio',"
+                - generic [ref=f33e317]: "'nvim-lua/plenary.nvim',"
+                - generic [ref=f33e318]: "'nvim-treesitter/nvim-treesitter',"
+                - generic [ref=f33e319]: "'haydenmeade/neotest-jest',"
+                - generic [ref=f33e320]: "},"
+                - generic [ref=f33e321]: config = function()
+                - generic [ref=f33e322]: "require('neotest').setup({"
+                - generic [ref=f33e323]: "adapters = {"
+                - generic [ref=f33e324]: "require('neotest-jest')({"
+                - generic [ref=f33e325]: jestCommand = 'npx jest',
+                - generic [ref=f33e326]: "}),"
+                - generic [ref=f33e327]: "},"
+                - generic [ref=f33e328]: "})"
+                - generic [ref=f33e329]: end,
+                - generic [ref=f33e330]: "},"
+                - generic [ref=f33e331]: "}"
+            - paragraph [ref=f33e332]: "Save and restart Neovim. Lazy will install the plugins automatically. You can now run tests with:"
+            - list [ref=f33e333]:
+              - listitem [ref=f33e334]:
+                - text: "-"
+                - code [ref=f33e335]: <leader>tr
+                - text: "- run the nearest test"
+              - listitem [ref=f33e336]:
+                - text: "-"
+                - code [ref=f33e337]: <leader>tf
+                - text: "- run all tests in the current file"
+              - listitem [ref=f33e338]:
+                - text: "-"
+                - code [ref=f33e339]: <leader>to
+                - text: "- open the test output panel"
+            - heading "###Debugging with nvim-dap" [level=3] [ref=f33e340]
+            - paragraph [ref=f33e341]:
+              - text: DAP stands for Debug Adapter Protocol, it's the same protocol VSCode uses under the hood. Add
+              - code [ref=f33e342]: nvim-dap
+              - text: "and the JS debug adapter to your plugins below the neotest one:"
+            - figure "lua Copy" [ref=f33e343]:
+              - generic [ref=f33e344]:
+                - generic [ref=f33e345]: lua
+                - button "Copy" [ref=f33e346]
+              - code [ref=f33e349]:
+                - generic [ref=f33e350]: "{"
+                - generic [ref=f33e351]: "'mfussenegger/nvim-dap',"
+                - generic [ref=f33e352]: "dependencies = {"
+                - generic [ref=f33e353]: "'rcarriga/nvim-dap-ui',"
+                - generic [ref=f33e354]: "'nvim-neotest/nvim-nio',"
+                - generic [ref=f33e355]: "'microsoft/vscode-js-debug',"
+                - generic [ref=f33e356]: "},"
+                - generic [ref=f33e357]: config = function()
+                - generic [ref=f33e358]: local dap = require('dap')
+                - generic [ref=f33e359]: local dapui = require('dapui')
+                - generic [ref=f33e360]: dapui.setup()
+                - generic [ref=f33e361]: dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+                - generic [ref=f33e362]: dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+                - generic [ref=f33e363]: "dap.adapters['pwa-node'] = {"
+                - generic [ref=f33e364]: type = 'server',
+                - generic [ref=f33e365]: host = 'localhost',
+                - generic [ref=f33e366]: "port = '${port}',"
+                - generic [ref=f33e367]: "executable = {"
+                - generic [ref=f33e368]: command = 'node',
+                - generic [ref=f33e369]: "args = { vim.fn.stdpath('data') .. '/lazy/vscode-js-debug/dist/src/dapDebugServer.js', '${port}' },"
+                - generic [ref=f33e370]: "},"
+                - generic [ref=f33e371]: "}"
+                - generic [ref=f33e372]: "for _, lang in ipairs({ 'javascript', 'typescript' }) do"
+                - generic [ref=f33e373]: "dap.configurations[lang] = {"
+                - generic [ref=f33e374]: "{"
+                - generic [ref=f33e375]: type = 'pwa-node',
+                - generic [ref=f33e376]: request = 'launch',
+                - generic [ref=f33e377]: name = 'Launch file',
+                - generic [ref=f33e378]: "program = '${file}',"
+                - generic [ref=f33e379]: "cwd = '${workspaceFolder}',"
+                - generic [ref=f33e380]: "},"
+                - generic [ref=f33e381]: "{"
+                - generic [ref=f33e382]: type = 'pwa-node',
+                - generic [ref=f33e383]: request = 'attach',
+                - generic [ref=f33e384]: name = 'Attach to process',
+                - generic [ref=f33e385]: processId = require('dap.utils').pick_process,
+                - generic [ref=f33e386]: "cwd = '${workspaceFolder}',"
+                - generic [ref=f33e387]: "},"
+                - generic [ref=f33e388]: "}"
+                - generic [ref=f33e389]: end
+                - generic [ref=f33e390]: end,
+                - generic [ref=f33e391]: "},"
+            - heading "###Debugging keymaps" [level=3] [ref=f33e392]
+            - paragraph [ref=f33e393]:
+              - text: Add these keymaps to your
+              - code [ref=f33e394]: init.lua
+              - text: "so you can control the debugger without leaving the keyboard:"
+            - figure "lua Copy" [ref=f33e395]:
+              - generic [ref=f33e396]:
+                - generic [ref=f33e397]: lua
+                - button "Copy" [ref=f33e398]
+              - code [ref=f33e401]:
+                - generic [ref=f33e402]: "vim.keymap.set('n', '<F5>', require('dap').continue, { desc = 'Debug: Start/Continue' })"
+                - generic [ref=f33e403]: "vim.keymap.set('n', '<F10>', require('dap').step_over, { desc = 'Debug: Step over' })"
+                - generic [ref=f33e404]: "vim.keymap.set('n', '<F11>', require('dap').step_into, { desc = 'Debug: Step into' })"
+                - generic [ref=f33e405]: "vim.keymap.set('n', '<F12>', require('dap').step_out, { desc = 'Debug: Step out' })"
+                - generic [ref=f33e406]: "vim.keymap.set('n', '<leader>b', require('dap').toggle_breakpoint, { desc = 'Debug: Toggle breakpoint' })"
+            - paragraph [ref=f33e407]:
+              - text: Set a breakpoint with
+              - code [ref=f33e408]: <leader>b
+              - text: ", then hit"
+              - code [ref=f33e409]: <F5>
+              - text: to start the debugger. The DAP UI will open automatically showing locals, the call stack, and a REPL.
+            - generic "End of post" [ref=f33e410]: // EOF //
+        - complementary [ref=f33e413]:
+          - navigation "On this page" [ref=f33e415]:
+            - paragraph [ref=f33e416]: on this page
+            - list [ref=f33e417]:
+              - listitem [ref=f33e418]:
+                - link "First, Why Use Neovim as your IDE?" [ref=f33e419]:
+                  - /url: "#first-why-use-neovim-as-your-ide"
+                - list [ref=f33e421]:
+                  - listitem [ref=f33e422]:
+                    - link "Quick Vim Background" [ref=f33e423]:
+                      - /url: "#quick-vim-background"
+              - listitem [ref=f33e425]:
+                - link "Why do I use Vim?" [ref=f33e426]:
+                  - /url: "#why-do-i-use-vim"
+              - listitem [ref=f33e428]:
+                - link "How to Install Neovim" [ref=f33e429]:
+                  - /url: "#how-to-install-neovim"
+                - list [ref=f33e431]:
+                  - listitem [ref=f33e432]:
+                    - link "Any other Linux distro other than Ubuntu, in this case Arch(btw):" [ref=f33e433]:
+                      - /url: "#any-other-linux-distro-other-than-ubuntu-in-this-case-arch-btw"
+                  - listitem [ref=f33e435]:
+                    - link "Ubuntu/Debian:" [ref=f33e436]:
+                      - /url: "#ubuntu-debian"
+                  - listitem [ref=f33e438]:
+                    - link "Build from source(chad way to do)" [ref=f33e439]:
+                      - /url: "#build-from-source-chad-way-to-do"
+              - listitem [ref=f33e441]:
+                - link "Adding some flavor" [ref=f33e442]:
+                  - /url: "#adding-some-flavor"
+                - list [ref=f33e444]:
+                  - listitem [ref=f33e445]:
+                    - link "Clone kickstart.nvim" [ref=f33e446]:
+                      - /url: "#clone-kickstart-nvim"
+                  - listitem [ref=f33e448]:
+                    - link "Setting up kickstart.nvim for web dev (JS/TS/React/Node)" [ref=f33e449]:
+                      - /url: "#setting-up-kickstart-nvim-for-web-dev-js-ts-react-node"
+                    - list [ref=f33e451]:
+                      - listitem [ref=f33e452]:
+                        - link "Installing the language servers" [ref=f33e453]:
+                          - /url: "#installing-the-language-servers"
+                      - listitem [ref=f33e455]:
+                        - link "Enabling the servers in init.lua" [ref=f33e456]:
+                          - /url: "#enabling-the-servers-in-init-lua"
+                      - listitem [ref=f33e458]:
+                        - link "Setting up formatting on save" [ref=f33e459]:
+                          - /url: "#setting-up-formatting-on-save"
+                  - listitem [ref=f33e461]:
+                    - link "Testing and debugging with Jest and DAP" [ref=f33e462]:
+                      - /url: "#testing-and-debugging-with-jest-and-dap"
+                    - list [ref=f33e464]:
+                      - listitem [ref=f33e465]:
+                        - link "Running Jest tests with neotest" [ref=f33e466]:
+                          - /url: "#running-jest-tests-with-neotest"
+                      - listitem [ref=f33e468]:
+                        - link "Debugging with nvim-dap" [ref=f33e469]:
+                          - /url: "#debugging-with-nvim-dap"
+                      - listitem [ref=f33e471]:
+                        - link "Debugging keymaps" [ref=f33e472]:
+                          - /url: "#debugging-keymaps"
+      - generic [ref=f33e474]:
+        - generic [ref=f33e475]: read
+        - generic [ref=f33e476]:
+          - generic [ref=f33e477]: date
+          - generic [ref=f33e478]: 2026-03-31
+        - generic [ref=f33e479]:
+          - generic [ref=f33e480]: read
+          - generic [ref=f33e481]: 7m
+        - generic [ref=f33e482]: utf-8
+  - button "Open Next.js Dev Tools" [ref=f33e488] [cursor=pointer]
+  - alert [ref=f33e492]

@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Popover as PopoverPrimitive,
   PreviewTrigger as PreviewTriggerPrimitive,

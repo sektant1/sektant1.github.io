@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import {
   Autocomplete,
@@ -97,7 +99,11 @@ function CommandDialog({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
-      {children}
+      {/* Command carries the Autocomplete that wires the input to the list.
+          Without it the dialog renders a search box that filters nothing and a
+          list that never appears, so it belongs here rather than being one
+          more wrapper every caller has to remember. */}
+      <Command>{children}</Command>
     </Dialog>
   )
 }
@@ -127,10 +133,26 @@ function CommandInput({ className, ...props }: InputProps) {
   )
 }
 
-function CommandList<T extends object>({ className, ...props }: MenuProps<T>) {
+function CommandList<T extends object>({
+  className,
+  empty,
+  renderEmptyState,
+  ...props
+}: MenuProps<T> & {
+  /** Shown when the query matches nothing. */
+  empty?: React.ReactNode
+}) {
   return (
     <Menu
       {...props}
+      // The list is a react-aria Collection: every child is parsed as an item
+      // or a section, and one plain element among them silently empties the
+      // whole thing. So the empty state is passed as a prop and rendered
+      // outside the collection rather than dropped in as a child.
+      renderEmptyState={
+        renderEmptyState ??
+        (empty ? () => <CommandEmpty>{empty}</CommandEmpty> : undefined)
+      }
       data-slot="command-list"
       className={cn(
         "no-scrollbar max-h-72 scroll-py-0 overflow-x-hidden overflow-y-auto outline-none",

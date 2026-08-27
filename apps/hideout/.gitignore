@@ -1,0 +1,17 @@
+node_modules
+dist
+out
+public/content-assets
+public/phosphor
+public/search
+content/posts/local-only-*/
+.cache
+.pages-disabled
+*.log
+.DS_Store
+data/
+.next/
+.env
+tsconfig.tsbuildinfo
+.claude/worktrees/
+# AGENTS.md
