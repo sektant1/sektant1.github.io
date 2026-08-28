@@ -54,6 +54,8 @@ export interface AsciiPost {
   ) => void
   /** 0 is an unsynchronised boot signal; 1 is the settled image. */
   setBootProgress: (progress: number) => void
+  /** Height of one glyph cell, in the drawing buffer's pixels. */
+  setCellHeight: (height: number) => void
   setSize: (width: number, height: number) => void
   dispose: () => void
 }
@@ -131,6 +133,11 @@ export function createAsciiPost(
 
     setBootProgress(progress) {
       material.uniforms.uBoot.value = THREE.MathUtils.clamp(progress, 0, 1)
+    },
+
+    setCellHeight(height) {
+      const h = Math.max(1, height)
+      material.uniforms.uCell.value.set(h * 0.6, h)
     },
 
     setSize(nextWidth, nextHeight) {

@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest"
 import {
+  CELL_ASPECT,
+  MIN_COLUMNS,
+  cellHeightFor,
   characterResolutionFor,
   lightingFor,
   needsEnvironment,
   postDefaultsFor,
+  renderScaleFor,
   subjectFor,
   toneMappingFor,
 } from "./policy"
@@ -75,6 +79,43 @@ describe("characterResolutionFor", () => {
   it("lets a caller override the viewport rule", () => {
     expect(characterResolutionFor(390, 0.26)).toBe(0.26)
     expect(characterResolutionFor(1440, 0.26)).toBe(0.26)
+  })
+})
+
+describe("cellHeightFor", () => {
+  it("holds the column floor in a phone-sized box", () => {
+    // The boot coin is 6rem across on a short phone.
+    const columns = 96 / (CELL_ASPECT * cellHeightFor(96, 0.26))
+    expect(columns).toBeCloseTo(MIN_COLUMNS)
+  })
+
+  it("leaves a desktop box on its resolution figure", () => {
+    // 18rem, the column the boot coin occupies from md up.
+    expect(cellHeightFor(288, 0.26)).toBeCloseTo(2 / 0.26)
+    expect(cellHeightFor(1200, 0.26)).toBeCloseTo(2 / 0.26)
+  })
+
+  it("lifts the coin's phone box, where the letter is lost", () => {
+    // 11rem, the widest the coin gets below md.
+    expect(cellHeightFor(176, 0.26)).toBeLessThan(2 / 0.26)
+  })
+
+  it("never coarsens past what the resolution asked for", () => {
+    for (const width of [64, 96, 176, 320, 640, 1440]) {
+      expect(cellHeightFor(width, 0.24)).toBeLessThanOrEqual(2 / 0.24)
+    }
+  })
+})
+
+describe("renderScaleFor", () => {
+  it("draws phone glyphs with the pixels the phone has", () => {
+    expect(renderScaleFor(3)).toBe(2)
+    expect(renderScaleFor(2)).toBe(2)
+  })
+
+  it("never goes below one, whatever the browser reports", () => {
+    expect(renderScaleFor(0)).toBe(1)
+    expect(renderScaleFor(Number.NaN)).toBe(1)
   })
 })
 

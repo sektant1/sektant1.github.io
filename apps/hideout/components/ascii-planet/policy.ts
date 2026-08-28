@@ -100,6 +100,71 @@ export function characterResolutionFor(
   return viewportWidth < MOBILE_WIDTH ? 0.18 : 0.24
 }
 
+/** A glyph cell is drawn 5 units wide for every 7 tall. */
+export const CELL_ASPECT = 0.6
+
+/**
+ * Columns the subject gets no matter how small its box is.
+ *
+ * The engraving on the coin is what has to survive the reduction, and it needs
+ * about this many cells across the disc to stay a ₿ rather than a blob.
+ *
+ * The figure sits just under what a desktop already gets — the coin's own
+ * column is 18rem wide and buys sixty-odd — so nothing there changes. A phone
+ * gives the same coin 11rem or less, which at the same characters-per-pixel
+ * buys thirty-eight, and that is where the letter goes to die.
+ */
+export const MIN_COLUMNS = 52
+
+/**
+ * The height of one glyph cell, in CSS pixels.
+ *
+ * A characters-per-pixel figure alone assumes the box is roughly a desktop's.
+ * The same figure in a 96px box buys twenty columns, so the cell is also
+ * capped by the width it has to divide: whichever rule asks for the smaller
+ * cell wins, and small boxes get a finer grid rather than a coarser subject.
+ */
+export function cellHeightFor(
+  hostWidth: number,
+  characterResolution: number
+): number {
+  const fromResolution = 2 / characterResolution
+  const fromColumns = hostWidth / (CELL_ASPECT * MIN_COLUMNS)
+  return Math.min(fromResolution, fromColumns)
+}
+
+/**
+ * Device pixels rendered per CSS pixel.
+ *
+ * The grid is measured in CSS pixels, so raising this does not change how many
+ * glyphs there are — it changes how many real pixels each one is drawn with.
+ * At 1 on a 3x phone the browser stretches every glyph across three pixels and
+ * the ramp turns to mush. Capped at 2: past that the cost squares and the
+ * glyphs are already sharp.
+ */
+export function renderScaleFor(devicePixelRatio: number): number {
+  if (!Number.isFinite(devicePixelRatio) || devicePixelRatio < 1) return 1
+  return Math.min(devicePixelRatio, 2)
+}
+
+/**
+ * The cell the shader is handed, in the drawing buffer's own pixels.
+ *
+ * A glyph is a 5x7 pattern drawn into the cell, and the shader refuses to go
+ * below five pixels of height because under that the pattern has no rows left
+ * to draw. Matching that figure here keeps the two in agreement: a 2x phone
+ * clears it easily, and a 1x display with a small box lands on it instead of
+ * asking the shader for a cell it will silently clamp.
+ */
+export const MIN_DEVICE_CELL_HEIGHT = 5
+
+export function deviceCellHeightFor(
+  cssCellHeight: number,
+  renderScale: number
+): number {
+  return Math.max(cssCellHeight * renderScale, MIN_DEVICE_CELL_HEIGHT)
+}
+
 /**
  * An environment map is only generated for a metal: a metal's diffuse
  * response is black, so all of its shading is reflection and without
