@@ -1,56 +1,43 @@
 import * as THREE from "three"
 
-// Loaded as text by raw-loader, configured for both bundlers in
-// next.config.mjs. Keeping the GLSL in real .vert/.frag files rather than
-// template literals is what gets it syntax highlighting, and what lets an
-// editor's GLSL tooling see it at all.
-import FRAGMENT from "./shaders/ascii-post.frag"
+import FRAGMENT from "./shaders/holo-post.frag"
 import VERTEX from "./shaders/ascii-post.vert"
 import type { ScreenPost, ScreenPostOptions } from "./screen-post"
 
 /**
- * A post pass that converts a render into a fixed 5x7 terminal glyph grid.
+ * A post pass that reduces a render to a projected volume: chunky raster
+ * pixels, scanlines, and a beam that has to find its lock.
  *
- * The shader reduces the frame to one number per cell and draws one of nine
- * procedural glyph densities. Two things are lost in that reduction, and no
- * amount of lighting gets them back:
+ * The other pass in this folder spends its resolution on glyph shapes. This
+ * one spends it on the subject, which is why it pairs with wireframe geometry
+ * rather than with a lit solid — there is no ramp here to carry shading, only
+ * a handful of brightness steps and the lines themselves.
  *
- *   Edges. A raised lip on a coin and the flat beside it can sit within one
- *   ramp step, so the relief disappears while the silhouette survives. A Sobel
- *   operator on luminance finds those boundaries and adds them back as
- *   brightness, which is the only channel the ramp can read.
- *
- *   Gradients. Sixteen steps across a curved surface is visible banding — flat
- *   plates of one character with hard seams. An ordered dither offsets each
- *   cell by a fixed fraction of a step before quantisation, so the boundary
- *   between two characters breaks into a stipple and reads as a smooth ramp.
- *
- * Runs on a fullscreen quad after the scene capture.
+ * Runs on a fullscreen quad after the scene capture, same as the ASCII pass.
  */
-
-export function createAsciiPost(
+export function createHoloPost(
   width: number,
   height: number,
   options: ScreenPostOptions = {}
 ): ScreenPost {
   const {
-    edge = 0.9,
-    dither = 0.055,
-    contrast = 1.25,
-    cellHeight = 8,
+    cellHeight = 6,
     ink = 0x35ff80,
-    minLevel = 0,
+    scanline = 0.45,
+    levels = 5,
   } = options
 
   const target = new THREE.WebGLRenderTarget(
     Math.max(1, width),
     Math.max(1, height),
     {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      // The pass reads alpha to find the background, so the target needs one.
+      // Nearest, unlike the ASCII pass: that one wants a smooth luminance to
+      // quantise, this one wants the exact texel it points at. Bilinear taps
+      // bleed a lit cell's value into its neighbours and the raster loses its
+      // edges — which reads as blur no matter how small the cells are.
+      minFilter: THREE.NearestFilter,
+      magFilter: THREE.NearestFilter,
       format: THREE.RGBAFormat,
-      // The scene is tone mapped on the way in; this buffer holds the result.
       colorSpace: THREE.SRGBColorSpace,
     }
   )
@@ -64,14 +51,13 @@ export function createAsciiPost(
           1 / Math.max(1, height)
         ),
       },
-      uEdge: { value: edge },
-      uDither: { value: dither },
-      uContrast: { value: contrast },
       uBoot: { value: 1 },
       uResolution: { value: new THREE.Vector2(width, height) },
-      uCell: { value: new THREE.Vector2(cellHeight * 0.6, cellHeight) },
+      // Only the height is read: a projected pixel is square.
+      uCell: { value: new THREE.Vector2(cellHeight, cellHeight) },
       uInk: { value: new THREE.Color(ink) },
-      uMinLevel: { value: minLevel },
+      uScanline: { value: scanline },
+      uLevels: { value: levels },
     },
     vertexShader: VERTEX,
     fragmentShader: FRAGMENT,
@@ -105,7 +91,7 @@ export function createAsciiPost(
 
     setCellHeight(height) {
       const h = Math.max(1, height)
-      material.uniforms.uCell.value.set(h * 0.6, h)
+      material.uniforms.uCell.value.set(h, h)
     },
 
     setSize(nextWidth, nextHeight) {

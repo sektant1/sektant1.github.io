@@ -13,6 +13,24 @@
 
 export type Subject = "relief" | "texture"
 
+/**
+ * The choice of style runs deeper than the post pass. A wireframe has no
+ * diffuse response to light and no reflection to catch, so the lighting rig,
+ * the environment map and the tone curve are all decided from it too.
+ *
+ * The type itself lives in lib/render-style, reached relatively because this
+ * file is read by tests that run without Next's path aliases: the CMS writes
+ * the value, and that module has to stay importable without three.
+ */
+export {
+  DEFAULT_RENDER_STYLE,
+  RENDER_STYLES,
+  isRenderStyle,
+} from "../../lib/render-style"
+export type { RenderStyle } from "../../lib/render-style"
+
+import { DEFAULT_RENDER_STYLE, type RenderStyle } from "../../lib/render-style"
+
 export interface LightSpec {
   kind: "ambient" | "directional"
   intensity: number
@@ -25,6 +43,13 @@ export interface PostDefaults {
   contrast: number
   dither: number
   minLevel: number
+}
+
+export interface HoloDefaults {
+  /** How dark every other raster row is drawn. */
+  scanline: number
+  /** Brightness steps the projection is quantised to. */
+  levels: number
 }
 
 export interface ToneMapping {
@@ -75,7 +100,15 @@ export function lightingFor(subject: Subject): LightSpec[] {
  * the highlights from clipping every bright pixel to the same character; the
  * exposure lift spreads the midtones the object mostly lives in.
  */
-export function toneMappingFor(subject: Subject): ToneMapping {
+export function toneMappingFor(
+  subject: Subject,
+  style: RenderStyle
+): ToneMapping {
+  // No filmic curve: a projection is emitted, not photographed, and rolling
+  // its highlights off only drags the top steps together. The exposure is
+  // lifted instead, because the raster's five steps have to be reached by a
+  // surface lit for a shading model that is about to be thrown away.
+  if (style === "holo") return { filmic: false, exposure: 1.3 }
   return subject === "relief"
     ? { filmic: true, exposure: 1.45 }
     : { filmic: false, exposure: 1 }
@@ -89,6 +122,23 @@ export function postDefaultsFor(subject: Subject): PostDefaults {
   return subject === "relief"
     ? { edge: 0.9, contrast: 1.25, dither: 0.055, minLevel: 0 }
     : { edge: 0, contrast: 1, dither: 0.045, minLevel: 1 }
+}
+
+/**
+ * Neither the Sobel nor the dither has anything to find in a wireframe: the
+ * edges are the geometry, and there is no gradient to break up. What the
+ * projection wants instead is its raster and how many steps it holds.
+ *
+ * The step count is where the two subjects part. A coin is a relief with an
+ * engraving to resolve, and five steps is what separates the ₿ from the field
+ * it is cut into. A globe only has to say land, water, and edge: more steps
+ * there turn the graticule and the facets into a third and fourth tone, and
+ * the object stops reading as one projected surface.
+ */
+export function holoDefaultsFor(subject: Subject): HoloDefaults {
+  return subject === "relief"
+    ? { scanline: 0.45, levels: 5 }
+    : { scanline: 0.45, levels: 3 }
 }
 
 /** Characters per pixel. Higher resolves more detail and costs more. */
@@ -134,6 +184,33 @@ export function cellHeightFor(
 }
 
 /**
+ * The projection's pixel, relative to a character cell.
+ *
+ * A glyph needs enough room to be a glyph; a projected pixel is a square and
+ * needs none, so the hologram spends the same box on a raster twice as fine.
+ * That is what keeps it reading as a low-poly model at high resolution rather
+ * than as the same picture in bigger blocks.
+ */
+export const HOLO_CELL_DIVISOR = 2
+
+/** The smallest projected pixel worth drawing, in the drawing buffer. */
+export const MIN_HOLO_DEVICE_CELL = 2
+
+export function postCellHeightFor(
+  style: RenderStyle,
+  cssCellHeight: number,
+  renderScale: number
+): number {
+  if (style === "holo") {
+    return Math.max(
+      (cssCellHeight / HOLO_CELL_DIVISOR) * renderScale,
+      MIN_HOLO_DEVICE_CELL
+    )
+  }
+  return deviceCellHeightFor(cssCellHeight, renderScale)
+}
+
+/**
  * Device pixels rendered per CSS pixel.
  *
  * The grid is measured in CSS pixels, so raising this does not change how many
@@ -170,6 +247,11 @@ export function deviceCellHeightFor(
  * response is black, so all of its shading is reflection and without
  * something to reflect it renders as a flat dark disc.
  */
-export function needsEnvironment(subject: Subject): boolean {
+export function needsEnvironment(
+  subject: Subject,
+  style: RenderStyle
+): boolean {
+  // Unlit lines reflect nothing, so generating the map is pure cost.
+  if (style === "holo") return false
   return subject === "relief"
 }

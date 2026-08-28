@@ -1,7 +1,8 @@
 import * as THREE from "three"
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
 import { logger } from "@workspace/ui/lib/logger"
-import { createAsciiPost, type AsciiPostOptions } from "./AsciiPost"
+import { createScreenPost } from "./screen-post"
+import type { ScreenPostOptions } from "./screen-post"
 import {
   createEarthLocationMarkers,
   resolveThemeColor,
@@ -11,9 +12,11 @@ import type { EarthLocation } from "./markers"
 import { createPlanetModel, loadGlbModel } from "./PlanetModel"
 import type { GlbSurface, PlanetHandle } from "./PlanetModel"
 import {
+  DEFAULT_RENDER_STYLE,
   cellHeightFor,
+  holoDefaultsFor,
+  postCellHeightFor,
   characterResolutionFor,
-  deviceCellHeightFor,
   lightingFor,
   needsEnvironment,
   postDefaultsFor,
@@ -21,6 +24,7 @@ import {
   subjectFor,
   toneMappingFor,
 } from "./policy"
+import type { RenderStyle } from "./policy"
 
 /**
  * A spinning subject, rendered to a character grid, in a host element.
@@ -52,7 +56,9 @@ export interface AsciiSceneOptions {
   /** Characters per pixel. Higher resolves more detail and costs more. */
   resolution?: number
   /** Edge and dither strength for the pass that feeds the character ramp. */
-  postOptions?: AsciiPostOptions
+  postOptions?: ScreenPostOptions
+  /** Character grid, or projected wireframe. Editable at /admin/home. */
+  style?: RenderStyle
   /** Plays the sync-tear settle. The boot curtain's scene sets this. */
   boot?: boolean
   onModelReady?: () => void
@@ -82,6 +88,7 @@ export function createAsciiScene(
     surface,
     resolution,
     postOptions,
+    style = DEFAULT_RENDER_STYLE,
     boot = false,
     onModelReady,
     onLocation,
@@ -110,25 +117,35 @@ export function createAsciiScene(
   renderer.setSize(initialW, initialH)
   renderer.setClearColor(0x000000, 0)
 
-  const tone = toneMappingFor(subject)
+  const tone = toneMappingFor(subject, style)
   renderer.toneMapping = tone.filmic
     ? THREE.ACESFilmicToneMapping
     : THREE.NoToneMapping
   renderer.toneMappingExposure = tone.exposure
 
   renderer.domElement.setAttribute("aria-hidden", "true")
+  // The chrome around the canvas is styled per style: a character grid wants
+  // its phosphor bloom, a raster wants its edges.
+  host.dataset.style = style
   host.appendChild(renderer.domElement)
 
   // Edge detection and dithering, applied to the frame before it is reduced
   // to characters. See AsciiPost for why neither can be done with lighting.
   // The pass works in the drawing buffer's own pixels, so both its size and
   // its cell are given in those rather than in CSS pixels.
-  const post = createAsciiPost(initialW * renderScale, initialH * renderScale, {
-    ...postDefaultsFor(subject),
-    ...postOptions,
-    cellHeight: deviceCellHeightFor(cellHeight, renderScale),
-    ink: resolveThemeColor("--primary", "#35ff80"),
-  })
+  const post = createScreenPost(
+    style,
+    initialW * renderScale,
+    initialH * renderScale,
+    {
+      ...(style === "holo"
+        ? holoDefaultsFor(subject)
+        : postDefaultsFor(subject)),
+      ...postOptions,
+      cellHeight: postCellHeightFor(style, cellHeight, renderScale),
+      ink: resolveThemeColor("--primary", "#35ff80"),
+    }
+  )
   const settling = boot && !reduceMotion
   post.setBootProgress(settling ? 0 : 1)
 
@@ -138,7 +155,7 @@ export function createAsciiScene(
 
   // Generated rather than fetched: no asset, no request.
   let envRT: THREE.WebGLRenderTarget | null = null
-  if (needsEnvironment(subject)) {
+  if (needsEnvironment(subject, style)) {
     const pmrem = new THREE.PMREMGenerator(renderer)
     const room = new RoomEnvironment()
     envRT = pmrem.fromScene(room, 0.04)
@@ -161,7 +178,7 @@ export function createAsciiScene(
 
   let rafId = 0
   let disposed = false
-  const modelPromise = modelUrl ? loadGlbModel(modelUrl, surface) : null
+  const modelPromise = modelUrl ? loadGlbModel(modelUrl, surface, style) : null
   let modelLoaded = !modelPromise
 
   // An empty group while a model is loading, rather than the procedural
@@ -169,7 +186,7 @@ export function createAsciiScene(
   // coin visibly replaced a planet a second or two in.
   let planet: PlanetHandle = modelUrl
     ? { group: new THREE.Group(), mesh: new THREE.Group(), dispose: () => {} }
-    : createPlanetModel(EARTH_TEXTURE)
+    : createPlanetModel(EARTH_TEXTURE, style)
   planet.group.rotation.y = INITIAL_PLANET_ROTATION_Y
   planet.group.scale.setScalar(modelScale)
   scene.add(planet.group)
@@ -324,7 +341,7 @@ export function createAsciiScene(
     // The column floor is a function of the box, so a rotation that halves
     // the width has to re-derive the cell or the subject loses its engraving.
     cellHeight = cellHeightFor(w, characterResolution)
-    post.setCellHeight(deviceCellHeightFor(cellHeight, renderScale))
+    post.setCellHeight(postCellHeightFor(style, cellHeight, renderScale))
     post.setSize(w * renderScale, h * renderScale)
   }
   const ro = new ResizeObserver(onResize)
@@ -332,6 +349,7 @@ export function createAsciiScene(
 
   logger.info("planet", "globe online", {
     subject,
+    style,
     resolution: characterResolution,
     columns: Math.floor(initialW / (cellHeight * 0.6)),
     renderScale,

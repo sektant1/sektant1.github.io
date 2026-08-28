@@ -10,6 +10,12 @@
  * writes, and both share this.
  */
 
+import {
+  DEFAULT_RENDER_STYLE,
+  isRenderStyle,
+  type RenderStyle,
+} from "../render-style"
+
 export type HomeQuickLink = {
   label: string
   href: string
@@ -22,6 +28,10 @@ export type HomeSection = {
 }
 
 export type HomeContent = {
+  render: {
+    /** How the globe and the boot coin are drawn. */
+    style: RenderStyle
+  }
   hero: {
     systemLabel: string
     systemUnit: string
@@ -54,6 +64,7 @@ export type HomeContent = {
 }
 
 export const DEFAULT_HOME_CONTENT: HomeContent = {
+  render: { style: DEFAULT_RENDER_STYLE },
   hero: {
     systemLabel: "СИСТЕМА //",
     systemUnit: "СКТ-01",
@@ -231,7 +242,14 @@ export function normalizeHomeContent(input: unknown): HomeContent {
   const sections = asRecord(root.sections, "Sections")
   const d = DEFAULT_HOME_CONTENT
 
+  const render = asRecord(root.render, "Render")
+
   const normalized: HomeContent = {
+    // An unknown style is a file written by hand, and the page still has to
+    // draw something: it falls back rather than refusing to render.
+    render: {
+      style: isRenderStyle(render.style) ? render.style : d.render.style,
+    },
     hero: {
       systemLabel: asText(
         hero.systemLabel,

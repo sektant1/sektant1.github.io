@@ -22,6 +22,7 @@ import { ContentTree } from "@/components/layout/content-tree"
 import { SiteLog } from "@/components/layout/site-log"
 import { StatusBar, type StatusField } from "@/components/layout/status-bar"
 import { buildCommandIndex } from "@/lib/content/command-index"
+import { getHomeContent } from "@/lib/content/home"
 import { isAdminVisible } from "@/lib/runtime/mode"
 import type { ContentTreeNode } from "@/lib/content/types"
 
@@ -71,7 +72,10 @@ export async function SiteShell({
   gauge,
   children,
 }: SiteShellProps) {
-  const commandIndex = await buildCommandIndex()
+  const [commandIndex, home] = await Promise.all([
+    buildCommandIndex(),
+    getHomeContent(),
+  ])
 
   return (
     // The provider defaults to min-h-svh, which is a full viewport *below*
@@ -213,6 +217,7 @@ export async function SiteShell({
         projects={commandIndex.projects.length}
         games={commandIndex.games.length}
         cms={isAdminVisible()}
+        style={home.render.style}
       />
     </SidebarProvider>
   )

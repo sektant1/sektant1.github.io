@@ -1,4 +1,5 @@
 import fs from "node:fs/promises"
+import { cache } from "react"
 import { homeContentPath } from "@/lib/content/paths"
 import {
   DEFAULT_HOME_CONTENT,
@@ -15,7 +16,7 @@ import {
  * then ignored — the CMS validates on the way in, so anything broken here was
  * hand-edited.
  */
-export async function getHomeContent(): Promise<HomeContent> {
+export const getHomeContent = cache(async (): Promise<HomeContent> => {
   let raw: string
   try {
     raw = await fs.readFile(homeContentPath(), "utf8")
@@ -31,7 +32,7 @@ export async function getHomeContent(): Promise<HomeContent> {
     )
     return DEFAULT_HOME_CONTENT
   }
-}
+})
 
 export { DEFAULT_HOME_CONTENT }
 export type { HomeContent }

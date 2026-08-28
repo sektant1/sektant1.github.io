@@ -10,6 +10,7 @@ import type { ActivityBucket } from "@/lib/activity"
 import { BANNER_FONT_OPTIONS } from "@/lib/banner-font"
 import { pad } from "@/lib/format"
 import type { HomeContent } from "@/lib/content/home-schema"
+import type { RenderStyle } from "@/lib/render-style"
 
 export type HeroTag = {
   name: string
@@ -26,6 +27,8 @@ type StationHeroProps = {
   activity: ActivityBucket[]
   /** Every string drawn here, editable at /admin/home. */
   content: HomeContent["hero"]
+  /** How the globe is drawn, editable at /admin/home. */
+  renderStyle?: RenderStyle
 }
 
 /**
@@ -41,6 +44,7 @@ export function StationHero({
   tags,
   activity,
   content,
+  renderStyle,
 }: StationHeroProps) {
   // Posts and projects share a scale so their bars compare. Reading time is a
   // different unit and gets a plain row instead of a bar.
@@ -184,6 +188,7 @@ export function StationHero({
         <GeoPanel
           title={content.globeTitle}
           hint={content.globeFooterEnd}
+          style={renderStyle}
           className="geo-display order-1 min-w-0 lg:order-2"
         />
       </div>

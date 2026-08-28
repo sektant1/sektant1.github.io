@@ -6,6 +6,7 @@ import { cn } from "@workspace/ui/lib/utils"
 
 import { AsciiPlanetScene } from "@/components/ascii-planet/ascii-planet-lazy"
 import type { EarthLocation } from "@/components/ascii-planet/markers"
+import type { RenderStyle } from "@/components/ascii-planet/policy"
 import {
   STATION,
   bearingDeg,
@@ -22,6 +23,8 @@ type GeoPanelProps = {
   title: string
   /** The drag affordance printed in the footer, editable at /admin/home. */
   hint: string
+  /** Character grid, or projected wireframe. Editable at /admin/home. */
+  style?: RenderStyle
   className?: string
 }
 
@@ -34,7 +37,7 @@ type GeoPanelProps = {
  * panel reports rather than decorates. Until the lookup returns it prints
  * dashes and says it is scanning, and if the lookup fails it says so.
  */
-export function GeoPanel({ title, hint, className }: GeoPanelProps) {
+export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
   const [fix, setFix] = React.useState<Fix>(null)
   const onLocation = React.useCallback(
     (location: EarthLocation | null) => setFix({ location }),
@@ -89,6 +92,7 @@ export function GeoPanel({ title, hint, className }: GeoPanelProps) {
             ariaLabel="Rotating ASCII globe, marked with where you are reading from. Drag to spin it."
             autoRotateSpeed={6}
             modelScale={0.8}
+            style={style}
             onLocation={onLocation}
           />
           <Reticle state={state} />
