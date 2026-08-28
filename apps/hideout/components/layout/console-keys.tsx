@@ -10,7 +10,7 @@ import {
 import { REPLAY_BOOT_EVENT } from "@/components/layout/cold-boot"
 import { PALETTE_EVENT } from "@/components/layout/command-palette"
 import { TOGGLE_EVENT } from "@/components/layout/site-log"
-import { tubeFaceOn } from "@/lib/tube-face"
+import { crtScreenOn } from "@/lib/crt-screen"
 
 /**
  * The labelled keys along the bottom edge, the way a terminal of this kind
@@ -57,29 +57,33 @@ export function ConsoleKeys({ className }: { className?: string }) {
       >
         boot
       </CommandKey>
-      <TubeKey />
+      <CrtKey />
     </CommandStrip>
   )
 }
 
 /**
- * The glass, on or off.
+ * The CRT screen, on or off.
  *
- * The key is lit while the tube face is on. It reports the state of the
- * screen, not what pressing it will do, the way a lit indicator on a console
- * does.
+ * One key for the whole treatment: the shadow mask, the raster, the refresh
+ * band, the glass, and the phosphor bloom that every line of text on the site
+ * is set in. Pressing it leaves the same page with nothing painted over it,
+ * which is what a reader with a long post in front of them is asking for.
+ *
+ * The key is lit while the screen is on. It reports the state of the screen,
+ * not what pressing it will do, the way a lit indicator on a console does.
  */
-function TubeKey() {
+function CrtKey() {
   const on = React.useSyncExternalStore(
-    tubeFaceOn.subscribe,
-    tubeFaceOn.read,
-    tubeFaceOn.serverSnapshot
+    crtScreenOn.subscribe,
+    crtScreenOn.read,
+    crtScreenOn.serverSnapshot
   )
 
   const toggle = () => {
     const next = !on
-    document.documentElement.dataset.tube = next ? "on" : "off"
-    tubeFaceOn.write(next)
+    document.documentElement.dataset.crt = next ? "on" : "off"
+    crtScreenOn.write(next)
   }
 
   return (
@@ -87,9 +91,9 @@ function TubeKey() {
       onClick={toggle}
       tone={on ? "active" : "default"}
       aria-pressed={on}
-      title={on ? "Lift the CRT glass" : "Put the CRT glass back"}
+      title={on ? "Turn the CRT screen off" : "Turn the CRT screen on"}
     >
-      tube
+      crt
     </CommandKey>
   )
 }

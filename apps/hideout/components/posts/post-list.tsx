@@ -37,7 +37,10 @@ function PostRow({ post, index }: { post: PostMeta; index: number }) {
     <li className="border-b border-terminal-rule">
       <Link
         href={`/posts/${post.slug}`}
-        className="group flex min-w-0 items-start gap-3 py-3 crt-persist hover:bg-terminal-wash focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:gap-4"
+        // The lit edge marks the row the pointer is on the way a console
+        // marks the selected channel: down the side, in the gutter, so the
+        // row's own left edge never moves and the listing stays a column.
+        className="group relative flex min-w-0 items-start gap-3 py-3 ps-2 crt-persist before:absolute before:inset-y-0 before:start-0 before:w-[2px] before:bg-transparent hover:bg-terminal-wash hover:before:bg-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:gap-4"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -56,7 +59,7 @@ function PostRow({ post, index }: { post: PostMeta; index: number }) {
           <div className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-3 sm:gap-y-1">
             <time
               dateTime={post.date}
-              className="shrink-0 font-mono text-[0.7rem] text-terminal-chrome-dim tabular-nums"
+              className="shrink-0 font-mono text-[0.7rem] text-terminal-chrome-dim tabular-nums group-hover:text-terminal-chrome"
             >
               {post.date}
             </time>

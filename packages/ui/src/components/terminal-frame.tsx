@@ -12,6 +12,16 @@ const STATUS_CLASS: Record<Status, string> = {
   fault: "bg-destructive motion-safe:animate-pulse",
 }
 
+/* The lamp says the state at the top of the panel; the edge says it down the
+   whole side, which is what makes a column of panels scannable without
+   reading a word. Standby drops to the border colour rather than going dark —
+   an unlit edge would read as a panel that lost its frame. */
+const STATUS_EDGE: Record<Status, string> = {
+  online: "[--crt-edge-color:var(--primary)]",
+  standby: "[--crt-edge-color:var(--border)]",
+  fault: "[--crt-edge-color:var(--destructive)]",
+}
+
 type TerminalFrameProps = React.ComponentProps<"section"> & {
   /** Shown in the top rule, military-readout style. */
   title: string
@@ -61,7 +71,11 @@ function TerminalFrame({
     <section
       data-slot="terminal-frame"
       data-status={status}
-      className={cn("relative flex flex-col border border-border", className)}
+      className={cn(
+        "crt-edge relative flex flex-col border border-border",
+        STATUS_EDGE[status],
+        className
+      )}
       {...props}
     >
       {/* A fault gets hazard banding across the top edge, so the state is
@@ -75,7 +89,10 @@ function TerminalFrame({
 
       {corners ? <CornerBoxes /> : null}
 
-      <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-1">
+      {/* The title rule is a plate, not a line of text on the body: a wash
+          behind it separates the panel's label from its contents at a glance,
+          which is what stops a stack of frames reading as one long list. */}
+      <div className="flex shrink-0 items-center gap-2 border-b border-border bg-terminal-wash py-1 ps-3 pe-2">
         <span
           aria-hidden="true"
           className={cn("size-1.5 shrink-0", STATUS_CLASS[status])}

@@ -4,8 +4,7 @@
   "title": "Ascii Banner",
   "description": "Ascii Banner component, themed for skt-ui-toolkit.",
   "dependencies": [
-    "figlet",
-    "vault66-crt-effect"
+    "figlet"
   ],
   "registryDependencies": [
     "skt-theme",
@@ -14,7 +13,7 @@
   "files": [
     {
       "path": "packages/ui/src/components/ascii-banner.tsx",
-      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport type { VariantProps } from \"class-variance-authority\"\n\nimport {\n  AsciiBannerView,\n  bannerVariants,\n} from \"@workspace/ui/components/ascii-banner-view\"\nimport {\n  renderAsciiArt,\n  type AsciiBannerFont,\n} from \"@workspace/ui/lib/ascii-art\"\n\ntype AsciiBannerProps = Omit<React.ComponentProps<\"div\">, \"children\"> &\n  VariantProps<typeof bannerVariants> & {\n    text: string\n    font?: AsciiBannerFont\n    /**\n     * \"scanlines\" is the CRT line pattern alone. \"glitch\" adds a monochrome\n     * sync tear that fires on its own every few seconds, and holds on hover.\n     */\n    effect?: \"none\" | \"scanlines\" | \"glitch\"\n  }\n\n/**\n * Large text rendered as figlet ASCII art, with optional CRT treatment. The\n * real string stays available to screen readers; the art is decorative.\n *\n * Renders the art in the browser, which costs the figlet engine and its font\n * tables in the bundle. Where the text is known ahead of time, call\n * `renderAsciiArt` on the server and pass the result to `AsciiBannerView`\n * instead — same output, none of the weight.\n */\nfunction AsciiBanner({\n  text,\n  font = \"Delta Corps Priest 1\",\n  ...props\n}: AsciiBannerProps) {\n  const { art, columns } = React.useMemo(\n    () => renderAsciiArt(text, font),\n    [text, font]\n  )\n\n  return (\n    <AsciiBannerView\n      art={art}\n      columns={columns}\n      text={text}\n      font={font}\n      {...props}\n    />\n  )\n}\n\nexport { AsciiBanner, bannerVariants }\nexport type { AsciiBannerFont }\n",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport type { VariantProps } from \"class-variance-authority\"\n\nimport {\n  AsciiBannerView,\n  bannerVariants,\n} from \"@workspace/ui/components/ascii-banner-view\"\nimport {\n  renderAsciiArt,\n  type AsciiBannerFont,\n} from \"@workspace/ui/lib/ascii-art\"\n\ntype AsciiBannerProps = Omit<React.ComponentProps<\"div\">, \"children\"> &\n  VariantProps<typeof bannerVariants> & {\n    text: string\n    font?: AsciiBannerFont\n    /**\n     * \"panel\" is the projection locked and steady. \"glitch\" is the same one\n     * still finding it: rows step sideways for a moment and settle. \"none\"\n     * renders the art in flat ink.\n     */\n    effect?: \"none\" | \"panel\" | \"glitch\"\n  }\n\n/**\n * Large text rendered as figlet ASCII art with the beam scanned through it.\n * The real string stays available to screen readers; the art is decorative.\n *\n * Renders the art in the browser, which costs the figlet engine and its font\n * tables in the bundle. Where the text is known ahead of time, call\n * `renderAsciiArt` on the server and pass the result to `AsciiBannerView`\n * instead — same output, none of the weight.\n */\nfunction AsciiBanner({\n  text,\n  font = \"Delta Corps Priest 1\",\n  ...props\n}: AsciiBannerProps) {\n  const { art, columns } = React.useMemo(\n    () => renderAsciiArt(text, font),\n    [text, font]\n  )\n\n  return (\n    <AsciiBannerView\n      art={art}\n      columns={columns}\n      text={text}\n      font={font}\n      {...props}\n    />\n  )\n}\n\nexport { AsciiBanner, bannerVariants }\nexport type { AsciiBannerFont }\n",
       "type": "registry:ui",
       "target": "components/ui/ascii-banner.tsx"
     },

@@ -31,11 +31,48 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-mono);
+    /* One wide stop, and nothing tight.
+     *
+     * This is how the globe on the front page glows and why it still reads as
+     * hard-edged: the spill sits far enough out that it never touches the
+     * stroke it came from, so the mass has a halo and the pixels inside it
+     * stay exactly where the raster put them. The stops that ruin type are
+     * the 1–4px ones — those land *on* the letter, thicken it, and fill the
+     * counters of 9px mono until the stroke is a smear that happens to be
+     * green.
+     *
+     * The colour is --primary rather than currentColor: the spill off a
+     * phosphor is the tube's own hue whatever level the stroke it came off is
+     * sitting at, which is the relationship in the plate — a pale mint mass
+     * with a saturated green halo. */
+    text-shadow: 0 0 10px color-mix(in oklch, var(--primary) 15%, transparent);
     /* The site is a text terminal first. Body copy is mono; the display face
        is reserved for headings and labels, where it reads as signage. */
     font-size: 0.875rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* The signage tier glows harder, because a screen where everything glows
+     equally has no glow — it has a haze, and the eye stops reading intensity
+     as meaning. Still one wide stop only, for the same reason as the body:
+     what makes the plate's mass read as lit is the halo around it, never a
+     softness inside it.
+
+     Selected on the colour roles rather than on tag names: a heading set in
+     ink is body copy that happens to be large, and a 9px label set in chrome
+     is signage. What lights up is what the palette already calls chrome.
+
+     Scoped under the CRT key, so lifting the glass takes the emission with
+     it and leaves the page in flat colour. */
+  html:not([data-crt="off"]) {
+    & .text-primary,
+    & .text-terminal-chrome,
+    & .text-terminal-chrome-dim {
+      text-shadow:
+        0 0 8px color-mix(in oklch, var(--primary) 30%, transparent),
+        0 0 20px color-mix(in oklch, var(--primary) 14%, transparent);
+    }
   }
 
   /* An anchored heading has to clear the sticky header, or a TOC jump lands
@@ -65,39 +102,43 @@
     inset: 0;
     z-index: 60;
     pointer-events: none;
+    /* The lit row. A single-gun tube draws a line and moves on; the vertical
+       grille that used to sit here was the one artefact on the face that came
+       from a three-gun aperture mask, and on a green screen it bought nothing
+       but a standing pattern down every glyph.
+
+       No opacity of its own: the strength is in --crt-beam-strength, so the
+       lit rows and the cut rows are dialled in the same units.
+
+       Written out rather than applied from crt-beam because a pseudo-element
+       cannot carry a class, and the utility is what the toolkit ships. The
+       two have to stay in step. */
     mix-blend-mode: screen;
-    opacity: 0.5;
-    /* The mask stripe: a 6px cycle, the same idea as the RGB triads on an
-       aperture-grille tube, reduced to the one gun this theme has. */
-    background-image: linear-gradient(
-      90deg,
-      color-mix(in oklch, var(--primary) 7%, transparent),
-      transparent 50%,
-      color-mix(in oklch, var(--primary) 7%, transparent)
+    background-image: repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--primary) 22%, transparent) 0 1px,
+      transparent 1px 2px
     );
-    background-size: 6px 100%;
   }
 
-  /* The refresh band: one element moved with transform, so the compositor
-     handles it and nothing on the page repaints. Eleven seconds per sweep —
-     fast enough to notice once, slow enough to stop noticing. */
-  & > .tube-roll {
+  /* The raster the beam draws down the face. Above the content, unlike the
+     grille, because a line that is meant to be missing from a glyph has to be
+     drawn after the glyph.
+   *
+     The gap is held well under what the globe runs at. The hologram pass is
+     drawing wireframe over empty space, where a 45% cut costs nothing;
+     the same depth across a page of 9px mono takes the counters out of e and
+     a, and this site is a text terminal before it is a screen. */
+  & > .tube-raster {
     position: fixed;
-    inset-inline: 0;
-    top: 0;
-    z-index: 61;
-    height: 22vh;
+    inset: 0;
+    z-index: 62;
     pointer-events: none;
-    mix-blend-mode: screen;
-    background-image: linear-gradient(
-      to bottom,
-      transparent,
-      color-mix(in oklch, var(--primary) 6%, transparent) 45%,
-      color-mix(in oklch, var(--primary) 9%, transparent) 55%,
-      transparent
-    );
-    will-change: transform;
-    animation: tube-roll 11s linear infinite;
+    /* Held low deliberately. The cut is the only thing on the face that takes
+       light away, and the page is being driven for brightness — a deep raster
+       here and a hot palette above cancel out, leaving a screen that is busy
+       rather than bright. */
+    --crt-raster-gap: 16%;
   }
 
   /* The glass: emission pooling at the top of the tube, and the corners
@@ -125,25 +166,30 @@
 /* Glass lifted. The tube key sets this on <html>, and what is left is the
    same page with nothing painted over it. There is no second theme here: the
    colours never change, only the layers on top of them. */
-html[data-tube="off"] .tube-face::before,
-html[data-tube="off"] .tube-face::after,
-html[data-tube="off"] .tube-face > .tube-roll {
+html[data-crt="off"] .tube-face::before,
+html[data-crt="off"] .tube-face::after,
+html[data-crt="off"] .tube-face > .tube-raster {
   display: none;
 }
 
-@keyframes tube-roll {
-  from {
-    transform: translateY(-22vh);
-  }
-  to {
-    transform: translateY(100vh);
-  }
+/* The emission goes with the glass. The halo is wide and faint enough that it
+   never softens a stroke, but it is still light the tube is putting out, and
+   a page with the screen switched off should be flat colour. */
+html[data-crt="off"] body {
+  text-shadow: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tube-face > .tube-roll {
-    animation: none;
-    opacity: 0;
+/* A reader who has asked the system for more contrast gets neither the mask
+   nor the spill: both are light spread over type on purpose, which is the one
+   thing that setting is asking us to stop doing. */
+@media (prefers-contrast: more) {
+  body {
+    text-shadow: none;
+  }
+
+  .tube-face::after,
+  .tube-face > .tube-raster {
+    display: none;
   }
 }
 

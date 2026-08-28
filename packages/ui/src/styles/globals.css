@@ -58,20 +58,52 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Phosphor bloom. The glow is built from currentColor, so it takes the tone of
-   whatever it is applied to and needs no per-colour variants.
+/* Driven phosphor: the element is pushed up the ramp rather than wrapped in a
+   halo.
+ *
+   A blurred text-shadow is what a camera pointed at a screen records, not what
+   the screen emits, and at readout sizes it costs the letterform more than the
+   glow is worth — the stroke goes soft and the counters fill in. brightness()
+   with a little saturate() moves the same colour further up the tube's own
+   ramp and leaves every edge exactly where it was, which is what makes a lit
+   label read as lit next to an unlit one.
+
+   Built from no colour of its own, so like the shadow it replaces it takes the
+   tone of whatever it is applied to and needs no per-colour variants.
 
    Named crt-glow, not text-glow: tailwind-merge treats an unknown `text-*`
    class as a text colour, so `cn("text-primary", "text-glow")` would drop the
    colour entirely.
 
-   Light backgrounds cannot carry a bloom — the halo reads as blur rather than
-   emission — so the effect is scoped to dark mode and degrades to nothing. */
+   Dark mode only: on a light ground there is no headroom to drive into, and a
+   brightened dark glyph is just a washed-out one. */
 @utility crt-glow {
   @variant dark {
-    text-shadow:
-      0 0 4px color-mix(in oklch, currentColor 55%, transparent),
-      0 0 14px color-mix(in oklch, currentColor 30%, transparent);
+    filter: brightness(1.22) saturate(1.12);
+  }
+}
+
+/* The state bar: a saturated edge down the inline start of a panel.
+ *
+ * A console tells you what a slot is doing before you read a word of it, and
+ * it does that with one lit edge rather than with a coloured border all the
+ * way round — a full outline changes the shape of the panel, an edge changes
+ * only its state. It is also the one place on a monochrome screen where a
+ * second hue can be spent, which is why --crt-edge-color is a variable and
+ * the fault case overrides it.
+ *
+ * Absolutely positioned, so the host has to establish a containing block. It
+ * sits inside the border rather than over it: the border is the panel, the
+ * bar is what the panel is reporting. */
+@utility crt-edge {
+  &::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: var(--crt-edge-width, 2px);
+    background-color: var(--crt-edge-color, var(--primary));
+    pointer-events: none;
   }
 }
 
@@ -119,6 +151,321 @@
   color: var(--ascii-ink);
 }
 
+/* A dot-matrix LED board: the sign in a station concourse, not a monitor.
+ *
+ * The body of the board is flat, so it can sit on the wrapper where no
+ * lattice has to line up with anything. It is tinted from the theme rather
+ * than from --ascii-ink, which is set further in on the art itself: the case
+ * is one piece of hardware whatever colour the diodes are driven at, and at
+ * nine percent of a near-black the difference is not visible anyway. */
+@utility led-board {
+  --led-body: color-mix(in oklch, var(--primary) 9%, oklch(0.13 0 0));
+  background-color: var(--led-body);
+}
+
+/* How the theme reaches a canvas, which has no cascade of its own: the
+   renderer reads these back off the element before it draws anything. The
+   font matters as much as the colours — the diode grid is measured from the
+   advance of the face that will actually be painted. */
+@utility led-surface {
+  color: var(--ascii-ink);
+  background-color: var(--led-body);
+  font-family: var(--font-mono);
+}
+
+/* Once the canvas has light on it, the CSS board underneath stops being the
+   picture and goes back to being the box. `visibility` rather than
+   `display`, because that box is what the canvas is sized from. */
+[data-slot="ascii-banner"][data-led="on"] :is(.led-matrix, .led-halo) {
+  visibility: hidden;
+}
+
+/* The faults belong to whichever board is actually being seen. The canvas
+   runs its own, off the same clock it draws with, so the CSS one has to stop
+   — two flickers at different periods read as a fault in the page rather
+   than in the sign. */
+[data-slot="ascii-banner"][data-led="on"] {
+  animation: none;
+}
+
+/* The diodes.
+ *
+ * Two background layers on one <pre>, both tiled at the same pitch, so
+ * nothing can drift half a dot out of register:
+ *
+ *   clipped to the text  the lit diodes. The art is the wiring diagram, not
+ *                        the picture — where it puts ink, a diode is on.
+ *   clipped to the box   the same lattice in the dark colour, across the
+ *                        whole board. Seeing the diodes that are *off* is
+ *                        what separates a LED sign from glowing text.
+ *
+ * The pitch is one art pixel: a monospace advance wide, half a line tall,
+ * because the block faces pack two pixel rows into every character cell.
+ *
+ * Each lit dot is hot in the middle and falls to the ink colour at its rim —
+ * a diode is a point source behind a diffuser, not a disc of flat paint, and
+ * that hot core is most of what makes one read as lit rather than painted.
+ * The bloom around it is a separate layer (led-halo), because a filter here
+ * would be clipped away with the rest of the element. */
+@utility led-matrix {
+  --led-pitch-x: 0.6em;
+  --led-pitch-y: 0.5em;
+  /* A driven diode is not its own hue at the centre — it clips to white and
+     only shows the phosphor at the rim, which is why a photograph of a lit
+     sign has white cores and coloured edges. */
+  --led-core: color-mix(in oklch, var(--ascii-ink) 48%, white);
+  --led-unlit: color-mix(in oklch, var(--ascii-ink) 17%, transparent);
+
+  position: relative;
+  color: transparent;
+  background-image:
+    radial-gradient(
+      circle closest-side,
+      var(--led-core) 0 26%,
+      var(--ascii-ink) 62%,
+      color-mix(in oklch, var(--ascii-ink) 60%, transparent) 86%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle closest-side,
+      var(--led-unlit) 0 55%,
+      color-mix(in oklch, var(--ascii-ink) 4%, transparent) 88%,
+      transparent 100%
+    );
+  background-size: var(--led-pitch-x) var(--led-pitch-y);
+  background-position: 0 0;
+  background-clip: text, border-box;
+  -webkit-background-clip: text, border-box;
+}
+
+/* The light a lit diode throws past its own rim.
+ *
+ * A second copy of the art, lit dots only, blurred and screened over the
+ * crisp one. It has to be its own element: `filter` is applied before
+ * background-clip takes the paint away, so a blur asked for on led-matrix
+ * would be clipped off with everything outside the glyphs — and a
+ * drop-shadow, the other obvious reach, haloes whole letterforms rather than
+ * single dots, which is the bleed that used to tear this art apart.
+ *
+ * Screen rather than normal blending, because light adds: two neighbouring
+ * diodes brighten the gap between them instead of painting over it. */
+@utility led-halo {
+  --led-pitch-x: 0.6em;
+  --led-pitch-y: 0.5em;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: transparent;
+  background-image: radial-gradient(
+    circle closest-side,
+    var(--ascii-ink) 0 55%,
+    color-mix(in oklch, var(--ascii-ink) 60%, transparent) 90%,
+    transparent 100%
+  );
+  background-size: var(--led-pitch-x) var(--led-pitch-y);
+  background-position: 0 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* Two ranges of spill from one layer: the blur is the light just off each
+     diode's rim, and the drop-shadow — applied to that already-blurred
+     result, so it follows the dots rather than the letterforms — is the
+     wash the board throws into the air around it.
+     In em, like everything else here: the banner is fit to its container and
+     can resolve to six pixels on a phone, where a fixed-pixel bloom stops
+     being a glow and becomes a smear. */
+  filter: blur(0.1em)
+    drop-shadow(
+      0 0 0.2em color-mix(in oklch, var(--ascii-ink) 75%, transparent)
+    )
+    drop-shadow(
+      0 0 0.55em color-mix(in oklch, var(--ascii-ink) 45%, transparent)
+    );
+  mix-blend-mode: screen;
+
+  /* The coating's decay, not the die's. See led-dead-row. */
+  --led-dead-timing: cubic-bezier(0.16, 0.62, 0.3, 1);
+}
+
+/* Faults for a board that is powered but tired.
+ *
+ * Brightness only, never geometry: this art is built from cells that tile,
+ * and anything that displaces one row sideways reads as the letters coming
+ * apart rather than as interference. */
+@keyframes led-flicker {
+  0%,
+  6%,
+  7.6%,
+  38%,
+  39.1%,
+  71%,
+  71.9%,
+  100% {
+    filter: brightness(1);
+  }
+  6.4% {
+    filter: brightness(0.62);
+  }
+  6.8% {
+    filter: brightness(1.1);
+  }
+  7.2% {
+    filter: brightness(0.82);
+  }
+  38.3% {
+    filter: brightness(1.2);
+  }
+  38.7% {
+    filter: brightness(0.7);
+  }
+  71.4% {
+    filter: brightness(0.55);
+  }
+}
+
+/* A row of diodes losing drive for a frame and coming back, in a different
+   place each time. Stepped, so the weak row appears where it is written
+   instead of sliding there.
+
+   It never reaches full opacity. A row at 1 would be a solid bar in the
+   board's colour, and that reads as a tear in the page rather than as a
+   fault in the sign — the diodes are still there, they are just not being
+   driven, so what shows through is the unlit lattice. */
+@keyframes led-dropout {
+  0%,
+  22%,
+  24%,
+  100% {
+    opacity: 0;
+    transform: translateY(2em);
+  }
+  23% {
+    opacity: 0.8;
+    transform: translateY(2em);
+  }
+  55%,
+  57.5% {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  56% {
+    opacity: 0.8;
+    transform: translateY(0.5em);
+  }
+  81%,
+  83% {
+    opacity: 0;
+    transform: translateY(3.5em);
+  }
+  82% {
+    opacity: 0.8;
+    transform: translateY(3.5em);
+  }
+}
+
+/* The board's own unsteadiness, on the wrapper so both dot layers dim
+   together — a halo that kept its brightness while the diodes under it
+   faltered would read as fog rather than as light. */
+@utility led-faults {
+  animation: led-flicker 6.7s steps(1, end) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* Carried by both dot layers, so a weak row loses its glow along with its
+   drive. Painted in the board's own colour and never opaque, so the row
+   dims towards the unlit lattice instead of towards a black bar, and
+   nothing about the art moves.
+
+   --led-dead-timing is what gives the board its phosphor. On the crisp
+   diodes the bar steps, because a diode's own die is fast: it is out on the
+   frame it is out. The halo overrides it to a decay curve, so the light the
+   dead row was throwing fades rather than vanishing — the coating keeps
+   glowing after the drive has stopped, which is the whole tell of a phosphor
+   panel and the thing most pastiches leave out. */
+@utility led-dead-row {
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: var(--led-pitch-y, 0.5em);
+    z-index: 1;
+    background-color: var(--led-body);
+    opacity: 0;
+    animation: led-dropout 9.3s var(--led-dead-timing, steps(1, end)) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+/* The projected raster, painted inside the glyphs.
+ *
+ * This is the globe's fill written as a gradient: the same ramp the hologram
+ * pass steps through — mid at the bottom of a cell, hot above it, the pale
+ * core at the top — and then a gap the page shows through, because on that
+ * pass every other raster row is missing rather than dark. Clipped to the
+ * text, so the art keeps its own silhouette and the raster lands inside it.
+ *
+ * A dot lattice says diodes: light arranged on a grid, each one its own
+ * source. A cut raster says beam: one gun scanning lines, brightest where it
+ * has just passed. Same art, and the difference is the whole difference
+ * between a sign in a concourse and a screen.
+ *
+ * Sized in em so the raster tracks the art, which is fit to its container and
+ * can resolve to six pixels on a phone; a fixed row height that reads as a
+ * scanline at 20px chews the glyphs to pieces at 9. --ascii-ink carries the
+ * colour, because background-image cannot read currentColor the way
+ * text-shadow can. */
+@utility crt-holo-fill {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--ascii-ink) 50%, oklch(0.97 0.06 158)) 0 0.05em,
+    color-mix(in oklch, var(--ascii-ink) 68%, oklch(0.95 0.09 158)) 0.05em
+      0.1em,
+    var(--ascii-ink) 0.1em 0.15em,
+    transparent 0.15em 0.2em
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* A projection that has not found its lock: rows step sideways for a moment,
+   then settle. Background-position only — the glyphs never move, so the art
+   stays on its grid and it is the raster inside it that slips, which is what
+   the pass on the globe does while it is still converging. */
+@keyframes crt-holo-slip {
+  0%,
+  86%,
+  100% {
+    background-position: 0 0;
+  }
+  88% {
+    background-position: 0.12em -0.05em;
+  }
+  91% {
+    background-position: -0.1em 0.03em;
+  }
+  94% {
+    background-position: 0.04em 0;
+  }
+}
+
+@utility crt-holo-slip {
+  animation: crt-holo-slip 7.4s steps(1, end) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* Scanlines painted *inside* the glyphs rather than over them. The gradient
    is the text's fill via background-clip, so there is no rectangle covering
    the block and the effect follows the letterforms exactly.
@@ -137,6 +484,61 @@
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+}
+
+/* The raster, cut into the picture rather than laid over it.
+ *
+ * Every other row is a gap the ground shows through — the same rule the
+ * hologram pass uses on the globe, which is where this look comes from. A
+ * screen-blended band can only ever add light, so a raster drawn that way
+ * brightens the dark half of the page and never bites into a lit glyph; the
+ * picture stays flat and the lines read as a texture printed on top of it.
+ * Cutting instead means the effect is proportional to how hard the phosphor
+ * is being driven: the near-black ground barely moves, and the beam colours —
+ * chrome, headings, readouts, the ink — get the banding.
+ *
+ * The cycle is 2px rather than the 3px a laid-over scanline can afford. A
+ * cut raster only spends half its cycle darkening, so the same visible depth
+ * comes out of a tighter pitch — and tighter is what keeps 9px mono legible,
+ * since the gap then lands inside a stroke rather than across a counter.
+ *
+ * Pairs with crt-beam. Cutting alone only ever takes light away, and a page
+ * that has lost half its rows and gained nothing back is not a brighter tube,
+ * it is a dimmer one — the beam has to put the energy somewhere.
+ *
+ * --crt-raster-gap is the one dial. Callers that want the reference look
+ * drive it toward 45%; the page-wide default is deliberately softer.
+ */
+@utility crt-interlace {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 var(--crt-raster-line, 1px),
+    color-mix(in oklch, black var(--crt-raster-gap, 24%), transparent)
+      var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
+  );
+}
+
+/* The other half of the raster: the row the beam is actually drawing.
+ *
+ * Screen, so it can only add — which is exactly wrong for the gap and exactly
+ * right here. On the near-black ground it lifts the row a little; on a lit
+ * glyph it drives the phosphor toward the pale top of the ramp, which is the
+ * hot core the hologram pass gets from its top two stops. Split off from
+ * crt-interlace because the two pull in opposite directions and an element
+ * carries one blend mode.
+ *
+ * Same 2px cycle and the same --crt-raster-line, so the light lands on the
+ * rows the cut left alone. Offset by nothing: a beam that lit the gap would
+ * fill the raster back in.
+ */
+@utility crt-beam {
+  mix-blend-mode: screen;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), transparent)
+      0 var(--crt-raster-line, 1px),
+    transparent var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
+  );
 }
 
 /* Phosphor bloom for a block of glyphs. drop-shadow follows the rendered
@@ -204,9 +606,11 @@
   }
 }
 
+/* The same drive, one notch down: for chrome that should sit above the body
+   copy without claiming the top of the ramp the way crt-glow does. */
 @utility crt-glow-soft {
   @variant dark {
-    text-shadow: 0 0 8px color-mix(in oklch, currentColor 28%, transparent);
+    filter: brightness(1.11) saturate(1.06);
   }
 }
 
