@@ -38,6 +38,12 @@ const SOCIAL_LINKS = [
   { label: "rss", href: "/rss.xml" },
 ]
 
+/** The person behind the operator callsign. */
+const BYLINE = {
+  name: "gabriel fernandes",
+  href: "https://www.linkedin.com/in/gabrielfernandesbr/",
+}
+
 type SiteShellProps = {
   /** The file path shown in the header rule, without the leading `~/`. */
   path: string
@@ -128,6 +134,20 @@ export async function SiteShell({
               </a>
             ))}
           </div>
+
+          {/* The one human name in the chrome. The machine calls itself
+              SEKTANT1 upstairs; this is who runs it. */}
+          <p className="border-t border-sidebar-border px-3 py-2 font-mono text-[0.65rem] text-terminal-ink-faint">
+            made by{" "}
+            <a
+              href={BYLINE.href}
+              target="_blank"
+              rel="noreferrer"
+              className="byline-link text-terminal-ink-dim crt-persist hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              {BYLINE.name}
+            </a>
+          </p>
         </SidebarFooter>
 
         {/* The panel's own edge is the collapse control, the way an editor
@@ -138,21 +158,34 @@ export async function SiteShell({
       {/* The chrome holds still at viewport height and the buffer scrolls
           inside it, so the status bar never rides off-screen. */}
       <SidebarInset className="min-h-0 overflow-hidden">
+        {/* The title bar of the open buffer. Everything else on the screen is
+            labelled the way a panel is — a Cyrillic caption, a rule, keys with
+            borders — and this bar used to be the one place speaking plain app
+            chrome, so it is dressed the same: the machine names what is open,
+            then the keys that act on it. */}
         <header className="sticky top-0 z-10 flex h-11 shrink-0 items-center gap-2 border-b bg-background px-3">
-          <SidebarTrigger className="md:hidden" />
+          <SidebarTrigger className="size-6 rounded-none border border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:bg-transparent hover:text-primary md:hidden" />
           <Separator orientation="vertical" className="h-4 md:hidden" />
 
-          <span className="min-w-0 flex-1 truncate font-mono text-[0.72rem]">
-            <span className="text-terminal-ink-faint">~/</span>
-            <span className="text-terminal-ink">{path}</span>
+          <span className="flex min-w-0 flex-1 items-baseline gap-2 font-mono text-[0.72rem]">
+            <span className="shrink-0 text-[0.62rem] tracking-[0.16em] text-terminal-chrome-dim uppercase">
+              БУФЕР //
+            </span>
+            <span className="min-w-0 truncate">
+              <span className="text-terminal-ink-faint">~/</span>
+              <span className="text-terminal-ink">{path}</span>
+            </span>
           </span>
 
-          <CommandTrigger className="hidden sm:flex" />
+          <CommandTrigger className="hidden sm:inline-flex" />
 
           {/* Bender is the face this site was drawn in, so it is the default
               here even though the toolkit ships Play — Bender has no Cyrillic
               and cannot be the library-wide default. */}
-          <FontPicker defaultFace="Bender" />
+          <FontPicker
+            defaultFace="Bender"
+            className="size-6 rounded-none border border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:bg-transparent hover:text-primary"
+          />
         </header>
 
         {gauge}
@@ -161,7 +194,7 @@ export async function SiteShell({
             actually scrolls, so it is what a TOC anchor jump moves. */}
         <div
           data-slot="buffer"
-          className="relative z-1 min-w-0 flex-1 scroll-smooth overflow-x-hidden overflow-y-auto motion-reduce:scroll-auto"
+          className="relative z-1 min-w-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth motion-reduce:scroll-auto"
         >
           {children}
         </div>

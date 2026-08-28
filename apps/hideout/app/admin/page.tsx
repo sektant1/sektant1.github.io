@@ -54,6 +54,12 @@ export default async function AdminDashboardPage() {
             display / hero
           </h2>
           <BannerFontPicker />
+          <Link
+            href="/admin/home"
+            className="text-xs text-terminal-ink-dim hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+          >
+            Edit the front page text →
+          </Link>
         </section>
 
         <section className="flex flex-col gap-3">

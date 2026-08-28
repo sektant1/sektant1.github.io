@@ -19,11 +19,8 @@ COPY --from=deps /repo/node_modules node_modules
 COPY --from=deps /repo/apps/hideout/node_modules apps/hideout/node_modules
 COPY . .
 WORKDIR /repo/apps/hideout
-# Copies content images into public/ and builds the post search index; the
-# build reads both.
-RUN npm run sync:content-assets \
-  && node scripts/generate-search-index.mjs \
-  && npx next build --webpack
+RUN npm run build \
+  && test -f public/models/bitcoin.glb
 
 FROM node:22-alpine AS runtime
 WORKDIR /app

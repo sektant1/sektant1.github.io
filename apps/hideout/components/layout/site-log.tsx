@@ -3,11 +3,12 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import { IconAlertOctagon, IconAlertTriangle } from "@tabler/icons-react"
+import { CommandKey } from "@workspace/ui/components/command-strip"
 import { LogConsole, useLogEntries } from "@workspace/ui/components/log-console"
 import { captureConsole, logger } from "@workspace/ui/lib/logger"
 import { cn } from "@workspace/ui/lib/utils"
 
-const TOGGLE_EVENT = "hideout:toggle-log"
+export const TOGGLE_EVENT = "hideout:toggle-log"
 
 /**
  * The integrated terminal.
@@ -72,14 +73,11 @@ export function SiteLogToggle({ className }: { className?: string }) {
   const warnings = entries.filter((entry) => entry.level === "warn").length
 
   return (
-    <button
-      type="button"
+    <CommandKey
       onClick={() => window.dispatchEvent(new Event(TOGGLE_EVENT))}
       title="Toggle the panel (ctrl+`)"
-      className={cn(
-        "flex shrink-0 items-center gap-2 border border-terminal-rule px-1.5 text-terminal-ink-dim crt-persist hover:border-terminal-edge hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
-        className
-      )}
+      tone={errors > 0 ? "alert" : "default"}
+      className={cn("gap-2 px-1.5", className)}
     >
       <span className="flex items-center gap-1">
         <IconAlertOctagon
@@ -99,6 +97,6 @@ export function SiteLogToggle({ className }: { className?: string }) {
       <span className="sr-only">
         {errors} errors and {warnings} warnings. Open the log panel.
       </span>
-    </button>
+    </CommandKey>
   )
 }

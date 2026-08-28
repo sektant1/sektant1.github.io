@@ -11,28 +11,31 @@ export function componentNames(dir) {
 
 /**
  * Finds the workspace modules a component imports. A component that imports a
- * sibling or a hook is not self-contained, so the registry item has to carry
- * that along or the consumer installs code that cannot resolve its imports.
+ * sibling, a hook or a lib module is not self-contained, so the registry item
+ * has to carry that along or the consumer installs code that cannot resolve
+ * its imports.
  *
  * `lib/utils` is excluded: `shadcn init` writes it into every project.
  */
 export function parseImports(source) {
   const components = new Set()
   const hooks = new Set()
+  const libs = new Set()
 
-  const pattern = /["']@workspace\/ui\/(components|hooks)\/([\w-]+)["']/g
+  const pattern = /["']@workspace\/ui\/(components|hooks|lib)\/([\w-]+)["']/g
   let match
   while ((match = pattern.exec(source)) !== null) {
     if (match[1] === "components") components.add(match[2])
-    else hooks.add(match[2])
+    else if (match[1] === "hooks") hooks.add(match[2])
+    else if (match[2] !== "utils") libs.add(match[2])
   }
 
-  return { components: [...components], hooks: [...hooks] }
+  return { components: [...components], hooks: [...hooks], libs: [...libs] }
 }
 
 export function buildItem(name, dependenciesByComponent, imports) {
   const dependencies = dependenciesByComponent[name]
-  const { components = [], hooks = [] } = imports ?? {}
+  const { components = [], hooks = [], libs = [] } = imports ?? {}
   const title = toTitle(name)
 
   return {
@@ -55,6 +58,11 @@ export function buildItem(name, dependenciesByComponent, imports) {
         path: `packages/ui/src/hooks/${hook}.ts`,
         type: "registry:hook",
         target: `hooks/${hook}.ts`,
+      })),
+      ...libs.map((lib) => ({
+        path: `packages/ui/src/lib/${lib}.ts`,
+        type: "registry:lib",
+        target: `lib/${lib}.ts`,
       })),
     ],
   }

@@ -141,6 +141,13 @@ a workspace dependency and compiles it from source, so an edit in
 npm run dev --workspace hideout    # localhost:3000
 ```
 
+`/admin/home` edits every string the front page renders — banner, tagline,
+panel labels, quick links, the quote, section headings — into
+`content/pages/home.json`. That file only carries what was changed: a field
+left empty renders the copy the site ships with, defined in
+`apps/hideout/lib/content/home-schema.ts`, so the front page survives a
+missing or half-written file.
+
 It builds two ways from the same source. `build:pages` produces a static
 export with the CMS stripped out, for GitHub Pages. A plain `build` produces a
 standalone Node bundle for self-hosting — `scripts/install.sh` sets that up on

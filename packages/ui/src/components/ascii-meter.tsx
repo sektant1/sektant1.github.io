@@ -27,6 +27,12 @@ type AsciiMeterProps = Omit<React.ComponentProps<"div">, "children"> &
     cells?: number
     /** Appended after the percentage, e.g. "MB" or "OPS". */
     unit?: string
+    /**
+     * Replaces the percentage with the figure the bar actually stands for.
+     * A count has no percentage worth printing — "003" says more than "43%"
+     * — while the bar still carries the comparison between rows.
+     */
+    display?: React.ReactNode
   }
 
 /**
@@ -42,6 +48,7 @@ function AsciiMeter({
   value,
   cells = 14,
   unit,
+  display,
   tone,
   size,
   className,
@@ -77,7 +84,8 @@ function AsciiMeter({
         ]
       </span>
       <span className="shrink-0">
-        {String(percent).padStart(3, " ")}%{unit ? ` ${unit}` : ""}
+        {display ?? `${String(percent).padStart(3, " ")}%`}
+        {unit ? ` ${unit}` : ""}
       </span>
     </div>
   )

@@ -6,9 +6,10 @@
   "description": "sektant.dev — devlog, project index and local MDX CMS.",
   "scripts": {
     "sync:content-assets": "node scripts/sync-content-assets.mjs",
-    "predev": "npm run sync:content-assets && node scripts/generate-search-index.mjs",
+    "build:models": "node scripts/build-models.mjs",
+    "predev": "npm run build:models && npm run sync:content-assets && node scripts/generate-search-index.mjs",
     "dev": "next dev",
-    "prebuild": "npm run sync:content-assets && node scripts/generate-search-index.mjs",
+    "prebuild": "npm run build:models && npm run sync:content-assets && node scripts/generate-search-index.mjs",
     "build": "next build --webpack",
     "build:pages": "node scripts/build-pages.mjs",
     "start": "next start",

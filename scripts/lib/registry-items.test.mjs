@@ -4,17 +4,38 @@ import { buildItem, diffManifest, parseImports } from "./registry-items.mjs"
 describe("parseImports", () => {
   it("finds sibling components a component depends on", () => {
     const source = `import { Button } from "@workspace/ui/components/button"`
-    expect(parseImports(source)).toEqual({ components: ["button"], hooks: [] })
+    expect(parseImports(source)).toEqual({
+      components: ["button"],
+      hooks: [],
+      libs: [],
+    })
   })
 
   it("finds hooks a component depends on", () => {
     const source = `import { useIsMobile } from "@workspace/ui/hooks/use-mobile"`
-    expect(parseImports(source)).toEqual({ components: [], hooks: ["use-mobile"] })
+    expect(parseImports(source)).toEqual({
+      components: [],
+      hooks: ["use-mobile"],
+      libs: [],
+    })
+  })
+
+  it("finds lib modules a component depends on", () => {
+    const source = `import { logger } from "@workspace/ui/lib/logger"`
+    expect(parseImports(source)).toEqual({
+      components: [],
+      hooks: [],
+      libs: ["logger"],
+    })
   })
 
   it("ignores lib/utils, which shadcn init already provides", () => {
     const source = `import { cn } from "@workspace/ui/lib/utils"`
-    expect(parseImports(source)).toEqual({ components: [], hooks: [] })
+    expect(parseImports(source)).toEqual({
+      components: [],
+      hooks: [],
+      libs: [],
+    })
   })
 
   it("deduplicates repeated imports of the same module", () => {
@@ -52,6 +73,22 @@ describe("buildItem", () => {
         path: "packages/ui/src/hooks/use-mobile.ts",
         type: "registry:hook",
         target: "hooks/use-mobile.ts",
+      },
+    ])
+  })
+
+  it("ships the lib files it imports alongside the component", () => {
+    const item = buildItem("log-console", {}, { libs: ["logger"] })
+    expect(item.files).toEqual([
+      {
+        path: "packages/ui/src/components/log-console.tsx",
+        type: "registry:ui",
+        target: "components/ui/log-console.tsx",
+      },
+      {
+        path: "packages/ui/src/lib/logger.ts",
+        type: "registry:lib",
+        target: "lib/logger.ts",
       },
     ])
   })

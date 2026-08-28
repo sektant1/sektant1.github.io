@@ -127,6 +127,10 @@ try {
     if (entry) moved.push(entry)
   }
 
+  // This build calls next directly rather than through `npm run build`, so
+  // it does not get the prebuild step and has to run the same preparation
+  // itself. A model missing here is a 404 on the boot screen.
+  await run("node", ["scripts/build-models.mjs"])
   await run("node", ["scripts/sync-content-assets.mjs"])
   await run("node", ["scripts/generate-search-index.mjs"])
   await run("npx", ["next", "build", "--webpack"], {

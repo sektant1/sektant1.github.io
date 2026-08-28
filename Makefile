@@ -78,6 +78,10 @@ format: ## Rewrite files with prettier
 
 ##@ Registry
 
+.PHONY: models
+models: ## Compile assets/models into the GLBs the site serves
+	npm run build:models --workspace hideout
+
 .PHONY: registry
 registry: ## Regenerate registry.json and the served /r/*.json
 	npm run registry:build

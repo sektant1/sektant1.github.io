@@ -1,0 +1,56 @@
+{
+  "hero": {
+    "systemLabel": "СИСТЕМА //",
+    "systemUnit": "СКТ-01",
+    "linkStatus": "СВЯЗЬ: УСТ.",
+    "bannerWide": "Sektant Hideout",
+    "bannerStackedTop": "Sektant",
+    "bannerStackedBottom": "Hideout",
+    "srTitle": "Sektant Hideout",
+    "tagline": "i become what i think",
+    "description": "my man cave for essays, tinkering, and things i built",
+    "operator": "ОПЕРАТОР // SEKTANT1",
+    "summaryTitle": "АРХИВ // СВОДКА",
+    "summaryRef": "BUF 001",
+    "metricPosts": "POSTS",
+    "metricProjects": "PROJECTS",
+    "metricMinutes": "READ MIN",
+    "quickAccessTitle": "БЫСТРЫЙ ДОСТУП",
+    "quickAccessRef": "NAV // 03",
+    "quickLinks": [
+      {
+        "label": "ESSAYS",
+        "href": "/posts"
+      },
+      {
+        "label": "PROJECTS",
+        "href": "/projects"
+      },
+      {
+        "label": "GAMES",
+        "href": "/games"
+      }
+    ],
+    "tagsTitle": "ИНДЕКС // ТЕГИ",
+    "tagsRef": "IDX // TAG",
+    "globeTitle": "ОБЪЕКТ 01 // GEO NODE",
+    "globeFooterEnd": "DRAG // SLEW"
+  },
+  "sections": {
+    "posts": {
+      "path": "content/posts",
+      "title": "LATEST",
+      "actionLabel": "all posts"
+    },
+    "games": {
+      "path": "content/games",
+      "title": "GAMES",
+      "actionLabel": "all games"
+    },
+    "projects": {
+      "path": "content/projects",
+      "title": "THINGS I BUILT",
+      "actionLabel": "all projects"
+    }
+  }
+}
