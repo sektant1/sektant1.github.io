@@ -77,30 +77,53 @@ function AsciiBannerView({
       data-slot="ascii-banner"
       data-effect={effect}
       data-font={font}
-      className={cn("ascii-fit relative isolate", className)}
+      className={cn(
+        "ascii-fit relative isolate",
+        // The waver sits out here rather than on the art: it is a filter, and
+        // the art is already carrying one for the halo.
+        effect === "glitch" && "crt-holo-waver",
+        className
+      )}
       {...props}
       // The art's own column count is what ascii-fit-text divides by.
       style={{ "--ascii-cols": columns, ...props.style } as React.CSSProperties}
     >
       <span className="sr-only">{text}</span>
 
-      {/* One layer, not three. The raster is inside the letterforms rather
-          than painted over them, so there is nothing to register a second copy
-          against — and no board behind it, because a projection has no
-          housing. */}
-      <pre
-        aria-hidden="true"
-        className={cn(
-          bannerVariants({ tone, size }),
-          // Without the raster the ink is flat: a gradient clipped to the
-          // glyphs takes pixels out of the letterforms rather than shading
-          // them, and at "none" the caller has asked for the art itself.
-          effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
-          effect === "glitch" && "crt-holo-slip"
+      {/* No board and no diode canvas: the raster is inside the letterforms,
+          so the art is the picture rather than the wiring diagram for one. */}
+      <div className="relative">
+        <pre
+          aria-hidden="true"
+          className={cn(
+            bannerVariants({ tone, size }),
+            // Without the raster the ink is flat: a gradient clipped to the
+            // glyphs takes pixels out of the letterforms rather than shading
+            // them, and at "none" the caller has asked for the art itself.
+            effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
+            effect !== "none" && "crt-holo-bloom",
+            effect === "glitch" && "crt-holo-slip"
+          )}
+        >
+          {art}
+        </pre>
+
+        {/* The ghost the beam lays down beside the one it aimed at, held at
+            zero opacity until the projection loses lock. Sized by the same
+            utilities off the same container as the copy underneath, so the two
+            land on the same grid to the pixel. */}
+        {effect === "glitch" && (
+          <pre
+            aria-hidden="true"
+            className={cn(
+              bannerVariants({ tone, size }),
+              "pointer-events-none absolute inset-0 crt-holo-ghost crt-holo-fill"
+            )}
+          >
+            {art}
+          </pre>
         )}
-      >
-        {art}
-      </pre>
+      </div>
     </div>
   )
 }

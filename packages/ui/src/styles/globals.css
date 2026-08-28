@@ -418,29 +418,67 @@
  * has just passed. Same art, and the difference is the whole difference
  * between a sign in a concourse and a screen.
  *
- * Sized in em so the raster tracks the art, which is fit to its container and
- * can resolve to six pixels on a phone; a fixed row height that reads as a
- * scanline at 20px chews the glyphs to pieces at 9. --ascii-ink carries the
- * colour, because background-image cannot read currentColor the way
- * text-shadow can. */
+ * Sized in pixels, and that is the whole reason this reads as the same
+ * surface as the globe rather than as a similar idea. The pass on the globe
+ * rasterises into the drawing buffer: its lines are a fixed number of device
+ * pixels wide no matter how large the subject is drawn, so a small globe and
+ * a large one are the same screen. An em-sized raster instead tracks the
+ * glyph, so banner art fitted to a wide container comes out with a coarse
+ * five-pixel pitch while the globe beside it holds one — two rasters, two
+ * screens, and the illusion is gone.
+ *
+ * Three rows to a cycle: the pale core the beam leaves at the top of a line,
+ * the ink itself under it, and the gap the page shows through. --ascii-ink
+ * carries the colour, because background-image cannot read currentColor the
+ * way text-shadow can. */
 @utility crt-holo-fill {
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--ascii-ink) 50%, oklch(0.97 0.06 158)) 0 0.05em,
-    color-mix(in oklch, var(--ascii-ink) 68%, oklch(0.95 0.09 158)) 0.05em
-      0.1em,
-    var(--ascii-ink) 0.1em 0.15em,
-    transparent 0.15em 0.2em
+    color-mix(in oklch, var(--ascii-ink) 22%, oklch(0.98 0.05 158)) 0 1px,
+    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 2px,
+    transparent 2px 3px
   );
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
 
-/* A projection that has not found its lock: rows step sideways for a moment,
-   then settle. Background-position only — the glyphs never move, so the art
-   stays on its grid and it is the raster inside it that slips, which is what
-   the pass on the globe does while it is still converging. */
+/* The halo the projected raster carries, the same two stops the globe's own
+   canvas is filtered with: one pixel tight so the cell edges stay edges
+   instead of dissolving into their own glow, and one wide and faint that only
+   shows where strokes are close enough for their spill to add up.
+
+   drop-shadow rather than text-shadow, because it follows the rendered mass
+   rather than each glyph box — which is what makes a block of art halo as one
+   object the way the globe does. It was ruinous while the art was a lattice of
+   tiling half-blocks and the LED grid was the picture; with the raster clipped
+   inside the letterforms there are no seams left for it to bleed into. */
+@utility crt-holo-bloom {
+  /* Driven before it is haloed, in that order: the globe's canvas arrives at
+     the compositor already lit by the pass that drew it, and a gradient
+     clipped to text does not — so the level has to be put back here or the
+     art reads as the same picture at a lower gain. */
+  filter: brightness(1.14) saturate(1.05)
+    drop-shadow(0 0 1px color-mix(in oklch, var(--primary) 60%, transparent))
+    drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 22%, transparent));
+}
+
+/* The sync tear, borrowed beat for beat from the pass on the globe.
+ *
+ * That one plays its faults while it is converging and then holds still: rows
+ * slip sideways in a band, the beam puts down a ghost a cell to the side of
+ * where it is aiming, and the level wavers until it settles. A sign on a wall
+ * loses lock the same way, just not once — so the same three run here on a
+ * long cycle, and each is a separate utility because they land on different
+ * elements: the raster inside the glyphs, a second copy of the art, and the
+ * block as a whole.
+ *
+ * All three share the 7.4s period and fire in the same four percent of it.
+ * Staggered, they would read as three unrelated effects; together they are
+ * one moment where the projection is not holding. */
+
+/* Rows step sideways. Background-position only — the glyphs never move, so
+   the art stays on its grid and it is the raster inside it that slips. */
 @keyframes crt-holo-slip {
   0%,
   86%,
@@ -448,18 +486,80 @@
     background-position: 0 0;
   }
   88% {
-    background-position: 0.12em -0.05em;
+    background-position: 3px -1px;
   }
   91% {
-    background-position: -0.1em 0.03em;
+    background-position: -2px 1px;
   }
   94% {
-    background-position: 0.04em 0;
+    background-position: 1px 0;
   }
 }
 
 @utility crt-holo-slip {
   animation: crt-holo-slip 7.4s steps(1, end) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* The ghost: the copy the beam lays down beside the one it meant to. Held at
+   zero opacity for the whole cycle except the beat, so it costs nothing to
+   have on the page — and offset horizontally only, because a projection that
+   has lost horizontal lock has not lost its lines. */
+@keyframes crt-holo-ghost {
+  0%,
+  86%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  88% {
+    opacity: 0.55;
+    transform: translateX(5px);
+  }
+  91% {
+    opacity: 0.4;
+    transform: translateX(-4px);
+  }
+  94% {
+    opacity: 0.25;
+    transform: translateX(2px);
+  }
+}
+
+@utility crt-holo-ghost {
+  animation: crt-holo-ghost 7.4s steps(1, end) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* The level wavering as the beam re-acquires: brightness rather than opacity,
+   so the block dims the way a driven phosphor does instead of fading toward
+   the page. */
+@keyframes crt-holo-waver {
+  0%,
+  86%,
+  100% {
+    filter: none;
+  }
+  88% {
+    filter: brightness(1.45);
+  }
+  90% {
+    filter: brightness(0.72);
+  }
+  93% {
+    filter: brightness(1.18);
+  }
+}
+
+@utility crt-holo-waver {
+  animation: crt-holo-waver 7.4s steps(1, end) infinite;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
