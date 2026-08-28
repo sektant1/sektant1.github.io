@@ -40,8 +40,10 @@ type AsciiBannerViewProps = Omit<React.ComponentProps<"div">, "children"> &
     /** Names the treatment; kept for callers that switch faces. */
     font?: string
     /**
-     * "panel" is the projection locked and steady. "glitch" is the same
-     * projection still finding it: rows step sideways for a moment and settle.
+     * "panel" is the projection at a steady level. "glitch" lets that level
+     * waver, the way a beam re-acquiring does. Brightness only: the art is
+     * built from cells that tile, and anything that displaces them reads as
+     * the letters coming apart rather than as interference.
      * "none" renders the art in flat ink, with no raster in it at all.
      */
     effect?: "none" | "panel" | "glitch"
@@ -101,28 +103,11 @@ function AsciiBannerView({
             // glyphs takes pixels out of the letterforms rather than shading
             // them, and at "none" the caller has asked for the art itself.
             effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
-            effect !== "none" && "crt-holo-bloom",
-            effect === "glitch" && "crt-holo-slip"
+            effect !== "none" && "crt-holo-bloom"
           )}
         >
           {art}
         </pre>
-
-        {/* The ghost the beam lays down beside the one it aimed at, held at
-            zero opacity until the projection loses lock. Sized by the same
-            utilities off the same container as the copy underneath, so the two
-            land on the same grid to the pixel. */}
-        {effect === "glitch" && (
-          <pre
-            aria-hidden="true"
-            className={cn(
-              bannerVariants({ tone, size }),
-              "pointer-events-none absolute inset-0 crt-holo-ghost crt-holo-fill"
-            )}
-          >
-            {art}
-          </pre>
-        )}
       </div>
     </div>
   )
