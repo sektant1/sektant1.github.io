@@ -19,7 +19,7 @@ export default async function ProjectsPage() {
       tree={tree}
       status={[{ label: "projects", value: projects.length }]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
         <SectionHeading path="content/projects" title="projects">
           <p className="max-w-prose text-xs text-terminal-ink-dim">
             Everything I have shipped or am still building. Each one links to

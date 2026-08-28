@@ -23,7 +23,7 @@ export default async function NotFound() {
       tree={tree}
       status={[{ label: "signal", value: "lost" }]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-12 md:px-6">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-12 md:px-6">
         <div aria-hidden="true">
           <AsciiBannerView
             art={banner.art}

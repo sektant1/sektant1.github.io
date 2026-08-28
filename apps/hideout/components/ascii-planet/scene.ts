@@ -112,7 +112,24 @@ export function createAsciiScene(
   const renderScale = renderScaleFor(window.devicePixelRatio)
   let cellHeight = cellHeightFor(initialW, characterResolution)
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false })
+  // A context is not guaranteed. Browsers with fingerprinting protection turn
+  // WebGL off, some extensions block it, and a machine with no accelerated
+  // driver can simply refuse — in which case the constructor throws. Left
+  // uncaught it escapes the mounting effect and React tears the page down, so
+  // the reader loses the whole site over one decorative panel.
+  let renderer: THREE.WebGLRenderer
+  try {
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false })
+  } catch (error) {
+    logger.warn("planet", "no WebGL context; the scene stays empty", error)
+    // Marked ready so nothing goes on waiting for a picture that will not
+    // arrive: the curtain drops its spinner and the panel keeps its readouts.
+    host.dataset.modelReady = "true"
+    onModelReady?.()
+    onLocation?.(null)
+    return { setPaused: () => {}, dispose: () => {} }
+  }
+
   renderer.setPixelRatio(renderScale)
   renderer.setSize(initialW, initialH)
   renderer.setClearColor(0x000000, 0)
@@ -240,6 +257,12 @@ export function createAsciiScene(
       })
       .catch((error) => {
         logger.error("planet", `could not load ${modelUrl}`, error)
+        // The model is the only thing the curtain waits for, and a blocked or
+        // failed fetch used to leave it waiting forever behind a spinner.
+        modelLoaded = true
+        host.dataset.modelReady = "true"
+        syncRendering()
+        onModelReady?.()
       })
   }
 

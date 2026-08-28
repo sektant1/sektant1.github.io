@@ -43,7 +43,7 @@ export function Article({
 }: ArticleProps) {
   return (
     <div className="mx-auto flex w-full max-w-6xl gap-10 px-4 py-6 md:px-6 md:py-8">
-      <article className="tube-on flex min-w-0 flex-1 flex-col">
+      <article className="flex min-w-0 flex-1 flex-col">
         <header className="flex flex-col gap-3 border-b border-terminal-rule pb-4">
           <div className="flex items-start justify-between gap-4">
             <h1 className="flex items-start gap-2 font-sans text-2xl leading-tight font-bold tracking-[0.04em] text-primary uppercase crt-glow-soft md:text-3xl">

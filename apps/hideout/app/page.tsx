@@ -62,7 +62,7 @@ export default async function HomePage() {
         { label: "projects", value: projects.length },
       ]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-8 md:px-6 md:py-12">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-8 md:px-6 md:py-12">
         <StationHero
           posts={posts.length}
           projects={projects.length}
