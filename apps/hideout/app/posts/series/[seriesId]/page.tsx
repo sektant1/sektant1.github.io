@@ -1,26 +1,26 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
-import { SiteShell } from "@/components/layout/site-shell";
-import { PostList } from "@/components/posts/post-list";
-import { getAllSeries, getSeriesById } from "@/lib/content/posts";
-import { buildContentTree } from "@/lib/content/tree";
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { SectionHeading } from "@/components/layout/section-heading"
+import { SiteShell } from "@/components/layout/site-shell"
+import { PostList } from "@/components/posts/post-list"
+import { getAllSeries, getSeriesById } from "@/lib/content/posts"
+import { buildContentTree } from "@/lib/content/tree"
 
 interface PostSeriesPageProps {
-  params: Promise<{ seriesId: string }>;
+  params: Promise<{ seriesId: string }>
 }
 
 export async function generateStaticParams() {
-  const series = await getAllSeries();
-  return series.map((item) => ({ seriesId: item.id }));
+  const series = await getAllSeries()
+  return series.map((item) => ({ seriesId: item.id }))
 }
 
 export async function generateMetadata({
   params,
 }: PostSeriesPageProps): Promise<Metadata> {
-  const { seriesId } = await params;
-  const series = await getSeriesById(seriesId);
-  if (!series) return { title: "Series not found" };
+  const { seriesId } = await params
+  const series = await getSeriesById(seriesId)
+  if (!series) return { title: "Series not found" }
 
   return {
     title: `${series.title} | Series`,
@@ -33,16 +33,16 @@ export async function generateMetadata({
       type: "website",
       url: `/posts/series/${series.id}`,
     },
-  };
+  }
 }
 
 export default async function PostSeriesPage({ params }: PostSeriesPageProps) {
-  const { seriesId } = await params;
+  const { seriesId } = await params
   const [series, tree] = await Promise.all([
     getSeriesById(seriesId),
     buildContentTree(`/posts/series/${seriesId}`),
-  ]);
-  if (!series) notFound();
+  ])
+  if (!series) notFound()
 
   return (
     <SiteShell
@@ -50,7 +50,9 @@ export default async function PostSeriesPage({ params }: PostSeriesPageProps) {
       tree={tree}
       status={[
         { label: "parts", value: series.count },
-        ...(series.latestPost ? [{ label: "latest", value: series.latestPost.date }] : []),
+        ...(series.latestPost
+          ? [{ label: "latest", value: series.latestPost.date }]
+          : []),
       ]}
     >
       <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
@@ -70,5 +72,5 @@ export default async function PostSeriesPage({ params }: PostSeriesPageProps) {
         <PostList posts={series.posts} />
       </div>
     </SiteShell>
-  );
+  )
 }

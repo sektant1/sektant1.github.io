@@ -107,11 +107,10 @@ async function normaliseThumbnail(servedPath) {
 
   const output = await image
     .resize(THUMB_WIDTH, THUMB_HEIGHT, {
-      fit: "contain",
-      position: "centre",
-      // Logos are usually drawn on their own flat ground; extending it beats
-      // a transparent bar when the source is not 16:9.
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
+      // fill stretches the source to the band instead of cropping it or
+      // letterboxing it: nothing is cut off the top or bottom, and every
+      // thumbnail reaches both edges of its card.
+      fit: "fill",
     })
     .webp({ quality: 80, effort: 4 })
     .toBuffer();

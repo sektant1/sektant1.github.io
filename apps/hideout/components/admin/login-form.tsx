@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert"
 import { Button } from "@workspace/ui/components/button"
 import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 

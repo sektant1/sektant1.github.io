@@ -25,7 +25,9 @@ type Destination = {
 export function destinations(meta: ProjectMeta): Destination[] {
   const all: Destination[] = [
     { key: "project", label: "Write-up", href: `/projects/${meta.slug}` },
-    ...(meta.repo ? [{ key: "repo" as const, label: "Repo", href: meta.repo }] : []),
+    ...(meta.repo
+      ? [{ key: "repo" as const, label: "Repo", href: meta.repo }]
+      : []),
     ...(meta.href
       ? [{ key: "website" as const, label: "Site", href: meta.href }]
       : []),
@@ -52,10 +54,9 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
 
   return (
     <li className="flex min-w-0 flex-col border border-border crt-persist hover:border-terminal-edge">
-      {/* The image fills the band edge to edge. These are logos and cover
-          shots with their subject in the middle, so cropping the margins is
-          what makes the row of cards read as one grid instead of a set of
-          differently-sized stamps floating in boxes. */}
+      {/* The image fills the band edge to edge, stretched rather than
+          cropped: the whole subject stays visible and every card in the row
+          carries the same band instead of a differently-sized stamp. */}
       {meta.thumbnail ? (
         <div
           className="w-full overflow-hidden border-b border-border bg-card"
@@ -68,7 +69,7 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            className="size-full object-cover object-center"
+            className="size-full object-fill"
           />
         </div>
       ) : null}

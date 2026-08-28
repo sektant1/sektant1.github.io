@@ -30,7 +30,10 @@ function FieldShell({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id} className="font-mono text-[0.7rem] text-terminal-ink-dim">
+      <Label
+        htmlFor={id}
+        className="font-mono text-[0.7rem] text-terminal-ink-dim"
+      >
         {label}
       </Label>
       {children}
@@ -76,7 +79,9 @@ export function TextField({
         value={value}
         placeholder={placeholder}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
+        aria-describedby={
+          error ? `${id}-error` : hint ? `${id}-hint` : undefined
+        }
         onChange={(event) => onChange(event.target.value)}
       />
     </FieldShell>
@@ -99,7 +104,9 @@ export function TextAreaField({
         rows={rows}
         value={value}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
+        aria-describedby={
+          error ? `${id}-error` : hint ? `${id}-hint` : undefined
+        }
         onChange={(event) => onChange(event.target.value)}
       />
     </FieldShell>

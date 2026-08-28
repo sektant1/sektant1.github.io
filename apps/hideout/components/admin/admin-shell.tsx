@@ -110,7 +110,10 @@ export function AdminShell({
                         "border-s-2 border-primary bg-terminal-wash text-foreground"
                     )}
                   >
-                    <span aria-hidden="true" className="text-terminal-chrome-dim">
+                    <span
+                      aria-hidden="true"
+                      className="text-terminal-chrome-dim"
+                    >
                       {pathname === link.href ? ">" : "-"}
                     </span>
                     {link.label}
@@ -184,7 +187,9 @@ export function AdminShell({
             </span>
           ))}
 
-          <span className="ms-auto shrink-0 text-terminal-chrome-dim">local</span>
+          <span className="ms-auto shrink-0 text-terminal-chrome-dim">
+            local
+          </span>
         </footer>
       </SidebarInset>
 

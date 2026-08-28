@@ -1,9 +1,9 @@
-import { AdminAction, AdminShell } from "@/components/admin/admin-shell";
-import { ContentTable } from "@/components/admin/content-table";
-import { getAllPosts } from "@/lib/content/posts";
+import { AdminAction, AdminShell } from "@/components/admin/admin-shell"
+import { ContentTable } from "@/components/admin/content-table"
+import { getAllPosts } from "@/lib/content/posts"
 
 export default async function AdminPostsPage() {
-  const posts = await getAllPosts({ includeDrafts: true });
+  const posts = await getAllPosts({ includeDrafts: true })
 
   return (
     <AdminShell
@@ -28,5 +28,5 @@ export default async function AdminPostsPage() {
         />
       </div>
     </AdminShell>
-  );
+  )
 }

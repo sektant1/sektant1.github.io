@@ -1,18 +1,18 @@
-import { notFound } from "next/navigation";
-import { PostForm } from "@/components/admin/post-form";
-import { getAllSeries, getPostBySlug } from "@/lib/content/posts";
+import { notFound } from "next/navigation"
+import { PostForm } from "@/components/admin/post-form"
+import { getAllSeries, getPostBySlug } from "@/lib/content/posts"
 
 interface EditPostPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
-  const { slug } = await params;
+  const { slug } = await params
   const [post, series] = await Promise.all([
     getPostBySlug(slug, { includeDrafts: true }),
     getAllSeries({ includeDrafts: true }),
-  ]);
-  if (!post) notFound();
+  ])
+  if (!post) notFound()
 
   return (
     <PostForm
@@ -21,5 +21,5 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
       series={series}
       today={new Date().toISOString().slice(0, 10)}
     />
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import { AdminAction, AdminShell } from "@/components/admin/admin-shell";
-import { ContentTable } from "@/components/admin/content-table";
-import { getAllGames } from "@/lib/content/games";
+import { AdminAction, AdminShell } from "@/components/admin/admin-shell"
+import { ContentTable } from "@/components/admin/content-table"
+import { getAllGames } from "@/lib/content/games"
 
 export default async function AdminGamesPage() {
-  const games = await getAllGames({ includeDrafts: true });
+  const games = await getAllGames({ includeDrafts: true })
 
   return (
     <AdminShell
@@ -26,5 +26,5 @@ export default async function AdminGamesPage() {
         />
       </div>
     </AdminShell>
-  );
+  )
 }

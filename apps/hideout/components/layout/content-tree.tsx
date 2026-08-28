@@ -36,7 +36,11 @@ function TreeLevel({
     <ul className="flex min-w-0 flex-col">
       {nodes.map((node) =>
         node.kind === "dir" ? (
-          <TreeDirectory key={`${node.label}-${depth}`} node={node} depth={depth} />
+          <TreeDirectory
+            key={`${node.label}-${depth}`}
+            node={node}
+            depth={depth}
+          />
         ) : (
           <TreeLeaf key={node.href} node={node} depth={depth} />
         )
@@ -66,10 +70,7 @@ function TreeDirectory({
         {/* [-] open, [+] closed: how a terminal tree has marked expansion
             since long before disclosure triangles existed, and it says which
             way the control goes rather than which way the node points. */}
-        <span
-          aria-hidden="true"
-          className="shrink-0 text-terminal-chrome-dim"
-        >
+        <span aria-hidden="true" className="shrink-0 text-terminal-chrome-dim">
           {open ? "[-]" : "[+]"}
         </span>
         <span className="truncate text-primary">{node.label}</span>

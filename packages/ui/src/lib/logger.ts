@@ -54,7 +54,12 @@ function emit() {
   for (const listener of listeners) listener(snapshot)
 }
 
-function record(level: LogLevel, scope: string, message: string, data?: unknown) {
+function record(
+  level: LogLevel,
+  scope: string,
+  message: string,
+  data?: unknown
+) {
   if (LEVEL_ORDER[level] < LEVEL_ORDER[threshold]) return
 
   const entry: LogEntry = {
@@ -135,7 +140,7 @@ export function captureConsole(): () => void {
         "console",
         args
           .map((arg) => (typeof arg === "string" ? arg : safeStringify(arg)))
-          .join(" "),
+          .join(" ")
       )
     }
 

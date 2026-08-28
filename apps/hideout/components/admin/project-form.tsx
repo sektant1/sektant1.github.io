@@ -86,7 +86,9 @@ export function ProjectForm({
             value={value.title}
             error={errors.title}
             onChange={(title) =>
-              update(slugPinned.current ? { title } : { title, slug: slugify(title) })
+              update(
+                slugPinned.current ? { title } : { title, slug: slugify(title) }
+              )
             }
           />
 
@@ -178,8 +180,12 @@ export function ProjectForm({
             value={value.open ?? "website"}
             options={[
               { value: "project", label: "the write-up here" },
-              ...(value.href ? [{ value: "website", label: "the live site" }] : []),
-              ...(value.repo ? [{ value: "repo", label: "the repository" }] : []),
+              ...(value.href
+                ? [{ value: "website", label: "the live site" }]
+                : []),
+              ...(value.repo
+                ? [{ value: "repo", label: "the repository" }]
+                : []),
             ]}
             onChange={(open) => update({ open: open as ProjectOpenTarget })}
           />
@@ -206,7 +212,8 @@ function validateProject(value: ProjectDraft): Errors {
   else if (!SLUG.test(value.slug)) {
     errors.slug = "Use lowercase letters, numbers and single hyphens."
   }
-  if (!value.description.trim()) errors.description = "A description is required."
+  if (!value.description.trim())
+    errors.description = "A description is required."
   if (!Number.isFinite(Date.parse(value.date))) errors.date = "Use YYYY-MM-DD."
   if (value.thumbnail?.includes("..")) {
     errors.thumbnail = "A logo cannot point outside its own folder."

@@ -27,13 +27,15 @@ export function GameMasthead({ meta }: { meta: GameMeta }) {
             src={meta.thumbnail}
             alt=""
             aria-hidden="true"
-            className="size-full object-cover object-center"
+            className="size-full object-fill"
           />
         </div>
       ) : null}
 
       {meta.description ? (
-        <p className="max-w-prose text-sm text-terminal-ink">{meta.description}</p>
+        <p className="max-w-prose text-sm text-terminal-ink">
+          {meta.description}
+        </p>
       ) : null}
 
       <dl className="flex max-w-xs flex-col gap-1">

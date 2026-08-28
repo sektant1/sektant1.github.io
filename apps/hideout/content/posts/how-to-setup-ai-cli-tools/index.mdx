@@ -1,7 +1,7 @@
 ---
-title: "How to setup AI CLI tools that do not act stupid"
+title: "How to stop your AI CLI from guessing"
 slug: "how-to-setup-ai-cli-tools"
-description: "A practical setup for Codex, Claude Code, global AGENTS.md, Context7, gh-grep, and project skills so your AI CLI has real context before it touches code."
+description: "The four layers of context that keep Codex and Claude Code from inventing your test command: global rules, project rules, MCP servers, skills."
 date: "2026-06-29"
 status: "published"
 tags:
@@ -129,7 +129,7 @@ Do not fill this file with corporate incense. "Write clean code" means nothing. 
 
 Library APIs rot. Frameworks mutate. Blog posts lie by aging.
 
-Context7 fixes one specific problem: it pulls current, version-aware docs into the assistant's context. The Context7 docs say the quiet part plainly: add `use context7` to your prompt, or configure your assistant so it always uses Context7 for library documentation, API references, and package examples. Revolutionary stuff, apparently. Reading the manual before writing code. Civilization may yet recover.
+Context7 fixes one specific problem: it pulls current, version-aware docs into the assistant's context. Add `use context7` to your prompt, or configure your assistant so it always reaches for Context7 on library documentation, API references, and package examples. Reading the manual before writing code, sold back to us as tooling.
 
 That belongs in your global instructions:
 

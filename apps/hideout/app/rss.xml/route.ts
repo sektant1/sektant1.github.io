@@ -1,7 +1,7 @@
-import { getPublicPostMetas } from "@/lib/content/posts";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo/site";
+import { getPublicPostMetas } from "@/lib/content/posts"
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo/site"
 
-export const dynamic = "force-static";
+export const dynamic = "force-static"
 
 function esc(s: string): string {
   return s
@@ -9,11 +9,11 @@ function esc(s: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+    .replace(/'/g, "&apos;")
 }
 
 export async function GET() {
-  const posts = await getPublicPostMetas();
+  const posts = await getPublicPostMetas()
   const items = posts
     .slice()
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
@@ -26,9 +26,9 @@ export async function GET() {
       <description>${esc(p.description || "")}</description>
       ${p.date ? `<pubDate>${new Date(p.date).toUTCString()}</pubDate>` : ""}
       ${(p.tags || []).map((t) => `<category>${esc(t)}</category>`).join("")}
-    </item>`,
+    </item>`
     )
-    .join("");
+    .join("")
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -39,9 +39,9 @@ export async function GET() {
     <language>en</language>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />${items}
   </channel>
-</rss>`;
+</rss>`
 
   return new Response(xml, {
     headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
-  });
+  })
 }

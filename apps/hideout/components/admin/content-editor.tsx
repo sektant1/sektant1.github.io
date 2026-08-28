@@ -3,7 +3,12 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@workspace/ui/components/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { toast } from "sonner"
 
@@ -40,7 +45,11 @@ type ContentEditorProps<T> = {
     errors: Errors
   }) => React.ReactNode
   /** Quick status changes, e.g. save as draft / publish. */
-  actions?: { label: string; apply: (value: T) => T; variant?: "default" | "outline" }[]
+  actions?: {
+    label: string
+    apply: (value: T) => T
+    variant?: "default" | "outline"
+  }[]
 }
 
 /**
@@ -75,7 +84,9 @@ export function ContentEditor<T>({
 
   // The saved snapshot, not the prop: after a save the file on disk is what
   // the form holds, so the unsaved marker has to clear.
-  const [committed, setCommitted] = React.useState(() => JSON.stringify(initial))
+  const [committed, setCommitted] = React.useState(() =>
+    JSON.stringify(initial)
+  )
   const dirty = JSON.stringify(value) !== committed
 
   React.useEffect(() => {
@@ -122,7 +133,8 @@ export function ContentEditor<T>({
         body: JSON.stringify(payload),
       })
       const body = await response.json()
-      if (!response.ok) throw new Error(body.error ?? "The file was not written.")
+      if (!response.ok)
+        throw new Error(body.error ?? "The file was not written.")
 
       setValue(payload)
       setCommitted(JSON.stringify(payload))
@@ -151,7 +163,11 @@ export function ContentEditor<T>({
   async function remove() {
     if (!originalSlug) return
     // A file delete cannot be undone from here, so it is confirmed first.
-    if (!window.confirm(`Delete content/${kind}/${originalSlug}? This removes the folder.`)) {
+    if (
+      !window.confirm(
+        `Delete content/${kind}/${originalSlug}? This removes the folder.`
+      )
+    ) {
       return
     }
 
@@ -227,7 +243,10 @@ export function ContentEditor<T>({
             ) : null}
           </div>
 
-          <Tabs defaultSelectedKey="write" className="flex min-w-0 flex-col gap-2">
+          <Tabs
+            defaultSelectedKey="write"
+            className="flex min-w-0 flex-col gap-2"
+          >
             <TabsList variant="line">
               <TabsTrigger id="write">write</TabsTrigger>
               <TabsTrigger id="preview">preview</TabsTrigger>
@@ -238,7 +257,9 @@ export function ContentEditor<T>({
                 aria-label="Post body, in MDX"
                 spellCheck={false}
                 value={bodyOf(value)}
-                onChange={(event) => setValue(setBody(value, event.target.value))}
+                onChange={(event) =>
+                  setValue(setBody(value, event.target.value))
+                }
                 className="min-h-[28rem] resize-y font-mono text-xs leading-relaxed"
               />
             </TabsContent>

@@ -122,6 +122,15 @@
   }
 }
 
+/* Glass lifted. The tube key sets this on <html>, and what is left is the
+   same page with nothing painted over it. There is no second theme here: the
+   colours never change, only the layers on top of them. */
+html[data-tube="off"] .tube-face::before,
+html[data-tube="off"] .tube-face::after,
+html[data-tube="off"] .tube-face > .tube-roll {
+  display: none;
+}
+
 @keyframes tube-roll {
   from {
     transform: translateY(-22vh);

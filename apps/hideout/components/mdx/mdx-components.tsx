@@ -56,7 +56,11 @@ export function createMdxComponents() {
               starts on the same left edge as the body text no matter its
               depth — and the one structural mark on the page also does
               something: it is how you link to a section. */}
-          <a href={`#${id}`} className="prose-anchor" aria-label="Link to this section">
+          <a
+            href={`#${id}`}
+            className="prose-anchor"
+            aria-label="Link to this section"
+          >
             {marker}
           </a>
           {children}
@@ -75,7 +79,9 @@ export function createMdxComponents() {
   }
 }
 
-async function HighlightedFence({ children }: React.HTMLAttributes<HTMLPreElement>) {
+async function HighlightedFence({
+  children,
+}: React.HTMLAttributes<HTMLPreElement>) {
   const { code, lang, filename } = readFence(children)
   const html = await highlightCode(code, lang)
 

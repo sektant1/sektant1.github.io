@@ -1,6 +1,10 @@
 import "server-only"
 
-import { createHighlighter, type Highlighter, type ThemeRegistration } from "shiki"
+import {
+  createHighlighter,
+  type Highlighter,
+  type ThemeRegistration,
+} from "shiki"
 
 /**
  * A monochrome phosphor syntax theme.
@@ -52,11 +56,21 @@ const phosphorTheme: ThemeRegistration = {
       settings: { foreground: TUBE.primary },
     },
     {
-      scope: ["entity.name.type", "entity.name.class", "support.type", "support.class"],
+      scope: [
+        "entity.name.type",
+        "entity.name.class",
+        "support.type",
+        "support.class",
+      ],
       settings: { foreground: TUBE.mid },
     },
     {
-      scope: ["string", "constant.numeric", "constant.language", "constant.character"],
+      scope: [
+        "string",
+        "constant.numeric",
+        "constant.language",
+        "constant.character",
+      ],
       settings: { foreground: TUBE.cyan },
     },
     {
@@ -67,7 +81,10 @@ const phosphorTheme: ThemeRegistration = {
       scope: ["entity.name.tag", "entity.other.attribute-name"],
       settings: { foreground: TUBE.mid },
     },
-    { scope: ["invalid", "markup.deleted"], settings: { foreground: TUBE.danger } },
+    {
+      scope: ["invalid", "markup.deleted"],
+      settings: { foreground: TUBE.danger },
+    },
   ],
 }
 

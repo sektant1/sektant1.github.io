@@ -94,7 +94,9 @@ export function GameForm({
             value={value.title}
             error={errors.title}
             onChange={(title) =>
-              update(slugPinned.current ? { title } : { title, slug: slugify(title) })
+              update(
+                slugPinned.current ? { title } : { title, slug: slugify(title) }
+              )
             }
           />
 
@@ -234,13 +236,19 @@ function validateGame(value: GameDraft): Errors {
   else if (!SLUG.test(value.slug)) {
     errors.slug = "Use lowercase letters, numbers and single hyphens."
   }
-  if (!value.description.trim()) errors.description = "A description is required."
+  if (!value.description.trim())
+    errors.description = "A description is required."
   if (!Number.isFinite(Date.parse(value.date))) errors.date = "Use YYYY-MM-DD."
   if (value.thumbnail?.includes("..")) {
     errors.thumbnail = "A cover cannot point outside its own folder."
   }
 
-  for (const key of ["playHref", "downloadHref", "storeHref", "repo"] as const) {
+  for (const key of [
+    "playHref",
+    "downloadHref",
+    "storeHref",
+    "repo",
+  ] as const) {
     const url = value[key]
     if (url && !/^https?:\/\//.test(url)) {
       errors[key] = "Use a full URL, starting with https://."

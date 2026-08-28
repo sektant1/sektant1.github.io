@@ -11,11 +11,11 @@ import { buildContentTree } from "@/lib/content/tree"
 import { extractToc } from "@/lib/mdx/toc"
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "Tech passport",
 }
 
-export default async function AboutPage() {
-  const page = await getPageBySlug("about")
+export default async function TechPassportPage() {
+  const page = await getPageBySlug("tech-passport")
   if (!page) notFound()
   const meta = publicPageMeta(page)
   const tree = await buildContentTree(`/${meta.slug}`)

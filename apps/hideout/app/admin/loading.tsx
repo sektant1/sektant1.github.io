@@ -1,4 +1,4 @@
-import { Spinner } from "@workspace/ui/components/spinner";
+import { Spinner } from "@workspace/ui/components/spinner"
 
 export default function AdminLoading() {
   return (
@@ -8,5 +8,5 @@ export default function AdminLoading() {
     >
       <Spinner /> Reading content from disk…
     </main>
-  );
+  )
 }

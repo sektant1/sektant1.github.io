@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
-import { GameGrid } from "@/components/games/game-grid";
-import { SectionHeading } from "@/components/layout/section-heading";
-import { SiteShell } from "@/components/layout/site-shell";
-import { getAllGames } from "@/lib/content/games";
-import { buildContentTree } from "@/lib/content/tree";
+import type { Metadata } from "next"
+import { GameGrid } from "@/components/games/game-grid"
+import { SectionHeading } from "@/components/layout/section-heading"
+import { SiteShell } from "@/components/layout/site-shell"
+import { getAllGames } from "@/lib/content/games"
+import { buildContentTree } from "@/lib/content/tree"
 
 export const metadata: Metadata = {
   title: "Games",
   description: "Games I have made, and where to play them.",
-};
+}
 
 export default async function GamesPage() {
   const [games, tree] = await Promise.all([
     getAllGames(),
     buildContentTree("/games"),
-  ]);
+  ])
 
-  const playable = games.filter((game) => game.meta.playHref).length;
+  const playable = games.filter((game) => game.meta.playHref).length
 
   return (
     <SiteShell
@@ -38,5 +38,5 @@ export default async function GamesPage() {
         <GameGrid games={games} />
       </div>
     </SiteShell>
-  );
+  )
 }

@@ -1,15 +1,17 @@
-import { AdminAction, AdminShell } from "@/components/admin/admin-shell";
-import { ContentTable } from "@/components/admin/content-table";
-import { getAllProjects } from "@/lib/content/projects";
+import { AdminAction, AdminShell } from "@/components/admin/admin-shell"
+import { ContentTable } from "@/components/admin/content-table"
+import { getAllProjects } from "@/lib/content/projects"
 
 export default async function AdminProjectsPage() {
-  const projects = await getAllProjects({ includeDrafts: true });
+  const projects = await getAllProjects({ includeDrafts: true })
 
   return (
     <AdminShell
       path="content/projects"
       status={[{ label: "projects", value: projects.length }]}
-      actions={<AdminAction href="/admin/projects/new">New project</AdminAction>}
+      actions={
+        <AdminAction href="/admin/projects/new">New project</AdminAction>
+      }
     >
       <div className="p-4 md:p-6">
         <ContentTable
@@ -26,5 +28,5 @@ export default async function AdminProjectsPage() {
         />
       </div>
     </AdminShell>
-  );
+  )
 }
