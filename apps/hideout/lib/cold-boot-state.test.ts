@@ -19,7 +19,14 @@ describe("bootIsDue", () => {
     expect(bootIsDue(NOW - COLD_BOOT_TTL_MS * 24, NOW)).toBe(true)
   })
 
-  it("runs for a stamp in the future rather than waiting out the skew", () => {
+  it("holds for a stamp written later in this session", () => {
+    // The reading is taken when the document opens; the stamp is written when
+    // the curtain is dismissed, which is always after it. Treating that as a
+    // moved clock replayed the sequence on every page the reader opened.
+    expect(bootIsDue(NOW + 8_000, NOW)).toBe(false)
+  })
+
+  it("runs for a clock that genuinely moved", () => {
     expect(bootIsDue(NOW + COLD_BOOT_TTL_MS, NOW)).toBe(true)
   })
 

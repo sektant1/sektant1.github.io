@@ -39,15 +39,24 @@ export const coldBootLastSeen = createPersistedPreference<number>({
   serialize: (value) => String(value),
 })
 
-/** Whether the sequence should run again. */
+/**
+ * Whether the sequence should run again.
+ *
+ * The comparison is on distance, in either direction, and the reason is the
+ * one that broke this: `now` is read once when the document opens, and the
+ * stamp is written later, when the reader dismisses the curtain. So the site's
+ * own stamp is routinely *ahead* of the reading it is compared against, and a
+ * rule that treated any future stamp as a moved clock ran the whole sequence
+ * again on the next page the reader opened.
+ *
+ * A stamp from the near future is this session. A stamp from further ahead
+ * than the window itself is a clock that genuinely moved — a machine waking
+ * from sleep, a timezone edit, a fresh VM — and is not worth waiting out.
+ */
 export function bootIsDue(lastSeen: number, now: number): boolean {
   if (lastSeen === UNAVAILABLE) return false
   if (!Number.isFinite(lastSeen) || lastSeen <= 0) return true
-  // A stamp in the future is a clock that moved — a machine waking from
-  // sleep, a timezone edit, a fresh VM — and waiting it out would hold the
-  // curtain shut for however long the skew is.
-  if (now < lastSeen) return true
-  return now - lastSeen >= COLD_BOOT_TTL_MS
+  return Math.abs(now - lastSeen) >= COLD_BOOT_TTL_MS
 }
 
 /**
