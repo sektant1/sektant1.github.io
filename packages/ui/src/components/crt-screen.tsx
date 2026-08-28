@@ -11,10 +11,15 @@ const crtVariants = cva("relative isolate overflow-hidden", {
       none: "",
       subtle: "[border-radius:6px/10px]",
     },
+    /* The dial is how much of the picture the gaps take, not how visible a
+       bar drawn over it is: the raster cuts, so its depth is the width of the
+       part that is missing. Heavy is the reference tube — the same cut the
+       hologram pass makes — and is meant for art and readouts rather than for
+       a panel of body copy. */
     intensity: {
-      subtle: "[--crt-scanline-opacity:0.05] [--crt-vignette-opacity:0.18]",
-      default: "[--crt-scanline-opacity:0.1] [--crt-vignette-opacity:0.35]",
-      heavy: "[--crt-scanline-opacity:0.18] [--crt-vignette-opacity:0.6]",
+      subtle: "[--crt-raster-gap:14%] [--crt-vignette-opacity:0.18]",
+      default: "[--crt-raster-gap:26%] [--crt-vignette-opacity:0.35]",
+      heavy: "[--crt-raster-gap:45%] [--crt-vignette-opacity:0.6]",
     },
   },
   defaultVariants: { curvature: "none", intensity: "default" },
@@ -53,13 +58,9 @@ function CrtScreen({
       <div
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute inset-0 z-20 opacity-0 dark:opacity-[var(--crt-scanline-opacity)]",
+          "pointer-events-none absolute inset-0 z-20 crt-interlace opacity-0 dark:opacity-100",
           flicker && "motion-safe:animate-[crt-flicker_4s_steps(2)_infinite]"
         )}
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.9) 0 1px, transparent 1px 3px)",
-        }}
       />
 
       <div
@@ -89,8 +90,8 @@ function CrtScreen({
 
 const KEYFRAMES = `
 @keyframes crt-flicker {
-  0%, 100% { opacity: var(--crt-scanline-opacity); }
-  50% { opacity: calc(var(--crt-scanline-opacity) * 1.6); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.62; }
 }
 @keyframes crt-sweep {
   0% { transform: translateY(-4rem); opacity: 0; }

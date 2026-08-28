@@ -187,8 +187,7 @@
         "ascii-banner-view"
       ],
       "dependencies": [
-        "figlet",
-        "vault66-crt-effect"
+        "figlet"
       ],
       "files": [
         {
@@ -210,9 +209,6 @@
       "description": "Ascii Banner View component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
-      ],
-      "dependencies": [
-        "vault66-crt-effect"
       ],
       "files": [
         {
@@ -794,6 +790,32 @@
           "path": "packages/ui/src/components/label.tsx",
           "type": "registry:ui",
           "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "led-panel",
+      "type": "registry:ui",
+      "title": "Led Panel",
+      "description": "Led Panel component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/led-panel.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/led-panel.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-reduced-motion.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/led-raster.ts",
+          "type": "registry:lib",
+          "target": "lib/led-raster.ts"
         }
       ]
     },

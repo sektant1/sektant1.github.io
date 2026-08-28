@@ -81,14 +81,25 @@
    the red theme's values here and have to be restated against the new ones. */
 :root,
 .dark {
-  --terminal-chrome: color-mix(in oklch, var(--primary) 96%, transparent);
-  --terminal-chrome-dim: color-mix(in oklch, var(--primary) 68%, transparent);
-  --terminal-ink: color-mix(in oklch, var(--foreground) 90%, transparent);
-  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 70%, transparent);
-  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 46%, transparent);
-  --terminal-rule: color-mix(in oklch, var(--border) 70%, transparent);
-  --terminal-edge: color-mix(in oklch, var(--primary) 45%, transparent);
-  --terminal-wash: color-mix(in oklch, var(--primary) 10%, transparent);
+  /* Driven, not glowing. What makes a colour read as emitting on a near-black
+     ground is its level, not a halo around it — so every role here sits a step
+     hotter than a print palette would put it, and the faint tier is the one
+     place light is genuinely being withheld.
+
+     The top two are the tube's own ramp, the stops the hologram pass calls hot
+     and core: a cell driven past the beam's nominal level does not get
+     greener, it gets paler, and that pale mint is what a lit mass on this
+     screen actually looks like. Chrome is the hot stop, chrome-dim is the beam
+     itself — so signage sits above the readouts by level rather than by being
+     a different colour. */
+  --terminal-chrome: color-mix(in oklch, var(--primary) 62%, oklch(0.95 0.09 158));
+  --terminal-chrome-dim: var(--primary);
+  --terminal-ink: var(--foreground);
+  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 80%, transparent);
+  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 55%, transparent);
+  --terminal-rule: color-mix(in oklch, var(--border) 85%, transparent);
+  --terminal-edge: color-mix(in oklch, var(--primary) 60%, transparent);
+  --terminal-wash: color-mix(in oklch, var(--primary) 12%, transparent);
 }
 
 /* Selection reads as a terminal's block cursor: the beam inverts rather than
@@ -105,10 +116,18 @@
  * making people learn a new one. Hovering something clickable fills the same
  * arrow with the beam instead of swapping it for a different drawing.
  *
- * Every coordinate is a whole unit of the 16-unit grid and the stroke is one
- * unit wide, because a cursor is rasterised once at a small size and never
- * scaled by the page: the old arrow was drawn on halves and tenths, so the
- * pointer was the one soft-edged thing on a screen made of hard pixels.
+ * Two rules make it rasterise exactly, and a cursor is the one image on the
+ * page that gets no second chance — it is drawn once at 16px and never scaled:
+ *
+ *   Stroke centres sit on half units. A 1-unit stroke centred on a whole
+ *   coordinate straddles two pixels and each edge lands at 50% coverage, so
+ *   the outline renders as two grey rows instead of one green one. Centred on
+ *   x.5 it covers pixel x exactly.
+ *
+ *   The hypotenuse is 45°. From the tip at 1.5,1.5 the right edge reaches
+ *   9.5,9.5 — dx and dy equal, so the stair steps down it are all one pixel.
+ *   It used to reach 10, and the extra unit put a two-pixel step in the middle
+ *   of the one edge the eye tracks when it follows a pointer.
  *
  * Inline SVG data URIs: no asset pipeline, no request. Each names a real
  * cursor keyword as its fallback, so if the image fails the pointer still
@@ -119,11 +138,11 @@
 .dark {
   /* Hotspot at the tip, 1 1 — the point of the arrow is what is pointing. */
   --cursor-default:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
       1 1,
     default;
   --cursor-pointer:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
       1 1,
     pointer;
   --cursor-text:
@@ -131,7 +150,7 @@
       8 8,
     text;
   --cursor-disabled:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter' opacity='.45'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter' opacity='.45'/%3E%3C/svg%3E")
       1 1,
     not-allowed;
 }

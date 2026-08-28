@@ -35,7 +35,7 @@ export const terminal: SectionMap = {
       </Row>
       <AsciiBanner text="SLANT" font="Slant" />
       <AsciiBanner text="STANDARD" font="Standard" tone="foreground" />
-      <AsciiBanner text="SMALL" font="Small" tone="muted" effect="scanlines" />
+      <AsciiBanner text="SMALL" font="Small" tone="muted" effect="panel" />
       <AsciiBanner text="BANNER3" font="Banner3" effect="none" />
     </div>
   ),

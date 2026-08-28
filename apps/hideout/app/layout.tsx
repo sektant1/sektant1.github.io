@@ -16,7 +16,7 @@ import {
   DEFAULT_BANNER_FONT,
 } from "@/lib/banner-font"
 import { COLD_BOOT_STORAGE_KEY, COLD_BOOT_TTL_MS } from "@/lib/cold-boot-state"
-import { TUBE_FACE_STORAGE_KEY } from "@/lib/tube-face"
+import { CRT_SCREEN_STORAGE_KEY } from "@/lib/crt-screen"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -90,7 +90,7 @@ const siteJsonLd = {
 // than being spelled out again here — one place to change a key.
 const coldBootSetup = `(function(){try{var raw=localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)});var seen=Number(raw);var fresh=raw!==null&&isFinite(seen)&&seen>0&&Math.abs(Date.now()-seen)<${COLD_BOOT_TTL_MS};if(fresh||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
 const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_IDS)}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
-const tubeFaceSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(TUBE_FACE_STORAGE_KEY)})==="0"){document.documentElement.dataset.tube="off"}}catch(error){}})()`
+const crtScreenSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(CRT_SCREEN_STORAGE_KEY)})==="0"){document.documentElement.dataset.crt="off"}}catch(error){}})()`
 
 export default function RootLayout({
   children,
@@ -114,8 +114,8 @@ export default function RootLayout({
         <Script id="cold-boot-setup" strategy="beforeInteractive">
           {coldBootSetup}
         </Script>
-        <Script id="tube-face-setup" strategy="beforeInteractive">
-          {tubeFaceSetup}
+        <Script id="crt-screen-setup" strategy="beforeInteractive">
+          {crtScreenSetup}
         </Script>
         <link
           rel="alternate"
@@ -136,7 +136,10 @@ export default function RootLayout({
       <body className="tube-face flex h-svh flex-col overflow-hidden">
         {/* The drifting refresh band. An element rather than a pseudo-element
             because the two pseudos on .tube-face are already spoken for. */}
-        <div aria-hidden="true" className="tube-roll" />
+        {/* The raster. Separate from the beam rows on ::after because the two
+            are composited differently — the lit row adds light, the gap takes
+            it away — and one element cannot carry both blend modes. */}
+        <div aria-hidden="true" className="tube-raster crt-interlace" />
 
         <ClassificationBar />
 

@@ -166,11 +166,17 @@ export function StationHero({
                   <li key={tag.name}>
                     <Link
                       href={`/posts?tag=${encodeURIComponent(tag.name)}`}
-                      className="flex items-center gap-1.5 border border-terminal-rule px-1.5 py-0.5 font-mono text-[0.62rem] tracking-wider text-terminal-ink-dim lowercase crt-persist hover:border-primary hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+                      // Under the pointer the chip inverts rather than
+                      // brightening: a tube highlights by driving the whole
+                      // cell and letting the glyphs fall out of it, which is
+                      // the same thing the page's own selection does.
+                      className="group/tag flex items-center gap-1.5 border border-terminal-rule px-1.5 py-0.5 font-mono text-[0.62rem] tracking-wider text-terminal-ink-dim lowercase crt-persist hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
                     >
-                      <span className="text-terminal-chrome-dim">#</span>
+                      <span className="text-terminal-chrome-dim group-hover/tag:text-primary-foreground">
+                        #
+                      </span>
                       <span className="truncate">{tag.name}</span>
-                      <span className="text-terminal-ink-faint tabular-nums">
+                      <span className="text-terminal-ink-faint tabular-nums group-hover/tag:text-primary-foreground">
                         {pad(tag.count, 2)}
                       </span>
                     </Link>
@@ -225,9 +231,13 @@ function HeroBanner({
           size="lg"
           // No crt-breathe: it pulses a drop-shadow, and a shadow traced onto
           // art whose cells have to tile bleeds into the seams and tears the
-          // letters apart. The CRT layer inside the banner carries the glow
-          // now, around the block rather than around every glyph.
-          effect={quiet ? "none" : "glitch"}
+          // letters apart. The banner's own dot lattice carries the glow now,
+          // one diode at a time.
+          //
+          // The quiet line is still on the board — a stacked banner with one
+          // half unlit reads as two different objects — it just holds still
+          // while the other one faults.
+          effect={quiet ? "panel" : "glitch"}
         />
       </div>
     )
