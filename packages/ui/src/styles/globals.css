@@ -119,13 +119,23 @@
   color: var(--ascii-ink);
 }
 
+/* The tube's raster, painted inside the glyphs.
+ *
+ * Measured in pixels, not em, and that is the whole point. The bands used to
+ * be em-sized with a one-em period, which is exactly the line height the art
+ * is set at — so the dim band landed at the same height in every row and cut
+ * the same slice out of every glyph. Block-drawing art is built from cells
+ * that tile, so a slice removed once per row does not read as a scanline; it
+ * reads as letters with pieces missing, which is what the banner was doing.
+ *
+ * In pixels the pattern is a raster laid over the block, independent of how
+ * large the art happens to be drawn, and no glyph loses the same part twice. */
 @utility crt-terminal-fill {
   color: transparent;
   background-image: repeating-linear-gradient(
     to bottom,
-    var(--ascii-ink) 0 0.62em,
-    color-mix(in oklch, var(--ascii-ink) 72%, transparent) 0.62em 0.78em,
-    var(--ascii-ink) 0.78em 1em
+    var(--ascii-ink) 0 2px,
+    color-mix(in oklch, var(--ascii-ink) 78%, transparent) 2px 3px
   );
   background-clip: text;
   -webkit-background-clip: text;
