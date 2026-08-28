@@ -79,6 +79,11 @@ Authored material read through the station, such as a post, essay, page,
 lesson, or work write-up.
 _Avoid_: Content item, entry
 
+**Write-up**:
+The primary document that explains a work. A work may exist without one, and
+other documents may reference the same work.
+_Avoid_: Project page, embedded description
+
 **Deployment**:
 A runnable form of a work mounted at a public path, independent of its host and
 editorial write-up.
@@ -97,6 +102,76 @@ _Avoid_: Attachment, sidecar
 A constrained visual treatment for a document or work within the station's
 identity.
 _Avoid_: Per-page theme
+
+**Working copy**:
+The private, editable form of a document or work. Readers continue seeing the
+published revision while its working copy changes.
+_Avoid_: Draft revision
+
+**Revision**:
+An immutable snapshot created at a deliberate content transition or manual
+checkpoint.
+_Avoid_: Autosave, version
+
+**Published revision**:
+The revision readers currently see for a document or work.
+_Avoid_: Live draft
+
+**Publication state**:
+Whether a document or work is private, published, or archived. It is separate
+from the real-world state of a work.
+_Avoid_: Status, visibility
+
+**Work state**:
+The real-world condition of a work, such as active, paused, complete, or
+abandoned.
+_Avoid_: Publication status
+
+**Archive**:
+Published material retained at its direct URL but removed from normal listings
+and visibly marked as archived.
+_Avoid_: Unpublished, deleted
+
+**Trash**:
+Private, reversibly removed material awaiting explicit purge.
+_Avoid_: Archive, delete
+
+**Example reference**:
+A stable link from a document to a registry or showcase example at a specific
+toolkit revision.
+_Avoid_: Copied example
+
+**Post**:
+A dated document published in the station feed. Essay, tutorial, field note,
+and devlog are treatments of a post, not separate document kinds.
+_Avoid_: Article, essay as a content type
+
+**Series**:
+A published, ordered collection of documents. A document belongs to at most
+one series.
+_Avoid_: Repeated series metadata
+
+**Tag**:
+A canonical label shared by works and documents, with one stable slug and one
+editable display name.
+_Avoid_: Category
+
+**Course**:
+A work that arranges lessons into ordered modules.
+_Avoid_: Track
+
+**Module**:
+A named, ordered section of a course containing lessons.
+_Avoid_: Chapter
+
+**Lesson**:
+A document taught within a course module.
+_Avoid_: Exercise, course page
+
+**Site configuration**:
+The revisioned composition and language of shared station surfaces, including
+home, navigation, and presentation choices.
+_Avoid_: Settings file, home content
 
 ## Comments
 
