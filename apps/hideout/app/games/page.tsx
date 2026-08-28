@@ -27,7 +27,7 @@ export default async function GamesPage() {
         ...(playable ? [{ label: "playable", value: playable }] : []),
       ]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
         <SectionHeading path="content/games" title="games">
           <p className="max-w-prose text-xs text-terminal-ink-dim">
             Things I built to be played. Where there is a browser build, the

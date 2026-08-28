@@ -223,8 +223,11 @@ function HeroBanner({
           text={text}
           font={option.font}
           size="lg"
+          // No crt-breathe: it pulses a drop-shadow, and a shadow traced onto
+          // art whose cells have to tile bleeds into the seams and tears the
+          // letters apart. The CRT layer inside the banner carries the glow
+          // now, around the block rather than around every glyph.
           effect={quiet ? "none" : "glitch"}
-          className={quiet ? undefined : "crt-breathe"}
         />
       </div>
     )

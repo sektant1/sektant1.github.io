@@ -55,7 +55,7 @@ export default async function PostSeriesPage({ params }: PostSeriesPageProps) {
           : []),
       ]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
         <SectionHeading
           path={`content/posts · series/${series.id}`}
           title={series.title}

@@ -25,7 +25,7 @@ export default async function PostsPage() {
         { label: "series", value: series.length },
       ]}
     >
-      <div className="tube-on mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 md:px-6 md:py-8">
         {/* useSearchParams reads the request URL, which is only known at
             request time — the boundary keeps the rest of the page static. */}
         <Suspense fallback={null}>

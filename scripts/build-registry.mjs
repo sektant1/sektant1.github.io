@@ -13,7 +13,8 @@ const MANIFEST_PATH = "registry.json"
 // Components whose generated source imports a package the consumer must
 // install. Update this map when `shadcn add` pulls in a new runtime dependency.
 const DEPENDENCIES = {
-  "ascii-banner": ["figlet"],
+  "ascii-banner": ["figlet", "vault66-crt-effect"],
+  "ascii-banner-view": ["vault66-crt-effect"],
   carousel: ["embla-carousel-react"],
   chart: ["recharts"],
   "input-otp": ["input-otp"],

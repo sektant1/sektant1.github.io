@@ -140,7 +140,13 @@ export default function RootLayout({
 
         <ClassificationBar />
 
-        <div className="flex min-h-0 flex-1">{children}</div>
+        {/* The tube warms up once, when the document loads.
+            It used to be on each page's own wrapper, which meant every
+            navigation re-played a power-on: a screen that switches on again
+            every time you open a post is not a screen, it is a transition
+            effect. This element belongs to the layout and survives routing, so
+            the animation runs on arrival and never again. */}
+        <div className="tube-on flex min-h-0 flex-1">{children}</div>
       </body>
     </html>
   )
