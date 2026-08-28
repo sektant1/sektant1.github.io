@@ -20,6 +20,7 @@ import {
 import { ColdBoot } from "@/components/layout/cold-boot"
 import { ContentTree } from "@/components/layout/content-tree"
 import { SiteLog } from "@/components/layout/site-log"
+import { SiteMark } from "@/components/layout/site-mark"
 import { StatusBar, type StatusField } from "@/components/layout/status-bar"
 import { buildCommandIndex } from "@/lib/content/command-index"
 import { getHomeContent } from "@/lib/content/home"
@@ -82,21 +83,31 @@ export async function SiteShell({
     // the classification banner and pushes the status bar off the bottom. It
     // fills the space it is given instead.
     <SidebarProvider className="h-full min-h-0">
-      <Sidebar>
+      {/* h-full, not the component's default viewport height: the shell hangs
+          below the classification bar, and a sidebar measured against the
+          whole screen hangs the same distance past the bottom of it — which
+          is where the byline went. */}
+      <Sidebar className="h-full">
         {/* Same height and bottom rule as the content header, so the two read
             as one bar across the top rather than two misaligned ones. */}
         <SidebarHeader className="h-11 justify-center border-b border-sidebar-border p-0 px-3">
           {/* Host designation, the way a terminal names itself at the top of
-              a session: the operator, then the machine. */}
+              a session: the mark, then the operator, then the machine. The
+              mark is the same one in the browser tab, which is the whole point
+              of it — this corner was the only place the site had no sign. */}
           <Link
             href="/"
-            className="flex min-w-0 flex-col leading-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            aria-label="Sektant's Hideout, home"
+            className="group/mark flex min-w-0 items-center gap-2 leading-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
           >
-            <span className="truncate font-mono text-xs tracking-[0.2em] text-primary uppercase crt-glow">
-              sektant
-            </span>
-            <span className="truncate font-mono text-[0.6rem] tracking-[0.2em] text-terminal-ink-faint uppercase">
-              hideout // fld
+            <SiteMark className="size-5 shrink-0 crt-glow-soft" />
+            <span className="flex min-w-0 flex-col">
+              <span className="truncate font-mono text-xs tracking-[0.2em] text-primary uppercase crt-glow">
+                sektant
+              </span>
+              <span className="truncate font-mono text-[0.6rem] tracking-[0.2em] text-terminal-ink-faint uppercase">
+                hideout // fld
+              </span>
             </span>
           </Link>
         </SidebarHeader>

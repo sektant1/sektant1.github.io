@@ -1,8 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#04140a"/>
-  <rect x="3" y="3" width="26" height="26" rx="4" fill="none" stroke="#2cff7a" stroke-width="1.5" opacity="0.6"/>
-  <text x="16" y="22" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="18" font-weight="700" fill="#2cff7a">S</text>
-  <rect x="20" y="20" width="3" height="2" fill="#62ff9a">
-    <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/>
-  </rect>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <title>Sektant's Hideout</title>
+  <!-- Every edge lands on a whole unit of a 16-unit grid, so at 16, 32, 48 or
+       192 pixels the mark is the same shape with hard edges and no grey.
+       The S is drawn, not set: a font glyph at this size is three shades of
+       antialiasing, which is the one thing a phosphor raster cannot show. -->
+  <rect width="16" height="16" fill="#04140a"/>
+
+  <!-- The frame is the terminal's corner brackets, not a border: the identity
+       has no rounded rectangles in it, and a full box at this size closes the
+       mark up. -->
+  <path fill="#1c8f4d" d="M1 1h4v1H2v3H1zM11 1h4v4h-1V2h-3zM1 11h1v3h3v1H1zM14 11h1v4h-4v-1h3z"/>
+
+  <!-- S, five rows of a 6x7 cell, aligned to the grid. -->
+  <path fill="#2cff7a" d="M4 4h7v2H6v1h5v5H4v-2h5v-1H4z"/>
+
+  <!-- The block cursor that follows it. Static: an animated favicon is
+       ignored by every browser that matters and only bloats the file. -->
+  <rect x="12" y="10" width="2" height="2" fill="#a9ffc9"/>
 </svg>

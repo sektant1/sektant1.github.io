@@ -105,6 +105,11 @@
  * making people learn a new one. Hovering something clickable fills the same
  * arrow with the beam instead of swapping it for a different drawing.
  *
+ * Every coordinate is a whole unit of the 16-unit grid and the stroke is one
+ * unit wide, because a cursor is rasterised once at a small size and never
+ * scaled by the page: the old arrow was drawn on halves and tenths, so the
+ * pointer was the one soft-edged thing on a screen made of hard pixels.
+ *
  * Inline SVG data URIs: no asset pipeline, no request. Each names a real
  * cursor keyword as its fallback, so if the image fails the pointer still
  * says what it does. Colours are literal hex because cursor: url() cannot
@@ -114,24 +119,35 @@
 .dark {
   /* Hotspot at the tip, 1 1 — the point of the arrow is what is pointing. */
   --cursor-default:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1.2' stroke-linejoin='miter'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
       1 1,
     default;
   --cursor-pointer:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
       1 1,
     pointer;
   --cursor-text:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2v12' stroke='%23a9ffc9' stroke-width='1'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='7' y='2' width='2' height='12' fill='%23a9ffc9'/%3E%3C/svg%3E")
       8 8,
     text;
   --cursor-disabled:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1.5L1.5 12L4.6 9.1L6.6 13.4L8.6 12.5L6.6 8.4L11 8.4Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1.2' opacity='.45' stroke-linejoin='miter'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1%201V12L4%209V13H6V9H10Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter' opacity='.45'/%3E%3C/svg%3E")
       1 1,
     not-allowed;
 }
 
 @layer base {
+  /* The icon set draws with round caps and round joins, which is every other
+     product's house style and none of this one's: on a screen where the type
+     is a raster, the banner is blocks and the pointer is a stair-stepped
+     arrow, a rounded stroke end is the single soft shape on the page.
+     Squared and mitred, the same icons read as if they were drawn on the
+     grid the rest of the chrome is drawn on. */
+  svg.tabler-icon {
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+
   html {
     cursor: var(--cursor-default);
   }
