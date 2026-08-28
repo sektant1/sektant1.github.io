@@ -11,10 +11,13 @@ import type { EarthLocation } from "./markers"
 import { createPlanetModel, loadGlbModel } from "./PlanetModel"
 import type { GlbSurface, PlanetHandle } from "./PlanetModel"
 import {
+  cellHeightFor,
   characterResolutionFor,
+  deviceCellHeightFor,
   lightingFor,
   needsEnvironment,
   postDefaultsFor,
+  renderScaleFor,
   subjectFor,
   toneMappingFor,
 } from "./policy"
@@ -96,8 +99,14 @@ export function createAsciiScene(
   const initialW = Math.max(1, host.clientWidth)
   const initialH = Math.max(1, host.clientHeight)
 
+  // Everything below the renderer is measured in CSS pixels and multiplied up
+  // by this: the glyph grid is a layout decision, the pixel ratio is only how
+  // finely each glyph gets drawn.
+  const renderScale = renderScaleFor(window.devicePixelRatio)
+  let cellHeight = cellHeightFor(initialW, characterResolution)
+
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false })
-  renderer.setPixelRatio(1)
+  renderer.setPixelRatio(renderScale)
   renderer.setSize(initialW, initialH)
   renderer.setClearColor(0x000000, 0)
 
@@ -112,10 +121,12 @@ export function createAsciiScene(
 
   // Edge detection and dithering, applied to the frame before it is reduced
   // to characters. See AsciiPost for why neither can be done with lighting.
-  const post = createAsciiPost(initialW, initialH, {
+  // The pass works in the drawing buffer's own pixels, so both its size and
+  // its cell are given in those rather than in CSS pixels.
+  const post = createAsciiPost(initialW * renderScale, initialH * renderScale, {
     ...postDefaultsFor(subject),
     ...postOptions,
-    cellHeight: 2 / characterResolution,
+    cellHeight: deviceCellHeightFor(cellHeight, renderScale),
     ink: resolveThemeColor("--primary", "#35ff80"),
   })
   const settling = boot && !reduceMotion
@@ -310,7 +321,11 @@ export function createAsciiScene(
     camera.aspect = w / h
     camera.updateProjectionMatrix()
     renderer.setSize(w, h)
-    post.setSize(w, h)
+    // The column floor is a function of the box, so a rotation that halves
+    // the width has to re-derive the cell or the subject loses its engraving.
+    cellHeight = cellHeightFor(w, characterResolution)
+    post.setCellHeight(deviceCellHeightFor(cellHeight, renderScale))
+    post.setSize(w * renderScale, h * renderScale)
   }
   const ro = new ResizeObserver(onResize)
   ro.observe(host)
@@ -318,6 +333,8 @@ export function createAsciiScene(
   logger.info("planet", "globe online", {
     subject,
     resolution: characterResolution,
+    columns: Math.floor(initialW / (cellHeight * 0.6)),
+    renderScale,
     fps: reduceMotion ? 0 : FRAME_RATE,
     reducedMotion: reduceMotion,
   })
