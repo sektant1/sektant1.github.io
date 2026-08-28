@@ -178,55 +178,90 @@
   }
 }
 
-@keyframes field-sync-loss {
+/* The retrace: the art re-drawing itself, one band at a time.
+ *
+ * The old treatment was a ghost copy of the whole block, displaced sideways
+ * for a frame — a photocopy artefact, and one that fired twice every eight
+ * seconds until the eye stopped seeing it while the page never stopped
+ * moving.
+ *
+ * This is a tube instead. A narrow band travels down the block, and inside it
+ * the second layer is drawn brighter and pushed a cell sideways, so the rows
+ * the beam is passing look like they are being laid down again while the rest
+ * of the art holds still. It runs once every half minute and is gone in under
+ * a second: something you catch, not something you sit through.
+ *
+ * A mask rather than clip-path, because the band has to fade at both edges —
+ * a hard cut re-reads as the old tear. */
+@keyframes ascii-retrace {
   0%,
-  88%,
-  92%,
-  96%,
-  100% {
+  95% {
     opacity: 0;
-    clip-path: inset(0 0 100% 0);
     transform: translateX(0);
+    mask-position: 0 -60%;
+    -webkit-mask-position: 0 -60%;
   }
-  89% {
-    opacity: 0.46;
-    clip-path: inset(16% 0 58% 0);
-    transform: translateX(0.42em);
-  }
-  90% {
-    opacity: 0.28;
-    clip-path: inset(61% 0 19% 0);
-    transform: translateX(-0.24em);
-  }
-  91% {
-    opacity: 0.38;
-    clip-path: inset(39% 0 43% 0);
-    transform: translateX(0.16em);
-  }
-  97% {
-    opacity: 0.3;
-    clip-path: inset(72% 0 11% 0);
+  95.4% {
+    opacity: 0.55;
     transform: translateX(0.3em);
   }
-  98% {
+  97% {
+    opacity: 0.42;
+    transform: translateX(-0.14em);
+  }
+  98.6% {
+    opacity: 0.5;
+    transform: translateX(0.08em);
+    mask-position: 0 60%;
+    -webkit-mask-position: 0 60%;
+  }
+  99%,
+  100% {
     opacity: 0;
-    clip-path: inset(72% 0 11% 0);
-    transform: translateX(-0.12em);
+    transform: translateX(0);
+    mask-position: 0 60%;
+    -webkit-mask-position: 0 60%;
   }
 }
 
 @utility ascii-signal-echo {
   opacity: 0;
-  animation: field-sync-loss 8s steps(1, end) infinite;
 
+  /* The mask is the block's own size, so the band's percentages are read
+     against the art: a tenth of a nine-row banner is about one row, which is
+     as wide as a single pass of a beam should be. */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0 41%,
+    black 45% 55%,
+    transparent 59% 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0 41%,
+    black 45% 55%,
+    transparent 59% 100%
+  );
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+
+  animation: ascii-retrace 32s linear infinite;
+
+  /* Under the pointer the beam parks in the middle of the block and stays
+     there, so the effect can be looked at rather than waited for. */
   .group\/ascii-banner:hover & {
-    opacity: 0.32;
-    clip-path: inset(42% 0 36% 0);
-    transform: translateX(0.2em);
+    animation: none;
+    opacity: 0.4;
+    transform: translateX(0.22em);
+    mask-position: 0 0;
+    -webkit-mask-position: 0 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+    opacity: 0;
   }
 }
 

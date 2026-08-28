@@ -38,8 +38,9 @@ type AsciiBannerViewProps = Omit<React.ComponentProps<"div">, "children"> &
     /** Names the treatment; the fill differs for the heaviest face. */
     font?: string
     /**
-     * "scanlines" is the CRT line pattern alone. "glitch" adds a monochrome
-     * sync tear that fires on its own every few seconds, and holds on hover.
+     * "scanlines" is the CRT line pattern alone. "glitch" adds the retrace:
+     * a band that travels down the art about twice a minute, redrawing the
+     * rows it passes. It parks mid-block on hover.
      */
     effect?: "none" | "scanlines" | "glitch"
   }
