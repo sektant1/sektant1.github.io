@@ -435,8 +435,8 @@
   background-image: repeating-linear-gradient(
     to bottom,
     color-mix(in oklch, var(--ascii-ink) 22%, oklch(0.98 0.05 158)) 0 1px,
-    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 2px,
-    transparent 2px 3px
+    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 3px,
+    transparent 3px 4px
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -457,86 +457,26 @@
   /* Driven before it is haloed, in that order: the globe's canvas arrives at
      the compositor already lit by the pass that drew it, and a gradient
      clipped to text does not — so the level has to be put back here or the
-     art reads as the same picture at a lower gain. */
+     art reads as the same picture at a lower gain.
+
+     One wide stop, and no tight one. The globe's canvas is a dense image and
+     can carry a one-pixel halo; this fill is vented — every fourth row is
+     transparent — so a tight shadow haloes each surviving row separately,
+     fills the gaps back in from the sides, and the letterforms drown in their
+     own glow. Wide and faint spills off the mass as a whole instead. */
   filter: brightness(1.14) saturate(1.05)
-    drop-shadow(0 0 1px color-mix(in oklch, var(--primary) 60%, transparent))
     drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 22%, transparent));
 }
 
-/* The sync tear, borrowed beat for beat from the pass on the globe.
+/* The level wavering as the beam re-acquires, borrowed from the pass on the
+ * globe — which slips its rows, ghosts a cell sideways and wavers its level
+ * while it converges.
  *
- * That one plays its faults while it is converging and then holds still: rows
- * slip sideways in a band, the beam puts down a ghost a cell to the side of
- * where it is aiming, and the level wavers until it settles. A sign on a wall
- * loses lock the same way, just not once — so the same three run here on a
- * long cycle, and each is a separate utility because they land on different
- * elements: the raster inside the glyphs, a second copy of the art, and the
- * block as a whole.
- *
- * All three share the 7.4s period and fire in the same four percent of it.
- * Staggered, they would read as three unrelated effects; together they are
- * one moment where the projection is not holding. */
-
-/* Rows step sideways. Background-position only — the glyphs never move, so
-   the art stays on its grid and it is the raster inside it that slips. */
-@keyframes crt-holo-slip {
-  0%,
-  86%,
-  100% {
-    background-position: 0 0;
-  }
-  88% {
-    background-position: 3px -1px;
-  }
-  91% {
-    background-position: -2px 1px;
-  }
-  94% {
-    background-position: 1px 0;
-  }
-}
-
-@utility crt-holo-slip {
-  animation: crt-holo-slip 7.4s steps(1, end) infinite;
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-}
-
-/* The ghost: the copy the beam lays down beside the one it meant to. Held at
-   zero opacity for the whole cycle except the beat, so it costs nothing to
-   have on the page — and offset horizontally only, because a projection that
-   has lost horizontal lock has not lost its lines. */
-@keyframes crt-holo-ghost {
-  0%,
-  86%,
-  100% {
-    opacity: 0;
-    transform: translateX(0);
-  }
-  88% {
-    opacity: 0.55;
-    transform: translateX(5px);
-  }
-  91% {
-    opacity: 0.4;
-    transform: translateX(-4px);
-  }
-  94% {
-    opacity: 0.25;
-    transform: translateX(2px);
-  }
-}
-
-@utility crt-holo-ghost {
-  animation: crt-holo-ghost 7.4s steps(1, end) infinite;
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-    opacity: 0;
-  }
-}
+ * Only the last of the three is here. The other two displace, and this art is
+ * built from half-blocks that have to tile: moved even a pixel, the cells stop
+ * meeting and it reads as the letters coming apart rather than as a projection
+ * losing lock. Brightness may waver. Geometry may not.
+ */
 
 /* The level wavering as the beam re-acquires: brightness rather than opacity,
    so the block dims the way a driven phosphor does instead of fading toward
@@ -573,13 +513,16 @@
    --ascii-ink carries the colour, because background-image cannot read
    currentColor the way text-shadow can. */
 @utility crt-scanfill {
-  /* Sized in em, not px: the art scales with its container, and a fixed
-     line thickness that reads as a scanline at 20px chews diagonal strokes
-     to pieces at 9px. */
+  /* The same three rows crt-holo-fill lays down, and for the same reason:
+     art on this screen is scanned by one beam, so its raster cannot change
+     pitch from one block to the next. Pixels, not em — an em-sized raster
+     tracks the glyph, and two blocks of art at different sizes then read as
+     two different screens. */
   background-image: repeating-linear-gradient(
     to bottom,
-    var(--ascii-ink) 0 0.14em,
-    color-mix(in oklch, var(--ascii-ink) 62%, transparent) 0.14em 0.2em
+    color-mix(in oklch, var(--ascii-ink) 22%, oklch(0.98 0.05 158)) 0 1px,
+    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 3px,
+    transparent 3px 4px
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -646,13 +589,18 @@
    per character. Two layers: a tight core and a wide, faint spill. */
 @utility crt-bloom {
   @variant dark {
-    filter: drop-shadow(
+    /* The globe's own two stops, and the drive in front of them: art that is
+       clipped or printed rather than rendered arrives unlit, so the level has
+       to be put back or the same picture reads at a lower gain than the one
+       beside it. */
+    filter: brightness(1.14) saturate(1.05)
+      drop-shadow(
         0 0 1px
-          color-mix(in oklch, var(--ascii-ink, currentColor) 65%, transparent)
+          color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent)
       )
       drop-shadow(
-        0 0 3px
-          color-mix(in oklch, var(--ascii-ink, currentColor) 18%, transparent)
+        0 0 7px
+          color-mix(in oklch, var(--ascii-ink, currentColor) 22%, transparent)
       );
   }
 }

@@ -45,7 +45,9 @@
      * phosphor is the tube's own hue whatever level the stroke it came off is
      * sitting at, which is the relationship in the plate — a pale mint mass
      * with a saturated green halo. */
-    text-shadow: 0 0 10px color-mix(in oklch, var(--primary) 15%, transparent);
+    text-shadow:
+      0 0 6px color-mix(in oklch, var(--primary) 20%, transparent),
+      0 0 16px color-mix(in oklch, var(--primary) 12%, transparent);
     /* The site is a text terminal first. Body copy is mono; the display face
        is reserved for headings and labels, where it reads as signage. */
     font-size: 0.875rem;
@@ -70,8 +72,9 @@
     & .text-terminal-chrome,
     & .text-terminal-chrome-dim {
       text-shadow:
-        0 0 8px color-mix(in oklch, var(--primary) 30%, transparent),
-        0 0 20px color-mix(in oklch, var(--primary) 14%, transparent);
+        0 0 5px color-mix(in oklch, var(--primary) 48%, transparent),
+        0 0 14px color-mix(in oklch, var(--primary) 26%, transparent),
+        0 0 30px color-mix(in oklch, var(--primary) 12%, transparent);
     }
   }
 
