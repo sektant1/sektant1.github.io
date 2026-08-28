@@ -19,7 +19,13 @@ function LazyImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
   return <img loading="lazy" decoding="async" alt="" {...props} />
 }
 
-function YouTube({ id, title = "Embedded video" }: { id: string; title?: string }) {
+function YouTube({
+  id,
+  title = "Embedded video",
+}: {
+  id: string
+  title?: string
+}) {
   return (
     // nocookie: the embed is illustrating a post, and it does not need to set
     // a tracking cookie on a reader who never presses play.

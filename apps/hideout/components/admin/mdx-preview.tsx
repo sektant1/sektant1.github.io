@@ -18,9 +18,8 @@ import { mdxElements } from "@/components/mdx/mdx-elements"
  * not watch older responses overwrite newer ones.
  */
 export function MdxPreview({ source }: { source: string }) {
-  const [compiled, setCompiled] = React.useState<MDXRemoteSerializeResult | null>(
-    null
-  )
+  const [compiled, setCompiled] =
+    React.useState<MDXRemoteSerializeResult | null>(null)
   const [error, setError] = React.useState<string | null>(null)
   const [pending, setPending] = React.useState(false)
 
@@ -36,13 +35,16 @@ export function MdxPreview({ source }: { source: string }) {
       })
         .then(async (response) => {
           const payload = await response.json()
-          if (!response.ok) throw new Error(payload.error ?? "Could not compile MDX.")
+          if (!response.ok)
+            throw new Error(payload.error ?? "Could not compile MDX.")
           setCompiled(payload.mdx)
           setError(null)
         })
         .catch((cause: unknown) => {
           if (controller.signal.aborted) return
-          setError(cause instanceof Error ? cause.message : "Could not compile MDX.")
+          setError(
+            cause instanceof Error ? cause.message : "Could not compile MDX."
+          )
         })
         .finally(() => {
           if (!controller.signal.aborted) setPending(false)

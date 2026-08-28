@@ -90,9 +90,7 @@ export function PostForm({
             error={errors.title}
             onChange={(title) =>
               update(
-                slugPinned.current
-                  ? { title }
-                  : { title, slug: slugify(title) }
+                slugPinned.current ? { title } : { title, slug: slugify(title) }
               )
             }
           />
@@ -239,14 +237,18 @@ function SeriesFields({
             label="series title"
             value={value.series.title}
             error={errors.seriesTitle}
-            onChange={(title) => update({ series: { ...value.series!, title } })}
+            onChange={(title) =>
+              update({ series: { ...value.series!, title } })
+            }
           />
           <TextField
             id="series-order"
             label="part number"
             type="number"
             value={
-              Number.isFinite(value.series.order) ? String(value.series.order) : ""
+              Number.isFinite(value.series.order)
+                ? String(value.series.order)
+                : ""
             }
             error={errors.seriesOrder}
             onChange={(order) =>
@@ -269,14 +271,16 @@ function validatePost(value: PostDraft): Errors {
   else if (!SLUG.test(value.slug)) {
     errors.slug = "Use lowercase letters, numbers and single hyphens."
   }
-  if (!value.description.trim()) errors.description = "A description is required."
+  if (!value.description.trim())
+    errors.description = "A description is required."
   if (!Number.isFinite(Date.parse(value.date))) errors.date = "Use YYYY-MM-DD."
   if (value.thumbnail?.includes("..")) {
     errors.thumbnail = "A thumbnail cannot point outside its own folder."
   }
   if (value.series) {
     if (!value.series.id.trim()) errors.seriesId = "A series id is required."
-    if (!value.series.title.trim()) errors.seriesTitle = "A series title is required."
+    if (!value.series.title.trim())
+      errors.seriesTitle = "A series title is required."
     if (!Number.isFinite(value.series.order)) {
       errors.seriesOrder = "A part number is required."
     }

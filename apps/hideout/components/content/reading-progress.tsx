@@ -66,7 +66,7 @@ export function ReadingProgress() {
       className="pointer-events-none z-10 shrink-0"
     >
       <ProgressTrack className="h-px bg-terminal-rule">
-        <ProgressIndicator className="crt-glow-soft bg-primary" />
+        <ProgressIndicator className="bg-primary crt-glow-soft" />
       </ProgressTrack>
     </Progress>
   )

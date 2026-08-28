@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import { SectionHeading } from "@/components/layout/section-heading";
-import { SiteShell } from "@/components/layout/site-shell";
-import { ProjectGrid } from "@/components/projects/project-grid";
-import { getAllProjects } from "@/lib/content/projects";
-import { buildContentTree } from "@/lib/content/tree";
+import type { Metadata } from "next"
+import { SectionHeading } from "@/components/layout/section-heading"
+import { SiteShell } from "@/components/layout/site-shell"
+import { ProjectGrid } from "@/components/projects/project-grid"
+import { getAllProjects } from "@/lib/content/projects"
+import { buildContentTree } from "@/lib/content/tree"
 
-export const metadata: Metadata = { title: "Projects" };
+export const metadata: Metadata = { title: "Projects" }
 
 export default async function ProjectsPage() {
   const [projects, tree] = await Promise.all([
     getAllProjects(),
     buildContentTree("/projects"),
-  ]);
+  ])
 
   return (
     <SiteShell
@@ -30,5 +30,5 @@ export default async function ProjectsPage() {
         <ProjectGrid projects={projects} />
       </div>
     </SiteShell>
-  );
+  )
 }

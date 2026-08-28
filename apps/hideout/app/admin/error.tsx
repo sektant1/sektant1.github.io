@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useRouter } from "next/navigation";
-import { Button } from "@workspace/ui/components/button";
-import { TerminalFrame } from "@workspace/ui/components/terminal-frame";
+import { useRouter } from "next/navigation"
+import { Button } from "@workspace/ui/components/button"
+import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 
 export default function AdminError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }) {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <main className="flex min-h-svh items-center justify-center p-4">
@@ -51,5 +51,5 @@ export default function AdminError({
         </div>
       </TerminalFrame>
     </main>
-  );
+  )
 }

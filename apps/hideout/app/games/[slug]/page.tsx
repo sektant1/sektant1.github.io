@@ -1,41 +1,45 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { Article } from "@/components/content/article";
-import { ReadingProgress } from "@/components/content/reading-progress";
-import { GameMasthead } from "@/components/games/game-masthead";
-import { SiteShell } from "@/components/layout/site-shell";
-import { createMdxComponents, EndOfFile } from "@/components/mdx/mdx-components";
-import { getAllGames, getGameBySlug } from "@/lib/content/games";
-import { buildContentTree } from "@/lib/content/tree";
-import { mdxOptions } from "@/lib/mdx/options";
-import { extractToc } from "@/lib/mdx/toc";
-import { isAdminVisible } from "@/lib/runtime/mode";
-import { SITE_AUTHOR, SITE_NAME, SITE_URL, absUrl } from "@/lib/seo/site";
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { MDXRemote } from "next-mdx-remote/rsc"
+import { Article } from "@/components/content/article"
+import { ReadingProgress } from "@/components/content/reading-progress"
+import { GameMasthead } from "@/components/games/game-masthead"
+import { SiteShell } from "@/components/layout/site-shell"
+import { createMdxComponents, EndOfFile } from "@/components/mdx/mdx-components"
+import { getAllGames, getGameBySlug } from "@/lib/content/games"
+import { buildContentTree } from "@/lib/content/tree"
+import { mdxOptions } from "@/lib/mdx/options"
+import { extractToc } from "@/lib/mdx/toc"
+import { isAdminVisible } from "@/lib/runtime/mode"
+import { SITE_AUTHOR, SITE_NAME, SITE_URL, absUrl } from "@/lib/seo/site"
 
 interface GamePageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  const games = await getAllGames();
-  return games.map((game) => ({ slug: game.meta.slug }));
+  const games = await getAllGames()
+  return games.map((game) => ({ slug: game.meta.slug }))
 }
 
-export async function generateMetadata({ params }: GamePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
-  if (!game) return { title: "Game not found" };
+export async function generateMetadata({
+  params,
+}: GamePageProps): Promise<Metadata> {
+  const { slug } = await params
+  const game = await getGameBySlug(slug)
+  if (!game) return { title: "Game not found" }
 
-  const { meta } = game;
-  const url = `${SITE_URL}/games/${meta.slug}`;
-  const image = meta.thumbnail ? absUrl(meta.thumbnail) : `${SITE_URL}/opengraph-image.png`;
+  const { meta } = game
+  const url = `${SITE_URL}/games/${meta.slug}`
+  const image = meta.thumbnail
+    ? absUrl(meta.thumbnail)
+    : `${SITE_URL}/opengraph-image.png`
 
   return {
     title: meta.title,
     description: meta.description,
     keywords: [...meta.tags, ...meta.platforms, meta.engine].filter(
-      (keyword): keyword is string => Boolean(keyword),
+      (keyword): keyword is string => Boolean(keyword)
     ),
     authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
     alternates: { canonical: `/games/${meta.slug}` },
@@ -53,17 +57,17 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
       description: meta.description,
       images: [image],
     },
-  };
+  }
 }
 
 export default async function GamePage({ params }: GamePageProps) {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
-  if (!game) notFound();
+  const { slug } = await params
+  const game = await getGameBySlug(slug)
+  if (!game) notFound()
 
-  const { meta } = game;
-  const toc = extractToc(game.body);
-  const tree = await buildContentTree(`/games/${meta.slug}`);
+  const { meta } = game
+  const toc = extractToc(game.body)
+  const tree = await buildContentTree(`/games/${meta.slug}`)
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -75,7 +79,7 @@ export default async function GamePage({ params }: GamePageProps) {
     author: { "@type": "Person", name: SITE_AUTHOR, url: SITE_URL },
     gamePlatform: meta.platforms,
     ...(meta.engine ? { gameEngine: meta.engine } : {}),
-  };
+  }
 
   return (
     <>
@@ -112,5 +116,5 @@ export default async function GamePage({ params }: GamePageProps) {
         </Article>
       </SiteShell>
     </>
-  );
+  )
 }

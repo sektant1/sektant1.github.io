@@ -1,37 +1,43 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { Article } from "@/components/content/article";
-import { ReadingProgress } from "@/components/content/reading-progress";
-import { SiteShell } from "@/components/layout/site-shell";
-import { SeriesNav } from "@/components/posts/series-nav";
-import { createMdxComponents, EndOfFile } from "@/components/mdx/mdx-components";
-import { mdxOptions } from "@/lib/mdx/options";
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { MDXRemote } from "next-mdx-remote/rsc"
+import { Article } from "@/components/content/article"
+import { ReadingProgress } from "@/components/content/reading-progress"
+import { SiteShell } from "@/components/layout/site-shell"
+import { SeriesNav } from "@/components/posts/series-nav"
+import { createMdxComponents, EndOfFile } from "@/components/mdx/mdx-components"
+import { mdxOptions } from "@/lib/mdx/options"
 import {
   getAllPosts,
   getPostBySlug,
   getSeriesContextForPost,
   publicPostMeta,
-} from "@/lib/content/posts";
-import { buildContentTree } from "@/lib/content/tree";
-import { isAdminVisible } from "@/lib/runtime/mode";
-import { extractToc } from "@/lib/mdx/toc";
-import { SITE_AUTHOR, SITE_NAME, SITE_URL, absUrl } from "@/lib/seo/site";
+} from "@/lib/content/posts"
+import { buildContentTree } from "@/lib/content/tree"
+import { isAdminVisible } from "@/lib/runtime/mode"
+import { extractToc } from "@/lib/mdx/toc"
+import { SITE_AUTHOR, SITE_NAME, SITE_URL, absUrl } from "@/lib/seo/site"
 
-interface PostPageProps { params: Promise<{ slug: string }> }
-
-export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.meta.slug }));
+interface PostPageProps {
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  const { slug: routeSlug } = await params;
-  const post = await getPostBySlug(routeSlug);
-  if (!post) return { title: "Post not found" };
-  const { title, description, slug, date, tags, thumbnail, series } = post.meta;
-  const url = `${SITE_URL}/posts/${slug}`;
-  const image = thumbnail ? absUrl(thumbnail) : `${SITE_URL}/opengraph-image.png`;
+export async function generateStaticParams() {
+  const posts = await getAllPosts()
+  return posts.map((post) => ({ slug: post.meta.slug }))
+}
+
+export async function generateMetadata({
+  params,
+}: PostPageProps): Promise<Metadata> {
+  const { slug: routeSlug } = await params
+  const post = await getPostBySlug(routeSlug)
+  if (!post) return { title: "Post not found" }
+  const { title, description, slug, date, tags, thumbnail, series } = post.meta
+  const url = `${SITE_URL}/posts/${slug}`
+  const image = thumbnail
+    ? absUrl(thumbnail)
+    : `${SITE_URL}/opengraph-image.png`
   return {
     title,
     description,
@@ -55,22 +61,24 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       description,
       images: [image],
     },
-  };
+  }
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post) notFound();
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+  if (!post) notFound()
 
-  const meta = publicPostMeta(post);
-  const toc = extractToc(post.body);
+  const meta = publicPostMeta(post)
+  const toc = extractToc(post.body)
   const [tree, seriesContext] = await Promise.all([
     buildContentTree(`/posts/${meta.slug}`),
     getSeriesContextForPost(post),
-  ]);
-  const url = `${SITE_URL}/posts/${meta.slug}`;
-  const image = meta.thumbnail ? absUrl(meta.thumbnail) : `${SITE_URL}/opengraph-image.png`;
+  ])
+  const url = `${SITE_URL}/posts/${meta.slug}`
+  const image = meta.thumbnail
+    ? absUrl(meta.thumbnail)
+    : `${SITE_URL}/opengraph-image.png`
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -89,7 +97,7 @@ export default async function PostPage({ params }: PostPageProps) {
     keywords: meta.tags?.join(", "),
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
-  };
+  }
 
   return (
     <>
@@ -104,10 +112,20 @@ export default async function PostPage({ params }: PostPageProps) {
         status={[
           { label: "date", value: meta.date },
           ...(meta.readingTime
-            ? [{ label: "read", value: meta.readingTime.replace(/\s*read$/i, "") }]
+            ? [
+                {
+                  label: "read",
+                  value: meta.readingTime.replace(/\s*read$/i, ""),
+                },
+              ]
             : []),
           ...(seriesContext
-            ? [{ label: "part", value: `${seriesContext.currentIndex + 1}/${seriesContext.posts.length}` }]
+            ? [
+                {
+                  label: "part",
+                  value: `${seriesContext.currentIndex + 1}/${seriesContext.posts.length}`,
+                },
+              ]
             : []),
         ]}
       >
@@ -120,10 +138,14 @@ export default async function PostPage({ params }: PostPageProps) {
           editHref={isAdminVisible() ? `/admin/posts/${meta.slug}/edit` : null}
           footer={seriesContext ? <SeriesNav context={seriesContext} /> : null}
         >
-          <MDXRemote source={post.body} components={createMdxComponents()} options={mdxOptions} />
+          <MDXRemote
+            source={post.body}
+            components={createMdxComponents()}
+            options={mdxOptions}
+          />
           <EndOfFile />
         </Article>
       </SiteShell>
     </>
-  );
+  )
 }

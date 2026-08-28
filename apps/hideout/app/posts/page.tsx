@@ -1,20 +1,20 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import { SiteShell } from "@/components/layout/site-shell";
-import { PostBrowser } from "@/components/posts/post-browser";
-import { getAllSeries, getPublicPostMetas } from "@/lib/content/posts";
-import { buildContentTree } from "@/lib/content/tree";
-import { getPostSearchHits } from "@/lib/search/posts";
+import { Suspense } from "react"
+import type { Metadata } from "next"
+import { SiteShell } from "@/components/layout/site-shell"
+import { PostBrowser } from "@/components/posts/post-browser"
+import { getAllSeries, getPublicPostMetas } from "@/lib/content/posts"
+import { buildContentTree } from "@/lib/content/tree"
+import { getPostSearchHits } from "@/lib/search/posts"
 
-export const metadata: Metadata = { title: "Posts" };
+export const metadata: Metadata = { title: "Posts" }
 
 export default async function PostsPage() {
   const [posts, series, tree] = await Promise.all([
     getPublicPostMetas(),
     getAllSeries(),
     buildContentTree("/posts"),
-  ]);
-  const searchHits = await getPostSearchHits(posts);
+  ])
+  const searchHits = await getPostSearchHits(posts)
 
   return (
     <SiteShell
@@ -33,5 +33,5 @@ export default async function PostsPage() {
         </Suspense>
       </div>
     </SiteShell>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import fs from "node:fs/promises";
-import { homeContentPath } from "@/lib/content/paths";
+import fs from "node:fs/promises"
+import { homeContentPath } from "@/lib/content/paths"
 import {
   DEFAULT_HOME_CONTENT,
   normalizeHomeContent,
   type HomeContent,
-} from "@/lib/content/home-schema";
+} from "@/lib/content/home-schema"
 
 /**
  * What the front page renders.
@@ -16,22 +16,22 @@ import {
  * hand-edited.
  */
 export async function getHomeContent(): Promise<HomeContent> {
-  let raw: string;
+  let raw: string
   try {
-    raw = await fs.readFile(homeContentPath(), "utf8");
+    raw = await fs.readFile(homeContentPath(), "utf8")
   } catch {
-    return DEFAULT_HOME_CONTENT;
+    return DEFAULT_HOME_CONTENT
   }
 
   try {
-    return normalizeHomeContent(JSON.parse(raw));
+    return normalizeHomeContent(JSON.parse(raw))
   } catch (error) {
     console.warn(
-      `Ignoring ${homeContentPath()}: ${error instanceof Error ? error.message : error}`,
-    );
-    return DEFAULT_HOME_CONTENT;
+      `Ignoring ${homeContentPath()}: ${error instanceof Error ? error.message : error}`
+    )
+    return DEFAULT_HOME_CONTENT
   }
 }
 
-export { DEFAULT_HOME_CONTENT };
-export type { HomeContent };
+export { DEFAULT_HOME_CONTENT }
+export type { HomeContent }
