@@ -46,7 +46,7 @@ function PostRow({ post, index }: { post: PostMeta; index: number }) {
           aria-hidden="true"
           loading="lazy"
           style={{ aspectRatio: THUMB_ASPECT }}
-          className="w-[4.5rem] shrink-0 border border-terminal-rule object-cover opacity-85 saturate-[0.85] transition-[opacity,filter] group-hover:opacity-100 group-hover:saturate-100 sm:w-32 lg:w-40"
+          className="w-[4.5rem] shrink-0 border border-terminal-rule object-contain opacity-85 saturate-[0.85] transition-[opacity,filter] group-hover:opacity-100 group-hover:saturate-100 sm:w-32 lg:w-40"
         />
 
         <div className="flex min-w-0 flex-1 flex-col gap-1">

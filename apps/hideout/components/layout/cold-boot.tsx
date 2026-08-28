@@ -15,9 +15,11 @@ import { pad } from "@/lib/format"
 /**
  * The sequence a machine like this runs when it is switched on.
  *
- * Every line reports something the page genuinely does: the fonts and model
- * it loads, the content it was built from, and the CMS being absent from a
- * published build.
+ * Every line reports something the page genuinely does: the fonts it loads,
+ * the content it was built from, the geolocation lookup the globe makes, the
+ * CMS being absent from a published build. Inventing plausible-looking
+ * hardware checks would make it a screensaver; keeping it truthful makes it
+ * the same POST the log panel shows in slower motion.
  *
  * Laid out like a mission briefing: the object turning on one side, the log
  * filling in on the other. The coin is the same ASCII renderer the front page
@@ -36,7 +38,7 @@ const COIN_POST = { edge: 0.72, dither: 0.035, contrast: 1.18 }
 /** Runs the sequence again, whatever the stored state says. */
 export const REPLAY_BOOT_EVENT = "hideout:replay-boot"
 
-/** Fast enough to feel machine-driven, slow enough to scan. */
+/** A dense kernel log: fast enough to feel machine-driven, slow enough to scan. */
 const LINE_INTERVAL = 118
 const LINES_PER_TICK = 1
 
@@ -60,34 +62,71 @@ type ColdBootProps = {
 
 function bootLines({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
   return [
-    { label: "LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
-    { label: "CHECK::AP.MASK", status: "ok", detail: "6PX" },
-    { label: "REQUEST::MODEL/BTC", status: "warn", detail: "GLB" },
+    { label: "[0.000] POST::БП", status: "ok", detail: "NOMINAL" },
+    { label: "[0.018] SYNC::ЭЛТ/P1", status: "ok", detail: "60HZ" },
+    { label: "[0.031] BOOT::GRUB", status: "ok", detail: "2.12" },
+    { label: "[0.044] LOAD::VMLINUX", status: "ok", detail: "6.12-FLD" },
+    { label: "[0.057] LOAD::INITRD", status: "ok", detail: "32M" },
+    { label: "[0.083] DECOMPRESS::KERNEL", status: "ok", detail: "X86_64" },
+    { label: "[0.101] INIT::EARLY.CONSOLE", status: "ok", detail: "TTY0" },
+    { label: "[0.126] DETECT::DMI", status: "ok", detail: "FLD-01" },
+    { label: "[0.149] INIT::CPU0", status: "ok", detail: "ONLINE" },
+    { label: "[0.177] MAP::ПАМЯТЬ", status: "ok", detail: "256M" },
+    { label: "[0.203] INIT::CRNG", status: "ok", detail: "READY" },
+    { label: "[0.228] SELECT::CLOCKSOURCE", status: "ok", detail: "TSC" },
+    { label: "[0.254] PARSE::ACPI.TABLES", status: "ok", detail: "6" },
+    { label: "[0.281] ENUM::PCI.BUS", status: "ok", detail: "DONE" },
+    { label: "[0.307] BIND::SIMPLEDRM", status: "ok", detail: "FB0" },
+    { label: "[0.336] INIT::ATKBD", status: "ok", detail: "SERIO0" },
+    { label: "[0.362] INIT::USB.CORE", status: "ok", detail: "2.0" },
+    { label: "[0.391] INIT::SCSI.CORE", status: "ok", detail: "READY" },
+    { label: "[0.424] INIT::NET.CORE", status: "ok", detail: "ONLINE" },
+    { label: "[0.458] INIT::IPV4", status: "ok", detail: "TCP" },
+    { label: "[0.486] SKIP::IPV6", status: "skip", detail: "POLICY" },
+    { label: "[0.517] CHECK::EXT4", status: "ok", detail: "CLEAN" },
+    { label: "[0.549] MOUNT::КОРЕНЬ", status: "ok", detail: "RO" },
+    { label: "[0.581] START::SYSTEMD", status: "ok", detail: "257" },
+    { label: "[0.617] START::JOURNALD", status: "ok", detail: "VOLATILE" },
+    { label: "[0.652] START::UDEVD", status: "ok", detail: "READY" },
+    { label: "[0.694] REACHED::LOCAL-FS", status: "ok", detail: "TARGET" },
+    { label: "[0.738] START::NETWORKD", status: "ok", detail: "ETH0" },
+    { label: "[0.781] WAIT::NETWORK.ONLINE", status: "ok", detail: "ROUTABLE" },
+    { label: "[0.826] RESOLVE::СЕТЬ/GEO", status: "warn", detail: "PENDING" },
+    { label: "[0.871] REACHED::NETWORK", status: "ok", detail: "TARGET" },
+    { label: "[0.917] LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
+    { label: "[0.962] CHECK::AP.MASK", status: "ok", detail: "6PX" },
+    { label: "[1.014] PRELOAD::MODEL/BTC", status: "ok", detail: "GLB" },
     {
-      label: "MOUNT>АРХИВ/CONTENT",
+      label: "[1.067] MOUNT>АРХИВ/CONTENT",
       status: "ok",
       detail: `${pad(posts + projects + games)} OBJ`,
     },
-    { label: "IDX>POSTS", status: "ok", detail: pad(posts) },
-    { label: "IDX>PROJECTS", status: "ok", detail: pad(projects) },
+    { label: "[1.113] MAP::NAV.ROUTES", status: "ok", detail: "READY" },
+    { label: "[1.159] IDX>POSTS", status: "ok", detail: pad(posts) },
+    { label: "[1.202] IDX>PROJECTS", status: "ok", detail: pad(projects) },
     {
-      label: "IDX>GAMES",
+      label: "[1.248] IDX>GAMES",
       status: games > 0 ? "ok" : "skip",
       detail: pad(games),
     },
+    { label: "[1.291] SEARCH::FTS", status: "ok", detail: "READY" },
     {
-      label: "INDEX::SEARCH",
+      label: "[1.337] LOAD::SEARCH.IDX",
       status: "ok",
       detail: `${pad(posts)} DOC`,
     },
+    { label: "[1.381] CHECK::CACHE.LOCAL", status: "ok", detail: "READY" },
     {
-      label: "CHECK::CMS.LOCAL",
+      label: "[1.426] CHECK::CMS.LOCAL",
       status: cms ? "ok" : "skip",
       detail: cms ? "RW" : "N/A",
     },
-    { label: "ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
-    { label: "OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
-    { label: "REACHED::HIDEOUT", status: "ok", detail: "READY" },
+    { label: "[1.472] START::HIDEOUT.SVC", status: "ok", detail: "ACTIVE" },
+    { label: "[1.519] ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
+    { label: "[1.566] OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
+    { label: "[1.612] VERIFY::KEYRING", status: "ok", detail: "ED25519" },
+    { label: "[1.658] AUTH::ОПЕРАТОР", status: "ok", detail: "ДОПУСК" },
+    { label: "[1.704] REACHED::HIDEOUT", status: "ok", detail: "TARGET" },
   ]
 }
 

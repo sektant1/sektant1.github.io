@@ -2,7 +2,7 @@
 // front-matter thumbnails to one size on the way through.
 //
 // Thumbnails come in as whatever the source was — a 1254×1254 logo, a 1280×720
-// screenshot, a 3 MB animated GIF. Cards crop them all to the same box, so
+// screenshot, a 3 MB animated GIF. Cards fit them all into the same box, so
 // they are encoded to that box here instead: same dimensions, same format, a
 // fraction of the bytes.
 
@@ -15,8 +15,8 @@ const root = process.cwd();
 const contentRoot = path.join(root, "content");
 const publicRoot = path.join(root, "public", "content-assets");
 
-// Kept in step with components/media/thumbnail.ts, which is what the CSS
-// crops to. 960×540 covers the largest card at 2× without being wasteful.
+// Kept in step with components/media/thumbnail.ts, which is what the CSS fits
+// into. 960×540 covers the largest card at 2× without being wasteful.
 const THUMB_WIDTH = 960;
 const THUMB_HEIGHT = 540;
 
@@ -107,7 +107,7 @@ async function normaliseThumbnail(servedPath) {
 
   const output = await image
     .resize(THUMB_WIDTH, THUMB_HEIGHT, {
-      fit: "cover",
+      fit: "contain",
       position: "centre",
       // Logos are usually drawn on their own flat ground; extending it beats
       // a transparent bar when the source is not 16:9.
