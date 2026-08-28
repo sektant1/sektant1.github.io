@@ -4,7 +4,8 @@
   "title": "Ascii Banner",
   "description": "Ascii Banner component, themed for skt-ui-toolkit.",
   "dependencies": [
-    "figlet"
+    "figlet",
+    "vault66-crt-effect"
   ],
   "registryDependencies": [
     "skt-theme",

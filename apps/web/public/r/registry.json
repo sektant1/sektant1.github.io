@@ -187,7 +187,8 @@
         "ascii-banner-view"
       ],
       "dependencies": [
-        "figlet"
+        "figlet",
+        "vault66-crt-effect"
       ],
       "files": [
         {
@@ -209,6 +210,9 @@
       "description": "Ascii Banner View component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "vault66-crt-effect"
       ],
       "files": [
         {
