@@ -5,9 +5,10 @@ name: CI
 # anything that reaches it has already been through this.
 on:
   push:
-    # `master` is absent on purpose: Release fires there and calls this same
-    # workflow, so listing it would run the gate twice per merge.
-    branches: [development]
+    # Feature branches only. Staging and Release own the two named branches and
+    # call this workflow themselves; listing them here would run the gate twice
+    # on every push to them.
+    branches-ignore: [master, development]
   pull_request:
   # Release and Staging run this same gate before they publish anything.
   workflow_call:
