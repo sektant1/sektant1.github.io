@@ -41,16 +41,9 @@ export type HomeContent = {
     quickAccessTitle: string
     quickAccessRef: string
     quickLinks: HomeQuickLink[]
-    quoteTitle: string
-    quoteRef: string
-    quoteText: string
-    quoteAuthor: string
-    quoteSource: string
+    tagsTitle: string
+    tagsRef: string
     globeTitle: string
-    globeStatus: string
-    globeReadoutStart: string[]
-    globeReadoutEnd: string[]
-    globeFooterStart: string
     globeFooterEnd: string
   }
   sections: {
@@ -69,49 +62,40 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     bannerStackedTop: "SEKTANT",
     bannerStackedBottom: "HIDEOUT",
     srTitle: "Sektant's Hideout",
-    tagline: "I make computers do cool stuff.",
-    description:
-      "Field notes on software, tools, games, and systems built after hours.",
+    tagline: "// TUBE WARM. LOG OPEN.",
+    description: "man cave for essays, tinkering, and things I built",
     operator: "ОПЕРАТОР // SEKTANT1",
     summaryTitle: "АРХИВ // СВОДКА",
     summaryRef: "BUF 001",
-    metricPosts: "posts",
-    metricProjects: "projects",
-    metricMinutes: "read min",
+    metricPosts: "POSTS",
+    metricProjects: "PROJECTS",
+    metricMinutes: "READ MIN",
     quickAccessTitle: "БЫСТРЫЙ ДОСТУП",
     quickAccessRef: "NAV // 03",
     quickLinks: [
-      { label: "field notes", href: "/posts" },
-      { label: "project archive", href: "/projects" },
-      { label: "playable builds", href: "/games" },
+      { label: "FIELD NOTES", href: "/posts" },
+      { label: "PROJECT ARCHIVE", href: "/projects" },
+      { label: "PLAYABLE BUILDS", href: "/games" },
     ],
-    quoteTitle: "ЗАПИСКА ОПЕРАТОРА",
-    quoteRef: "REF // 01",
-    quoteText:
-      "The struggle itself towards the heights is enough to fill a man's heart. One must imagine Sisyphus happy.",
-    quoteAuthor: "A. Camus",
-    quoteSource: "The Myth of Sisyphus",
+    tagsTitle: "ИНДЕКС // ТЕГИ",
+    tagsRef: "IDX // TAG",
     globeTitle: "ОБЪЕКТ 01 // GEO NODE",
-    globeStatus: "[ LIVE ]",
-    globeReadoutStart: ["SCAN // GEO", "AZ // AUTO", "RNG // 12.8K"],
-    globeReadoutEnd: ["TRACK 01", "LOCK // SOFT"],
-    globeFooterStart: "GRID 0.24 // P31 // GEO",
     globeFooterEnd: "DRAG // SLEW",
   },
   sections: {
     posts: {
       path: "content/posts",
-      title: "latest",
+      title: "LATEST",
       actionLabel: "all posts",
     },
     games: {
       path: "content/games",
-      title: "games",
+      title: "GAMES",
       actionLabel: "all games",
     },
     projects: {
       path: "content/projects",
-      title: "things I built",
+      title: "THINGS I BUILT",
       actionLabel: "all projects",
     },
   },
@@ -129,9 +113,7 @@ const BANNER_FIELDS = [
 ] as const
 
 const MAX_LENGTH = 240
-const MAX_QUOTE_LENGTH = 600
 const MAX_QUICK_LINKS = 8
-const MAX_READOUT_LINES = 6
 
 export class HomeContentError extends Error {}
 
@@ -139,7 +121,12 @@ function fail(message: string): never {
   throw new HomeContentError(message)
 }
 
-function asText(value: unknown, fallback: string, label: string, max = MAX_LENGTH) {
+function asText(
+  value: unknown,
+  fallback: string,
+  label: string,
+  max = MAX_LENGTH
+) {
   if (value === undefined || value === null) return fallback
   if (typeof value !== "string") fail(`${label} must be text.`)
   const trimmed = value.trim()
@@ -147,14 +134,17 @@ function asText(value: unknown, fallback: string, label: string, max = MAX_LENGT
   // empty slot in the layout.
   if (!trimmed) return fallback
   if (trimmed.length > max) fail(`${label} is longer than ${max} characters.`)
-  if (/[\p{Cc}]/u.test(trimmed)) fail(`${label} cannot contain control characters.`)
+  if (/[\p{Cc}]/u.test(trimmed))
+    fail(`${label} cannot contain control characters.`)
   return trimmed
 }
 
 function asAscii(value: unknown, fallback: string, label: string) {
   const text = asText(value, fallback, label, 64)
   if (!ASCII_ONLY.test(text)) {
-    fail(`${label} is drawn as ASCII art, so it cannot use non-ASCII characters.`)
+    fail(
+      `${label} is drawn as ASCII art, so it cannot use non-ASCII characters.`
+    )
   }
   return text
 }
@@ -167,25 +157,6 @@ function asHref(value: unknown, fallback: string, label: string) {
   }
   if (/^https?:\/\/\S+$/i.test(href)) return href
   fail(`${label} must be a site path like /posts, or a full http(s) URL.`)
-}
-
-function asLines(value: unknown, fallback: string[], label: string) {
-  if (value === undefined || value === null) return fallback
-  const raw = Array.isArray(value)
-    ? value
-    : typeof value === "string"
-      ? value.split("\n")
-      : fail(`${label} must be a list of lines.`)
-
-  const lines = raw
-    .map((line, index) => asText(line, "", `${label} line ${index + 1}`, 48))
-    .filter(Boolean)
-
-  if (!lines.length) return fallback
-  if (lines.length > MAX_READOUT_LINES) {
-    fail(`${label} takes at most ${MAX_READOUT_LINES} lines.`)
-  }
-  return lines
 }
 
 function asQuickLinks(value: unknown, fallback: HomeQuickLink[]) {
@@ -225,7 +196,8 @@ function asString(value: unknown) {
 
 function asRecord(value: unknown, label: string): Record<string, unknown> {
   if (value === undefined || value === null) return {}
-  if (typeof value !== "object" || Array.isArray(value)) fail(`${label} must be an object.`)
+  if (typeof value !== "object" || Array.isArray(value))
+    fail(`${label} must be an object.`)
   return value as Record<string, unknown>
 }
 
@@ -261,7 +233,12 @@ export function normalizeHomeContent(input: unknown): HomeContent {
 
   const normalized: HomeContent = {
     hero: {
-      systemLabel: asText(hero.systemLabel, d.hero.systemLabel, "System label", 48),
+      systemLabel: asText(
+        hero.systemLabel,
+        d.hero.systemLabel,
+        "System label",
+        48
+      ),
       systemUnit: asText(hero.systemUnit, d.hero.systemUnit, "System unit", 48),
       linkStatus: asText(hero.linkStatus, d.hero.linkStatus, "Link status", 48),
       bannerWide: asAscii(hero.bannerWide, d.hero.bannerWide, "Wide banner"),
@@ -277,11 +254,31 @@ export function normalizeHomeContent(input: unknown): HomeContent {
       ),
       srTitle: asText(hero.srTitle, d.hero.srTitle, "Screen-reader title", 80),
       tagline: asText(hero.tagline, d.hero.tagline, "Tagline"),
-      description: asText(hero.description, d.hero.description, "Description", 400),
+      description: asText(
+        hero.description,
+        d.hero.description,
+        "Description",
+        400
+      ),
       operator: asText(hero.operator, d.hero.operator, "Operator line", 48),
-      summaryTitle: asText(hero.summaryTitle, d.hero.summaryTitle, "Summary title", 48),
-      summaryRef: asText(hero.summaryRef, d.hero.summaryRef, "Summary reference", 24),
-      metricPosts: asText(hero.metricPosts, d.hero.metricPosts, "Posts metric label", 24),
+      summaryTitle: asText(
+        hero.summaryTitle,
+        d.hero.summaryTitle,
+        "Summary title",
+        48
+      ),
+      summaryRef: asText(
+        hero.summaryRef,
+        d.hero.summaryRef,
+        "Summary reference",
+        24
+      ),
+      metricPosts: asText(
+        hero.metricPosts,
+        d.hero.metricPosts,
+        "Posts metric label",
+        24
+      ),
       metricProjects: asText(
         hero.metricProjects,
         d.hero.metricProjects,
@@ -307,27 +304,17 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         24
       ),
       quickLinks: asQuickLinks(hero.quickLinks, d.hero.quickLinks),
-      quoteTitle: asText(hero.quoteTitle, d.hero.quoteTitle, "Quote title", 48),
-      quoteRef: asText(hero.quoteRef, d.hero.quoteRef, "Quote reference", 24),
-      quoteText: asText(hero.quoteText, d.hero.quoteText, "Quote", MAX_QUOTE_LENGTH),
-      quoteAuthor: asText(hero.quoteAuthor, d.hero.quoteAuthor, "Quote author", 80),
-      quoteSource: asText(hero.quoteSource, d.hero.quoteSource, "Quote source", 80),
-      globeTitle: asText(hero.globeTitle, d.hero.globeTitle, "Globe caption", 48),
-      globeStatus: asText(hero.globeStatus, d.hero.globeStatus, "Globe status", 24),
-      globeReadoutStart: asLines(
-        hero.globeReadoutStart,
-        d.hero.globeReadoutStart,
-        "Globe readout, left"
+      tagsTitle: asText(
+        hero.tagsTitle,
+        d.hero.tagsTitle,
+        "Tag index title",
+        48
       ),
-      globeReadoutEnd: asLines(
-        hero.globeReadoutEnd,
-        d.hero.globeReadoutEnd,
-        "Globe readout, right"
-      ),
-      globeFooterStart: asText(
-        hero.globeFooterStart,
-        d.hero.globeFooterStart,
-        "Globe footer, left",
+      tagsRef: asText(hero.tagsRef, d.hero.tagsRef, "Tag index reference", 24),
+      globeTitle: asText(
+        hero.globeTitle,
+        d.hero.globeTitle,
+        "Globe caption",
         48
       ),
       globeFooterEnd: asText(
@@ -338,8 +325,16 @@ export function normalizeHomeContent(input: unknown): HomeContent {
       ),
     },
     sections: {
-      posts: normalizeSection(sections.posts, d.sections.posts, "Posts section"),
-      games: normalizeSection(sections.games, d.sections.games, "Games section"),
+      posts: normalizeSection(
+        sections.posts,
+        d.sections.posts,
+        "Posts section"
+      ),
+      games: normalizeSection(
+        sections.games,
+        d.sections.games,
+        "Games section"
+      ),
       projects: normalizeSection(
         sections.projects,
         d.sections.projects,

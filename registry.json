@@ -183,7 +183,8 @@
       "title": "Ascii Banner",
       "description": "Ascii Banner component, themed for skt-ui-toolkit.",
       "registryDependencies": [
-        "skt-theme"
+        "skt-theme",
+        "ascii-banner-view"
       ],
       "dependencies": [
         "figlet"
@@ -193,6 +194,27 @@
           "path": "packages/ui/src/components/ascii-banner.tsx",
           "type": "registry:ui",
           "target": "components/ui/ascii-banner.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/ascii-art.ts",
+          "type": "registry:lib",
+          "target": "lib/ascii-art.ts"
+        }
+      ]
+    },
+    {
+      "name": "ascii-banner-view",
+      "type": "registry:ui",
+      "title": "Ascii Banner View",
+      "description": "Ascii Banner View component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/ascii-banner-view.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ascii-banner-view.tsx"
         }
       ]
     },
@@ -493,6 +515,22 @@
       ]
     },
     {
+      "name": "command-strip",
+      "type": "registry:ui",
+      "title": "Command Strip",
+      "description": "Command Strip component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/command-strip.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/command-strip.tsx"
+        }
+      ]
+    },
+    {
       "name": "context-menu",
       "type": "registry:ui",
       "title": "Context Menu",
@@ -623,6 +661,16 @@
           "path": "packages/ui/src/components/font-picker.tsx",
           "type": "registry:ui",
           "target": "components/ui/font-picker.tsx"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-persisted-preference.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-persisted-preference.ts"
+        },
+        {
+          "path": "packages/ui/src/lib/persisted-preference.ts",
+          "type": "registry:lib",
+          "target": "lib/persisted-preference.ts"
         }
       ]
     },
@@ -759,6 +807,11 @@
           "path": "packages/ui/src/components/log-console.tsx",
           "type": "registry:ui",
           "target": "components/ui/log-console.tsx"
+        },
+        {
+          "path": "packages/ui/src/lib/logger.ts",
+          "type": "registry:lib",
+          "target": "lib/logger.ts"
         }
       ]
     },
@@ -973,6 +1026,22 @@
           "path": "packages/ui/src/hooks/use-mobile.ts",
           "type": "registry:hook",
           "target": "hooks/use-mobile.ts"
+        }
+      ]
+    },
+    {
+      "name": "signal-trace",
+      "type": "registry:ui",
+      "title": "Signal Trace",
+      "description": "Signal Trace component, themed for skt-ui-toolkit.",
+      "registryDependencies": [
+        "skt-theme"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/signal-trace.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/signal-trace.tsx"
         }
       ]
     },

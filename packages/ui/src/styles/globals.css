@@ -241,6 +241,34 @@
   }
 }
 
+/* A block cursor that blinks the way a hardware terminal's does: on and off
+   in hard steps, never faded. steps(1) is what keeps it from easing, which is
+   the difference between a terminal and a loading spinner. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@utility caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: caret-blink 1.06s steps(1) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
 @utility crt-glow-soft {
   @variant dark {
     text-shadow: 0 0 8px color-mix(in oklch, currentColor 28%, transparent);
@@ -279,30 +307,35 @@
 /* A tube that is driven hard: the beam brightens and dims on a slow cycle
    rather than sitting at a fixed level. Built on drop-shadow so it haloes a
    block of ASCII as one mass, the way crt-bloom does — this is that effect
-   with a pulse, for the one piece of art a page is built around. */
+   with a pulse, for the one piece of art a page is built around.
+
+   The radii are in em rather than px so the halo tracks the art. The banner
+   is fit to its container and can resolve to six pixels on a phone, where a
+   fourteen-pixel bloom stopped being a glow and became two stacked lines
+   bleeding into each other. */
 @keyframes crt-breathe {
   0%,
   100% {
     filter: drop-shadow(
-        0 0 1px
+        0 0 0.06em
           color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent)
       )
       drop-shadow(
-        0 0 3px
+        0 0 0.18em
           color-mix(in oklch, var(--ascii-ink, currentColor) 18%, transparent)
       );
   }
   50% {
     filter: drop-shadow(
-        0 0 1px
+        0 0 0.06em
           color-mix(in oklch, var(--ascii-ink, currentColor) 85%, transparent)
       )
       drop-shadow(
-        0 0 7px
+        0 0 0.4em
           color-mix(in oklch, var(--ascii-ink, currentColor) 30%, transparent)
       )
       drop-shadow(
-        0 0 14px
+        0 0 0.8em
           color-mix(in oklch, var(--ascii-ink, currentColor) 12%, transparent)
       );
   }
@@ -316,6 +349,18 @@
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+/* The refresh head crossing an oscilloscope channel. Travels a little past
+   the right edge before wrapping, so the sweep leaves the plot rather than
+   snapping back from inside it. */
+@keyframes signal-sweep {
+  from {
+    transform: translateX(-30px);
+  }
+  to {
+    transform: translateX(240px);
   }
 }
 

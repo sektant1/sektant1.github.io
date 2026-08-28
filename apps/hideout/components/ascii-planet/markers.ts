@@ -37,6 +37,9 @@ export interface EarthLocationMarkersHandle {
   group: THREE.Group
   addLocation: (location: EarthLocation) => void
   update: () => void
+  /** Markers freeze where they were when the scene stops, so a paused scene
+   *  hides them rather than leaving pins over whatever scrolled into place. */
+  setVisible: (visible: boolean) => void
   dispose: () => void
 }
 
@@ -120,6 +123,18 @@ export function createEarthLocationMarkers({
       const x = hostBox.left + (projected.x * 0.5 + 0.5) * hostRect.x
       const y = hostBox.top + (-projected.y * 0.5 + 0.5) * hostRect.y
 
+      // Labels and pins are fixed to the viewport rather than to the panel, so
+      // that a label can hang outside the frame without being clipped by it.
+      // The cost is that nothing stops one drifting over the header as the
+      // page scrolls, so the panel's own box is the clip: a marker outside it
+      // is not drawn.
+      const inPanel =
+        x >= hostBox.left - 2 &&
+        x <= hostBox.right + 2 &&
+        y >= hostBox.top - 2 &&
+        y <= hostBox.bottom + 2
+      const shown = inPanel ? visibility : 0
+
       if (marker.label && marker.connector && marker.endpoint) {
         const labelBox = marker.label.getBoundingClientRect()
         const labelX = x - labelBox.width * 0.5
@@ -128,10 +143,14 @@ export function createEarthLocationMarkers({
         const labelAnchorY = labelY + labelBox.height
 
         marker.label.style.transform = `translate3d(${labelX}px, ${labelY}px, 0)`
-        marker.label.dataset.visible = visibility > 0.08 ? "true" : "false"
+        // The label hangs above the pin, so it has to clear the panel's top
+        // edge on its own account, not the pin's.
+        const labelInPanel = inPanel && labelY >= hostBox.top - 2
+        marker.label.dataset.visible =
+          labelInPanel && shown > 0.08 ? "true" : "false"
         marker.label.style.setProperty(
           "--marker-visibility",
-          String(visibility)
+          String(labelInPanel ? shown : 0)
         )
         marker.connector.setAttribute("x1", String(labelAnchorX))
         marker.connector.setAttribute("y1", String(labelAnchorY))
@@ -139,12 +158,12 @@ export function createEarthLocationMarkers({
         marker.connector.setAttribute("y2", String(y))
         marker.endpoint.setAttribute("cx", String(x))
         marker.endpoint.setAttribute("cy", String(y))
-        marker.connector.style.opacity = String(visibility)
-        marker.endpoint.style.opacity = String(visibility)
+        marker.connector.style.opacity = String(labelInPanel ? shown : 0)
+        marker.endpoint.style.opacity = String(shown)
       }
 
       marker.target.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
-      marker.target.style.opacity = String(visibility)
+      marker.target.style.opacity = String(shown)
     }
   }
 
@@ -152,6 +171,14 @@ export function createEarthLocationMarkers({
     group,
     addLocation,
     update,
+    setVisible(visible) {
+      const display = visible ? "" : "none"
+      overlay.svg.style.display = display
+      markers.forEach((marker) => {
+        if (marker.label) marker.label.style.display = display
+        marker.target.style.display = display
+      })
+    },
     dispose() {
       planetMesh.remove(group)
       group.traverse((object) => {

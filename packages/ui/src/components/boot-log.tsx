@@ -35,6 +35,13 @@ type BootLogProps = Omit<React.ComponentProps<"div">, "children"> & {
   windowSize?: number
   /** Keep a blinking block after the last line. */
   cursor?: boolean
+  /**
+   * How much of the log has printed, 0..1, whenever that changes. The log
+   * owns its own clock, so a caller that needs to know when the sequence ends
+   * reads it from here rather than recomputing the timeline from `interval`
+   * and `batchSize` and hoping the two stay in step.
+   */
+  onReveal?: (fraction: number) => void
 }
 
 /**
@@ -48,6 +55,7 @@ function BootLog({
   batchSize = 1,
   windowSize,
   cursor = true,
+  onReveal,
   className,
   ...props
 }: BootLogProps) {
@@ -67,8 +75,18 @@ function BootLog({
     setShown(0)
   }
 
+  // Held in a ref so a caller passing an inline function does not restart the
+  // sequence on every render.
+  const report = React.useRef(onReveal)
   React.useEffect(() => {
-    if (reduceMotion) return
+    report.current = onReveal
+  }, [onReveal])
+
+  React.useEffect(() => {
+    if (reduceMotion) {
+      report.current?.(1)
+      return
+    }
 
     const startedAt = performance.now()
     const pace = Math.max(1, interval)
@@ -80,6 +98,7 @@ function BootLog({
       const completedBatches = Math.floor(elapsed / pace)
       const next = Math.min(lines.length, completedBatches * batch)
       setShown(next)
+      report.current?.(lines.length ? next / lines.length : 1)
 
       if (next < lines.length) {
         id = setTimeout(
@@ -129,10 +148,11 @@ function BootLog({
           </div>
         ))}
 
-        {cursor && visible >= lines.length ? (
-          <span className="text-primary crt-glow motion-safe:animate-pulse">
-            _
-          </span>
+        {/* The block sits at the head of the print, not at the end of it: a
+            terminal's cursor is where the next character will land, so it
+            travels down the log and stops when the log stops. */}
+        {cursor ? (
+          <span className="caret text-primary crt-glow" aria-hidden="true" />
         ) : null}
       </div>
     </div>

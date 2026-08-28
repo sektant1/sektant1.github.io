@@ -54,7 +54,10 @@ jobs:
       - run: npm ci
       - run: npm run pages:build
       # A missing CNAME silently drops the custom domain on the next deploy.
+      # The model is generated rather than committed, so its absence would
+      # only show up as a 404 on the boot screen of a published build.
       - run: test -f dist-pages/CNAME && test -f dist-pages/r/button.json
+      - run: test -f dist-pages/models/bitcoin.glb
 
   # Proves the image the installer will pull actually builds, before master
   # ever tries to publish it. Not pushed: this runs on branches and PRs.

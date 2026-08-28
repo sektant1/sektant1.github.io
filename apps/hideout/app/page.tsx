@@ -1,18 +1,19 @@
-import { GameGrid } from "@/components/games/game-grid";
-import { StationHero } from "@/components/hero/station-hero";
-import { SectionHeading } from "@/components/layout/section-heading";
-import { SiteShell } from "@/components/layout/site-shell";
-import { PostList } from "@/components/posts/post-list";
-import { ProjectGrid } from "@/components/projects/project-grid";
-import { getAllPosts, publicPostMeta } from "@/lib/content/posts";
-import { getAllGames } from "@/lib/content/games";
-import { getAllProjects } from "@/lib/content/projects";
-import { getHomeContent } from "@/lib/content/home";
-import { buildContentTree } from "@/lib/content/tree";
+import { GameGrid } from "@/components/games/game-grid"
+import { StationHero } from "@/components/hero/station-hero"
+import { SectionHeading } from "@/components/layout/section-heading"
+import { SiteShell } from "@/components/layout/site-shell"
+import { PostList } from "@/components/posts/post-list"
+import { ProjectGrid } from "@/components/projects/project-grid"
+import { getAllPosts, publicPostMeta } from "@/lib/content/posts"
+import { getAllGames } from "@/lib/content/games"
+import { getAllProjects } from "@/lib/content/projects"
+import { getHomeContent } from "@/lib/content/home"
+import { buildActivity } from "@/lib/activity"
+import { buildContentTree } from "@/lib/content/tree"
 
 function readingMinutes(readingTime?: string) {
-  const match = /(\d+)/.exec(readingTime ?? "");
-  return match ? Number.parseInt(match[1], 10) : 0;
+  const match = /(\d+)/.exec(readingTime ?? "")
+  return match ? Number.parseInt(match[1], 10) : 0
 }
 
 export default async function HomePage() {
@@ -22,13 +23,35 @@ export default async function HomePage() {
     getAllGames(),
     buildContentTree("/"),
     getHomeContent(),
-  ]);
+  ])
 
-  const posts = postDocuments.map(publicPostMeta);
+  const posts = postDocuments.map(publicPostMeta)
+
+  // Busiest first, then alphabetical so the order is stable between builds
+  // when two tags are level. The hero shows the head of this list.
+  const tagCounts = new Map<string, number>()
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+    }
+  }
+  const tags = [...tagCounts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .slice(0, 12)
   const minutes = posts.reduce(
     (total, post) => total + readingMinutes(post.readingTime),
-    0,
-  );
+    0
+  )
+
+  // Everything the archive holds, on one timeline. The trace reports that the
+  // station was worked on and how often, not what any entry was, so the three
+  // kinds are counted together.
+  const activity = buildActivity([
+    ...posts.map((post) => post.date),
+    ...projects.map((project) => project.meta.date),
+    ...games.map((game) => game.meta.date),
+  ])
 
   return (
     <SiteShell
@@ -44,6 +67,8 @@ export default async function HomePage() {
           posts={posts.length}
           projects={projects.length}
           minutes={minutes}
+          tags={tags}
+          activity={activity}
           content={home.hero}
         />
 
@@ -63,7 +88,10 @@ export default async function HomePage() {
             <SectionHeading
               path={home.sections.games.path}
               title={home.sections.games.title}
-              action={{ label: home.sections.games.actionLabel, href: "/games" }}
+              action={{
+                label: home.sections.games.actionLabel,
+                href: "/games",
+              }}
             />
             <GameGrid games={games.slice(0, 3)} />
           </section>
@@ -82,5 +110,5 @@ export default async function HomePage() {
         </section>
       </div>
     </SiteShell>
-  );
+  )
 }

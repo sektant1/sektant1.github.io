@@ -1,4 +1,8 @@
-import type { AsciiBannerFont } from "@workspace/ui/components/ascii-banner"
+import type { AsciiBannerFont } from "@workspace/ui/lib/ascii-art"
+import {
+  createPersistedPreference,
+  oneOf,
+} from "@workspace/ui/lib/persisted-preference"
 
 export const BANNER_FONT_STORAGE_KEY = "ascii-banner-font"
 
@@ -32,6 +36,10 @@ export type BannerFontId = (typeof BANNER_FONT_OPTIONS)[number]["id"]
 
 export const DEFAULT_BANNER_FONT: BannerFontId = "delta"
 
-export function isBannerFontId(value: string | null): value is BannerFontId {
-  return BANNER_FONT_OPTIONS.some((option) => option.id === value)
-}
+export const BANNER_FONT_IDS = BANNER_FONT_OPTIONS.map((option) => option.id)
+
+export const bannerFontPreference = createPersistedPreference<BannerFontId>({
+  key: BANNER_FONT_STORAGE_KEY,
+  fallback: DEFAULT_BANNER_FONT,
+  parse: oneOf(BANNER_FONT_IDS),
+})

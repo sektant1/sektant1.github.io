@@ -9,6 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from "@workspace/ui/components/command"
+import { CommandKey } from "@workspace/ui/components/command-strip"
 import { Kbd } from "@workspace/ui/components/kbd"
 
 import { REPLAY_BOOT_EVENT } from "@/components/layout/cold-boot"
@@ -25,7 +26,7 @@ export type CommandEntry = {
 }
 
 /** The header trigger and the dialog are siblings, not parent and child. */
-const PALETTE_EVENT = "hideout:open-palette"
+export const PALETTE_EVENT = "hideout:open-palette"
 
 /** The platform does not change while the page is open. */
 const subscribeToNothing = () => () => {}
@@ -159,19 +160,18 @@ export function CommandTrigger({ className }: { className?: string }) {
     () => null
   )
 
+  // The same key the status bar carries, so the header reads as another bank
+  // of the same console rather than as a search box borrowed from a web app.
   return (
-    <button
-      type="button"
+    <CommandKey
       onClick={() => window.dispatchEvent(new Event(PALETTE_EVENT))}
-      className={cn(
-        "flex items-center gap-2 border border-terminal-rule px-2 py-0.5 font-mono text-[0.7rem] text-terminal-ink-dim hover:border-terminal-edge hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
-        className
-      )}
+      title="Search everything (ctrl+k)"
+      className={cn("gap-2", className)}
     >
-      <span>find</span>
-      <Kbd className="bg-transparent text-terminal-chrome-dim">
-        {modifier ? `${modifier} K` : " "}
+      find
+      <Kbd className="bg-transparent text-terminal-chrome-dim normal-case">
+        {modifier ? `${modifier} K` : " "}
       </Kbd>
-    </button>
+    </CommandKey>
   )
 }

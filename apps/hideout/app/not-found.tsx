@@ -1,23 +1,37 @@
-import type { Metadata } from "next";
-import { AsciiBanner } from "@workspace/ui/components/ascii-banner";
-import { LinkButton } from "@workspace/ui/components/button";
-import { SiteShell } from "@/components/layout/site-shell";
-import { buildContentTree } from "@/lib/content/tree";
+import type { Metadata } from "next"
+import { AsciiBannerView } from "@workspace/ui/components/ascii-banner-view"
+import { renderAsciiArt } from "@workspace/ui/lib/ascii-art"
+import { LinkButton } from "@workspace/ui/components/button"
+import { SiteShell } from "@/components/layout/site-shell"
+import { buildContentTree } from "@/lib/content/tree"
 
 export const metadata: Metadata = {
   title: "404",
   description: "No file at this path.",
   robots: { index: false, follow: false },
-};
+}
 
 export default async function NotFound() {
-  const tree = await buildContentTree();
+  const tree = await buildContentTree()
+  // Rendered here rather than in the browser: the text never changes, and
+  // importing the client banner pulled figlet into every route's bundle.
+  const banner = renderAsciiArt("404")
 
   return (
-    <SiteShell path="404" tree={tree} status={[{ label: "signal", value: "lost" }]}>
+    <SiteShell
+      path="404"
+      tree={tree}
+      status={[{ label: "signal", value: "lost" }]}
+    >
       <div className="tube-on mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-12 md:px-6">
         <div aria-hidden="true">
-          <AsciiBanner text="404" size="lg" effect="glitch" />
+          <AsciiBannerView
+            art={banner.art}
+            columns={banner.columns}
+            text="404"
+            size="lg"
+            effect="glitch"
+          />
         </div>
 
         <div className="flex flex-col gap-2">
@@ -46,5 +60,5 @@ export default async function NotFound() {
         </div>
       </div>
     </SiteShell>
-  );
+  )
 }

@@ -55,13 +55,9 @@
   }
 }
 
-/* The tube face, painted over everything.
- *
- * The vertical stripe of the shadow mask and the vignette where the glass
- * curves away at the edges stay fixed while content moves beneath them.
- *
- * Fixed, not per-section, so scrolling moves the content across a screen that
- * holds still. That is the thing that makes it read as hardware. */
+/* The tube face, painted over everything: shadow mask, refresh band, vignette.
+ * Fixed rather than per-section, so content scrolls across a screen that holds
+ * still. */
 @utility tube-face {
   &::after {
     content: "";
@@ -82,13 +78,9 @@
     background-size: 6px 100%;
   }
 
-  /* The refresh band: the seam where the beam is mid-frame, drifting down the
-     screen because the tube and the camera are never quite in sync. One
-     element moved with transform — the compositor handles it, and nothing on
-     the page repaints.
-
-     Long and slow. A band that sweeps every second is a screensaver; one that
-     takes eleven seconds reads as hardware you stop noticing. */
+  /* The refresh band: one element moved with transform, so the compositor
+     handles it and nothing on the page repaints. Eleven seconds per sweep —
+     fast enough to notice once, slow enough to stop noticing. */
   & > .tube-roll {
     position: fixed;
     inset-inline: 0;
@@ -146,8 +138,8 @@
   }
 }
 
-/* Power-on. The whole buffer arrives as a tube warming up rather than as a
-   fade — brightness and scan height, not opacity and translate. */
+/* Power-on: brightness and scan height rather than opacity and translate, so
+   the buffer arrives as a tube warming up. */
 @keyframes tube-on {
   0% {
     opacity: 0;
@@ -229,41 +221,72 @@
     );
 }
 
+/* The tracking display acquiring the reader.
+ *
+ * The sight sits wide and dim while the position lookup is out, then contracts
+ * once onto the pin. Scale on a group inside the SVG, so nothing re-lays out,
+ * and the readouts fade up from half strength as their figures become real. */
+.geo-reticle {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 900ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 900ms ease;
+}
+
+.geo-reticle[data-state="scan"] {
+  transform: scale(1.24);
+  opacity: 0.5;
+}
+
+.geo-reticle[data-state="lock"] {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* A failed lookup holds the wide sight and dims further: the display is still
+   looking, and says so, rather than pretending to hold something. */
+.geo-reticle[data-state="nofix"] {
+  transform: scale(1.24);
+  opacity: 0.28;
+}
+
+.geo-readout {
+  transition: opacity 320ms ease;
+}
+
+.geo-readout[data-pending="true"] {
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-reticle,
+  .geo-readout {
+    transition: none;
+  }
+}
+
+/* A phosphor link: dotted while it waits, solid and glowing under the pointer,
+   the way a selected entry lights on a tube. */
+.byline-link {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.byline-link:hover,
+.byline-link:focus-visible {
+  text-decoration-style: solid;
+  text-shadow: 0 0 6px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+
 .ascii-font-choice {
   display: none;
 }
 
-html[data-ascii-font="delta"]
-  .ascii-font-choice[data-ascii-font="delta"],
+html[data-ascii-font="delta"] .ascii-font-choice[data-ascii-font="delta"],
 html[data-ascii-font="dos-rebel"]
   .ascii-font-choice[data-ascii-font="dos-rebel"],
 html[data-ascii-font="sub-zero"]
   .ascii-font-choice[data-ascii-font="sub-zero"] {
   display: block;
-}
-
-/* A blinking block cursor, for prompts that are waiting for input. */
-@keyframes caret-blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@utility caret {
-  display: inline-block;
-  width: 0.5em;
-  height: 1em;
-  vertical-align: text-bottom;
-  background: currentColor;
-  animation: caret-blink 1.06s steps(1) infinite;
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-    opacity: 0.6;
-  }
 }

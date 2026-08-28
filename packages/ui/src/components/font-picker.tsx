@@ -10,6 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
 import { Tooltip, TooltipTrigger } from "@workspace/ui/components/tooltip"
+import {
+  createPersistedPreference,
+  oneOf,
+} from "@workspace/ui/lib/persisted-preference"
+import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 
 /**
  * Bender is the face the identity was drawn against, so it leads. It has no
@@ -29,69 +34,44 @@ type FaceId = (typeof FACES)[number]["id"]
 
 export const FONT_STORAGE_KEY = "display-face"
 
-/** Notifies every mounted picker when one of them writes a new choice. */
-const listeners = new Set<() => void>()
-
-function subscribe(listener: () => void) {
-  listeners.add(listener)
-  window.addEventListener("storage", listener)
-  return () => {
-    listeners.delete(listener)
-    window.removeEventListener("storage", listener)
-  }
-}
-
-function readStored(): string | null {
-  // Private windows and blocked site data make this throw rather than return
-  // null, so the read is guarded and the caller's default stands.
-  try {
-    return window.localStorage.getItem(FONT_STORAGE_KEY)
-  } catch {
-    return null
-  }
-}
+// Null rather than a face id, so "nothing chosen yet" stays distinguishable
+// from "chose the same face the caller defaults to".
+const storedFace = createPersistedPreference<FaceId | null>({
+  key: FONT_STORAGE_KEY,
+  fallback: null,
+  parse: oneOf(FACES.map((option) => option.id)),
+})
 
 /**
  * Swaps the display face for the whole page.
  *
  * `--font-display` feeds `--font-sans`, so one property changes every heading
  * and label without touching the mono stack the body copy is set in.
- *
- * The stored choice is read through useSyncExternalStore rather than in an
- * effect: localStorage does not exist on the server, and this is the API that
- * lets the server render the default and the client correct it during
- * hydration instead of after it, with no flash in between.
  */
-export function FontPicker({ defaultFace = "Play" }: { defaultFace?: FaceId }) {
-  const stored = React.useSyncExternalStore(
-    subscribe,
-    readStored,
-    () => null // The server has no storage; it renders defaultFace.
-  )
-
-  const face: FaceId = FACES.some((option) => option.id === stored)
-    ? (stored as FaceId)
-    : defaultFace
+export function FontPicker({
+  defaultFace = "Play",
+  className,
+}: {
+  defaultFace?: FaceId
+  /** Styles the trigger, so a host can dress it as its own chrome does. */
+  className?: string
+}) {
+  const [stored, choose] = usePersistedPreference(storedFace)
+  const face = stored ?? defaultFace
 
   React.useEffect(() => {
     document.documentElement.style.setProperty("--font-display", face)
   }, [face])
 
-  function choose(next: FaceId) {
-    try {
-      window.localStorage.setItem(FONT_STORAGE_KEY, next)
-    } catch {
-      // Not recallable, but the effect below still applies it to this page.
-      document.documentElement.style.setProperty("--font-display", next)
-    }
-    // `storage` only fires in other tabs, so this tab is told directly.
-    for (const listener of listeners) listener()
-  }
-
   return (
     <DropdownMenuTrigger>
       <TooltipTrigger>
-        <Button variant="ghost" size="icon-sm" aria-label="Change display face">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Change display face"
+          className={className}
+        >
           <IconTypography />
         </Button>
         <Tooltip>Display face — {face}</Tooltip>

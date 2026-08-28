@@ -7,6 +7,12 @@ export interface PlanetHandle {
   dispose: () => void
 }
 
+// A scene is built per mount, and the curtain's scene is mounted more than
+// once: React's strict double-invoke in development, and a replayed boot.
+// Without this the GLB is fetched again each time and the coin visibly loads
+// twice; cached, the second build parses bytes that are already here.
+THREE.Cache.enabled = true
+
 const TARGET_DIAMETER = 2.8
 
 function fitObjectToTarget(

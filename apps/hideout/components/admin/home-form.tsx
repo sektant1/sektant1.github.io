@@ -90,7 +90,8 @@ export function HomeForm({ home }: { home: HomeContent }) {
         body: JSON.stringify(value),
       })
       const body = await response.json()
-      if (!response.ok) throw new Error(body.error ?? "The file was not written.")
+      if (!response.ok)
+        throw new Error(body.error ?? "The file was not written.")
 
       // The server fills empty fields from the defaults, so what comes back is
       // what the page will render — not necessarily what was typed.
@@ -111,7 +112,9 @@ export function HomeForm({ home }: { home: HomeContent }) {
   }
 
   function restore() {
-    if (!window.confirm("Replace every field with the copy the site ships with?")) {
+    if (
+      !window.confirm("Replace every field with the copy the site ships with?")
+    ) {
       return
     }
     setValue(DEFAULT_HOME_CONTENT)
@@ -379,51 +382,29 @@ export function HomeForm({ home }: { home: HomeContent }) {
           </Button>
         </Group>
 
-        <Group title="operator's note">
+        <Group title="tag index">
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
-              id="quoteTitle"
+              id="tagsTitle"
               label="panel title"
-              value={value.hero.quoteTitle}
-              error={errors.quoteTitle}
-              placeholder={d.hero.quoteTitle}
-              onChange={(quoteTitle) => hero({ quoteTitle })}
+              value={value.hero.tagsTitle}
+              error={errors.tagsTitle}
+              placeholder={d.hero.tagsTitle}
+              onChange={(tagsTitle) => hero({ tagsTitle })}
             />
             <TextField
-              id="quoteRef"
+              id="tagsRef"
               label="panel reference"
-              value={value.hero.quoteRef}
-              error={errors.quoteRef}
-              placeholder={d.hero.quoteRef}
-              onChange={(quoteRef) => hero({ quoteRef })}
+              value={value.hero.tagsRef}
+              error={errors.tagsRef}
+              placeholder={d.hero.tagsRef}
+              onChange={(tagsRef) => hero({ tagsRef })}
             />
           </div>
-          <TextAreaField
-            id="quoteText"
-            label="quote"
-            value={value.hero.quoteText}
-            error={errors.quoteText}
-            rows={3}
-            onChange={(quoteText) => hero({ quoteText })}
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TextField
-              id="quoteAuthor"
-              label="author"
-              value={value.hero.quoteAuthor}
-              error={errors.quoteAuthor}
-              placeholder={d.hero.quoteAuthor}
-              onChange={(quoteAuthor) => hero({ quoteAuthor })}
-            />
-            <TextField
-              id="quoteSource"
-              label="source"
-              value={value.hero.quoteSource}
-              error={errors.quoteSource}
-              placeholder={d.hero.quoteSource}
-              onChange={(quoteSource) => hero({ quoteSource })}
-            />
-          </div>
+          <p className="text-xs text-terminal-ink-faint">
+            The tags themselves come from the posts, so there is nothing to edit
+            here beyond what the panel is called.
+          </p>
         </Group>
 
         <Group title="globe panel">
@@ -437,42 +418,6 @@ export function HomeForm({ home }: { home: HomeContent }) {
               onChange={(globeTitle) => hero({ globeTitle })}
             />
             <TextField
-              id="globeStatus"
-              label="status"
-              value={value.hero.globeStatus}
-              error={errors.globeStatus}
-              placeholder={d.hero.globeStatus}
-              onChange={(globeStatus) => hero({ globeStatus })}
-            />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TextAreaField
-              id="globeReadoutStart"
-              label="readout, left"
-              value={value.hero.globeReadoutStart.join("\n")}
-              error={errors.globeReadoutStart}
-              rows={3}
-              onChange={(text) => hero({ globeReadoutStart: splitLines(text) })}
-            />
-            <TextAreaField
-              id="globeReadoutEnd"
-              label="readout, right"
-              value={value.hero.globeReadoutEnd.join("\n")}
-              error={errors.globeReadoutEnd}
-              rows={3}
-              onChange={(text) => hero({ globeReadoutEnd: splitLines(text) })}
-            />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <TextField
-              id="globeFooterStart"
-              label="footer, left"
-              value={value.hero.globeFooterStart}
-              error={errors.globeFooterStart}
-              placeholder={d.hero.globeFooterStart}
-              onChange={(globeFooterStart) => hero({ globeFooterStart })}
-            />
-            <TextField
               id="globeFooterEnd"
               label="footer, right"
               value={value.hero.globeFooterEnd}
@@ -481,6 +426,11 @@ export function HomeForm({ home }: { home: HomeContent }) {
               onChange={(globeFooterEnd) => hero({ globeFooterEnd })}
             />
           </div>
+          <p className="text-xs text-terminal-ink-faint">
+            The status, the readouts and the left footer are measured, not
+            written: the panel prints the bearing and range from Prypiat to
+            wherever the reader is, and says so when it cannot get a fix.
+          </p>
         </Group>
 
         {(["posts", "games", "projects"] as const).map((key) => (
@@ -518,7 +468,13 @@ export function HomeForm({ home }: { home: HomeContent }) {
   )
 }
 
-function Group({ title, children }: { title: string; children: React.ReactNode }) {
+function Group({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
   return (
     <section className="flex flex-col gap-4">
       <h2 className="font-mono text-[0.65rem] tracking-widest text-terminal-chrome-dim uppercase">
@@ -527,10 +483,6 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
       {children}
     </section>
   )
-}
-
-function splitLines(text: string) {
-  return text.split("\n").map((line) => line.trim())
 }
 
 /**

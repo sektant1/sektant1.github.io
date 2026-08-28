@@ -1,0 +1,13 @@
+**/node_modules
+**/.next
+**/out
+**/dist
+.git
+.playwright-mcp
+**/.turbo
+dist-pages
+**/.env*
+**/*.log
+**/*.tsbuildinfo
+apps/hideout/public/models
+boot.png

@@ -11,10 +11,11 @@ import {
   SITE_URL,
 } from "@/lib/seo/site"
 import {
-  BANNER_FONT_OPTIONS,
+  BANNER_FONT_IDS,
   BANNER_FONT_STORAGE_KEY,
   DEFAULT_BANNER_FONT,
 } from "@/lib/banner-font"
+import { COLD_BOOT_STORAGE_KEY } from "@/lib/cold-boot-state"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -82,8 +83,12 @@ const siteJsonLd = {
   },
 }
 
-const coldBootSetup = `(function(){try{if(localStorage.getItem("cold-boot-seen")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
-const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_OPTIONS.map((option) => option.id))}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
+// Both run before first paint, which is the whole point of them: they settle
+// what the page looks like before React exists, so nothing flashes and gets
+// corrected. Their storage keys come from the modules that own them rather
+// than being spelled out again here — one place to change a key.
+const coldBootSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)})==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
+const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_IDS)}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
 
 export default function RootLayout({
   children,

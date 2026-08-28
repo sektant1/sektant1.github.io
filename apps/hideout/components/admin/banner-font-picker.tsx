@@ -1,58 +1,29 @@
 "use client"
 
-import * as React from "react"
 import { AsciiBanner } from "@workspace/ui/components/ascii-banner"
 import {
   NativeSelect,
   NativeSelectOption,
 } from "@workspace/ui/components/native-select"
+import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 
 import {
   BANNER_FONT_OPTIONS,
-  BANNER_FONT_STORAGE_KEY,
-  DEFAULT_BANNER_FONT,
-  isBannerFontId,
+  bannerFontPreference,
   type BannerFontId,
 } from "@/lib/banner-font"
 
-const listeners = new Set<() => void>()
-
-function subscribe(listener: () => void) {
-  listeners.add(listener)
-  window.addEventListener("storage", listener)
-  return () => {
-    listeners.delete(listener)
-    window.removeEventListener("storage", listener)
-  }
-}
-
-function readStored() {
-  try {
-    const stored = window.localStorage.getItem(BANNER_FONT_STORAGE_KEY)
-    return isBannerFontId(stored) ? stored : DEFAULT_BANNER_FONT
-  } catch {
-    return DEFAULT_BANNER_FONT
-  }
-}
-
 export function BannerFontPicker() {
-  const selected = React.useSyncExternalStore(
-    subscribe,
-    readStored,
-    () => DEFAULT_BANNER_FONT
-  )
+  const [selected, store] = usePersistedPreference(bannerFontPreference)
   const option =
     BANNER_FONT_OPTIONS.find((candidate) => candidate.id === selected) ??
     BANNER_FONT_OPTIONS[0]
 
   function choose(next: BannerFontId) {
+    // The face is applied by an attribute rather than by re-rendering: the
+    // hero ships all three, and CSS picks the one this attribute names.
     document.documentElement.dataset.asciiFont = next
-    try {
-      window.localStorage.setItem(BANNER_FONT_STORAGE_KEY, next)
-    } catch {
-      // Choice still applies to current page when storage is unavailable.
-    }
-    for (const listener of listeners) listener()
+    store(next)
   }
 
   return (

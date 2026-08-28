@@ -13,7 +13,9 @@ describe("normalizeHomeContent", () => {
   })
 
   it("keeps every field the file does not mention", () => {
-    const content = normalizeHomeContent({ hero: { tagline: "I break things." } })
+    const content = normalizeHomeContent({
+      hero: { tagline: "I break things." },
+    })
 
     expect(content.hero.tagline).toBe("I break things.")
     expect(content.hero.description).toBe(DEFAULT_HOME_CONTENT.hero.description)
@@ -27,7 +29,9 @@ describe("normalizeHomeContent", () => {
   })
 
   it("trims what it keeps", () => {
-    const content = normalizeHomeContent({ hero: { operator: "  ОПЕРАТОР // X  " } })
+    const content = normalizeHomeContent({
+      hero: { operator: "  ОПЕРАТОР // X  " },
+    })
 
     expect(content.hero.operator).toBe("ОПЕРАТОР // X")
   })
@@ -39,9 +43,9 @@ describe("normalizeHomeContent", () => {
   })
 
   it("refuses non-ASCII in the ASCII banner", () => {
-    expect(() => normalizeHomeContent({ hero: { bannerWide: "СЕКТАНТ" } })).toThrow(
-      HomeContentError
-    )
+    expect(() =>
+      normalizeHomeContent({ hero: { bannerWide: "СЕКТАНТ" } })
+    ).toThrow(HomeContentError)
   })
 
   it("refuses text longer than the field allows", () => {
@@ -62,15 +66,21 @@ describe("normalizeHomeContent", () => {
         hero: { quickLinks: [{ label: "notes", href: "/posts" }] },
       })
 
-      expect(content.hero.quickLinks).toEqual([{ label: "notes", href: "/posts" }])
+      expect(content.hero.quickLinks).toEqual([
+        { label: "notes", href: "/posts" },
+      ])
     })
 
     it("accepts absolute URLs", () => {
       const content = normalizeHomeContent({
-        hero: { quickLinks: [{ label: "code", href: "https://github.com/sektant1" }] },
+        hero: {
+          quickLinks: [{ label: "code", href: "https://github.com/sektant1" }],
+        },
       })
 
-      expect(content.hero.quickLinks[0].href).toBe("https://github.com/sektant1")
+      expect(content.hero.quickLinks[0].href).toBe(
+        "https://github.com/sektant1"
+      )
     })
 
     it("drops rows the editor blanked out", () => {
@@ -89,18 +99,24 @@ describe("normalizeHomeContent", () => {
     it("falls back when every row was blanked out", () => {
       const content = normalizeHomeContent({ hero: { quickLinks: [] } })
 
-      expect(content.hero.quickLinks).toEqual(DEFAULT_HOME_CONTENT.hero.quickLinks)
+      expect(content.hero.quickLinks).toEqual(
+        DEFAULT_HOME_CONTENT.hero.quickLinks
+      )
     })
 
     it("refuses a half-filled row", () => {
       expect(() =>
-        normalizeHomeContent({ hero: { quickLinks: [{ label: "notes", href: "" }] } })
+        normalizeHomeContent({
+          hero: { quickLinks: [{ label: "notes", href: "" }] },
+        })
       ).toThrow(/needs a destination/)
     })
 
     it("refuses a destination that is neither a path nor a URL", () => {
       expect(() =>
-        normalizeHomeContent({ hero: { quickLinks: [{ label: "x", href: "posts" }] } })
+        normalizeHomeContent({
+          hero: { quickLinks: [{ label: "x", href: "posts" }] },
+        })
       ).toThrow(/site path/)
     })
 
@@ -118,35 +134,29 @@ describe("normalizeHomeContent", () => {
         href: "/posts",
       }))
 
-      expect(() => normalizeHomeContent({ hero: { quickLinks: many } })).toThrow(
-        /at most/
-      )
+      expect(() =>
+        normalizeHomeContent({ hero: { quickLinks: many } })
+      ).toThrow(/at most/)
     })
   })
 
-  describe("globe readouts", () => {
-    it("accepts a list", () => {
+  describe("globe panel", () => {
+    it("keeps the two strings that are still written by hand", () => {
       const content = normalizeHomeContent({
-        hero: { globeReadoutStart: ["SCAN // X", "AZ // Y"] },
+        hero: { globeTitle: "ОБЪЕКТ 02", globeFooterEnd: "DRAG // SLEW" },
       })
 
-      expect(content.hero.globeReadoutStart).toEqual(["SCAN // X", "AZ // Y"])
+      expect(content.hero.globeTitle).toBe("ОБЪЕКТ 02")
+      expect(content.hero.globeFooterEnd).toBe("DRAG // SLEW")
     })
 
-    it("accepts one string per line, the way a textarea sends it", () => {
+    it("drops readouts that used to be editable, now that they are measured", () => {
       const content = normalizeHomeContent({
-        hero: { globeReadoutEnd: "TRACK 02\nLOCK // HARD" },
+        hero: { globeStatus: "[ LIVE ]", globeReadoutStart: ["RNG // 12.8K"] },
       })
 
-      expect(content.hero.globeReadoutEnd).toEqual(["TRACK 02", "LOCK // HARD"])
-    })
-
-    it("falls back when the list is emptied", () => {
-      const content = normalizeHomeContent({ hero: { globeReadoutEnd: "\n \n" } })
-
-      expect(content.hero.globeReadoutEnd).toEqual(
-        DEFAULT_HOME_CONTENT.hero.globeReadoutEnd
-      )
+      expect(content.hero).not.toHaveProperty("globeStatus")
+      expect(content.hero).not.toHaveProperty("globeReadoutStart")
     })
   })
 
@@ -160,7 +170,9 @@ describe("normalizeHomeContent", () => {
       expect(content.sections.games.actionLabel).toBe(
         DEFAULT_HOME_CONTENT.sections.games.actionLabel
       )
-      expect(content.sections.projects).toEqual(DEFAULT_HOME_CONTENT.sections.projects)
+      expect(content.sections.projects).toEqual(
+        DEFAULT_HOME_CONTENT.sections.projects
+      )
     })
   })
 
@@ -171,6 +183,8 @@ describe("normalizeHomeContent", () => {
   })
 
   it("refuses a hero that is not an object", () => {
-    expect(() => normalizeHomeContent({ hero: [] })).toThrow(/must be an object/)
+    expect(() => normalizeHomeContent({ hero: [] })).toThrow(
+      /must be an object/
+    )
   })
 })

@@ -15,7 +15,12 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@workspace/ui/components/native-select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { PostList } from "@/components/posts/post-list"
@@ -83,7 +88,8 @@ export function PostBrowser({
   const tagCounts = React.useMemo(() => {
     const counts = new Map<string, number>()
     for (const post of posts) {
-      for (const item of post.tags) counts.set(item, (counts.get(item) ?? 0) + 1)
+      for (const item of post.tags)
+        counts.set(item, (counts.get(item) ?? 0) + 1)
     }
     return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b))
   }, [posts])
@@ -114,8 +120,10 @@ export function PostBrowser({
     () =>
       [...filtered].sort((a, b) => {
         if (sort === "oldest") return published(a) - published(b)
-        if (sort === "shortest") return minutes(a.readingTime) - minutes(b.readingTime)
-        if (sort === "longest") return minutes(b.readingTime) - minutes(a.readingTime)
+        if (sort === "shortest")
+          return minutes(a.readingTime) - minutes(b.readingTime)
+        if (sort === "longest")
+          return minutes(b.readingTime) - minutes(a.readingTime)
         return published(b) - published(a)
       }),
     [filtered, sort]
@@ -168,7 +176,7 @@ export function PostBrowser({
         <span className="font-mono text-[0.7rem] text-terminal-chrome-dim tabular-nums">
           {tab === "series"
             ? `${series.length} series`
-            : `${filtered.length} / ${posts.length}`}
+            : `${filtered.length} of ${posts.length} posts`}
         </span>
       </div>
 
@@ -186,7 +194,7 @@ export function PostBrowser({
                   setQuery(event.target.value)
                   setPage(1)
                 }}
-                placeholder="search post text"
+                placeholder="search titles and text"
                 aria-label="Search posts"
               />
             </label>
@@ -250,9 +258,9 @@ export function PostBrowser({
         {visible.length === 0 ? (
           <Empty>
             <EmptyHeader>
-              <EmptyTitle>No posts match this filter</EmptyTitle>
+              <EmptyTitle>nothing matches this filter</EmptyTitle>
               <EmptyDescription>
-                Clear the filter to see all {posts.length} posts.
+                :clear brings back all {posts.length} posts.
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
