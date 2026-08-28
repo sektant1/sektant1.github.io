@@ -433,9 +433,9 @@ export function HomeForm({ home }: { home: HomeContent }) {
             onChange={renderStyle}
           />
           <p className="text-xs text-terminal-ink-faint">
-            ascii lights the model and reduces it to characters. hologram
-            drops the lighting, draws the model as a self-lit low-poly surface,
-            and rasterises it on a square grid with scanlines.
+            ascii lights the model and reduces it to characters. hologram drops
+            the lighting, draws the model as a self-lit low-poly surface, and
+            rasterises it on a square grid with scanlines.
           </p>
         </Group>
 

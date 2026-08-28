@@ -10,7 +10,7 @@ import type { RenderStyle } from "@/components/ascii-planet/policy"
 import { logger } from "@workspace/ui/lib/logger"
 import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 import { usePrefersReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
-import { coldBootSeen } from "@/lib/cold-boot-state"
+import { bootDueOnThisLoad, coldBootLastSeen } from "@/lib/cold-boot-state"
 import { pad } from "@/lib/format"
 
 /**
@@ -27,9 +27,10 @@ import { pad } from "@/lib/format"
  * uses, pointed at a different model — no second engine, and it is already
  * paid for.
  *
- * Shown once. It is a greeting, not a toll — a reader who comes back to look
- * something up should land on the page, and someone who has never seen it
- * gets it once and continues after the final check.
+ * Shown at most once an hour. It is a greeting, not a toll: someone reading
+ * three posts in a row lands straight on the page, and someone coming back
+ * tomorrow gets the machine switching on again rather than a sequence they
+ * saw once in March and never again.
  */
 
 const COIN_MODEL = "/models/bitcoin.glb"
@@ -148,7 +149,10 @@ export function ColdBoot({
 
   // The server renders the curtain. The head script hides it before first
   // paint when storage says it should be skipped.
-  const [seen, markSeen] = usePersistedPreference(coldBootSeen)
+  const [lastSeen, markSeen] = usePersistedPreference(coldBootLastSeen)
+  // The server has no storage, so it renders the curtain and the head script
+  // hides it before first paint when the last viewing is still fresh.
+  const due = bootDueOnThisLoad(lastSeen)
 
   const [dismissed, setDismissed] = React.useState(false)
   // Asked for explicitly, so it overrides both the stored state and the
@@ -157,14 +161,14 @@ export function ColdBoot({
   const [progress, setProgress] = React.useState(0)
   const [armed, setArmed] = React.useState(false)
   const [coinReady, setCoinReady] = React.useState(false)
-  const running = replaying || (!seen && !reduceMotion && !dismissed)
+  const running = replaying || (due && !reduceMotion && !dismissed)
   const complete = progress >= 1
   const markCoinReady = React.useCallback(() => setCoinReady(true), [])
 
   const finish = React.useCallback(() => {
     setDismissed(true)
     setReplaying(false)
-    markSeen(true)
+    markSeen(Date.now())
   }, [markSeen])
 
   React.useEffect(() => {

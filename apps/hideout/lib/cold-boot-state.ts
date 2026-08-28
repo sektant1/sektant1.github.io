@@ -3,16 +3,64 @@ import { createPersistedPreference } from "@workspace/ui/lib/persisted-preferenc
 export const COLD_BOOT_STORAGE_KEY = "cold-boot-seen"
 
 /**
- * Whether this terminal has already watched the boot sequence.
+ * How long one viewing counts for.
  *
- * Blocked storage reads as seen. A private window cannot remember anything,
- * so the alternative is replaying the whole sequence on every page view — a
- * greeting turned into a toll.
+ * The sequence used to be shown once and then never again, which made it a
+ * thing you saw on your first visit and forgot the site had. An hour is the
+ * span where a return reads as coming back rather than as still being here:
+ * long enough that clicking through five posts never replays it, short enough
+ * that tomorrow's visit gets the machine switching on again.
  */
-export const coldBootSeen = createPersistedPreference<boolean>({
+export const COLD_BOOT_TTL_MS = 60 * 60 * 1000
+
+/**
+ * Storage is blocked, so nothing written now will be readable later.
+ *
+ * A private window would otherwise replay the whole sequence on every page
+ * view — a greeting turned into a toll — so it reads as just watched instead.
+ */
+const UNAVAILABLE = -1
+
+/**
+ * When this terminal last watched the boot sequence, as epoch milliseconds.
+ *
+ * The key held "1"/"0" before it held a stamp. An old "1" parses as a
+ * timestamp from 1970, which is due by any measure: the reader gets the
+ * sequence once more and the next write puts a real stamp in its place.
+ */
+export const coldBootLastSeen = createPersistedPreference<number>({
   key: COLD_BOOT_STORAGE_KEY,
-  fallback: false,
-  whenUnavailable: true,
-  parse: (raw) => raw === "1",
-  serialize: (value) => (value ? "1" : "0"),
+  fallback: 0,
+  whenUnavailable: UNAVAILABLE,
+  parse: (raw) => {
+    const stamp = Number(raw)
+    return Number.isFinite(stamp) && stamp > 0 ? stamp : null
+  },
+  serialize: (value) => String(value),
 })
+
+/** Whether the sequence should run again. */
+export function bootIsDue(lastSeen: number, now: number): boolean {
+  if (lastSeen === UNAVAILABLE) return false
+  if (!Number.isFinite(lastSeen) || lastSeen <= 0) return true
+  // A stamp in the future is a clock that moved — a machine waking from
+  // sleep, a timezone edit, a fresh VM — and waiting it out would hold the
+  // curtain shut for however long the skew is.
+  if (now < lastSeen) return true
+  return now - lastSeen >= COLD_BOOT_TTL_MS
+}
+
+/**
+ * When this document was opened.
+ *
+ * The window is measured from one reading taken on the first call, not from
+ * the clock at render time: a tab left open for an hour should not have the
+ * curtain reappear under the reader on the next re-render, and a component
+ * that reads the clock while rendering is not a pure component.
+ */
+let openedAt = 0
+
+export function bootDueOnThisLoad(lastSeen: number): boolean {
+  if (!openedAt) openedAt = Date.now()
+  return bootIsDue(lastSeen, openedAt)
+}
