@@ -24,6 +24,7 @@ const SECTIONS = [
     dir: "cms",
     links: [
       { label: "dashboard", href: "/admin" },
+      { label: "front page", href: "/admin/home" },
       { label: "posts", href: "/admin/posts" },
       { label: "projects", href: "/admin/projects" },
       { label: "games", href: "/admin/games" },

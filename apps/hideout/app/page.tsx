@@ -7,6 +7,7 @@ import { ProjectGrid } from "@/components/projects/project-grid";
 import { getAllPosts, publicPostMeta } from "@/lib/content/posts";
 import { getAllGames } from "@/lib/content/games";
 import { getAllProjects } from "@/lib/content/projects";
+import { getHomeContent } from "@/lib/content/home";
 import { buildContentTree } from "@/lib/content/tree";
 
 function readingMinutes(readingTime?: string) {
@@ -15,11 +16,12 @@ function readingMinutes(readingTime?: string) {
 }
 
 export default async function HomePage() {
-  const [postDocuments, projects, games, tree] = await Promise.all([
+  const [postDocuments, projects, games, tree, home] = await Promise.all([
     getAllPosts(),
     getAllProjects(),
     getAllGames(),
     buildContentTree("/"),
+    getHomeContent(),
   ]);
 
   const posts = postDocuments.map(publicPostMeta);
@@ -42,13 +44,14 @@ export default async function HomePage() {
           posts={posts.length}
           projects={projects.length}
           minutes={minutes}
+          content={home.hero}
         />
 
         <section className="flex flex-col gap-4">
           <SectionHeading
-            path="content/posts"
-            title="latest"
-            action={{ label: "all posts", href: "/posts" }}
+            path={home.sections.posts.path}
+            title={home.sections.posts.title}
+            action={{ label: home.sections.posts.actionLabel, href: "/posts" }}
           />
           <PostList posts={posts.slice(0, 4)} />
         </section>
@@ -58,9 +61,9 @@ export default async function HomePage() {
         {games.length > 0 ? (
           <section className="flex flex-col gap-4">
             <SectionHeading
-              path="content/games"
-              title="games"
-              action={{ label: "all games", href: "/games" }}
+              path={home.sections.games.path}
+              title={home.sections.games.title}
+              action={{ label: home.sections.games.actionLabel, href: "/games" }}
             />
             <GameGrid games={games.slice(0, 3)} />
           </section>
@@ -68,9 +71,12 @@ export default async function HomePage() {
 
         <section className="flex flex-col gap-4">
           <SectionHeading
-            path="content/projects"
-            title="things I built"
-            action={{ label: "all projects", href: "/projects" }}
+            path={home.sections.projects.path}
+            title={home.sections.projects.title}
+            action={{
+              label: home.sections.projects.actionLabel,
+              href: "/projects",
+            }}
           />
           <ProjectGrid projects={projects.slice(0, 3)} />
         </section>

@@ -35,6 +35,12 @@ export function pageIndexPath(slug: string) {
   return path.join(pagesRoot, slug, "index.mdx");
 }
 
+// The front page is chrome, not prose: labels, a quote, three links. It reads
+// as JSON rather than as MDX front matter with an empty body.
+export function homeContentPath() {
+  return path.join(pagesRoot, "home.json");
+}
+
 type AssetKind = "posts" | "projects" | "games";
 
 export function normalizeAssetRef(kind: AssetKind, slug: string, ref?: string) {
