@@ -16,6 +16,7 @@ import {
   DEFAULT_BANNER_FONT,
 } from "@/lib/banner-font"
 import { COLD_BOOT_STORAGE_KEY } from "@/lib/cold-boot-state"
+import { TUBE_FACE_STORAGE_KEY } from "@/lib/tube-face"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -89,6 +90,7 @@ const siteJsonLd = {
 // than being spelled out again here — one place to change a key.
 const coldBootSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)})==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
 const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_IDS)}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
+const tubeFaceSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(TUBE_FACE_STORAGE_KEY)})==="0"){document.documentElement.dataset.tube="off"}}catch(error){}})()`
 
 export default function RootLayout({
   children,
@@ -111,6 +113,9 @@ export default function RootLayout({
         </Script>
         <Script id="cold-boot-setup" strategy="beforeInteractive">
           {coldBootSetup}
+        </Script>
+        <Script id="tube-face-setup" strategy="beforeInteractive">
+          {tubeFaceSetup}
         </Script>
         <link
           rel="alternate"

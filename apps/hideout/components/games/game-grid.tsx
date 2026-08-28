@@ -30,7 +30,9 @@ export function destinations(meta: GameMeta): Destination[] {
     meta.downloadHref
       ? { key: "download", label: "Download", href: meta.downloadHref }
       : null,
-    meta.storeHref ? { key: "store", label: "Store", href: meta.storeHref } : null,
+    meta.storeHref
+      ? { key: "store", label: "Store", href: meta.storeHref }
+      : null,
     { key: "detail", label: "Write-up", href: `/games/${meta.slug}` },
     meta.repo ? { key: "repo", label: "Source", href: meta.repo } : null,
   ].filter((link): link is Destination => link !== null)
@@ -77,7 +79,7 @@ function GameCard({ meta }: { meta: GameMeta }) {
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            className="size-full object-cover object-center"
+            className="size-full object-fill"
           />
         </div>
       ) : null}
@@ -102,7 +104,9 @@ function GameCard({ meta }: { meta: GameMeta }) {
         {/* The two facts that decide whether someone can play it at all. */}
         {meta.engine || meta.platforms.length > 0 ? (
           <p className="font-mono text-[0.65rem] text-terminal-chrome-dim">
-            {[meta.engine, meta.platforms.join(" / ")].filter(Boolean).join(" · ")}
+            {[meta.engine, meta.platforms.join(" / ")]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         ) : null}
 

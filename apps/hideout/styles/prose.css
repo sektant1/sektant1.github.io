@@ -43,8 +43,16 @@
    Below the breakpoint there is no margin to put it in, so it falls back into
    the line rather than being cut off. */
 .prose .prose-anchor {
-  display: inline-block;
-  padding: 0.08em 0.32em;
+  /* The mark is set smaller than the heading, so left to its own line box it
+     rides above the letters it labels. Boxing it to the heading's line height
+     (1.15em of the heading = 1.15 / 0.62 of this element's own em) and
+     centring the glyphs inside puts the mark on the same row as the text at
+     every level. */
+  display: inline-flex;
+  align-items: center;
+  height: calc(1.15em / 0.62);
+  vertical-align: middle;
+  padding: 0 0.32em;
   border: 1px solid var(--terminal-edge);
   background: var(--terminal-wash);
   color: var(--primary);

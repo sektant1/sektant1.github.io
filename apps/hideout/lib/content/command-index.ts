@@ -59,6 +59,11 @@ export const buildCommandIndex = cache(async (): Promise<CommandIndex> => {
       { href: "/projects", label: "All projects", keywords: "work builds" },
       { href: "/games", label: "All games", keywords: "play itch jam" },
       { href: "/about", label: "About", keywords: "contact email gpg radio" },
+      {
+        href: "/tech-passport",
+        label: "Tech passport",
+        keywords: "colophon stack built with fonts credits",
+      },
       { href: "/rss.xml", label: "RSS feed", keywords: "subscribe atom" },
     ],
   }

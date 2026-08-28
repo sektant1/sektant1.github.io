@@ -1,0 +1,35 @@
+---
+title: "Tech passport"
+slug: "tech-passport"
+description: "what this site is built out of."
+date: "2026-08-28"
+status: "published"
+tags: []
+---
+
+Every page here is a file in a git repo. No database, no CMS service, no
+analytics watching you read.
+
+## The stack
+
+- _framework:_ Next.js 16, App Router, static export
+- _content:_ MDX files under `content/`, parsed at build time
+- _components:_ my own shadcn registry, installable with `shadcn add`
+- _3d:_ three.js, rendered to ASCII glyphs
+- _banners:_ figlet, rendered on the server so the font never ships to you
+- _host:_ GitHub Pages
+
+## The look
+
+Green phosphor on black, because a CRT is the only screen I have ever wanted to
+sit at. The display face is Bender. The chrome speaks Cyrillic and the body
+speaks lowercase Latin, and nothing on the panels is fake telemetry: every
+readout is a real number this page knows.
+
+## Writing
+
+I write posts in Neovim, or in the admin CMS when I am away from it. The CMS
+writes the same MDX files to the same folders, so there is nothing to migrate
+if it ever goes away.
+
+The source is on [github](https://github.com/sektant1).
