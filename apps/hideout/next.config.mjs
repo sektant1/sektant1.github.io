@@ -12,6 +12,10 @@ const nextConfig = {
   ...(isPagesBuild ? { output: "export" } : { output: "standalone" }),
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   reactStrictMode: true,
+  // The dev indicator parks itself over the sidebar footer, where it sits on
+  // top of the social links and reads as part of the chrome. Compile and
+  // runtime errors are still surfaced without it.
+  devIndicators: false,
   // The toolkit ships TypeScript source, not a build. Next compiles it with
   // the app, which is what makes an edit in packages/ui show up here without
   // a publish step.
