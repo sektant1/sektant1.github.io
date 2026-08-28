@@ -70,6 +70,7 @@ export default async function HomePage() {
           tags={tags}
           activity={activity}
           content={home.hero}
+          renderStyle={home.render.style}
         />
 
         <section className="flex flex-col gap-4">

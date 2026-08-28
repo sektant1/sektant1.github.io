@@ -4,6 +4,7 @@ import {
   MIN_COLUMNS,
   cellHeightFor,
   characterResolutionFor,
+  holoDefaultsFor,
   lightingFor,
   needsEnvironment,
   postDefaultsFor,
@@ -52,8 +53,20 @@ describe("lightingFor", () => {
 
 describe("toneMappingFor", () => {
   it("only lifts exposure where a filmic curve is applied", () => {
-    expect(toneMappingFor("relief")).toEqual({ filmic: true, exposure: 1.45 })
-    expect(toneMappingFor("texture")).toEqual({ filmic: false, exposure: 1 })
+    expect(toneMappingFor("relief", "ascii")).toEqual({
+      filmic: true,
+      exposure: 1.45,
+    })
+    expect(toneMappingFor("texture", "ascii")).toEqual({
+      filmic: false,
+      exposure: 1,
+    })
+  })
+
+  it("drops the curve for a projection, whatever the subject", () => {
+    for (const subject of ["relief", "texture"] as const) {
+      expect(toneMappingFor(subject, "holo").filmic).toBe(false)
+    }
   })
 })
 
@@ -79,6 +92,14 @@ describe("characterResolutionFor", () => {
   it("lets a caller override the viewport rule", () => {
     expect(characterResolutionFor(390, 0.26)).toBe(0.26)
     expect(characterResolutionFor(1440, 0.26)).toBe(0.26)
+  })
+})
+
+describe("holoDefaultsFor", () => {
+  it("gives the coin more steps than the globe", () => {
+    expect(holoDefaultsFor("relief").levels).toBeGreaterThan(
+      holoDefaultsFor("texture").levels
+    )
   })
 })
 
@@ -121,7 +142,11 @@ describe("renderScaleFor", () => {
 
 describe("needsEnvironment", () => {
   it("generates one only for relief, whose shading is reflection", () => {
-    expect(needsEnvironment("relief")).toBe(true)
-    expect(needsEnvironment("texture")).toBe(false)
+    expect(needsEnvironment("relief", "ascii")).toBe(true)
+    expect(needsEnvironment("texture", "ascii")).toBe(false)
+  })
+
+  it("skips it for a projection, which reflects nothing", () => {
+    expect(needsEnvironment("relief", "holo")).toBe(false)
   })
 })

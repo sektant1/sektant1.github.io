@@ -6,7 +6,16 @@ import { Button } from "@workspace/ui/components/button"
 import { toast } from "sonner"
 
 import { AdminShell } from "@/components/admin/admin-shell"
-import { TextAreaField, TextField } from "@/components/admin/fields"
+import {
+  SelectField,
+  TextAreaField,
+  TextField,
+} from "@/components/admin/fields"
+import {
+  RENDER_STYLES,
+  RENDER_STYLE_LABELS,
+  isRenderStyle,
+} from "@/lib/render-style"
 import {
   DEFAULT_HOME_CONTENT,
   MAX_QUICK_LINKS,
@@ -50,6 +59,11 @@ export function HomeForm({ home }: { home: HomeContent }) {
     window.addEventListener("beforeunload", warn)
     return () => window.removeEventListener("beforeunload", warn)
   }, [dirty])
+
+  function renderStyle(style: string) {
+    if (!isRenderStyle(style)) return
+    setValue((current) => ({ ...current, render: { style } }))
+  }
 
   function hero(next: Partial<HomeContent["hero"]>) {
     setValue((current) => ({ ...current, hero: { ...current.hero, ...next } }))
@@ -404,6 +418,24 @@ export function HomeForm({ home }: { home: HomeContent }) {
           <p className="text-xs text-terminal-ink-faint">
             The tags themselves come from the posts, so there is nothing to edit
             here beyond what the panel is called.
+          </p>
+        </Group>
+
+        <Group title="render style">
+          <SelectField
+            id="renderStyle"
+            label="how the globe and the coin are drawn"
+            value={value.render.style}
+            options={RENDER_STYLES.map((style) => ({
+              value: style,
+              label: RENDER_STYLE_LABELS[style],
+            }))}
+            onChange={renderStyle}
+          />
+          <p className="text-xs text-terminal-ink-faint">
+            ascii lights the model and reduces it to characters. hologram
+            drops the lighting, draws the model as a self-lit low-poly surface,
+            and rasterises it on a square grid with scanlines.
           </p>
         </Group>
 

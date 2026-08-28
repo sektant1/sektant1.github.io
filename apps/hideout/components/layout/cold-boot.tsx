@@ -6,6 +6,7 @@ import { BootLog, type BootLine } from "@workspace/ui/components/boot-log"
 import { Spinner } from "@workspace/ui/components/spinner"
 
 import { AsciiPlanetScene } from "@/components/ascii-planet/ascii-planet-lazy"
+import type { RenderStyle } from "@/components/ascii-planet/policy"
 import { logger } from "@workspace/ui/lib/logger"
 import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 import { usePrefersReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
@@ -58,6 +59,8 @@ type ColdBootProps = {
   games: number
   /** True when the CMS is compiled into this build. */
   cms: boolean
+  /** How the coin is drawn. Editable at /admin/home. */
+  style?: RenderStyle
 }
 
 function bootLines({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
@@ -130,7 +133,13 @@ function bootLines({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
   ]
 }
 
-export function ColdBoot({ posts, projects, games, cms }: ColdBootProps) {
+export function ColdBoot({
+  posts,
+  projects,
+  games,
+  cms,
+  style,
+}: ColdBootProps) {
   const reduceMotion = usePrefersReducedMotion()
   const lines = React.useMemo(
     () => bootLines({ posts, projects, games, cms }),
@@ -235,6 +244,7 @@ export function ColdBoot({ posts, projects, games, cms }: ColdBootProps) {
             // engraving while the supplied roughness map shapes highlights.
             surface={COIN_SURFACE}
             postOptions={COIN_POST}
+            style={style}
             boot
           />
         </div>

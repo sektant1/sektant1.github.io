@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import type { AsciiPostOptions } from "./AsciiPost"
+import type { RenderStyle } from "./policy"
+import type { ScreenPostOptions } from "./screen-post"
 import type { EarthLocation } from "./markers"
 import type { GlbSurface } from "./PlanetModel"
 import { createAsciiScene } from "./scene"
@@ -17,7 +18,9 @@ interface AsciiPlanetSceneProps {
   cameraDistance?: number
   surface?: GlbSurface
   resolution?: number
-  postOptions?: AsciiPostOptions
+  postOptions?: ScreenPostOptions
+  /** Character grid, or projected wireframe. Editable at /admin/home. */
+  style?: RenderStyle
   /** Set by the boot curtain, which owns the screen while it runs. */
   boot?: boolean
   /** The reader's resolved position, or null when the lookup fails. */
@@ -42,6 +45,7 @@ export function AsciiPlanetScene({
   surface,
   resolution,
   postOptions,
+  style,
   boot = false,
   onLocation,
 }: AsciiPlanetSceneProps) {
@@ -69,6 +73,7 @@ export function AsciiPlanetScene({
       surface,
       resolution,
       postOptions,
+      style,
       boot,
       onModelReady: onReady,
       onLocation: (location) => locationRef.current?.(location),
@@ -99,6 +104,7 @@ export function AsciiPlanetScene({
     surface,
     resolution,
     postOptions,
+    style,
     boot,
     onReady,
   ])

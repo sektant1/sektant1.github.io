@@ -188,3 +188,21 @@ describe("normalizeHomeContent", () => {
     )
   })
 })
+
+describe("render style", () => {
+  it("defaults to the projection", () => {
+    expect(normalizeHomeContent({}).render.style).toBe("holo")
+  })
+
+  it("takes the character grid when the CMS asks for it", () => {
+    expect(
+      normalizeHomeContent({ render: { style: "ascii" } }).render.style
+    ).toBe("ascii")
+  })
+
+  it("falls back rather than refusing a hand-edited style", () => {
+    expect(
+      normalizeHomeContent({ render: { style: "crt" } }).render.style
+    ).toBe("holo")
+  })
+})

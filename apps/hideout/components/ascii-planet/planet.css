@@ -95,6 +95,17 @@ html[data-cold-boot="skip"] .cold-boot {
     drop-shadow(0 0 8px color-mix(in oklch, var(--primary) 20%, transparent));
 }
 
+/* Same tube, tighter beam. The raster keeps the phosphor halo the rest of the
+   site is drawn with — a hologram on this screen is still on this screen — but
+   the inner shadow is pulled in to one pixel so the cell edges stay edges
+   instead of dissolving into their own glow. */
+.ascii-planet-scene[data-style="holo"] canvas {
+  filter: drop-shadow(
+      0 0 1px color-mix(in oklch, var(--primary) 60%, transparent)
+    )
+    drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 22%, transparent));
+}
+
 /* The effect renders into a <table> or <pre> sized by the character grid, not
    by the host, so it is centred rather than stretched. */
 .ascii-planet-scene pre,
