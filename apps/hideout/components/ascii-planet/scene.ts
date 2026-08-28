@@ -142,7 +142,12 @@ export function createAsciiScene(
         ? holoDefaultsFor(subject)
         : postDefaultsFor(subject)),
       ...postOptions,
-      cellHeight: postCellHeightFor(style, cellHeight, renderScale),
+      cellHeight: postCellHeightFor(
+        style,
+        cellHeight,
+        renderScale,
+        initialW * renderScale
+      ),
       ink: resolveThemeColor("--primary", "#35ff80"),
     }
   )
@@ -341,7 +346,9 @@ export function createAsciiScene(
     // The column floor is a function of the box, so a rotation that halves
     // the width has to re-derive the cell or the subject loses its engraving.
     cellHeight = cellHeightFor(w, characterResolution)
-    post.setCellHeight(postCellHeightFor(style, cellHeight, renderScale))
+    post.setCellHeight(
+      postCellHeightFor(style, cellHeight, renderScale, w * renderScale)
+    )
     post.setSize(w * renderScale, h * renderScale)
   }
   const ro = new ResizeObserver(onResize)

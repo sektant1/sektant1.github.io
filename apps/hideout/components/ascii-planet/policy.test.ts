@@ -4,8 +4,12 @@ import {
   MIN_COLUMNS,
   cellHeightFor,
   characterResolutionFor,
+  HOLO_COLUMNS,
+  MIN_HOLO_DEVICE_CELL,
+  holoCellHeightFor,
   holoDefaultsFor,
   lightingFor,
+  postCellHeightFor,
   needsEnvironment,
   postDefaultsFor,
   renderScaleFor,
@@ -125,6 +129,25 @@ describe("cellHeightFor", () => {
     for (const width of [64, 96, 176, 320, 640, 1440]) {
       expect(cellHeightFor(width, 0.24)).toBeLessThanOrEqual(2 / 0.24)
     }
+  })
+})
+
+describe("holoCellHeightFor", () => {
+  it("draws the same column count whatever the buffer is", () => {
+    for (const buffer of [352, 654, 768, 1024]) {
+      expect(buffer / holoCellHeightFor(buffer)).toBeCloseTo(HOLO_COLUMNS)
+    }
+  })
+
+  it("stops at a cell the raster can still resolve", () => {
+    expect(holoCellHeightFor(96)).toBe(MIN_HOLO_DEVICE_CELL)
+  })
+
+  it("does not follow the character grid down on a phone", () => {
+    // The phone globe coarsens its glyphs; the projection should not care.
+    const phone = postCellHeightFor("holo", cellHeightFor(327, 0.18), 2, 654)
+    const desktop = postCellHeightFor("holo", cellHeightFor(384, 0.24), 1, 384)
+    expect(654 / phone).toBeCloseTo(384 / desktop)
   })
 })
 

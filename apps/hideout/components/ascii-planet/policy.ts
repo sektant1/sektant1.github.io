@@ -184,29 +184,42 @@ export function cellHeightFor(
 }
 
 /**
- * The projection's pixel, relative to a character cell.
+ * How many pixels wide the projection is drawn, however big its box is.
  *
- * A glyph needs enough room to be a glyph; a projected pixel is a square and
- * needs none, so the hologram spends the same box on a raster twice as fine.
- * That is what keeps it reading as a low-poly model at high resolution rather
- * than as the same picture in bigger blocks.
+ * The character grid is sized so a glyph stays legible, which is why it
+ * coarsens on a phone — a 5x7 pattern needs room. A projected pixel is a
+ * square and needs none of that, so tying the raster to the character figure
+ * dragged it down with the glyphs: the same hologram came out at ninety
+ * columns on a desktop and sixty on a phone, on a screen where it is already
+ * physically smaller.
+ *
+ * Fixing the column count instead makes the picture the same picture
+ * everywhere, and the pixel ratio decides how finely it is drawn.
  */
-export const HOLO_CELL_DIVISOR = 2
+export const HOLO_COLUMNS = 112
 
 /** The smallest projected pixel worth drawing, in the drawing buffer. */
 export const MIN_HOLO_DEVICE_CELL = 2
 
+export function holoCellHeightFor(bufferWidth: number): number {
+  return Math.max(bufferWidth / HOLO_COLUMNS, MIN_HOLO_DEVICE_CELL)
+}
+
+/**
+ * The cell handed to whichever pass is drawing, in drawing-buffer pixels.
+ *
+ * The two styles measure from different things on purpose: a character cell
+ * from the box's CSS width, because that is what decides whether a glyph can
+ * be read, and a projected pixel from the buffer it lands in, because that is
+ * what decides how sharp the raster is.
+ */
 export function postCellHeightFor(
   style: RenderStyle,
   cssCellHeight: number,
-  renderScale: number
+  renderScale: number,
+  bufferWidth: number
 ): number {
-  if (style === "holo") {
-    return Math.max(
-      (cssCellHeight / HOLO_CELL_DIVISOR) * renderScale,
-      MIN_HOLO_DEVICE_CELL
-    )
-  }
+  if (style === "holo") return holoCellHeightFor(bufferWidth)
   return deviceCellHeightFor(cssCellHeight, renderScale)
 }
 
