@@ -30,6 +30,115 @@ function asString(value: unknown) {
   return typeof value === "string" ? value.trim() : ""
 }
 
+/**
+ * The fields every collection stores, and the checks every collection runs.
+ *
+ * Posts, projects and games are all a title, a slug, a description, a date,
+ * some tags, an optional thumbnail and a body — written out three times, which
+ * is how the three drifted: games never learned to require a description or to
+ * trim a body, and its missing-title error is worded differently. Those
+ * differences are now options rather than accidents, so the next one has to be
+ * asked for.
+ *
+ * The collection-specific fields stay where they are. A project's `open`
+ * target and a game's store link are genuinely its own, and folding them into
+ * a shared shape would buy nothing but indirection.
+ */
+type CoreOptions = {
+  /** Games say "A title is required."; the others say "Title is required." */
+  titleError?: string
+  /** Games accept an empty description. Posts and projects do not. */
+  requireDescription?: boolean
+  /** Games keep the body's surrounding whitespace. */
+  trimBody?: boolean
+}
+
+function normalizeCore(
+  data: Record<string, unknown>,
+  {
+    titleError = "Title is required.",
+    requireDescription = true,
+    trimBody = true,
+  }: CoreOptions = {}
+) {
+  const title = asString(data.title)
+  const slug = slugify(asString(data.slug) || title)
+  const description = asString(data.description)
+  const date = asString(data.date) || new Date().toISOString().slice(0, 10)
+  const tags = asTags(data.tags)
+  const thumbnail = asString(data.thumbnail) || undefined
+  const rawBody = typeof data.body === "string" ? data.body : ""
+
+  if (!title) throw new Error(titleError)
+  if (!slug) throw new Error("Slug is required.")
+  assertSlug(slug)
+  if (requireDescription && !description)
+    throw new Error("Description is required.")
+  assertDate(date)
+  assertAssetRef(thumbnail, "Thumbnail")
+
+  return {
+    title,
+    slug,
+    description,
+    date,
+    tags,
+    thumbnail,
+    body: trimBody ? rawBody.trim() : rawBody,
+  }
+}
+
+/** The object form of whatever the request sent, without trusting it. */
+function asRecord(input: unknown): Record<string, unknown> {
+  return input && typeof input === "object"
+    ? (input as Record<string, unknown>)
+    : {}
+}
+
+/**
+ * Front matter, written by hand rather than by a YAML library.
+ *
+ * Deliberate: the CMS owns these files and the shape is small and fixed, so a
+ * dependency to emit six keys would be more to install than to read. What the
+ * helpers buy is that every value is quoted the same way and every document
+ * opens and closes the same way, which is what three separate serialisers kept
+ * almost — but not exactly — agreeing on.
+ */
+function field(key: string, value: string | number) {
+  return `${key}: ${JSON.stringify(value)}`
+}
+
+/** Written only when there is something to write. */
+function optional(key: string, value: string | undefined) {
+  return value ? [field(key, value)] : []
+}
+
+/** A front-matter list, written even when it is empty. */
+function list(key: string, values: string[]) {
+  return [`${key}:`, ...values.map((value) => `  - ${JSON.stringify(value)}`)]
+}
+
+/** The four keys every collection opens with, in the order it opens with. */
+function head(payload: {
+  title: string
+  slug: string
+  description: string
+  date: string
+}) {
+  return [
+    "---",
+    field("title", payload.title),
+    field("slug", payload.slug),
+    field("description", payload.description),
+    field("date", payload.date),
+  ]
+}
+
+/** Closes the block and puts the body under it, or a prompt to write one. */
+function withBody(lines: string[], body: string, placeholder: string) {
+  return [...lines, "---", "", body || placeholder, ""].join("\n")
+}
+
 function asTags(value: unknown) {
   if (Array.isArray(value))
     return value
@@ -106,62 +215,35 @@ function assertUrl(value: string | undefined, label: string) {
 }
 
 export function normalizePostPayload(input: unknown): PostPayload {
-  const data =
-    input && typeof input === "object" ? (input as Record<string, unknown>) : {}
-  const title = asString(data.title)
-  const slug = slugify(asString(data.slug) || title)
-  const description = asString(data.description)
-  const date = asString(data.date) || new Date().toISOString().slice(0, 10)
-  const status: PostStatus = data.status === "published" ? "published" : "draft"
-  const tags = asTags(data.tags)
-  const thumbnail = asString(data.thumbnail) || undefined
-  const series = normalizePostSeries(data.series)
-  const body = typeof data.body === "string" ? data.body.trim() : ""
-
-  if (!title) throw new Error("Title is required.")
-  if (!slug) throw new Error("Slug is required.")
-  assertSlug(slug)
-  if (!description) throw new Error("Description is required.")
-  assertDate(date)
-  assertAssetRef(thumbnail, "Thumbnail")
+  const data = asRecord(input)
+  const core = normalizeCore(data)
 
   return {
-    title,
-    slug,
-    description,
-    date,
-    status,
-    tags,
-    thumbnail,
-    series,
-    body,
+    ...core,
+    status: data.status === "published" ? "published" : "draft",
+    series: normalizePostSeries(data.series),
   }
 }
 
 export function serializePost(payload: PostPayload) {
-  const lines = [
-    "---",
-    `title: ${JSON.stringify(payload.title)}`,
-    `slug: ${JSON.stringify(payload.slug)}`,
-    `description: ${JSON.stringify(payload.description)}`,
-    `date: ${JSON.stringify(payload.date)}`,
-    `status: ${JSON.stringify(payload.status)}`,
-    "tags:",
-    ...payload.tags.map((tag) => `  - ${JSON.stringify(tag)}`),
-  ]
-
-  if (payload.thumbnail)
-    lines.push(`thumbnail: ${JSON.stringify(payload.thumbnail)}`)
-  if (payload.series) {
-    lines.push(
-      "series:",
-      `  id: ${JSON.stringify(payload.series.id)}`,
-      `  title: ${JSON.stringify(payload.series.title)}`,
-      `  order: ${payload.series.order}`
-    )
-  }
-  lines.push("---", "", payload.body || "Write the post body here.", "")
-  return lines.join("\n")
+  return withBody(
+    [
+      ...head(payload),
+      field("status", payload.status),
+      ...list("tags", payload.tags),
+      ...optional("thumbnail", payload.thumbnail),
+      ...(payload.series
+        ? [
+            "series:",
+            `  ${field("id", payload.series.id)}`,
+            `  ${field("title", payload.series.title)}`,
+            `  order: ${payload.series.order}`,
+          ]
+        : []),
+    ],
+    payload.body,
+    "Write the post body here."
+  )
 }
 
 export function postDocumentToPayload(
@@ -193,29 +275,13 @@ function asProjectOpenTarget(value: unknown): ProjectOpenTarget | undefined {
 }
 
 export function normalizeProjectPayload(input: unknown): ProjectPayload {
-  const data =
-    input && typeof input === "object" ? (input as Record<string, unknown>) : {}
-  const title = asString(data.title)
-  const slug = slugify(asString(data.slug) || title)
-  const description = asString(data.description)
-  const date = asString(data.date) || new Date().toISOString().slice(0, 10)
-  const tags = asTags(data.tags)
-  const stack = asTags(data.stack)
-  const thumbnail = asString(data.thumbnail) || undefined
+  const data = asRecord(input)
+  const core = normalizeCore(data)
+
   const href = asString(data.href) || undefined
   const repo = asString(data.repo) || undefined
   const open = asProjectOpenTarget(data.open)
-  const status = asString(data.status) || undefined
-  const visibility: PostStatus =
-    data.visibility === "draft" ? "draft" : "published"
-  const body = typeof data.body === "string" ? data.body.trim() : ""
 
-  if (!title) throw new Error("Title is required.")
-  if (!slug) throw new Error("Slug is required.")
-  assertSlug(slug)
-  if (!description) throw new Error("Description is required.")
-  assertDate(date)
-  assertAssetRef(thumbnail, "Thumbnail")
   assertUrl(href, "Website URL")
   assertUrl(repo, "Repository URL")
   if (open === "website" && !href)
@@ -224,43 +290,32 @@ export function normalizeProjectPayload(input: unknown): ProjectPayload {
     throw new Error("Repository projects need a repo URL.")
 
   return {
-    title,
-    slug,
-    description,
-    date,
-    tags,
-    stack,
-    thumbnail,
+    ...core,
+    stack: asTags(data.stack),
     href,
     repo,
     open,
-    status,
-    visibility,
-    body,
+    status: asString(data.status) || undefined,
+    visibility: data.visibility === "draft" ? "draft" : "published",
   }
 }
 
 export function serializeProject(payload: ProjectPayload) {
-  const lines = [
-    "---",
-    `title: ${JSON.stringify(payload.title)}`,
-    `slug: ${JSON.stringify(payload.slug)}`,
-    `description: ${JSON.stringify(payload.description)}`,
-    `date: ${JSON.stringify(payload.date)}`,
-  ]
-  if (payload.status) lines.push(`status: ${JSON.stringify(payload.status)}`)
-  lines.push(`visibility: ${JSON.stringify(payload.visibility)}`)
-  lines.push("tags:")
-  payload.tags.forEach((tag) => lines.push(`  - ${JSON.stringify(tag)}`))
-  lines.push("stack:")
-  payload.stack.forEach((item) => lines.push(`  - ${JSON.stringify(item)}`))
-  if (payload.href) lines.push(`href: ${JSON.stringify(payload.href)}`)
-  if (payload.repo) lines.push(`repo: ${JSON.stringify(payload.repo)}`)
-  if (payload.open) lines.push(`open: ${JSON.stringify(payload.open)}`)
-  if (payload.thumbnail)
-    lines.push(`thumbnail: ${JSON.stringify(payload.thumbnail)}`)
-  lines.push("---", "", payload.body || "Write the project body here.", "")
-  return lines.join("\n")
+  return withBody(
+    [
+      ...head(payload),
+      ...optional("status", payload.status),
+      field("visibility", payload.visibility),
+      ...list("tags", payload.tags),
+      ...list("stack", payload.stack),
+      ...optional("href", payload.href),
+      ...optional("repo", payload.repo),
+      ...optional("open", payload.open),
+      ...optional("thumbnail", payload.thumbnail),
+    ],
+    payload.body,
+    "Write the project body here."
+  )
 }
 
 export function projectDocumentToPayload(
@@ -289,36 +344,30 @@ export interface GamePayload {
 }
 
 export function normalizeGamePayload(input: unknown): GamePayload {
-  const data =
-    input && typeof input === "object" ? (input as Record<string, unknown>) : {}
-  const title = asString(data.title)
-  const slug = slugify(asString(data.slug) || title)
-  const description = asString(data.description)
-  const date = asString(data.date) || new Date().toISOString().slice(0, 10)
-  const thumbnail = asString(data.thumbnail) || undefined
+  const data = asRecord(input)
+  // The three exceptions games came with. They are almost certainly drift
+  // rather than intent — nothing about a game makes its description optional
+  // — but changing them is an editorial decision, not a refactor.
+  const core = normalizeCore(data, {
+    titleError: "A title is required.",
+    requireDescription: false,
+    trimBody: false,
+  })
+
   const playHref = asString(data.playHref) || undefined
   const downloadHref = asString(data.downloadHref) || undefined
   const storeHref = asString(data.storeHref) || undefined
   const repo = asString(data.repo) || undefined
 
-  if (!title) throw new Error("A title is required.")
-  assertSlug(slug)
-  assertDate(date)
-  assertAssetRef(thumbnail, "Thumbnail")
   assertUrl(playHref, "Play link")
   assertUrl(downloadHref, "Download link")
   assertUrl(storeHref, "Store link")
   assertUrl(repo, "Repository")
 
   return {
-    title,
-    slug,
-    description,
-    date,
-    tags: asTags(data.tags),
+    ...core,
     platforms: asTags(data.platforms),
     engine: asString(data.engine) || undefined,
-    thumbnail,
     playHref,
     downloadHref,
     storeHref,
@@ -326,37 +375,28 @@ export function normalizeGamePayload(input: unknown): GamePayload {
     status: asString(data.status) || undefined,
     jam: asString(data.jam) || undefined,
     visibility: asString(data.visibility) === "draft" ? "draft" : "published",
-    body: typeof data.body === "string" ? data.body : "",
   }
 }
 
 export function serializeGame(payload: GamePayload) {
-  const lines = [
-    "---",
-    `title: ${JSON.stringify(payload.title)}`,
-    `slug: ${JSON.stringify(payload.slug)}`,
-    `description: ${JSON.stringify(payload.description)}`,
-    `date: ${JSON.stringify(payload.date)}`,
-  ]
-  if (payload.engine) lines.push(`engine: ${JSON.stringify(payload.engine)}`)
-  if (payload.status) lines.push(`status: ${JSON.stringify(payload.status)}`)
-  if (payload.jam) lines.push(`jam: ${JSON.stringify(payload.jam)}`)
-  lines.push(`visibility: ${JSON.stringify(payload.visibility)}`)
-  lines.push("platforms:")
-  payload.platforms.forEach((item) => lines.push(`  - ${JSON.stringify(item)}`))
-  lines.push("tags:")
-  payload.tags.forEach((tag) => lines.push(`  - ${JSON.stringify(tag)}`))
-  if (payload.playHref)
-    lines.push(`playHref: ${JSON.stringify(payload.playHref)}`)
-  if (payload.downloadHref)
-    lines.push(`downloadHref: ${JSON.stringify(payload.downloadHref)}`)
-  if (payload.storeHref)
-    lines.push(`storeHref: ${JSON.stringify(payload.storeHref)}`)
-  if (payload.repo) lines.push(`repo: ${JSON.stringify(payload.repo)}`)
-  if (payload.thumbnail)
-    lines.push(`thumbnail: ${JSON.stringify(payload.thumbnail)}`)
-  lines.push("---", "", payload.body || "Write the game body here.", "")
-  return lines.join("\n")
+  return withBody(
+    [
+      ...head(payload),
+      ...optional("engine", payload.engine),
+      ...optional("status", payload.status),
+      ...optional("jam", payload.jam),
+      field("visibility", payload.visibility),
+      ...list("platforms", payload.platforms),
+      ...list("tags", payload.tags),
+      ...optional("playHref", payload.playHref),
+      ...optional("downloadHref", payload.downloadHref),
+      ...optional("storeHref", payload.storeHref),
+      ...optional("repo", payload.repo),
+      ...optional("thumbnail", payload.thumbnail),
+    ],
+    payload.body,
+    "Write the game body here."
+  )
 }
 
 export function gameDocumentToPayload(
