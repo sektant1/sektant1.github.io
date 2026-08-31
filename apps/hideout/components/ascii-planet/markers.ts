@@ -1,4 +1,6 @@
 import * as THREE from "three"
+
+import { resolveThemeColor } from "./theme-color"
 import { latLonToVector3 } from "./geo"
 
 export interface EarthLocation {
@@ -198,79 +200,6 @@ export function createEarthLocationMarkers({
   }
 }
 
-/**
- * Where the reader is, as far as an IP can say.
- *
- * Two sources, tried in order, because the first is on the privacy blocklists
- * that every content blocker ships: for a reader running uBlock or Brave's
- * shields the request never leaves the machine, and a panel whose whole job is
- * to print a bearing had nothing to print. The second is a different domain
- * answering the same question, which is usually enough to get through.
- *
- * Both are best-effort. Blocked, refused, slow or nonsense resolves to null
- * and the panel says it has no fix — never a guess dressed as a reading.
- */
-const IP_SOURCES = [
-  {
-    url: "https://ipapi.co/json/",
-    place: (data: Record<string, unknown>) =>
-      asPlace(data.city, data.country_name),
-  },
-  {
-    url: "https://ipwho.is/",
-    place: (data: Record<string, unknown>) => asPlace(data.city, data.country),
-  },
-] as const
-
-/** How long one source gets before the next is tried. */
-const IP_LOOKUP_TIMEOUT = 6000
-
-function asPlace(city: unknown, country: unknown) {
-  if (typeof city === "string" && city) return city.toUpperCase()
-  if (typeof country === "string" && country) return country.toUpperCase()
-  return "APPROX"
-}
-
-export async function resolveUserIpLocation(
-  signal?: AbortSignal
-): Promise<EarthLocation | null> {
-  for (const source of IP_SOURCES) {
-    if (signal?.aborted) return null
-
-    // A blocker usually refuses the request outright, but a DNS sink can leave
-    // it hanging instead, and the panel would sit there scanning forever.
-    const timeout = AbortSignal.timeout(IP_LOOKUP_TIMEOUT)
-    const attempt = signal ? AbortSignal.any([signal, timeout]) : timeout
-
-    try {
-      const response = await fetch(source.url, {
-        signal: attempt,
-        headers: { Accept: "application/json" },
-      })
-      if (!response.ok) continue
-
-      const data = (await response.json()) as Record<string, unknown>
-      const lat = Number(data.latitude)
-      const lon = Number(data.longitude)
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue
-
-      return {
-        id: "user-ip",
-        name: "LOCALHOST",
-        country: source.place(data),
-        lat,
-        lon,
-        variant: "user",
-        showLabel: true,
-      }
-    } catch {
-      // Blocked, offline, or out of time. Try the next one.
-    }
-  }
-
-  return null
-}
-
 function createMilitaryMarker(
   normal: THREE.Vector3,
   variant: EarthLocation["variant"],
@@ -431,7 +360,7 @@ interface MarkerTheme {
 }
 
 function resolveMarkerTheme(): MarkerTheme {
-  const primary = resolveThemeColor("--primary", "#35ff80")
+  const primary = resolveThemeColor("--primary", "#32f078")
   const primaryStrong = resolveThemeColor("--primary", "#a9ffc9")
   return {
     hideout: primaryStrong,
@@ -439,55 +368,4 @@ function resolveMarkerTheme(): MarkerTheme {
     user: primaryStrong,
     userGlow: primary,
   }
-}
-
-/**
- * Resolves a CSS custom property to a colour three can use.
- *
- * The theme is written in oklch, and getComputedStyle hands that back as
- * `lab(...)` — a format THREE.Color does not parse, so every marker was
- * silently falling back and logging a warning per frame. The browser's own 2D
- * context is the conversion: assign any CSS colour, read it back as rgb.
- */
-export function resolveThemeColor(
-  token: string,
-  fallback: string
-): THREE.Color {
-  const styles = getComputedStyle(document.documentElement)
-  const value = styles.getPropertyValue(token).trim() || fallback
-
-  try {
-    return new THREE.Color(toRgb(value) ?? fallback)
-  } catch {
-    return new THREE.Color(fallback)
-  }
-}
-
-/** One shared context; creating a canvas per colour would be absurd. */
-let converter: CanvasRenderingContext2D | null | undefined
-
-function toRgb(value: string): string | null {
-  if (converter === undefined) {
-    converter = document
-      .createElement("canvas")
-      .getContext("2d", { willReadFrequently: true })
-  }
-  if (!converter) return null
-
-  // An unparseable value leaves fillStyle untouched, so it is primed with a
-  // sentinel: if it comes back unchanged, the colour was not understood.
-  converter.fillStyle = "#000000"
-  converter.fillStyle = value
-  const first = converter.fillStyle
-
-  converter.fillStyle = "#ffffff"
-  converter.fillStyle = value
-
-  if (converter.fillStyle !== first) return null
-
-  converter.clearRect(0, 0, 1, 1)
-  converter.fillStyle = first
-  converter.fillRect(0, 0, 1, 1)
-  const [r, g, b] = converter.getImageData(0, 0, 1, 1).data
-  return `rgb(${r}, ${g}, ${b})`
 }

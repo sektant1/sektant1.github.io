@@ -3,12 +3,10 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { logger } from "@workspace/ui/lib/logger"
 import { createScreenPost } from "./screen-post"
 import type { ScreenPostOptions } from "./screen-post"
-import {
-  createEarthLocationMarkers,
-  resolveThemeColor,
-  resolveUserIpLocation,
-} from "./markers"
+import { createEarthLocationMarkers } from "./markers"
 import type { EarthLocation } from "./markers"
+import { resolveUserIpLocation } from "./geo-ip"
+import { resolveThemeColor } from "./theme-color"
 import { createPlanetModel, loadGlbModel } from "./PlanetModel"
 import type { GlbSurface, PlanetHandle } from "./PlanetModel"
 import {
@@ -165,7 +163,7 @@ export function createAsciiScene(
         renderScale,
         initialW * renderScale
       ),
-      ink: resolveThemeColor("--primary", "#35ff80"),
+      ink: resolveThemeColor("--primary", "#32f078"),
     }
   )
   const settling = boot && !reduceMotion

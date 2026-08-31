@@ -46,10 +46,10 @@ The hideout sits at the root because the custom domain belongs to it — its
 `public/CNAME` is what keeps `sektant.dev` pointed here across deploys. Serve
 the exact artifact locally with `make pages-serve`.
 
-The published URLs are defined in two places, and both have to agree with the
-domain: `apps/web/src/lib/registry-url.ts` (the `add` command) and the
-`homepage` field in `scripts/build-registry.mjs`. If the showcase ever moves,
-`base` in `apps/web/vite.config.ts` has to match its new path.
+The published URLs come from `SITE_ORIGIN` in `apps/web/src/lib/registry-url.ts`
+— the `add` command and the registry's `homepage` field are both derived from
+it. If the showcase ever moves, `base` in `apps/web/vite.config.ts` has to
+match its new path.
 
 Repository settings need the Pages source set to **GitHub Actions**.
 

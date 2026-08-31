@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server"
-import { createCmsGame, listCmsGames } from "@/lib/cms/games"
+import { cmsGames } from "@/lib/cms/games"
 
 export async function GET() {
-  const games = await listCmsGames()
+  const games = await cmsGames.list()
   return NextResponse.json({ games })
 }
 
 export async function POST(request: Request) {
   try {
-    const created = await createCmsGame(await request.json())
+    const created = await cmsGames.create(await request.json())
     return NextResponse.json({ game: created }, { status: 201 })
   } catch (error) {
     return NextResponse.json(

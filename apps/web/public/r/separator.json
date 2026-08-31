@@ -3,6 +3,9 @@
   "name": "separator",
   "title": "Separator",
   "description": "Separator component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

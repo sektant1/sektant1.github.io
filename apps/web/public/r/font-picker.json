@@ -3,6 +3,9 @@
   "name": "font-picker",
   "title": "Font Picker",
   "description": "Font Picker component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react"
+  ],
   "registryDependencies": [
     "skt-theme",
     "button",

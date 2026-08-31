@@ -5,7 +5,7 @@
   "type": "module",
   "description": "sektant.dev — devlog, project index and local MDX CMS.",
   "scripts": {
-    "sync:content-assets": "node scripts/sync-content-assets.mjs",
+    "sync:content-assets": "node --experimental-strip-types scripts/sync-content-assets.mjs",
     "build:models": "node scripts/build-models.mjs",
     "predev": "npm run build:models && npm run sync:content-assets && node scripts/generate-search-index.mjs",
     "dev": "next dev",

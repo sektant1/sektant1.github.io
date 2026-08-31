@@ -3,6 +3,9 @@
   "name": "toggle-group",
   "title": "Toggle Group",
   "description": "Toggle Group component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme",
     "toggle"

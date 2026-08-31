@@ -3,6 +3,9 @@
   "name": "table",
   "title": "Table",
   "description": "Table component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

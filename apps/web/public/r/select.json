@@ -3,6 +3,10 @@
   "name": "select",
   "title": "Select",
   "description": "Select component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react",
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme",
     "input-group"

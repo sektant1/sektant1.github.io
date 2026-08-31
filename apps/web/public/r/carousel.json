@@ -4,6 +4,7 @@
   "title": "Carousel",
   "description": "Carousel component, themed for skt-ui-toolkit.",
   "dependencies": [
+    "@tabler/icons-react",
     "embla-carousel-react"
   ],
   "registryDependencies": [

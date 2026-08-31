@@ -30,9 +30,12 @@ scripts; it is the documented interface.
 - **The registry is generated.** Adding a file to `packages/ui/src/components`
   is half the change: run `make registry` and commit `registry.json` with it.
   CI fails on drift (`make registry-check`).
-- **A new runtime dependency needs registering.** When a component's generated
-  source imports a package the consumer must install, add it to `DEPENDENCIES`
-  in `scripts/build-registry.mjs`, or `shadcn add` produces a broken install.
+- **Runtime dependencies are derived, not declared.** The generator reads the
+  imports of a component *and of every hook and lib file it ships with*, so a
+  new package needs nothing but the import. It does need to be in
+  `packages/ui/package.json` — the build fails on an import the workspace does
+  not declare. This replaced a hand-kept map that had drifted on 42 of 66
+  items.
 - **Models are compiled, not committed.** Edit the GLB in
   `apps/hideout/assets/models`; `make models` writes the served copy. The
   textures are downscaled and re-encoded there because the ASCII pass reduces
@@ -42,8 +45,16 @@ scripts; it is the documented interface.
   server with `renderAsciiArt` into `AsciiBannerView`. Importing
   `AsciiPlanetScene` or `AsciiBanner` directly from a page puts ~700 KB back
   into every route.
-- **The published URL lives in two places** — `apps/web/src/lib/registry-url.ts`
-  and `homepage` in `scripts/build-registry.mjs` — and they have to agree.
+- **The published URL has one source.** `apps/web/src/lib/registry-url.ts`
+  holds `SITE_ORIGIN`; the registry generator imports `SHOWCASE_URL` from it.
+  `apps/hideout/lib/seo/site.ts` keeps its own copy — separate workspace, and
+  it takes an env-var override for previews.
+- **Two build scripts import `.ts` and need `--experimental-strip-types`.**
+  `registry:build` / `registry:check` read the published URL, and
+  `sync:content-assets` reads the thumbnail size, so the values cannot drift
+  from the modules that own them. The flag is already in the npm scripts —
+  don't drop it, and don't drop `engines.node` below 22.6, which is where node
+  learned to run TypeScript.
 - **`dist-pages/` is build output**, assembled by `make pages`. Never hand-edit.
 - **Copy and chrome follow a register system.** Cyrillic caps for signage,
   Latin caps for readouts, lowercase Latin for the human voice — and readouts

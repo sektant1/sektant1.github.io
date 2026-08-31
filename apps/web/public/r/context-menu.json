@@ -3,6 +3,10 @@
   "name": "context-menu",
   "title": "Context Menu",
   "description": "Context Menu component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react",
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

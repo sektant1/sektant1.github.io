@@ -3,6 +3,10 @@
   "name": "combobox",
   "title": "Combobox",
   "description": "Combobox component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react",
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme",
     "button",

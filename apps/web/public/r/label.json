@@ -3,6 +3,9 @@
   "name": "label",
   "title": "Label",
   "description": "Label component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],
