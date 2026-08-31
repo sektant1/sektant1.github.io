@@ -3,6 +3,9 @@
   "name": "textarea",
   "title": "Textarea",
   "description": "Textarea component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

@@ -3,6 +3,9 @@
   "name": "collapsible",
   "title": "Collapsible",
   "description": "Collapsible component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

@@ -4,8 +4,9 @@
   "title": "Sonner",
   "description": "Sonner component, themed for skt-ui-toolkit.",
   "dependencies": [
-    "sonner",
-    "next-themes"
+    "@tabler/icons-react",
+    "next-themes",
+    "sonner"
   ],
   "registryDependencies": [
     "skt-theme"

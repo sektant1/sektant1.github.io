@@ -3,6 +3,9 @@
   "name": "spinner",
   "title": "Spinner",
   "description": "Spinner component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

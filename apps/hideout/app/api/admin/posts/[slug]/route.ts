@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { deleteCmsPost, readCmsPost, updateCmsPost } from "@/lib/cms/posts"
+import { cmsPosts } from "@/lib/cms/posts"
 
 interface RouteContext {
   params: Promise<{ slug: string }>
@@ -7,7 +7,7 @@ interface RouteContext {
 
 export async function GET(_request: Request, { params }: RouteContext) {
   const { slug } = await params
-  const post = await readCmsPost(slug)
+  const post = await cmsPosts.read(slug)
   if (!post)
     return NextResponse.json({ error: "Post not found." }, { status: 404 })
   return NextResponse.json({ post })
@@ -16,7 +16,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
 export async function PUT(request: Request, { params }: RouteContext) {
   try {
     const { slug } = await params
-    const post = await updateCmsPost(slug, await request.json())
+    const post = await cmsPosts.update(slug, await request.json())
     return NextResponse.json({ post })
   } catch (error) {
     return NextResponse.json(
@@ -32,7 +32,7 @@ export async function PUT(request: Request, { params }: RouteContext) {
 export async function DELETE(_request: Request, { params }: RouteContext) {
   try {
     const { slug } = await params
-    const result = await deleteCmsPost(slug)
+    const result = await cmsPosts.remove(slug)
     return NextResponse.json(result)
   } catch (error) {
     return NextResponse.json(

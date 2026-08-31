@@ -21,7 +21,7 @@ import {
  */
 const TUBE = {
   bright: "#d6ffe6",
-  primary: "#35ff80",
+  primary: "#32f078",
   mid: "#7dffab",
   dim: "#2ee06e",
   faint: "#1c8a44",

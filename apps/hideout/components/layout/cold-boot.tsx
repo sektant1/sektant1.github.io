@@ -71,53 +71,74 @@ type ColdBootProps = {
   style?: RenderStyle
 }
 
-function bootLines({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
+/**
+ * The steps, without their timestamps.
+ *
+ * The bracketed time used to be typed into each label — plausible-looking
+ * numbers that climbed to 1.059 while the log actually took three and a half
+ * seconds to print, because the pacing lives in LINE_INTERVAL and nothing
+ * connected the two. "Readouts are real" is the site's own rule, and a column
+ * that looks like elapsed time has to be elapsed time. It is derived below.
+ */
+function bootSteps({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
   return [
-    { label: "[0.000] POST::БП", status: "ok", detail: "NOMINAL" },
-    { label: "[0.018] SYNC::ЭЛТ/P1", status: "ok", detail: "60HZ" },
-    { label: "[0.044] INIT::EARLY.CONSOLE", status: "ok", detail: "TTY0" },
-    { label: "[0.071] DETECT::DMI", status: "ok", detail: "FLD-01" },
-    { label: "[0.098] MAP::ПАМЯТЬ", status: "ok", detail: "256M" },
-    { label: "[0.126] INIT::CRNG", status: "ok", detail: "READY" },
-    { label: "[0.157] MOUNT::КОРЕНЬ", status: "ok", detail: "RO" },
-    { label: "[0.189] START::SYSTEMD", status: "ok", detail: "257" },
-    { label: "[0.223] INIT::NET.CORE", status: "ok", detail: "ONLINE" },
-    { label: "[0.258] SKIP::IPV6", status: "skip", detail: "POLICY" },
-    { label: "[0.294] WAIT::NETWORK.ONLINE", status: "ok", detail: "ROUTABLE" },
-    { label: "[0.331] RESOLVE::СЕТЬ/GEO", status: "warn", detail: "PENDING" },
-    { label: "[0.369] LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
-    { label: "[0.408] CHECK::AP.MASK", status: "ok", detail: "6PX" },
-    { label: "[0.448] PRELOAD::MODEL/BTC", status: "ok", detail: "GLB" },
+    { label: "POST::БП", status: "ok", detail: "NOMINAL" },
+    { label: "SYNC::ЭЛТ/P1", status: "ok", detail: "60HZ" },
+    { label: "INIT::EARLY.CONSOLE", status: "ok", detail: "TTY0" },
+    { label: "DETECT::DMI", status: "ok", detail: "FLD-01" },
+    { label: "MAP::ПАМЯТЬ", status: "ok", detail: "256M" },
+    { label: "INIT::CRNG", status: "ok", detail: "READY" },
+    { label: "MOUNT::КОРЕНЬ", status: "ok", detail: "RO" },
+    { label: "START::SYSTEMD", status: "ok", detail: "257" },
+    { label: "INIT::NET.CORE", status: "ok", detail: "ONLINE" },
+    { label: "SKIP::IPV6", status: "skip", detail: "POLICY" },
+    { label: "WAIT::NETWORK.ONLINE", status: "ok", detail: "ROUTABLE" },
+    { label: "RESOLVE::СЕТЬ/GEO", status: "warn", detail: "PENDING" },
+    { label: "LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
+    { label: "CHECK::AP.MASK", status: "ok", detail: "6PX" },
+    { label: "PRELOAD::MODEL/BTC", status: "ok", detail: "GLB" },
     {
-      label: "[0.489] MOUNT>АРХИВ/CONTENT",
+      label: "MOUNT>АРХИВ/CONTENT",
       status: "ok",
       detail: `${pad(posts + projects + games)} OBJ`,
     },
-    { label: "[0.531] MAP::NAV.ROUTES", status: "ok", detail: "READY" },
-    { label: "[0.574] IDX>POSTS", status: "ok", detail: pad(posts) },
-    { label: "[0.618] IDX>PROJECTS", status: "ok", detail: pad(projects) },
+    { label: "MAP::NAV.ROUTES", status: "ok", detail: "READY" },
+    { label: "IDX>POSTS", status: "ok", detail: pad(posts) },
+    { label: "IDX>PROJECTS", status: "ok", detail: pad(projects) },
     {
-      label: "[0.663] IDX>GAMES",
+      label: "IDX>GAMES",
       status: games > 0 ? "ok" : "skip",
       detail: pad(games),
     },
-    { label: "[0.709] SEARCH::FTS", status: "ok", detail: "READY" },
+    { label: "SEARCH::FTS", status: "ok", detail: "READY" },
     {
-      label: "[0.756] LOAD::SEARCH.IDX",
+      label: "LOAD::SEARCH.IDX",
       status: "ok",
       detail: `${pad(posts)} DOC`,
     },
     {
-      label: "[0.804] CHECK::CMS.LOCAL",
+      label: "CHECK::CMS.LOCAL",
       status: cms ? "ok" : "skip",
       detail: cms ? "RW" : "N/A",
     },
-    { label: "[0.853] START::HIDEOUT.SVC", status: "ok", detail: "ACTIVE" },
-    { label: "[0.903] ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
-    { label: "[0.954] OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
-    { label: "[1.006] AUTH::ОПЕРАТОР", status: "ok", detail: "ДОПУСК" },
-    { label: "[1.059] REACHED::HIDEOUT", status: "ok", detail: "TARGET" },
+    { label: "START::HIDEOUT.SVC", status: "ok", detail: "ACTIVE" },
+    { label: "ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
+    { label: "OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
+    { label: "AUTH::ОПЕРАТОР", status: "ok", detail: "ДОПУСК" },
+    { label: "REACHED::HIDEOUT", status: "ok", detail: "TARGET" },
   ]
+}
+
+/** When a line prints, in seconds, to the millisecond the log actually keeps. */
+function elapsed(index: number) {
+  return ((index * LINE_INTERVAL) / 1000).toFixed(3)
+}
+
+function bootLines(props: ColdBootProps): BootLine[] {
+  return bootSteps(props).map((step, index) => ({
+    ...step,
+    label: `[${elapsed(index)}] ${step.label}`,
+  }))
 }
 
 export function ColdBoot({

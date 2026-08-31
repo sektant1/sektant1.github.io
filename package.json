@@ -10,8 +10,8 @@
     "typecheck": "turbo typecheck",
     "test": "vitest run",
     "pages:build": "node scripts/build-pages.mjs",
-    "registry:build": "node scripts/build-registry.mjs && shadcn build --output apps/web/public/r",
-    "registry:check": "node scripts/build-registry.mjs --check"
+    "registry:build": "node --experimental-strip-types scripts/build-registry.mjs && shadcn build --output apps/web/public/r",
+    "registry:check": "node --experimental-strip-types scripts/build-registry.mjs --check"
   },
   "devDependencies": {
     "prettier": "^3.8.3",
@@ -22,7 +22,7 @@
   },
   "packageManager": "npm@11.11.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.6"
   },
   "workspaces": [
     "apps/*",

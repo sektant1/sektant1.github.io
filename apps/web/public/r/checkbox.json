@@ -3,6 +3,10 @@
   "name": "checkbox",
   "title": "Checkbox",
   "description": "Checkbox component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react",
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

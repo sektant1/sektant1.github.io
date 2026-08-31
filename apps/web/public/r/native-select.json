@@ -3,6 +3,9 @@
   "name": "native-select",
   "title": "Native Select",
   "description": "Native Select component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

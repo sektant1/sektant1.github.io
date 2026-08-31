@@ -3,6 +3,9 @@
   "name": "hover-card",
   "title": "Hover Card",
   "description": "Hover Card component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

@@ -3,6 +3,9 @@
   "name": "item",
   "title": "Item",
   "description": "Item component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme",
     "separator"

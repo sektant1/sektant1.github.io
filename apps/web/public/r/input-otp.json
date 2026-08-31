@@ -4,6 +4,7 @@
   "title": "Input Otp",
   "description": "Input Otp component, themed for skt-ui-toolkit.",
   "dependencies": [
+    "@tabler/icons-react",
     "input-otp"
   ],
   "registryDependencies": [

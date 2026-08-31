@@ -136,6 +136,10 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/accordion.tsx",
@@ -168,6 +172,9 @@
       "registryDependencies": [
         "skt-theme",
         "button"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -332,6 +339,10 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/breadcrumb.tsx",
@@ -347,6 +358,9 @@
       "description": "Button component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -383,6 +397,10 @@
         "button",
         "select"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/calendar.tsx",
@@ -417,6 +435,7 @@
         "button"
       ],
       "dependencies": [
+        "@tabler/icons-react",
         "embla-carousel-react"
       ],
       "files": [
@@ -454,6 +473,10 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/checkbox.tsx",
@@ -469,6 +492,9 @@
       "description": "Collapsible component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -488,6 +514,10 @@
         "button",
         "input-group"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/combobox.tsx",
@@ -505,6 +535,10 @@
         "skt-theme",
         "dialog",
         "input-group"
+      ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
       ],
       "files": [
         {
@@ -537,6 +571,10 @@
       "description": "Context Menu component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
       ],
       "files": [
         {
@@ -571,6 +609,10 @@
         "skt-theme",
         "button"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/dialog.tsx",
@@ -587,6 +629,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@base-ui/react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/drawer.tsx",
@@ -602,6 +647,10 @@
       "description": "Dropdown Menu component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
       ],
       "files": [
         {
@@ -656,6 +705,9 @@
         "dropdown-menu",
         "tooltip"
       ],
+      "dependencies": [
+        "@tabler/icons-react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/font-picker.tsx",
@@ -682,6 +734,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/hover-card.tsx",
@@ -697,6 +752,9 @@
       "description": "Input component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -717,6 +775,9 @@
         "input",
         "textarea"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/input-group.tsx",
@@ -734,6 +795,7 @@
         "skt-theme"
       ],
       "dependencies": [
+        "@tabler/icons-react",
         "input-otp"
       ],
       "files": [
@@ -753,6 +815,9 @@
         "skt-theme",
         "separator"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/item.tsx",
@@ -769,6 +834,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/kbd.tsx",
@@ -784,6 +852,9 @@
       "description": "Label component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -828,6 +899,9 @@
         "skt-theme",
         "button"
       ],
+      "dependencies": [
+        "@tabler/icons-react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/log-console.tsx",
@@ -849,6 +923,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@tabler/icons-react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/native-select.tsx",
@@ -866,6 +943,9 @@
         "skt-theme",
         "button"
       ],
+      "dependencies": [
+        "@tabler/icons-react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/pagination.tsx",
@@ -881,6 +961,9 @@
       "description": "Popover component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -898,6 +981,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/progress.tsx",
@@ -913,6 +999,9 @@
       "description": "Radio Group component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -987,6 +1076,10 @@
         "skt-theme",
         "input-group"
       ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/select.tsx",
@@ -1002,6 +1095,9 @@
       "description": "Separator component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1019,6 +1115,10 @@
       "registryDependencies": [
         "skt-theme",
         "button"
+      ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1041,6 +1141,10 @@
         "sheet",
         "skeleton",
         "tooltip"
+      ],
+      "dependencies": [
+        "@tabler/icons-react",
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1095,6 +1199,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/slider.tsx",
@@ -1112,8 +1219,9 @@
         "skt-theme"
       ],
       "dependencies": [
-        "sonner",
-        "next-themes"
+        "@tabler/icons-react",
+        "next-themes",
+        "sonner"
       ],
       "files": [
         {
@@ -1131,6 +1239,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "@tabler/icons-react"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/spinner.tsx",
@@ -1146,6 +1257,9 @@
       "description": "Switch component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1163,6 +1277,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/table.tsx",
@@ -1178,6 +1295,9 @@
       "description": "Tabs component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1211,6 +1331,9 @@
       "registryDependencies": [
         "skt-theme"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/textarea.tsx",
@@ -1226,6 +1349,9 @@
       "description": "Toggle component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {
@@ -1244,6 +1370,9 @@
         "skt-theme",
         "toggle"
       ],
+      "dependencies": [
+        "react-aria-components"
+      ],
       "files": [
         {
           "path": "packages/ui/src/components/toggle-group.tsx",
@@ -1259,6 +1388,9 @@
       "description": "Tooltip component, themed for skt-ui-toolkit.",
       "registryDependencies": [
         "skt-theme"
+      ],
+      "dependencies": [
+        "react-aria-components"
       ],
       "files": [
         {

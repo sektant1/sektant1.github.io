@@ -3,6 +3,9 @@
   "name": "slider",
   "title": "Slider",
   "description": "Slider component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "react-aria-components"
+  ],
   "registryDependencies": [
     "skt-theme"
   ],

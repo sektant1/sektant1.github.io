@@ -3,6 +3,9 @@
   "name": "log-console",
   "title": "Log Console",
   "description": "Log Console component, themed for skt-ui-toolkit.",
+  "dependencies": [
+    "@tabler/icons-react"
+  ],
   "registryDependencies": [
     "skt-theme",
     "button"

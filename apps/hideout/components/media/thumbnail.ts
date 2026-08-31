@@ -5,8 +5,10 @@
  * every front-matter thumbnail to match it — so a 1254×1254 logo and a
  * 1280×720 screenshot arrive the same size and the grid reads as a grid.
  *
- * The generator in scripts/sync-content-assets.mjs reads these values, so the
- * ratio the CSS fits to and the ratio the files are encoded at cannot drift.
+ * The generator in scripts/sync-content-assets.mjs imports these values, so
+ * the ratio the CSS fits to and the ratio the files are encoded at cannot
+ * drift. Keep this file free of imports of its own: it is loaded by a plain
+ * node script as well as by the bundler.
  */
 export const THUMB_WIDTH = 960
 export const THUMB_HEIGHT = 540

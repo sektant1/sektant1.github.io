@@ -11,14 +11,17 @@ import path from "node:path";
 import matter from "gray-matter";
 import sharp from "sharp";
 
+// Imported, not restated. thumbnail.ts is what the CSS fits into and it has
+// always claimed this script reads it — but the numbers were typed again here,
+// so the guarantee was prose and nothing would have caught the two drifting.
+import {
+  THUMB_HEIGHT,
+  THUMB_WIDTH,
+} from "../components/media/thumbnail.ts";
+
 const root = process.cwd();
 const contentRoot = path.join(root, "content");
 const publicRoot = path.join(root, "public", "content-assets");
-
-// Kept in step with components/media/thumbnail.ts, which is what the CSS fits
-// into. 960×540 covers the largest card at 2× without being wasteful.
-const THUMB_WIDTH = 960;
-const THUMB_HEIGHT = 540;
 
 const COLLECTIONS = ["posts", "projects", "games"];
 
