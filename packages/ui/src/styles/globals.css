@@ -427,16 +427,24 @@
  * five-pixel pitch while the globe beside it holds one — two rasters, two
  * screens, and the illusion is gone.
  *
- * Three rows to a cycle: the pale core the beam leaves at the top of a line,
- * the ink itself under it, and the gap the page shows through. --ascii-ink
- * carries the colour, because background-image cannot read currentColor the
- * way text-shadow can. */
+ * Three rows to a cycle: the hot core the beam leaves at the top of a line,
+ * the ink itself under it, and the gap where the phosphor is not being
+ * driven. --ascii-ink carries the colour, because background-image cannot
+ * read currentColor the way text-shadow can.
+ *
+ * The swing across those rows is the whole difficulty. Drive the core to
+ * near-white and vent the gap to nothing and the raster stops being a texture
+ * inside the letter and becomes the letter — a stack of pale bars with holes
+ * between them, in no particular shape. So the core is the ink lifted, not
+ * replaced; the body is the ink itself; and the gap keeps 55% of it, which is
+ * the alpha the globe's own hologram pass leaves on an unlit row. Same
+ * surface, same number. */
 @utility crt-holo-fill {
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--ascii-ink) 22%, oklch(0.98 0.05 158)) 0 1px,
-    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 3px,
-    transparent 3px 4px
+    color-mix(in oklch, var(--ascii-ink) 82%, white) 0 1px,
+    var(--ascii-ink) 1px 3px,
+    color-mix(in oklch, var(--ascii-ink) 55%, transparent) 3px 4px
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -454,18 +462,19 @@
    tiling half-blocks and the LED grid was the picture; with the raster clipped
    inside the letterforms there are no seams left for it to bleed into. */
 @utility crt-holo-bloom {
-  /* Driven before it is haloed, in that order: the globe's canvas arrives at
-     the compositor already lit by the pass that drew it, and a gradient
-     clipped to text does not — so the level has to be put back here or the
-     art reads as the same picture at a lower gain.
+  /* One wide stop, and no tight one. The globe's canvas is a dense image and
+     can carry a one-pixel halo; this fill is rastered, so a tight shadow
+     haloes each row separately, fills the gaps back in from the sides, and
+     the letterforms drown in their own glow. Wide and faint spills off the
+     mass as a whole instead.
 
-     One wide stop, and no tight one. The globe's canvas is a dense image and
-     can carry a one-pixel halo; this fill is vented — every fourth row is
-     transparent — so a tight shadow haloes each surviving row separately,
-     fills the gaps back in from the sides, and the letterforms drown in their
-     own glow. Wide and faint spills off the mass as a whole instead. */
-  filter: brightness(1.14) saturate(1.05)
-    drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 22%, transparent));
+     Held to a spill the strokes can survive. The gain that used to sit in
+     front of this was making up for a fill mixed toward white — with the ink
+     carrying its own level the art arrives lit, and brightness on top of that
+     only pushes the raster into the halo, which is the smear. Saturation
+     stays: a phosphor gets more coloured as it is driven, not less. */
+  filter: saturate(1.06)
+    drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 18%, transparent));
 }
 
 /* The level wavering as the beam re-acquires, borrowed from the pass on the
@@ -506,28 +515,11 @@
   }
 }
 
-/* Scanlines painted *inside* the glyphs rather than over them. The gradient
-   is the text's fill via background-clip, so there is no rectangle covering
-   the block and the effect follows the letterforms exactly.
-
-   --ascii-ink carries the colour, because background-image cannot read
-   currentColor the way text-shadow can. */
-@utility crt-scanfill {
-  /* The same three rows crt-holo-fill lays down, and for the same reason:
-     art on this screen is scanned by one beam, so its raster cannot change
-     pitch from one block to the next. Pixels, not em — an em-sized raster
-     tracks the glyph, and two blocks of art at different sizes then read as
-     two different screens. */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    color-mix(in oklch, var(--ascii-ink) 22%, oklch(0.98 0.05 158)) 0 1px,
-    color-mix(in oklch, var(--ascii-ink) 52%, oklch(0.95 0.09 158)) 1px 3px,
-    transparent 3px 4px
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
+/* crt-scanfill was here: the same gradient, the same clip, the same three
+   rows, under a second name and with no caller. Two copies of a raster that
+   the comment above insists cannot differ from block to block is the one
+   duplication this file cannot afford — the next person to retune the pitch
+   would have found one of them. crt-holo-fill is the single definition. */
 
 /* The raster, cut into the picture rather than laid over it.
  *
@@ -553,6 +545,15 @@
  * drive it toward 45%; the page-wide default is deliberately softer.
  */
 @utility crt-interlace {
+  /* Multiply, so the cut is a fraction of what is under it rather than a
+     fixed amount of black laid on top. Painted flat, the same alpha that
+     barely dents a lit glyph is an enormous proportional change to a
+     near-black ground — a 24% black over rgb(3,19,10) is a visible bar, and a
+     page of them is a screen with stripes on it rather than a screen. The
+     ground is nearly black already; multiplying it leaves it nearly black,
+     and the raster shows up only where the phosphor is actually being
+     driven. */
+  mix-blend-mode: multiply;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0 var(--crt-raster-line, 1px),
@@ -563,23 +564,32 @@
 
 /* The other half of the raster: the row the beam is actually drawing.
  *
- * Screen, so it can only add — which is exactly wrong for the gap and exactly
- * right here. On the near-black ground it lifts the row a little; on a lit
- * glyph it drives the phosphor toward the pale top of the ramp, which is the
- * hot core the hologram pass gets from its top two stops. Split off from
- * crt-interlace because the two pull in opposite directions and an element
- * carries one blend mode.
+ * Gain, not addition. Screen adds a fixed amount of light to whatever is
+ * under it, so the row it lit was as bright over empty page as it was over a
+ * glyph — and on a ground this dark a fixed addition is the largest
+ * proportional change on the screen, which is what put visible bars across
+ * every empty panel. color-dodge divides instead: every row it touches comes
+ * out a fixed *fraction* brighter, so the ground stays ground and the drive
+ * lands where there is phosphor to drive. The cut on crt-interlace is the
+ * same bargain in the other direction, which is what keeps the two halves
+ * symmetrical.
  *
- * Same 2px cycle and the same --crt-raster-line, so the light lands on the
- * rows the cut left alone. Offset by nothing: a beam that lit the gap would
- * fill the raster back in.
+ * The gap rows stay transparent, which dodge leaves alone exactly as it
+ * leaves black alone — and unlike black, a transparent row is still nothing
+ * if the blend is ever dropped, rather than a bar of ink across the page. The
+ * strength is how far the lit row is mixed off black: at 16% the row comes
+ * out about a sixth brighter than it went in.
+ *
+ * Same cycle and the same --crt-raster-line as the cut, so the light lands on
+ * the rows the cut left alone. Offset by nothing: a beam that lit the gap
+ * would fill the raster back in.
  */
 @utility crt-beam {
-  mix-blend-mode: screen;
+  mix-blend-mode: color-dodge;
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), transparent)
-      0 var(--crt-raster-line, 1px),
+    color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), black) 0
+      var(--crt-raster-line, 1px),
     transparent var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
   );
 }

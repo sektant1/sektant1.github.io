@@ -37,8 +37,6 @@ type TerminalFrameProps = React.ComponentProps<"section"> & {
   stamp?: React.ReactNode
   /** Right-hand end of the bottom rule, opposite `footer`. */
   footerStamp?: React.ReactNode
-  /** Draws the close boxes a windowed terminal puts in its corners. */
-  corners?: boolean
   /** Draws the scroll rail down the inside edge. Decorative. */
   rail?: boolean
   /** Removes the padding-free default so short panels can breathe. */
@@ -49,10 +47,14 @@ type TerminalFrameProps = React.ComponentProps<"section"> & {
  * A bordered panel dressed as a terminal readout: a bracketed title cut into
  * the top rule, a status lamp, and an optional footer stamp.
  *
- * The optional chrome — corner boxes, a scroll rail, a stamp at each end of
- * the rules — is what a windowed console of this era actually carried, and it
- * is what makes a stack of panels read as one instrument rather than as cards
- * with borders.
+ * The optional chrome — a scroll rail, a stamp at each end of the rules — is
+ * what a windowed console of this era actually carried, and it is what makes
+ * a stack of panels read as one instrument rather than as cards with borders.
+ *
+ * The four boxed `x` marks that used to sit in the corners are gone. They
+ * were drawn over the rules rather than in them, so each one covered whatever
+ * the corner already held — the stamp on the right, the footer label on the
+ * left — and the panel is denser without them anyway.
  */
 function TerminalFrame({
   title,
@@ -60,7 +62,6 @@ function TerminalFrame({
   status = "online",
   stamp,
   footerStamp,
-  corners = false,
   rail = false,
   className,
   bodyClassName,
@@ -86,8 +87,6 @@ function TerminalFrame({
           className="absolute inset-x-0 top-0 h-[3px] hazard-stripe"
         />
       ) : null}
-
-      {corners ? <CornerBoxes /> : null}
 
       {/* The title rule is a plate, not a line of text on the body: a wash
           behind it separates the panel's label from its contents at a glance,
@@ -123,30 +122,6 @@ function TerminalFrame({
         </div>
       ) : null}
     </section>
-  )
-}
-
-/** The four boxed marks a window of this era wore at its corners. */
-function CornerBoxes() {
-  return (
-    <span aria-hidden="true" className="pointer-events-none">
-      {[
-        "start-0 top-0 border-e border-b",
-        "end-0 top-0 border-s border-b",
-        "start-0 bottom-0 border-e border-t",
-        "end-0 bottom-0 border-s border-t",
-      ].map((position) => (
-        <span
-          key={position}
-          className={cn(
-            "absolute z-1 flex size-3 items-center justify-center border-border bg-background font-mono text-[0.5rem] leading-none text-terminal-chrome-dim",
-            position
-          )}
-        >
-          x
-        </span>
-      ))}
-    </span>
   )
 }
 

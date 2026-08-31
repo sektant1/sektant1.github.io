@@ -60,7 +60,6 @@ export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
       stamp={STATES[state].stamp}
       footer={`PRYPIAT ${formatCoordinate(STATION)}`}
       footerStamp={hint}
-      corners
       className={className}
       bodyClassName="flex min-h-[26rem] flex-col overflow-hidden"
     >
