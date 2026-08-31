@@ -46,8 +46,8 @@
      * sitting at, which is the relationship in the plate — a pale mint mass
      * with a saturated green halo. */
     text-shadow:
-      0 0 6px color-mix(in oklch, var(--primary) 20%, transparent),
-      0 0 16px color-mix(in oklch, var(--primary) 12%, transparent);
+      0 0 6px color-mix(in oklch, var(--primary) 13%, transparent),
+      0 0 16px color-mix(in oklch, var(--primary) 8%, transparent);
     /* The site is a text terminal first. Body copy is mono; the display face
        is reserved for headings and labels, where it reads as signage. */
     font-size: 0.875rem;
@@ -71,10 +71,16 @@
     & .text-primary,
     & .text-terminal-chrome,
     & .text-terminal-chrome-dim {
+      /* Three stops, all of them well down from where they were. A halo is
+         drawn per glyph, so in a line of text the spill from every letter
+         lands on its neighbours and on the leading above and below — the
+         levels that look like emission around one lit word add up to a green
+         wash under a whole paragraph, and the page stops reading as green
+         type on black and starts reading as green on green. */
       text-shadow:
-        0 0 5px color-mix(in oklch, var(--primary) 48%, transparent),
-        0 0 14px color-mix(in oklch, var(--primary) 26%, transparent),
-        0 0 30px color-mix(in oklch, var(--primary) 12%, transparent);
+        0 0 5px color-mix(in oklch, var(--primary) 30%, transparent),
+        0 0 14px color-mix(in oklch, var(--primary) 15%, transparent),
+        0 0 30px color-mix(in oklch, var(--primary) 7%, transparent);
     }
   }
 
@@ -101,9 +107,16 @@
 @utility tube-face {
   /* Both halves of the raster on one dial each, set here rather than at the
      layer that uses them, so a viewport that needs a quieter face can turn
-     the whole face down in one place. */
-  --crt-beam-strength: 20%;
-  --crt-raster-gap: 16%;
+     the whole face down in one place.
+   *
+     The cut carries more of the raster than the lift does, which is not
+     symmetry for its own sake. Darkening scales all three channels down and
+     cannot leave the gamut, so it holds the phosphor's colour exactly;
+     brightening runs the lit channel into its ceiling, and once green is
+     pinned at full only red and blue can still rise — which washes the hue
+     out toward white. So the gap does the work and the beam only tops it up. */
+  --crt-beam-strength: 10%;
+  --crt-raster-gap: 20%;
 
   /* A phone is the hard case. The raster's pitch is fixed in CSS pixels — it
      has to be, or a page zoomed on a phone would be scanned by a coarser beam
@@ -112,8 +125,8 @@
      raster across two-thirds of the strokes. Turn the face down rather than
      the pitch up: the screen stays one screen, and the text keeps its rows. */
   @media (width < 40rem) {
-    --crt-beam-strength: 12%;
-    --crt-raster-gap: 10%;
+    --crt-beam-strength: 6%;
+    --crt-raster-gap: 12%;
   }
 
   &::after {
@@ -132,8 +145,9 @@
 
        Dodge rather than screen: the row comes out a fixed fraction brighter
        instead of a fixed amount brighter, so an empty panel stays empty and
-       only driven phosphor gets the raster. crt-beam carries the reasoning in
-       full.
+       only driven phosphor gets the raster. Neutral grey rather than the
+       beam's own green, or the division lands hardest on the green channel
+       and walks the whole page toward it. crt-beam carries both in full.
 
        Written out rather than applied from crt-beam because a pseudo-element
        cannot carry a class, and the utility is what the toolkit ships. The
@@ -141,8 +155,7 @@
     mix-blend-mode: color-dodge;
     background-image: repeating-linear-gradient(
       to bottom,
-      color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), black) 0
-        1px,
+      color-mix(in srgb, white var(--crt-beam-strength, 10%), black) 0 1px,
       transparent 1px 2px
     );
   }
@@ -165,7 +178,14 @@
   }
 
   /* The glass: emission pooling at the top of the tube, and the corners
-     falling away. Behind the content, so text stays crisp. */
+     falling away. Behind the content, so text stays crisp.
+   *
+     The pool is the one green the page adds that is not a glyph, and it lies
+     over the half of the screen most of the reading happens in — so it is
+     held to a level that reads as emission rather than as a tint on the type.
+     It was drawn at 10%, which put a measurable green cast on body copy in
+     the top half and none in the bottom, and a tube whose colour depends on
+     how far down the page you are is not one screen. */
   &::before {
     content: "";
     position: fixed;
@@ -175,7 +195,7 @@
     background-image:
       radial-gradient(
         ellipse at 50% 0%,
-        color-mix(in oklch, var(--primary) 10%, transparent),
+        color-mix(in oklch, var(--primary) 6%, transparent),
         transparent 70%
       ),
       radial-gradient(
