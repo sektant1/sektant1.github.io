@@ -99,6 +99,23 @@
  * Fixed rather than per-section, so content scrolls across a screen that holds
  * still. */
 @utility tube-face {
+  /* Both halves of the raster on one dial each, set here rather than at the
+     layer that uses them, so a viewport that needs a quieter face can turn
+     the whole face down in one place. */
+  --crt-beam-strength: 20%;
+  --crt-raster-gap: 16%;
+
+  /* A phone is the hard case. The raster's pitch is fixed in CSS pixels — it
+     has to be, or a page zoomed on a phone would be scanned by a coarser beam
+     than the same page on a monitor — but the type it lands on is not: body
+     copy is 12px here against 14px on a desktop, so every glyph gets the same
+     raster across two-thirds of the strokes. Turn the face down rather than
+     the pitch up: the screen stays one screen, and the text keeps its rows. */
+  @media (width < 40rem) {
+    --crt-beam-strength: 12%;
+    --crt-raster-gap: 10%;
+  }
+
   &::after {
     content: "";
     position: fixed;
@@ -113,13 +130,19 @@
        No opacity of its own: the strength is in --crt-beam-strength, so the
        lit rows and the cut rows are dialled in the same units.
 
+       Dodge rather than screen: the row comes out a fixed fraction brighter
+       instead of a fixed amount brighter, so an empty panel stays empty and
+       only driven phosphor gets the raster. crt-beam carries the reasoning in
+       full.
+
        Written out rather than applied from crt-beam because a pseudo-element
        cannot carry a class, and the utility is what the toolkit ships. The
        two have to stay in step. */
-    mix-blend-mode: screen;
+    mix-blend-mode: color-dodge;
     background-image: repeating-linear-gradient(
       to bottom,
-      color-mix(in oklch, var(--primary) 22%, transparent) 0 1px,
+      color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), black) 0
+        1px,
       transparent 1px 2px
     );
   }
@@ -131,17 +154,14 @@
      The gap is held well under what the globe runs at. The hologram pass is
      drawing wireframe over empty space, where a 45% cut costs nothing;
      the same depth across a page of 9px mono takes the counters out of e and
-     a, and this site is a text terminal before it is a screen. */
+     a, and this site is a text terminal before it is a screen.
+   *
+     The depth itself is on .tube-face with the beam it answers to. */
   & > .tube-raster {
     position: fixed;
     inset: 0;
     z-index: 62;
     pointer-events: none;
-    /* Held low deliberately. The cut is the only thing on the face that takes
-       light away, and the page is being driven for brightness — a deep raster
-       here and a hot palette above cancel out, leaving a screen that is busy
-       rather than bright. */
-    --crt-raster-gap: 16%;
   }
 
   /* The glass: emission pooling at the top of the tube, and the corners

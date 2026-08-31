@@ -22,6 +22,13 @@ import { pad } from "@/lib/format"
  * hardware checks would make it a screensaver; keeping it truthful makes it
  * the same POST the log panel shows in slower motion.
  *
+ * That rule is also what sets the length. The sequence used to open with
+ * twenty lines of generic kernel boot — GRUB, initrd, ACPI, the PCI bus —
+ * none of which this site has or does, and all of which the reader had to sit
+ * through before the log said a single true thing about the archive. Cutting
+ * them took the greeting from about six seconds to under four without
+ * removing one line that reports real work.
+ *
  * Laid out like a mission briefing: the object turning on one side, the log
  * filling in on the other. The coin is the same ASCII renderer the front page
  * uses, pointed at a different model — no second engine, and it is already
@@ -68,69 +75,48 @@ function bootLines({ posts, projects, games, cms }: ColdBootProps): BootLine[] {
   return [
     { label: "[0.000] POST::БП", status: "ok", detail: "NOMINAL" },
     { label: "[0.018] SYNC::ЭЛТ/P1", status: "ok", detail: "60HZ" },
-    { label: "[0.031] BOOT::GRUB", status: "ok", detail: "2.12" },
-    { label: "[0.044] LOAD::VMLINUX", status: "ok", detail: "6.12-FLD" },
-    { label: "[0.057] LOAD::INITRD", status: "ok", detail: "32M" },
-    { label: "[0.083] DECOMPRESS::KERNEL", status: "ok", detail: "X86_64" },
-    { label: "[0.101] INIT::EARLY.CONSOLE", status: "ok", detail: "TTY0" },
-    { label: "[0.126] DETECT::DMI", status: "ok", detail: "FLD-01" },
-    { label: "[0.149] INIT::CPU0", status: "ok", detail: "ONLINE" },
-    { label: "[0.177] MAP::ПАМЯТЬ", status: "ok", detail: "256M" },
-    { label: "[0.203] INIT::CRNG", status: "ok", detail: "READY" },
-    { label: "[0.228] SELECT::CLOCKSOURCE", status: "ok", detail: "TSC" },
-    { label: "[0.254] PARSE::ACPI.TABLES", status: "ok", detail: "6" },
-    { label: "[0.281] ENUM::PCI.BUS", status: "ok", detail: "DONE" },
-    { label: "[0.307] BIND::SIMPLEDRM", status: "ok", detail: "FB0" },
-    { label: "[0.336] INIT::ATKBD", status: "ok", detail: "SERIO0" },
-    { label: "[0.362] INIT::USB.CORE", status: "ok", detail: "2.0" },
-    { label: "[0.391] INIT::SCSI.CORE", status: "ok", detail: "READY" },
-    { label: "[0.424] INIT::NET.CORE", status: "ok", detail: "ONLINE" },
-    { label: "[0.458] INIT::IPV4", status: "ok", detail: "TCP" },
-    { label: "[0.486] SKIP::IPV6", status: "skip", detail: "POLICY" },
-    { label: "[0.517] CHECK::EXT4", status: "ok", detail: "CLEAN" },
-    { label: "[0.549] MOUNT::КОРЕНЬ", status: "ok", detail: "RO" },
-    { label: "[0.581] START::SYSTEMD", status: "ok", detail: "257" },
-    { label: "[0.617] START::JOURNALD", status: "ok", detail: "VOLATILE" },
-    { label: "[0.652] START::UDEVD", status: "ok", detail: "READY" },
-    { label: "[0.694] REACHED::LOCAL-FS", status: "ok", detail: "TARGET" },
-    { label: "[0.738] START::NETWORKD", status: "ok", detail: "ETH0" },
-    { label: "[0.781] WAIT::NETWORK.ONLINE", status: "ok", detail: "ROUTABLE" },
-    { label: "[0.826] RESOLVE::СЕТЬ/GEO", status: "warn", detail: "PENDING" },
-    { label: "[0.871] REACHED::NETWORK", status: "ok", detail: "TARGET" },
-    { label: "[0.917] LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
-    { label: "[0.962] CHECK::AP.MASK", status: "ok", detail: "6PX" },
-    { label: "[1.014] PRELOAD::MODEL/BTC", status: "ok", detail: "GLB" },
+    { label: "[0.044] INIT::EARLY.CONSOLE", status: "ok", detail: "TTY0" },
+    { label: "[0.071] DETECT::DMI", status: "ok", detail: "FLD-01" },
+    { label: "[0.098] MAP::ПАМЯТЬ", status: "ok", detail: "256M" },
+    { label: "[0.126] INIT::CRNG", status: "ok", detail: "READY" },
+    { label: "[0.157] MOUNT::КОРЕНЬ", status: "ok", detail: "RO" },
+    { label: "[0.189] START::SYSTEMD", status: "ok", detail: "257" },
+    { label: "[0.223] INIT::NET.CORE", status: "ok", detail: "ONLINE" },
+    { label: "[0.258] SKIP::IPV6", status: "skip", detail: "POLICY" },
+    { label: "[0.294] WAIT::NETWORK.ONLINE", status: "ok", detail: "ROUTABLE" },
+    { label: "[0.331] RESOLVE::СЕТЬ/GEO", status: "warn", detail: "PENDING" },
+    { label: "[0.369] LOAD::FNT/BENDER", status: "ok", detail: "WOFF" },
+    { label: "[0.408] CHECK::AP.MASK", status: "ok", detail: "6PX" },
+    { label: "[0.448] PRELOAD::MODEL/BTC", status: "ok", detail: "GLB" },
     {
-      label: "[1.067] MOUNT>АРХИВ/CONTENT",
+      label: "[0.489] MOUNT>АРХИВ/CONTENT",
       status: "ok",
       detail: `${pad(posts + projects + games)} OBJ`,
     },
-    { label: "[1.113] MAP::NAV.ROUTES", status: "ok", detail: "READY" },
-    { label: "[1.159] IDX>POSTS", status: "ok", detail: pad(posts) },
-    { label: "[1.202] IDX>PROJECTS", status: "ok", detail: pad(projects) },
+    { label: "[0.531] MAP::NAV.ROUTES", status: "ok", detail: "READY" },
+    { label: "[0.574] IDX>POSTS", status: "ok", detail: pad(posts) },
+    { label: "[0.618] IDX>PROJECTS", status: "ok", detail: pad(projects) },
     {
-      label: "[1.248] IDX>GAMES",
+      label: "[0.663] IDX>GAMES",
       status: games > 0 ? "ok" : "skip",
       detail: pad(games),
     },
-    { label: "[1.291] SEARCH::FTS", status: "ok", detail: "READY" },
+    { label: "[0.709] SEARCH::FTS", status: "ok", detail: "READY" },
     {
-      label: "[1.337] LOAD::SEARCH.IDX",
+      label: "[0.756] LOAD::SEARCH.IDX",
       status: "ok",
       detail: `${pad(posts)} DOC`,
     },
-    { label: "[1.381] CHECK::CACHE.LOCAL", status: "ok", detail: "READY" },
     {
-      label: "[1.426] CHECK::CMS.LOCAL",
+      label: "[0.804] CHECK::CMS.LOCAL",
       status: cms ? "ok" : "skip",
       detail: cms ? "RW" : "N/A",
     },
-    { label: "[1.472] START::HIDEOUT.SVC", status: "ok", detail: "ACTIVE" },
-    { label: "[1.519] ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
-    { label: "[1.566] OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
-    { label: "[1.612] VERIFY::KEYRING", status: "ok", detail: "ED25519" },
-    { label: "[1.658] AUTH::ОПЕРАТОР", status: "ok", detail: "ДОПУСК" },
-    { label: "[1.704] REACHED::HIDEOUT", status: "ok", detail: "TARGET" },
+    { label: "[0.853] START::HIDEOUT.SVC", status: "ok", detail: "ACTIVE" },
+    { label: "[0.903] ARM::ЖУРНАЛ/SITE", status: "ok", detail: "LIVE" },
+    { label: "[0.954] OPEN::CMD.IFACE", status: "ok", detail: "CTRL-K" },
+    { label: "[1.006] AUTH::ОПЕРАТОР", status: "ok", detail: "ДОПУСК" },
+    { label: "[1.059] REACHED::HIDEOUT", status: "ok", detail: "TARGET" },
   ]
 }
 

@@ -148,7 +148,17 @@ html[data-cold-boot="skip"] .cold-boot {
     -1px 1px 0 var(--background),
     1px -1px 0 var(--background),
     -1px -1px 0 var(--background);
-  opacity: var(--marker-visibility, 1);
+  /* Nothing until it has been placed.
+   *
+     A marker is appended to <body> at top:0 left:0 and only gets its real
+     position from the first update(), which cannot run until the scene has
+     something to project against. Defaulting this to 1 meant the callout
+     spent that gap at full strength in the corner of the viewport, over the
+     classification bar and over the boot sequence — and on a first load,
+     which is exactly when the model is slowest to arrive, that gap is long
+     enough to read. Zero is the honest default: a pin that does not know
+     where it is yet is not drawn. update() sets the real value. */
+  opacity: var(--marker-visibility, 0);
   will-change: transform, opacity;
 }
 
@@ -218,16 +228,21 @@ html[data-cold-boot="skip"] .cold-boot {
   pointer-events: none;
 }
 
+/* The leader line and its endpoint start unplaced too: both ends of the line
+   are still at the origin until update() runs, so an opaque one draws a stroke
+   across the top-left corner of the page. */
 .ascii-planet-location-connectors__line {
   stroke: var(--primary);
   stroke-width: 1.25;
   /* Long-short-dot: a leader line, not a border. */
   stroke-dasharray: 7 4 1 4;
+  opacity: 0;
   transition: opacity 150ms ease-out;
 }
 
 .ascii-planet-location-connectors__endpoint {
   fill: var(--primary);
+  opacity: 0;
   transition: opacity 150ms ease-out;
 }
 
@@ -252,6 +267,10 @@ html[data-cold-boot="skip"] .cold-boot {
     );
   animation: planet-pin 1.8s ease-in-out infinite;
   transition: opacity 150ms ease-out;
+  /* Unplaced until update() says otherwise, for the reason on the label. The
+     reticle is the half that pulses, so an unplaced one does not just sit in
+     the corner — it blinks there. */
+  opacity: 0;
   will-change: transform, opacity;
 }
 
