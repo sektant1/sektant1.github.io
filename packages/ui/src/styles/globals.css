@@ -76,10 +76,19 @@
    colour entirely.
 
    Dark mode only: on a light ground there is no headroom to drive into, and a
-   brightened dark glyph is just a washed-out one. */
+   brightened dark glyph is just a washed-out one.
+
+   Brightness alone, with no saturate beside it. The tube's green sits on the
+   edge of sRGB — its green channel is already at the ceiling — so saturate()
+   could not make it greener, it could only push red and blue *down* while
+   asking green for 12% it does not have. What came back depended on the
+   monitor: an sRGB panel clipped it and a wide-gamut one rendered part of the
+   overflow, which is two different palettes for the same stylesheet. Scaling
+   all three channels keeps the ratio between them, so the colour stays the
+   colour and only its level moves — and a level is all this was ever for. */
 @utility crt-glow {
   @variant dark {
-    filter: brightness(1.22) saturate(1.12);
+    filter: brightness(1.06);
   }
 }
 
@@ -471,10 +480,12 @@
      Held to a spill the strokes can survive. The gain that used to sit in
      front of this was making up for a fill mixed toward white — with the ink
      carrying its own level the art arrives lit, and brightness on top of that
-     only pushes the raster into the halo, which is the smear. Saturation
-     stays: a phosphor gets more coloured as it is driven, not less. */
-  filter: saturate(1.06)
-    drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 18%, transparent));
+     only pushes the raster into the halo, which is the smear. The saturate
+     went for the reason crt-glow's did: the ink is already at the edge of the
+     gamut, so it only ever asked for green that was not there. */
+  filter: drop-shadow(
+    0 0 5px color-mix(in oklch, var(--primary) 18%, transparent)
+  );
 }
 
 /* The level wavering as the beam re-acquires, borrowed from the pass on the
@@ -557,7 +568,7 @@
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0 var(--crt-raster-line, 1px),
-    color-mix(in oklch, black var(--crt-raster-gap, 24%), transparent)
+    color-mix(in srgb, black var(--crt-raster-gap, 24%), transparent)
       var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
   );
 }
@@ -574,11 +585,22 @@
  * same bargain in the other direction, which is what keeps the two halves
  * symmetrical.
  *
+ * The gain is neutral grey, not the beam's own green, and that is the whole
+ * correctness of it: dodge divides per channel, so a green gain divides the
+ * green channel hardest and leaves red almost alone — every lit row came out
+ * not just brighter but greener, and a page of them walked the entire screen
+ * toward pure green. It looked like a hotter tube on one monitor and like a
+ * different palette on the next. Grey raises all three channels by the same
+ * factor, which is what a beam does: a single-gun tube has one phosphor, so
+ * driving it harder changes how bright the green is, never which green it is.
+ *
+ * Mixed in srgb rather than oklch so the strength means exactly what the
+ * blend maths does with it: at 10% the row is divided by 0.9, a ninth
+ * brighter, on every channel.
+ *
  * The gap rows stay transparent, which dodge leaves alone exactly as it
  * leaves black alone — and unlike black, a transparent row is still nothing
- * if the blend is ever dropped, rather than a bar of ink across the page. The
- * strength is how far the lit row is mixed off black: at 16% the row comes
- * out about a sixth brighter than it went in.
+ * if the blend is ever dropped, rather than a bar of ink across the page.
  *
  * Same cycle and the same --crt-raster-line as the cut, so the light lands on
  * the rows the cut left alone. Offset by nothing: a beam that lit the gap
@@ -588,7 +610,7 @@
   mix-blend-mode: color-dodge;
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--primary) var(--crt-beam-strength, 16%), black) 0
+    color-mix(in srgb, white var(--crt-beam-strength, 10%), black) 0
       var(--crt-raster-line, 1px),
     transparent var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
   );
@@ -668,7 +690,7 @@
    copy without claiming the top of the ramp the way crt-glow does. */
 @utility crt-glow-soft {
   @variant dark {
-    filter: brightness(1.11) saturate(1.06);
+    filter: brightness(1.03);
   }
 }
 

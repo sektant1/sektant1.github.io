@@ -10,6 +10,17 @@
  * mint, a near-black with a green undertone behind it, and red kept for
  * faults only. Values are the sektant.dev tube, converted to oklch.
  *
+ * The beam is deliberately kept a step below the top of sRGB. It used to sit
+ * at #35ff80, whose green channel is 255 — the exact edge of the gamut, with
+ * nowhere left to go. Every filter in the toolkit that brightens or saturates
+ * was then asking for green that does not exist, and what came back was the
+ * monitor's decision rather than the stylesheet's: an sRGB panel clipped it
+ * and a wide-gamut one rendered part of the overflow, so the same page was a
+ * different green on two machines. At 240 the beam has headroom, crt-glow
+ * lands inside the gamut, and the tube is the colour it says it is
+ * everywhere. The hue does not move — 150 is the P1 phosphor, and that was
+ * never the part that was wrong.
+ *
  * A phosphor tube has no light mode — a green-on-white terminal is a
  * simulation of paper, not of a screen — so the tokens are declared once and
  * repeated under .dark rather than split into two schemes. */
@@ -34,7 +45,7 @@
   --popover: oklch(0.2625 0.0537 153.6473);
   --popover-foreground: oklch(0.931 0.1116 155.9673);
 
-  --primary: oklch(0.8791 0.2285 150.0267); /* #35ff80 — the beam */
+  --primary: oklch(0.8398 0.2181 149.9797); /* #32f078 — the beam */
   --primary-foreground: oklch(0.1433 0.0264 157.8684); /* #020d06 */
 
   --secondary: oklch(0.2625 0.0537 153.6473);
@@ -55,11 +66,11 @@
 
   --border: oklch(0.4373 0.1104 150.3163); /* #12622f */
   --input: oklch(0.4373 0.1104 150.3163);
-  --ring: oklch(0.8791 0.2285 150.0267);
+  --ring: oklch(0.8398 0.2181 149.9797);
 
   /* Charts read as one beam at decreasing intensity rather than as five
      unrelated colours — a single-gun tube cannot do hue variety. */
-  --chart-1: oklch(0.8791 0.2285 150.0267);
+  --chart-1: oklch(0.8398 0.2181 149.9797);
   --chart-2: oklch(0.7688 0.1323 191.0468); /* #00cec8 — the cyan gun */
   --chart-3: oklch(0.797 0.2084 149.6977);
   --chart-4: oklch(0.5098 0.131 150.3234);
@@ -68,12 +79,12 @@
   /* The sidebar is the deepest surface: chassis behind the glass. */
   --sidebar: oklch(0.1433 0.0264 157.8684);
   --sidebar-foreground: oklch(0.9644 0.0537 158.4613);
-  --sidebar-primary: oklch(0.8791 0.2285 150.0267);
+  --sidebar-primary: oklch(0.8398 0.2181 149.9797);
   --sidebar-primary-foreground: oklch(0.1433 0.0264 157.8684);
   --sidebar-accent: oklch(0.2625 0.0537 153.6473);
-  --sidebar-accent-foreground: oklch(0.8791 0.2285 150.0267);
+  --sidebar-accent-foreground: oklch(0.8398 0.2181 149.9797);
   --sidebar-border: oklch(0.3205 0.0713 152.083);
-  --sidebar-ring: oklch(0.8791 0.2285 150.0267);
+  --sidebar-ring: oklch(0.8398 0.2181 149.9797);
 }
 
 /* The terminal roles are defined against --primary and --foreground in
@@ -109,25 +120,50 @@
   color: var(--background);
 }
 
-/* Pointers: one arrow, drawn in the tube's own colours.
+/* Pointers: the instrument acquiring a target, not an arrow.
  *
- * The plain mouse arrow rather than a reticle or a hand — it is the shape
- * every pointer has been for forty years, and nothing here is served by
- * making people learn a new one. Hovering something clickable fills the same
- * arrow with the beam instead of swapping it for a different drawing.
+ * The arrow this replaces was the one thing on the page that came from
+ * somebody else's operating system. Everything else here is an instrument —
+ * the globe carries a reticle that opens while it is scanning and contracts
+ * once it has the reader (see .geo-reticle), the location pins are target
+ * boxes with corner ticks, the meters are drawn in cells. The pointer is the
+ * part of that instrument the reader is actually holding, so it is drawn from
+ * the same vocabulary: four corner ticks with the beam's own dot in the
+ * middle, hotspot dead centre, aiming with the dot rather than with a tip.
+ *
+ * The states are the acquisition, which is also what fixes the real problem
+ * with the arrow: hovering a link only refilled the same silhouette, so the
+ * one signal that matters most on a page of links was a colour change you had
+ * to be looking at the pointer to notice.
+ *
+ *   scan     four open ticks around a single lit pixel. Nothing under us.
+ *   lock     the cell inverts — it fills with beam and the target falls out
+ *            of it as a hole. Which is exactly what this site's own hover
+ *            does everywhere else: a tag under the pointer drives the whole
+ *            cell and lets the glyphs drop out of it. Same idea, 16 pixels.
+ *   text     the caret, with the serifs a text cursor needs to sit between
+ *            two characters. The one shape here that cannot be reinvented
+ *            without costing someone their place in a line.
+ *   disabled the ticks alone, dimmed, with no dot at the centre. The
+ *            instrument is pointing at something that is not answering.
+ *
+ * Every mark is laid over a one-pixel shell of the tube's own black, so the
+ * pointer survives the surfaces it has to cross — a lit button, a project
+ * screenshot, the pale end of the globe.
  *
  * Two rules make it rasterise exactly, and a cursor is the one image on the
- * page that gets no second chance — it is drawn once at 16px and never scaled:
+ * page that gets no second chance — it is drawn once at 16px:
  *
  *   Stroke centres sit on half units. A 1-unit stroke centred on a whole
  *   coordinate straddles two pixels and each edge lands at 50% coverage, so
  *   the outline renders as two grey rows instead of one green one. Centred on
- *   x.5 it covers pixel x exactly.
+ *   x.5 it covers pixel x exactly. Solid marks are whole-unit rects instead,
+ *   which cover their pixels exactly for the same reason.
  *
- *   The hypotenuse is 45°. From the tip at 1.5,1.5 the right edge reaches
- *   9.5,9.5 — dx and dy equal, so the stair steps down it are all one pixel.
- *   It used to reach 10, and the extra unit put a two-pixel step in the middle
- *   of the one edge the eye tracks when it follows a pointer.
+ *   The ticks are two units long and start four in from the edge, so the gap
+ *   along each side stays open once the black shell has widened them. Shorter
+ *   and they read as dots; longer and the shell closes the gaps and the four
+ *   ticks become one box.
  *
  * Inline SVG data URIs: no asset pipeline, no request. Each names a real
  * cursor keyword as its fallback, so if the image fails the pointer still
@@ -136,22 +172,23 @@
  */
 :root,
 .dark {
-  /* Hotspot at the tip, 1 1 — the point of the arrow is what is pointing. */
+  /* Hotspot 8 8 on all four: the dot is what is pointing, and it stays in the
+     same place through every state so the aim never jumps on hover. */
   --cursor-default:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
-      1 1,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
+      8 8,
     default;
   --cursor-pointer:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2335ff80' stroke='%2304170c' stroke-width='1' stroke-linejoin='miter'/%3E%3C/svg%3E")
-      1 1,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='4' width='9' height='9' fill='%2304170c'/%3E%3Crect x='5' y='5' width='7' height='7' fill='%2332f078'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2304170c'/%3E%3C/svg%3E")
+      8 8,
     pointer;
   --cursor-text:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='7' y='2' width='2' height='12' fill='%23a9ffc9'/%3E%3C/svg%3E")
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='8' height='3' fill='%2304170c'/%3E%3Crect x='6' y='2' width='4' height='12' fill='%2304170c'/%3E%3Crect x='4' y='12' width='8' height='3' fill='%2304170c'/%3E%3Crect x='5' y='2' width='6' height='1' fill='%23a9ffc9'/%3E%3Crect x='7' y='3' width='2' height='10' fill='%23a9ffc9'/%3E%3Crect x='5' y='13' width='6' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
       8 8,
     text;
   --cursor-disabled:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M1.5%201.5V12.5L4.5%209.5V13.5H6.5V9.5H9.5Z' fill='%2304170c' stroke='%2335ff80' stroke-width='1' stroke-linejoin='miter' opacity='.45'/%3E%3C/svg%3E")
-      1 1,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23157a3b' stroke-width='1'/%3E%3C/svg%3E")
+      8 8,
     not-allowed;
 }
 
