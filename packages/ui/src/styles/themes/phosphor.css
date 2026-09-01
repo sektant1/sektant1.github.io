@@ -141,9 +141,10 @@
  *            of it as a hole. Which is exactly what this site's own hover
  *            does everywhere else: a tag under the pointer drives the whole
  *            cell and lets the glyphs drop out of it. Same idea, 16 pixels.
- *   text     the caret, with the serifs a text cursor needs to sit between
- *            two characters. The one shape here that cannot be reinvented
- *            without costing someone their place in a line.
+ *   text     a one-pixel caret axis, shelled so it keeps its place between
+ *            two characters on both dark and driven cells.
+ *   grab     two open clamp jaws around the target pixel.
+ *   grabbing those jaws contract and rise to the tube's hot level.
  *   disabled the ticks alone, dimmed, with no dot at the centre. The
  *            instrument is pointing at something that is not answering.
  *
@@ -165,29 +166,51 @@
  *   and they read as dots; longer and the shell closes the gaps and the four
  *   ticks become one box.
  *
- * Inline SVG data URIs: no asset pipeline, no request. Each names a real
- * cursor keyword as its fallback, so if the image fails the pointer still
- * says what it does. Colours are literal hex because cursor: url() cannot
- * read a custom property — they are the ramp above.
+ * Inline data URIs: no asset pipeline, no request. PNG leads because cursor
+ * engines are required to support it; a pixel-identical SVG follows with an
+ * explicit natural size. Each names a real cursor keyword as its final
+ * fallback, so the pointer still says what it does. Colours are literal hex
+ * because cursor: url() cannot read a custom property — they are the ramp
+ * above.
  */
 :root,
 .dark {
-  /* Hotspot 8 8 on all four: the dot is what is pointing, and it stays in the
+  /* Hotspot 8 8 throughout: the dot is what is pointing, and it stays in the
      same place through every state so the aim never jumps on hover. */
   --cursor-default:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAACUSURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBXo3cxgYGBgYLqlPgSvEJ8eEbCpMASGArI4JmwJkG5BpmDjWMMDnf3xqsAYiTDM2Dehq8AIWcZ7/Rh8q/rOI8/xHNwzDC+S6AG8Y4LIVRQ226LmkPoWBRZznP7aEhJ4WsEYjTBFME7pmZIBiALZ4xgaQ1VGcFygGANlCa0XK6idPAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
       8 8,
     default;
   --cursor-pointer:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='4' width='9' height='9' fill='%2304170c'/%3E%3Crect x='5' y='5' width='7' height='7' fill='%2332f078'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2304170c'/%3E%3C/svg%3E")
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABASURBVDjLY2AYBRQDRmyCLOI8//Fp+vPyC1wfCy5FejdzsIpfUp+Cwmei1AsEDUC3kWQDcHmFfl4gBCiOxmEAAHVoDhHPaMdtAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%2304170c'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%2332f078'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2304170c'/%3E%3C/svg%3E")
       8 8,
     pointer;
   --cursor-text:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='8' height='3' fill='%2304170c'/%3E%3Crect x='6' y='2' width='4' height='12' fill='%2304170c'/%3E%3Crect x='4' y='12' width='8' height='3' fill='%2304170c'/%3E%3Crect x='5' y='2' width='6' height='1' fill='%23a9ffc9'/%3E%3Crect x='7' y='3' width='2' height='10' fill='%23a9ffc9'/%3E%3Crect x='5' y='13' width='6' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABaSURBVDjLY2CgEDBiE2QR5/mPT9Ofl1/g+lhwKVr6Yi9W8WgJZxQ+E829AHMJss0EvQBTgB4WyBqp5oVRA6hgANZoxJWUYeLI0YkzIeFLysgG0D4pYwPILgAAa0klIQwlJZwAAAAASUVORK5CYII=")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='7' height='3' fill='%2304170c'/%3E%3Crect x='7' y='2' width='3' height='12' fill='%2304170c'/%3E%3Crect x='5' y='12' width='7' height='3' fill='%2304170c'/%3E%3Crect x='6' y='2' width='5' height='1' fill='%23a9ffc9'/%3E%3Crect x='8' y='3' width='1' height='10' fill='%23a9ffc9'/%3E%3Crect x='6' y='13' width='5' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
       8 8,
     text;
+  --cursor-grab:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAAB+SURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBXo3cxgYGBgYLqlPgSvEJ8eEbCpMASGArI4JmwJkG5BpmDgywGoAuv+x8eFex+dU9IDDBpgIKSAULgQNwOZvkgwgBHCGAYs4z398CQmvC2D+hmlCT0g4DSDkX2zqKM4LFAMAGapBHJas8vIAAAAASUVORK5CYII=")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
+      8 8,
+    grab;
+  --cursor-grabbing:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABtSURBVDjLY2AY8oARmyCLOM9/XBr+vPzCyIAPsIjz/GcR5/m/8v/J/yv/n8RgoxvOhM2QpS/2MhArjtUAGIiWcEahsQG8BmAzjGQDcHmHaAPwOZ8kL5BlAMz5S1/sxekVrAbgcjY2ceqnRLoDAHBRLZFEr34JAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%23a9ffc9' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
+      8 8,
+    grabbing;
   --cursor-disabled:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23157a3b' stroke-width='1'/%3E%3C/svg%3E")
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAAB5SURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBYLJ+gwMDAwM7+dehCvEJ8eEbCpMASGArI4JmwJkG5BpmDjWMMDnf6LVsIjz/EdXhM0QQmrIB+S4gOIwwIhGWBShK0ZOCwSjEd0Q9ISEDFAMwBbP2ACyOorzAsUAAJ+bUBge01WxAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23157a3b' stroke-width='1'/%3E%3C/svg%3E")
       8 8,
     not-allowed;
 }
@@ -195,21 +218,23 @@
 @layer base {
   /* The icon set draws with round caps and round joins, which is every other
      product's house style and none of this one's: on a screen where the type
-     is a raster, the banner is blocks and the pointer is a stair-stepped
-     arrow, a rounded stroke end is the single soft shape on the page.
+     is a raster, the banner is blocks and the pointer is a stepped reticle, a
+     rounded stroke end is the single soft shape on the page.
      Squared and mitred, the same icons read as if they were drawn on the
      grid the rest of the chrome is drawn on. */
   svg.tabler-icon {
     stroke-linecap: square;
     stroke-linejoin: miter;
   }
+}
 
-  html {
-    cursor: var(--cursor-default);
-  }
+/* These stay unlayered so semantic roles and explicit cursor utilities both
+   receive the theme instead of Tailwind's later native cursor declarations. */
+:where(html, .cursor-default) {
+  cursor: var(--cursor-default);
+}
 
-  /* Matched on role, not on class: anything the browser already treats as a
-     link, a button or a text field picks the right pointer up on its own. */
+:where(
   a[href],
   button,
   [role="button"],
@@ -217,21 +242,36 @@
   summary,
   label,
   select,
-  option {
-    cursor: var(--cursor-pointer);
-  }
+  option,
+  .cursor-pointer
+) {
+  cursor: var(--cursor-pointer);
+}
 
+:where(
   input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not(
       [type="radio"]
     ),
   textarea,
-  [contenteditable="true"] {
-    cursor: var(--cursor-text);
-  }
+  [contenteditable="true"],
+  .cursor-text
+) {
+  cursor: var(--cursor-text);
+}
 
+:where(.cursor-grab) {
+  cursor: var(--cursor-grab);
+}
+
+:where(.cursor-grab:active, .cursor-grabbing) {
+  cursor: var(--cursor-grabbing);
+}
+
+:where(
   :disabled,
   [aria-disabled="true"],
-  [data-disabled] {
-    cursor: var(--cursor-disabled);
-  }
+  [data-disabled],
+  .cursor-not-allowed
+) {
+  cursor: var(--cursor-disabled);
 }

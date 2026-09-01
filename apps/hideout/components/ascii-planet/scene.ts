@@ -277,7 +277,7 @@ export function createAsciiScene(
     lastX = event.clientX
     lastY = event.clientY
     host.setPointerCapture(event.pointerId)
-    host.style.cursor = "grabbing"
+    host.style.cursor = "var(--cursor-grabbing, grabbing)"
   }
   const onPointerMove = (event: PointerEvent) => {
     if (!dragging) return
@@ -289,7 +289,7 @@ export function createAsciiScene(
   const onPointerUp = (event: PointerEvent) => {
     dragging = false
     host.releasePointerCapture?.(event.pointerId)
-    host.style.cursor = "grab"
+    host.style.cursor = "var(--cursor-grab, grab)"
   }
   host.addEventListener("pointerdown", onPointerDown)
   host.addEventListener("pointermove", onPointerMove)

@@ -15,7 +15,7 @@ html[data-cold-boot="skip"] .cold-boot {
   margin-inline: auto;
   overflow: hidden;
   color: var(--primary);
-  cursor: grab;
+  cursor: var(--cursor-grab, grab);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -74,7 +74,7 @@ html[data-cold-boot="skip"] .cold-boot {
 }
 
 .ascii-planet-scene:active {
-  cursor: grabbing;
+  cursor: var(--cursor-grabbing, grabbing);
 }
 
 .ascii-planet-scene * {
