@@ -22,7 +22,6 @@ html[data-cold-boot="skip"] .cold-boot {
     transparent 58% 100%
   );
   transform: translateY(-100%);
-  will-change: transform, opacity;
   animation: cold-boot-sweep 860ms cubic-bezier(0.18, 0.72, 0.25, 1) 80ms both;
 }
 
@@ -32,8 +31,16 @@ html[data-cold-boot="skip"] .cold-boot {
   animation: cold-boot-panel 300ms steps(4, end) 120ms both;
 }
 
+/* No will-change on either of these, or on the sweep above.
+ *
+ * It was declared on both, and neither is the case it is for: a will-change
+ * that is set in a stylesheet and never removed is a compositor layer held for
+ * the life of the document, and these are one-shot animations of 80ms and
+ * 860ms that start on load. The hint asks the browser to prepare for motion
+ * that finished a second after the page arrived, and there is nothing to take
+ * it back down afterwards. The browser promotes for the duration of a running
+ * animation on its own, which is exactly the window that matters here. */
 .cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
-  will-change: transform, opacity;
   animation: cold-boot-line 80ms steps(2, end) both;
 }
 
@@ -112,5 +119,19 @@ html[data-cold-boot="skip"] .cold-boot {
 
   .cold-boot::before {
     display: none;
+  }
+}
+
+/* The sweep is a screen-blended band of --primary over the whole viewport, and
+   the globe's boot glow is a text-shadow in the same colour. Under forced
+   colours neither has a palette to belong to. */
+@media (forced-colors: active) {
+  .cold-boot::before {
+    display: none;
+  }
+
+  .cold-boot .ascii-planet-scene pre,
+  .cold-boot .ascii-planet-scene table {
+    text-shadow: none;
   }
 }

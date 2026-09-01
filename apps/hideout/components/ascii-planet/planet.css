@@ -67,7 +67,24 @@
   left: 50%;
   margin: 0;
   transform: translate(-50%, -50%);
-  animation: planet-glow 2.8s ease-in-out infinite;
+  /* The halo pulse, on the toolkit's own crt-breathe rather than a second
+     implementation of it.
+   *
+     What was here animated text-shadow — three stops interpolating forever
+     across a block of glyphs that covers a viewport-square. text-shadow is
+     paint, not composite, so every frame of that repainted the whole globe,
+     continuously, for as long as the front page was open. It was the most
+     expensive thing on the site and it was decorative.
+   *
+     crt-breathe is the same gesture built on drop-shadow: composited, sized in
+     em so the halo tracks the art rather than the viewport, and already the
+     definition every other piece of lit art on this site shares. Two
+     implementations of one look, and the costly one was the one on the home
+     page. */
+  animation: crt-breathe 2.8s ease-in-out infinite;
+  /* crt-breathe reads its colour from --ascii-ink, which is set on banner art;
+     the globe drives the beam directly. */
+  --ascii-ink: var(--primary);
 }
 
 /* ── Location markers ──────────────────────────────────────────────────
@@ -325,21 +342,9 @@
   }
 }
 
-@keyframes planet-glow {
-  0%,
-  100% {
-    text-shadow:
-      0 0 3px color-mix(in oklch, var(--primary) 80%, transparent),
-      0 0 10px color-mix(in oklch, var(--primary) 45%, transparent),
-      0 0 24px color-mix(in oklch, var(--primary) 28%, transparent);
-  }
-  50% {
-    text-shadow:
-      0 0 5px var(--primary),
-      0 0 16px color-mix(in oklch, var(--primary) 60%, transparent),
-      0 0 36px color-mix(in oklch, var(--primary) 40%, transparent);
-  }
-}
+/* planet-glow was here: the same pulse as crt-breathe in the toolkit, written
+   in text-shadow instead of drop-shadow. The scene now uses crt-breathe, which
+   composites rather than repaints and is sized in em. */
 
 @keyframes planet-pin {
   0%,

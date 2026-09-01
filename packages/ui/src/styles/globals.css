@@ -18,7 +18,39 @@
 @import "@fontsource/chakra-petch/700.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
+
+/* Body faces, for the same reason as the display list: a reader can change the
+   face the prose is set in. All monospace, and that is not a limitation — this
+   site is a text terminal before it is a document, so a proportional body face
+   would not be a variant of the identity, it would be a different one. Each
+   carries a Cyrillic subset, so switching never drops half the glyph set.
+
+   These change --font-body only. --font-mono stays IBM Plex Mono whatever is
+   picked, because the instrument surfaces measure themselves against it — see
+   the note on --font-body below. */
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/cyrillic-400.css";
+@import "@fontsource/fira-mono/400.css";
+@import "@fontsource/fira-mono/500.css";
+@import "@fontsource/fira-mono/cyrillic-400.css";
+@import "@fontsource/source-code-pro/400.css";
+@import "@fontsource/source-code-pro/500.css";
+@import "@fontsource/source-code-pro/cyrillic-400.css";
 @import "tailwindcss";
+
+/* The enter/exit vocabulary the overlay components are written against:
+   animate-in, animate-out, fade-in-*, zoom-in-*, slide-in-from-*. It was a
+   dependency in package.json for a long time without ever being imported, so
+   every one of those classes compiled to nothing — dialog, tooltip, popover,
+   select, dropdown-menu, context-menu, hover-card, combobox and alert-dialog
+   all opened and closed with a hard cut. Nothing in the tree flagged it,
+   because an unknown utility in Tailwind is silently dropped rather than an
+   error, and a missing animation looks like a design decision.
+
+   It also ships a `caret-blink` of its own, on a soft ease-out ramp. Ours is
+   below under crt-caret-blink and stays the hardware one. */
+@import "tw-animate-css";
 
 /* Bender, the face the identity was drawn against. It is not on npm, so the
    files ship with the package rather than as a @fontsource dependency; Play
@@ -561,12 +593,7 @@
      and the raster shows up only where the phosphor is actually being
      driven. */
   mix-blend-mode: multiply;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 var(--crt-raster-line, 1px),
-    color-mix(in srgb, black var(--crt-raster-gap, 24%), transparent)
-      var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
-  );
+  background-image: var(--crt-interlace-image);
 }
 
 /* The other half of the raster: the row the beam is actually drawing.
@@ -604,12 +631,7 @@
  */
 @utility crt-beam {
   mix-blend-mode: color-dodge;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    color-mix(in srgb, white var(--crt-beam-strength, 10%), black) 0
-      var(--crt-raster-line, 1px),
-    transparent var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
-  );
+  background-image: var(--crt-beam-image);
 }
 
 /* Phosphor bloom for a block of glyphs. drop-shadow follows the rendered
@@ -633,7 +655,9 @@
   }
 }
 
-/* A whole-element jitter, for art that is not layered into colour channels. */
+/* A whole-element jitter, for art that is not layered into colour channels.
+   Reached through animate-[crt-jitter_…] rather than a utility of its own,
+   because the callers all want their own duration. */
 @keyframes crt-jitter {
   0%,
   92%,
@@ -656,8 +680,13 @@
 
 /* A block cursor that blinks the way a hardware terminal's does: on and off
    in hard steps, never faded. steps(1) is what keeps it from easing, which is
-   the difference between a terminal and a loading spinner. */
-@keyframes caret-blink {
+   the difference between a terminal and a loading spinner.
+
+   Named crt-caret-blink rather than caret-blink: tw-animate-css defines a
+   `caret-blink` of its own on a soft ramp, and two @keyframes under one name
+   resolve by document order — which would make this animation depend on where
+   the import sits rather than on what it says. */
+@keyframes crt-caret-blink {
   0%,
   49% {
     opacity: 1;
@@ -674,7 +703,7 @@
   height: 1em;
   vertical-align: text-bottom;
   background: currentColor;
-  animation: caret-blink 1.06s steps(1) infinite;
+  animation: crt-caret-blink 1.06s steps(1) infinite;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -779,6 +808,92 @@
   }
 }
 
+/* ── CrtScreen ─────────────────────────────────────────────────────────
+   The screen component's own two animations. They lived in a template
+   literal inside crt-screen.tsx and were rendered into a <style> tag by every
+   instance, so three screens on a page meant three identical copies in the
+   DOM — and the one place a person would look for a keyframe, this file, did
+   not have them. */
+
+/* The whole face losing a little drive. steps(2) keeps it switching rather
+   than breathing: a tube that is failing does not ease. */
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+
+/* The refresh band falling down the glass.
+ *
+ * The travel is in percentages of the band's own box, and the band is sized
+ * to the screen — so -100% is exactly clear of the top edge and 100% exactly
+ * clear of the bottom, whatever the screen's height. It used to end at
+ * translateY(100vh) on a fixed 4rem bar, which is only correct on a screen
+ * that happens to be viewport-tall: in a 200px CrtScreen the band left the
+ * box in the first tenth of the cycle and spent the remaining five seconds
+ * travelling somewhere nobody could see. */
+@keyframes crt-sweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* The band itself: a full-height box carrying a 4rem gradient at its top, so
+   the element can be measured in percentages of the screen while the visible
+   light stays a fixed depth. */
+@utility crt-sweep-band {
+  /* Plain rgb rather than a color-mix: the band is neutral light by
+     definition — a beam brightening every channel by the same factor, the same
+     argument crt-beam makes — so there is no colour here to mix, and a
+     color-mix would only give Tailwind a fallback to emit for browsers that
+     lack it. */
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(255 255 255 / 0.06),
+    transparent
+  );
+  background-size: 100% 4rem;
+  background-repeat: no-repeat;
+}
+
+/* The vignette on the inside of the glass. Was an inline style with a
+   hardcoded rgb(0 0 0 / …); the depth is still a property so a caller can
+   dial it, but the colour comes from the theme now. */
+@utility crt-vignette {
+  /* The alpha goes in the colour directly rather than through a color-mix.
+     Tailwind emits a no-color-mix fallback for every mix it sees, and the
+     fallback for this one was a fully opaque black at the rim — a browser
+     without color-mix would have got a hard black frame instead of a
+     vignette. rgb() with a variable alpha needs no fallback and is what the
+     inline style this replaced already did. */
+  background-image: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgb(0 0 0 / var(--crt-vignette-opacity, 0.55)) 100%
+  );
+}
+
+/* Everything the two schemes agree on. `.dark` below restates only the tokens
+   that actually change, which is 23 of them — it used to restate all 75,
+   including the fonts, the radius, the eight shadow steps and the whole
+   terminal-* block verbatim, comment included. Two copies of a value that has
+   no reason to differ is two places to edit and one place to forget. */
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.2178 0 0);
@@ -814,10 +929,38 @@
   --sidebar-ring: oklch(0.5799 0.2203 25.1911);
   --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-serif: Georgia, serif;
+
+  /* Two mono stacks, and the split is the point.
+   *
+   * --font-mono is the instrument face and is not a preference. Things measure
+   * themselves against it: ascii-fit-text sizes art by assuming a 0.61em
+   * advance, led-matrix and led-halo tile their diode lattice at a 0.6em pitch,
+   * and led-surface hands the face to a canvas renderer that reads the advance
+   * back off the element before it draws. Point any of those at a face with a
+   * different advance ratio and the lattice stops landing on the glyphs — the
+   * art comes apart rather than changing font.
+   *
+   * --font-body is the human voice: prose, descriptions, the body copy a reader
+   * actually sits and reads. Nothing measures it, so it is safe to swap, and
+   * FontPicker writes --font-body-face to do exactly that.
+   *
+   * Its fallback is the sans stack, so the toolkit ships neutral: with no face
+   * picked, body copy is set in whatever the theme's body font already was and
+   * nothing moves. A project whose body is mono — apps/hideout is one, it is a
+   * terminal before it is a document — restates --font-body with its own
+   * default, the same way it restates --font-display for Bender.
+   *
+   * The line between --font-body and --font-mono is the register system:
+   * machine surfaces — readouts, code, the raster — stay on the instrument
+   * face; the person talking gets whatever the reader chose. */
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
+  --font-body: var(--font-body-face, var(--font-sans));
+  --ui-scale: 1;
   --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 0px;
+  /* --shadow-x and --shadow-y were here, unreferenced by anything in the repo
+     and duplicated by --shadow-offset-x/-y below, which are the pair the
+     @theme block actually maps. They came in with the generated theme and were
+     shipped to every consumer of skt-theme. */
   --shadow-blur: 0px;
   --shadow-spread: 0px;
   --shadow-opacity: 0;
@@ -846,19 +989,37 @@
   --shadow-offset-y: 0px;
   --letter-spacing: 0em;
 
-  /* Terminal palette. The base shadcn tokens cover the component library;
-     these name the roles the terminal idiom keeps reaching for, so the same
-     intent is not spelled as a different opacity in every file. */
-  --terminal-chrome: color-mix(in oklch, var(--primary) 92%, transparent);
-  --terminal-chrome-dim: color-mix(in oklch, var(--primary) 58%, transparent);
-  --terminal-ink: color-mix(in oklch, var(--foreground) 82%, transparent);
-  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 58%, transparent);
-  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 34%, transparent);
-  --terminal-rule: color-mix(in oklch, var(--border) 55%, transparent);
-  --terminal-edge: color-mix(in oklch, var(--primary) 32%, transparent);
-  --terminal-wash: color-mix(in oklch, var(--primary) 7%, transparent);
+  /* The two halves of the raster, as images rather than as rules.
+   *
+   * A pseudo-element cannot carry a class, so anything painting the tube face
+   * on a ::before or ::after had to copy the gradient out of the utility by
+   * hand — and then the copy and the original had to be kept in step by
+   * whoever remembered. Held here, both the utility and the pseudo read the
+   * same declaration, and the dials inside it (--crt-beam-strength,
+   * --crt-raster-gap, --crt-raster-line, --crt-raster-cycle) still resolve on
+   * whatever element the image is finally painted on, because a custom
+   * property substitutes its var()s at the point of use. One definition, and
+   * it is still tunable per element. */
+  --crt-beam-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, white var(--crt-beam-strength, 10%), black) 0
+      var(--crt-raster-line, 1px),
+    transparent var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
+  );
+  --crt-interlace-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 var(--crt-raster-line, 1px),
+    color-mix(in srgb, black var(--crt-raster-gap, 24%), transparent)
+      var(--crt-raster-line, 1px) var(--crt-raster-cycle, 2px)
+  );
 }
 
+/* Only what the dark scheme actually changes.
+ *
+ * This block used to restate all 75 tokens, including the three font stacks,
+ * the radius, the eight shadow steps, the spacing and letter-spacing — every
+ * one of them character-for-character identical to :root. What is left is the
+ * 23 colours that genuinely differ; the rest is inherited from above. */
 .dark {
   --background: oklch(0.2178 0 0);
   --foreground: oklch(0.9612 0 0);
@@ -866,8 +1027,6 @@
   --card-foreground: oklch(0.9612 0 0);
   --popover: oklch(0.2178 0 0);
   --popover-foreground: oklch(0.9612 0 0);
-  --primary: oklch(0.5799 0.2203 25.1911);
-  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.2393 0 0);
   --secondary-foreground: oklch(0.9851 0 0);
   --muted: oklch(0.2393 0 0);
@@ -875,59 +1034,35 @@
   --accent: oklch(0.223 0.0725 21.8281);
   --accent-foreground: oklch(0.6331 0.1896 20.4467);
   --destructive: oklch(0.3901 0.1298 25.5873);
-  --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.3715 0 0);
   --input: oklch(0.3715 0 0);
-  --ring: oklch(0.5799 0.2203 25.1911);
-  --chart-1: oklch(0.5799 0.2203 25.1911);
   --chart-2: oklch(0.8853 0 0);
   --chart-3: oklch(0.683 0 0);
   --chart-4: oklch(0.5103 0 0);
   --chart-5: oklch(0.3211 0 0);
   --sidebar: oklch(0.2178 0 0);
   --sidebar-foreground: oklch(0.8853 0 0);
-  --sidebar-primary: oklch(0.5799 0.2203 25.1911);
-  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.2178 0 0);
   --sidebar-accent-foreground: oklch(0.6331 0.1896 20.4467);
   --sidebar-border: oklch(0.2686 0 0);
-  --sidebar-ring: oklch(0.5799 0.2203 25.1911);
-  --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
-  --font-serif: Georgia, serif;
-  --font-mono: IBM Plex Mono, ui-monospace, monospace;
-  --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 0px;
-  --shadow-blur: 0px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0;
-  --shadow-color: #1a1a1a;
-  --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
-  --shadow-xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
-  --shadow-sm:
-    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
-    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
-  --shadow:
-    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
-    0px 1px 2px -1px hsl(0 0% 10.1961% / 0);
-  --shadow-md:
-    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
-    0px 2px 4px -1px hsl(0 0% 10.1961% / 0);
-  --shadow-lg:
-    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
-    0px 4px 6px -1px hsl(0 0% 10.1961% / 0);
-  --shadow-xl:
-    0px 0px 0px 0px hsl(0 0% 10.1961% / 0),
-    0px 8px 10px -1px hsl(0 0% 10.1961% / 0);
-  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0);
-  --shadow-offset-x: 0px;
-  --shadow-offset-y: 0px;
-  --letter-spacing: 0em;
-  --spacing: 0.25rem;
+}
 
-  /* Terminal palette. The base shadcn tokens cover the component library;
-     these name the roles the terminal idiom keeps reaching for, so the same
-     intent is not spelled as a different opacity in every file. */
+/* Terminal palette. The base shadcn tokens cover the component library; these
+   name the roles the terminal idiom keeps reaching for, so the same intent is
+   not spelled as a different opacity in every file.
+ *
+   Written against both selectors at once, and written *after* the two colour
+   blocks — which is the whole reason this is one rule rather than two copies.
+   A color-mix() inside a custom property is substituted at computed-value time
+   on the element the property is declared on, not where it is finally used. So
+   a --terminal-ink declared only in :root would keep the light --foreground
+   even on a dark page, which is why this block used to appear verbatim in both
+   schemes. Because `.dark` is set on <html> — the same element :root matches —
+   both selectors land on one element, and the mix resolves against whichever
+   --foreground won there. A `.dark` on some inner container works for the same
+   reason: that container redeclares --foreground, and this rule matches it. */
+:root,
+.dark {
   --terminal-chrome: color-mix(in oklch, var(--primary) 92%, transparent);
   --terminal-chrome-dim: color-mix(in oklch, var(--primary) 58%, transparent);
   --terminal-ink: color-mix(in oklch, var(--foreground) 82%, transparent);
@@ -983,6 +1118,7 @@
 
   --font-sans: var(--font-display, Play), ui-sans-serif, sans-serif, system-ui;
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
+  --font-body: var(--font-body);
   --font-serif: Georgia, serif;
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -1053,9 +1189,24 @@
 
   /* The theme's type scale is built for dense terminal UI, which lands too
      small at a 16px root. Everything downstream is in rem, so one value here
-     scales the whole system coherently. */
+     scales the whole system coherently.
+   *
+     A percentage, not 17px. The scale wanted is "one notch up from default",
+     and 106.25% is exactly 17/16 — the same size for a reader on the default
+     setting. The difference is the reader who is not on it: a px root throws
+     that person's browser font-size preference away outright, which is the one
+     accessibility setting a text-dense interface can least afford to ignore.
+     A percentage is relative to their preference, so the ratio the type scale
+     was drawn at survives at whatever size they actually need.
+
+     --ui-scale multiplies it, and this is the only place it is applied. Because
+     the whole system is in rem — type, spacing, the icon sizes, the gaps — one
+     factor here moves the interface as a piece rather than growing the text out
+     of the boxes it sits in. It compounds with the reader's own preference
+     rather than replacing it: someone already at 20px who asks for 1.25 gets
+     25px, which is what asking for a quarter more means. */
   html {
-    font-size: 17px;
+    font-size: calc(106.25% * var(--ui-scale, 1));
   }
 
   * {
@@ -1063,6 +1214,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* The reader's face, which defaults to the theme's own — see --font-body.
+       Declared here so FontPicker's body list is wired for every consumer
+       rather than only for the project that remembered to hook it up. */
+    font-family: var(--font-body);
     letter-spacing: var(--tracking-normal);
   }
 
@@ -1077,5 +1232,62 @@
     pointer-events: none;
     opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Forced colours: the reader's OS has replaced the palette, and every effect
+ * in this file is an argument about a palette we no longer own.
+ *
+ * A blend mode has nothing meaningful to blend once the ground is a system
+ * colour, a drop-shadow in --primary paints a hue the reader has explicitly
+ * replaced, and the grain is noise over text at a contrast level chosen by
+ * somebody who needed it chosen. So the whole emission layer comes off and
+ * what is left is the structure: type, borders, and the system's own colours
+ * doing their job. The interface still works — it just stops pretending to be
+ * a tube.
+ *
+ * Unlayered on purpose. Every selector here is a class that @utility emits
+ * into Tailwind's `utilities` layer, and `base` cannot reach past it — an
+ * unlayered rule outranks all of them, which is the same reason the cursor
+ * rules in phosphor.css sit outside a layer. */
+@media (forced-colors: active) {
+  .dark body::after {
+    display: none;
+  }
+
+  .crt-glow,
+  .crt-glow-soft,
+  .crt-bloom,
+  .crt-breathe,
+  .crt-holo-bloom,
+  .led-halo,
+  .led-faults {
+    filter: none;
+    animation: none;
+  }
+
+  .crt-interlace,
+  .crt-beam,
+  .crt-sweep-band,
+  .crt-vignette,
+  .led-matrix,
+  .led-halo,
+  .crt-holo-fill {
+    background-image: none;
+    mix-blend-mode: normal;
+  }
+
+  /* These two clip their paint to the glyphs and set colour to transparent to
+     do it. With the paint gone, the text has to come back. */
+  .led-matrix,
+  .crt-holo-fill {
+    color: CanvasText;
+  }
+
+  /* The two places colour carries the meaning rather than the mood: a lit
+     state edge and a fault banding. Those keep their own paint. */
+  .crt-edge::before,
+  .hazard-stripe {
+    forced-color-adjust: none;
   }
 }

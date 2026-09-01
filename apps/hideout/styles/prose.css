@@ -71,7 +71,7 @@
   text-shadow: none;
 }
 
-@media (min-width: 40rem) {
+@media (width >= 40rem) {
   .prose .prose-anchor {
     position: absolute;
     /* Right-aligned against the text edge, so #, ## and ### all end where the
@@ -90,7 +90,12 @@
   }
 }
 
-@media (max-width: 39.99rem) {
+/* Range syntax, matching the query above and the rest of the repo. It was
+   `max-width: 39.99rem` against a `min-width: 40rem` — a hand-cut gap meant to
+   stop the two from both matching at exactly 40rem, which is the problem range
+   syntax exists to remove. `width < 40rem` is the exact complement of
+   `width >= 40rem`: no overlap, and no sliver between them either. */
+@media (width < 40rem) {
   .prose .prose-anchor {
     margin-inline-end: 0.5em;
   }
@@ -222,6 +227,24 @@
   color: var(--primary);
   font-family: var(--font-mono);
   font-size: 0.9em;
+}
+
+/* Code blocks carry both tubes.
+ *
+ * Shiki is run at build time with two themes and `defaultColor: false`, so
+ * every span arrives with --shiki-green and --shiki-amber on it and no resolved
+ * colour of its own. The reader picks the tube long after the HTML was written,
+ * so which of the two is spent has to be a selector rather than a re-render. */
+.prose .shiki,
+.prose .shiki span {
+  color: var(--shiki-green);
+  background-color: var(--shiki-green-bg);
+}
+
+[data-tube="amber"] .prose .shiki,
+[data-tube="amber"] .prose .shiki span {
+  color: var(--shiki-amber);
+  background-color: var(--shiki-amber-bg);
 }
 
 .prose hr {

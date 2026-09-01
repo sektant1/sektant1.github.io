@@ -6,6 +6,9 @@ import {
   componentNames,
   diffManifest,
 } from "./lib/registry-items.mjs"
+// The theme is read out of the stylesheet that defines it, for the same reason
+// the dependencies below are read out of the components: a second copy drifts.
+import { readThemeVars } from "./lib/theme-vars.mjs"
 // The showcase owns the published address; the manifest borrows it rather than
 // restating it, so `homepage` and the `shadcn add` command cannot drift apart.
 import { SHOWCASE_URL } from "../apps/web/src/lib/registry-url.ts"
@@ -35,8 +38,12 @@ const themeItem = {
   title: "SKT Theme",
   description:
     "The skt-ui-toolkit visual identity: colors, zero radius, flat shadows and typefaces.",
-  dependencies: ["@fontsource/chakra-petch", "@fontsource/ibm-plex-mono"],
-  cssVars: JSON.parse(readFileSync("scripts/theme-vars.json", "utf8")),
+  // The faces the theme actually falls back to: Play behind --font-display and
+  // IBM Plex Mono behind --font-mono and --font-body. It used to name
+  // chakra-petch, which matched the stale font-sans in the hand-kept vars file
+  // and no longer matches anything the stylesheet says.
+  dependencies: ["@fontsource/play", "@fontsource/ibm-plex-mono"],
+  cssVars: readThemeVars(),
 }
 
 const names = componentNames(COMPONENTS_DIR)
