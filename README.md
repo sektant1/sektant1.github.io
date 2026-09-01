@@ -127,8 +127,9 @@ and the `terminal-*` roles keep coming from one place:
 @import "@workspace/ui/themes/phosphor.css";  /* green, dark-only */
 ```
 
-`phosphor.css` also carries the phosphor pointers: a crosshair reticle for the
-default cursor, an arrow for links, drawn as inline SVG.
+`phosphor.css` also carries the phosphor cursor set: an open reticle, a locked
+target cell, a text caret, open and closed grab clamps, and an unpowered state.
+Each carries pixel-matched SVG and PNG sources with a stable centre hotspot.
 
 ## sektant.dev
 
