@@ -441,19 +441,15 @@
  * driven. --ascii-ink carries the colour, because background-image cannot
  * read currentColor the way text-shadow can.
  *
- * The swing across those rows is the whole difficulty. Drive the core to
- * near-white and vent the gap to nothing and the raster stops being a texture
- * inside the letter and becomes the letter — a stack of pale bars with holes
- * between them, in no particular shape. So the core is the ink lifted, not
- * replaced; the body is the ink itself; and the gap keeps 55% of it, which is
- * the alpha the globe's own hologram pass leaves on an unlit row. Same
- * surface, same number. */
+ * The lit rows keep the ink's own hue. Mixing the core toward white made this
+ * surface paler than the globe even when both read the same token. The gap
+ * keeps 55% of the ink, which is the alpha the globe's own hologram pass
+ * leaves on an unlit row. Same surface, same number. */
 @utility crt-holo-fill {
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--ascii-ink) 82%, white) 0 1px,
-    var(--ascii-ink) 1px 3px,
-    color-mix(in oklch, var(--ascii-ink) 55%, transparent) 3px 4px
+    var(--ascii-ink) 0 3px,
+    color-mix(in oklch, var(--ascii-ink) 98%, transparent) 3px 4px
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -625,13 +621,13 @@
        clipped or printed rather than rendered arrives unlit, so the level has
        to be put back or the same picture reads at a lower gain than the one
        beside it. */
-    filter: brightness(1.14) saturate(1.05)
+    filter: brightness(1.24) saturate(1.05)
       drop-shadow(
         0 0 1px
           color-mix(in oklch, var(--ascii-ink, currentColor) 60%, transparent)
       )
       drop-shadow(
-        0 0 7px
+        0 0 5px
           color-mix(in oklch, var(--ascii-ink, currentColor) 22%, transparent)
       );
   }

@@ -4,6 +4,7 @@
 @import "@workspace/ui/globals.css";
 @import "@workspace/ui/themes/phosphor.css";
 @import "./prose.css";
+@import "./cold-boot.css";
 
 /* Tailwind's source detection is rooted at the file that imports it, which
    lives in packages/ui. This app is outside that root and has to be named. */

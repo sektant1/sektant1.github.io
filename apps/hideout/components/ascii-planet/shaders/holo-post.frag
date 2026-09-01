@@ -14,34 +14,18 @@ float luma(vec3 c) {
 }
 
 /**
- * One tube, four phosphors.
+ * One tube, one phosphor at five drive levels.
  *
- * A single ink scaled by brightness gives a picture that is the same colour
- * everywhere and only varies in how dim it is, which on a dark page reads as
- * one flat tone. A real phosphor shifts as it is driven harder: the low end
- * sits deep and blue-green where the beam barely excites it, the middle is the
- * tube's own colour, and the top blooms toward white at the core of the line.
- *
- * Stops rather than a gradient, because the raster has already quantised the
- * value — a continuous ramp between them would only be resampled back onto
- * these steps.
+ * Every stop scales the theme's primary ink uniformly. Hard-coded hot and core
+ * colours made the globe fade toward grey while the rest of the tube stayed
+ * green. Stops preserve the quantised shading without changing its hue.
  */
 vec3 phosphor(float v) {
-  vec3 deep = uInk * vec3(0.30, 0.42, 0.36);
-  vec3 low = uInk * 0.62;
-  vec3 mid = uInk;
-  // The top stops stay on the tube. Mixing toward flat white reads as a
-  // different display bleeding through the green one; mixing toward a pale
-  // green keeps the hot end as the same phosphor driven harder, which is what
-  // the halo around it is already telling the eye.
-  vec3 hot = mix(uInk, vec3(0.62, 1.0, 0.74), 0.35);
-  vec3 core = mix(uInk, vec3(0.80, 1.0, 0.86), 0.50);
-
-  if (v < 0.22) return deep;
-  if (v < 0.42) return low;
-  if (v < 0.66) return mid;
-  if (v < 0.86) return hot;
-  return core;
+  if (v < 0.22) return uInk * 0.36;
+  if (v < 0.42) return uInk * 0.62;
+  if (v < 0.66) return uInk * 0.78;
+  if (v < 0.86) return uInk * 0.90;
+  return uInk;
 }
 
 /**
