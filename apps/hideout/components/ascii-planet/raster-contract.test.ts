@@ -52,13 +52,18 @@ function expectOne(source: string, pattern: RegExp, what: string) {
 }
 
 describe("the banner raster and the globe's hologram pass", () => {
-  /* The CSS comment on crt-holo-fill says the gap "keeps 55% of it, which is
-     the alpha the globe's own hologram pass leaves on an unlit row. Same
-     surface, same number." This is that sentence, as an assertion. */
-  it("leave the same amount of light on an unlit row", () => {
-    const scanline = Number(
-      expectOne(policy, /scanline:\s*([\d.]+)/, "scanline default")
-    )
+  /* This used to assert the opposite: that crt-holo-fill's gap stop matched
+     `1 - scanline`, so the banner's unlit row left exactly the light the
+     globe's pass leaves on one. That was right while the banner cut its own
+     raster. It stopped being right when the raster moved onto the tube face,
+     which now draws a 1px line on a 2px cycle over the entire page — banner
+     art included. A second raster inside the glyphs does not reinforce that
+     one, it beats against it, because 4px and 2px cycles drift in and out of
+     phase down every stroke.
+
+     So the contract is now the other way round, and it is worth guarding in
+     that direction: the fill stays flat, and the face owns the raster. */
+  it("do not both raster the same glyphs", () => {
     const gapKeeps = Number(
       expectOne(
         toolkitCss,
@@ -66,7 +71,17 @@ describe("the banner raster and the globe's hologram pass", () => {
         "crt-holo-fill gap stop"
       )
     )
-    expect(gapKeeps / 100).toBeCloseTo(1 - scanline, 5)
+    // Flat enough that no row reads as a cut. Anything approaching the globe's
+    // own gap would put a second raster inside the letterforms.
+    expect(gapKeeps).toBeGreaterThanOrEqual(95)
+
+    // And the face is still the thing that does raster, at its own pitch.
+    const facePitch = expectOne(
+      toolkitCss,
+      /--crt-raster-cycle, (\d+)px\)\s*\n?\s*\)/,
+      "tube face raster cycle"
+    )
+    expect(Number(facePitch)).toBe(2)
   })
 
   it("keep the primary phosphor hue at every brightness", () => {

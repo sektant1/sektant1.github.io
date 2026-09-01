@@ -468,15 +468,19 @@
  * five-pixel pitch while the globe beside it holds one — two rasters, two
  * screens, and the illusion is gone.
  *
- * Three rows to a cycle: the hot core the beam leaves at the top of a line,
- * the ink itself under it, and the gap where the phosphor is not being
- * driven. --ascii-ink carries the colour, because background-image cannot
- * read currentColor the way text-shadow can.
+ * --ascii-ink carries the colour, because background-image cannot read
+ * currentColor the way text-shadow can.
  *
- * The lit rows keep the ink's own hue. Mixing the core toward white made this
- * surface paler than the globe even when both read the same token. The gap
- * keeps 55% of the ink, which is the alpha the globe's own hologram pass
- * leaves on an unlit row. Same surface, same number. */
+ * The rows are flat now, and that is the point of them. This used to cut its
+ * own raster — a hot core, the ink, then a gap holding 55% of it, matched to
+ * the alpha the globe's hologram pass leaves on an unlit row. That match
+ * stopped being the right goal when the raster moved onto the tube face and
+ * started being drawn over the whole page at a 1px line on a 2px cycle: a
+ * second raster inside the glyphs, on a 3px line and a 4px cycle, is not the
+ * same screen twice over, it is two screens beating against each other down
+ * every stroke. The face owns the raster; this owns the fill, and the 2% the
+ * last row gives back is what keeps the gradient a gradient rather than a flat
+ * colour that would be simpler written as one. */
 @utility crt-holo-fill {
   background-image: repeating-linear-gradient(
     to bottom,
