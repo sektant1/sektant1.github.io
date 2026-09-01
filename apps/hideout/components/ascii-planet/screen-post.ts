@@ -26,6 +26,14 @@ export interface ScreenPost {
   setBootProgress: (progress: number) => void
   /** Height of one cell, in the drawing buffer's pixels. */
   setCellHeight: (height: number) => void
+  /**
+   * The emitted phosphor colour.
+   *
+   * A uniform rather than a rebuild: the tube can be swapped while the scene
+   * is running, and re-creating the pass would replay the boot settle and
+   * re-fetch the model to change one colour.
+   */
+  setInk: (ink: THREE.ColorRepresentation) => void
   setSize: (width: number, height: number) => void
   dispose: () => void
 }

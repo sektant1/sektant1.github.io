@@ -17,6 +17,18 @@ import {
 } from "@/lib/banner-font"
 import { COLD_BOOT_STORAGE_KEY, COLD_BOOT_TTL_MS } from "@/lib/cold-boot-state"
 import { CRT_SCREEN_STORAGE_KEY } from "@/lib/crt-screen"
+import { TUBES, TUBE_STORAGE_KEY } from "@/lib/tube"
+import {
+  BODY_FACE_IDS,
+  BODY_FONT_FACE_PROPERTY,
+  BODY_FONT_STORAGE_KEY,
+  FACE_IDS,
+  FONT_FACE_PROPERTY,
+  FONT_STORAGE_KEY,
+  SCALE_IDS,
+  UI_SCALE_PROPERTY,
+  UI_SCALE_STORAGE_KEY,
+} from "@workspace/ui/components/font-picker"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -84,13 +96,23 @@ const siteJsonLd = {
   },
 }
 
-// Both run before first paint, which is the whole point of them: they settle
-// what the page looks like before React exists, so nothing flashes and gets
-// corrected. Their storage keys come from the modules that own them rather
+// These all run before first paint, which is the whole point of them: they
+// settle what the page looks like before React exists, so nothing flashes and
+// gets corrected. Their storage keys come from the modules that own them rather
 // than being spelled out again here — one place to change a key.
 const coldBootSetup = `(function(){try{var raw=localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)});var seen=Number(raw);var fresh=raw!==null&&isFinite(seen)&&seen>0&&Math.abs(Date.now()-seen)<${COLD_BOOT_TTL_MS};if(fresh||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
 const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_IDS)}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
+// Which phosphor the tube is coated with. Green is the default and needs no
+// attribute, so only a stored amber writes one.
+const tubeSetup = `(function(){try{var v=localStorage.getItem(${JSON.stringify(TUBE_STORAGE_KEY)});if(${JSON.stringify([...TUBES])}.includes(v)&&v!=="green"){document.documentElement.dataset.tube=v}}catch(error){}})()`
 const crtScreenSetup = `(function(){try{if(localStorage.getItem(${JSON.stringify(CRT_SCREEN_STORAGE_KEY)})==="0"){document.documentElement.dataset.crt="off"}}catch(error){}})()`
+// The reading settings — both faces and the interface scale — for the reason
+// the three above exist: FontPicker sets them from an effect, which does not
+// run until React has hydrated, so a reader who had chosen any of them watched
+// the page paint wrong and then correct itself. The display picker had always
+// done that; a body face doubles it, since a body swap moves every line of
+// prose rather than just the headings, and a scale change reflows the lot.
+const readingSetup = `(function(){var r=document.documentElement;function set(key,allowed,prop){try{var v=localStorage.getItem(key);if(allowed.includes(v)){r.style.setProperty(prop,v)}}catch(error){}}set(${JSON.stringify(FONT_STORAGE_KEY)},${JSON.stringify(FACE_IDS)},${JSON.stringify(FONT_FACE_PROPERTY)});set(${JSON.stringify(BODY_FONT_STORAGE_KEY)},${JSON.stringify(BODY_FACE_IDS)},${JSON.stringify(BODY_FONT_FACE_PROPERTY)});set(${JSON.stringify(UI_SCALE_STORAGE_KEY)},${JSON.stringify(SCALE_IDS)},${JSON.stringify(UI_SCALE_PROPERTY)})})()`
 
 export default function RootLayout({
   children,
@@ -116,6 +138,12 @@ export default function RootLayout({
         </Script>
         <Script id="crt-screen-setup" strategy="beforeInteractive">
           {crtScreenSetup}
+        </Script>
+        <Script id="tube-setup" strategy="beforeInteractive">
+          {tubeSetup}
+        </Script>
+        <Script id="reading-setup" strategy="beforeInteractive">
+          {readingSetup}
         </Script>
         <link
           rel="alternate"

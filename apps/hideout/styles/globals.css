@@ -4,6 +4,7 @@
 @import "@workspace/ui/globals.css";
 @import "@workspace/ui/themes/phosphor.css";
 @import "./prose.css";
+@import "./cold-boot.css";
 
 /* Tailwind's source detection is rooted at the file that imports it, which
    lives in packages/ui. This app is outside that root and has to be named. */
@@ -18,6 +19,12 @@
      which wins over this. Declaring it in CSS rather than only from the
      picker's effect is what keeps the first paint from flashing Play. */
   --font-display: Bender;
+
+  /* The toolkit lets body copy follow the display face, which is right for a
+     component gallery and wrong here: this site is a text terminal before it
+     is a document, so its prose is mono. Same shape as the default — a reader's
+     pick, then a fallback — with the fallback pointed at the tube's own face. */
+  --font-body: var(--font-body-face, IBM Plex Mono), ui-monospace, monospace;
 }
 
 @layer base {
@@ -30,7 +37,10 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-mono);
+    /* --font-body, not --font-mono: the reader can change this one. It falls
+       back to the same IBM Plex Mono, so an unset preference is the face this
+       has always been. The instrument surfaces keep --font-mono directly. */
+    font-family: var(--font-body);
     /* One wide stop, and nothing tight.
      *
      * This is how the globe on the front page glows and why it still reads as
@@ -149,15 +159,13 @@
        beam's own green, or the division lands hardest on the green channel
        and walks the whole page toward it. crt-beam carries both in full.
 
-       Written out rather than applied from crt-beam because a pseudo-element
-       cannot carry a class, and the utility is what the toolkit ships. The
-       two have to stay in step. */
+       A pseudo-element cannot carry a class, so this used to be the gradient
+       written out a second time — and the copy had already drifted, hardcoding
+       the 1px line and 2px cycle that the utility takes from
+       --crt-raster-line and --crt-raster-cycle. --crt-beam-image is now the one
+       declaration both read; the dials still resolve here, on this element. */
     mix-blend-mode: color-dodge;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      color-mix(in srgb, white var(--crt-beam-strength, 10%), black) 0 1px,
-      transparent 1px 2px
-    );
+    background-image: var(--crt-beam-image);
   }
 
   /* The raster the beam draws down the face. Above the content, unlike the
@@ -222,14 +230,63 @@ html[data-crt="off"] body {
   text-shadow: none;
 }
 
+/* And the unsteadiness goes with it.
+ *
+ * Switching the glass off used to hide the overlays and leave every loop
+ * running underneath: the globe kept breathing its halo and dropping frames,
+ * the pins kept pulsing, the banner kept flickering and wavering. That is a
+ * screen that has been turned off and is still flickering, which is the one
+ * reading the key is meant to rule out — and it left the most expensive
+ * animation on the page, planet-glow, running for a reader who had explicitly
+ * asked for less of the effect.
+ *
+ * Named rather than a blanket `* { animation: none }`: a spinner and a caret
+ * are the interface working, not the tube misbehaving, and those keep going. */
+html[data-crt="off"]
+  :is(
+    .ascii-planet-scene[data-model-ready="true"],
+    .ascii-planet-scene pre,
+    .ascii-planet-scene table,
+    .ascii-planet-location-target,
+    .crt-breathe,
+    .crt-holo-waver,
+    .led-faults
+  ),
+html[data-crt="off"] .led-dead-row::after {
+  animation: none;
+}
+
+/* And the globe has to be told it is visible.
+ *
+ * The scene starts at opacity 0 and is brought up by planet-boot, which holds
+ * the end state with `forwards` — so cancelling that animation does not leave
+ * the globe lit, it leaves it at the zero it started from, and the front page
+ * loses its subject entirely. The reduced-motion block at the foot of
+ * planet.css has carried this same line for exactly this reason. */
+html[data-crt="off"] .ascii-planet-scene {
+  opacity: 1;
+}
+
 /* A reader who has asked the system for more contrast gets neither the mask
    nor the spill: both are light spread over type on purpose, which is the one
-   thing that setting is asking us to stop doing. */
-@media (prefers-contrast: more) {
+   thing that setting is asking us to stop doing.
+ *
+   ::before goes with them. It was left on, which meant the green pool still
+   lay across the top half of the screen and the vignette still pulled the
+   corners down — both of them light and shade spread over body copy, which is
+   the same thing the beam and the raster were removed for. Lifting the glass
+   with data-crt="off" already took all three; asking the system for contrast
+   now takes the same three. */
+Forced colours asks for the same thing for a different reason: the reader's
+   OS owns the palette now, and every layer of the face is light in a colour we
+   no longer control. Two conditions, one answer, so one rule — the toolkit's
+   own effects are handled in packages/ui. */
+@media (prefers-contrast: more), (forced-colors: active) {
   body {
     text-shadow: none;
   }
 
+  .tube-face::before,
   .tube-face::after,
   .tube-face > .tube-raster {
     display: none;
@@ -375,6 +432,80 @@ html[data-crt="off"] body {
 .byline-link:focus-visible {
   text-decoration-style: solid;
   text-shadow: 0 0 6px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+
+/* ── Route transitions ─────────────────────────────────────────────────
+ *
+ * The tube does not reload between pages, it redraws — so a navigation should
+ * be the beam repainting the buffer, not a cut to a new document.
+ *
+ * These rules are the styling half only, and they are inert until something
+ * actually starts a transition. Nothing here does: React's <ViewTransition>
+ * is the mechanism the App Router uses, and it only exists in the
+ * react-experimental build Next swaps in when one of blockingSSR, taint,
+ * transitionIndicator or gestureTransition is set in next.config — see
+ * next/dist/lib/needs-experimental-react.js. With the stable React this app
+ * pins, the import resolves to undefined. Turning that flag on moves the whole
+ * app onto experimental React, which is a decision about the app rather than
+ * about its styling, so it is not made here. When it is made, the look below
+ * is already written and this comment can go.
+ *
+ * A crossfade, not a slide. Direction encodes travel through space, and this
+ * site is one screen displaying different buffers — the content changes, the
+ * screen does not move. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  /* Fast enough that a reader clicking through an index never waits on it. */
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* The old buffer leaves on the phosphor's own curve: level falling rather than
+   the page fading toward white. */
+::view-transition-old(root) {
+  animation-name: tube-repaint-out;
+}
+
+::view-transition-new(root) {
+  animation-name: tube-repaint-in;
+}
+
+@keyframes tube-repaint-out {
+  to {
+    opacity: 0;
+    filter: brightness(1.35);
+  }
+}
+
+@keyframes tube-repaint-in {
+  from {
+    opacity: 0;
+    filter: brightness(1.35);
+  }
+}
+
+/* The overlay swallows clicks for the length of the transition, which on a
+   180ms crossfade is long enough to lose a deliberate second click. */
+::view-transition {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 1ms;
+    animation-delay: 0s;
+  }
+}
+
+/* The glass being off is also a statement about motion. The pseudo tree is
+   generated on the root element itself, so this attaches to <html> rather than
+   describing a descendant of it. */
+html[data-crt="off"]::view-transition-old(*),
+html[data-crt="off"]::view-transition-new(*),
+html[data-crt="off"]::view-transition-group(*) {
+  animation-duration: 1ms;
 }
 
 .ascii-font-choice {

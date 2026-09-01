@@ -1,4 +1,7 @@
 {
+  "render": {
+    "style": "holo"
+  },
   "hero": {
     "systemLabel": "СИСТЕМА //",
     "systemUnit": "СКТ-01",
@@ -34,7 +37,7 @@
     "tagsTitle": "ИНДЕКС // ТЕГИ",
     "tagsRef": "IDX // TAG",
     "globeTitle": "ОБЪЕКТ 01 // GEO NODE",
-    "globeFooterEnd": "DRAG // SLEW"
+    "globeFooterEnd": "- DRAG -"
   },
   "sections": {
     "posts": {
@@ -52,8 +55,5 @@
       "title": "THINGS I BUILT",
       "actionLabel": "all projects"
     }
-  },
-  "render": {
-    "style": "holo"
   }
 }

@@ -21,6 +21,7 @@ const read = (path: string) => readFileSync(repoRoot + path, "utf8")
 
 const policy = read("apps/hideout/components/ascii-planet/policy.ts")
 const toolkitCss = read("packages/ui/src/styles/globals.css")
+const coldBootCss = read("apps/hideout/styles/cold-boot.css")
 const asciiShader = read(
   "apps/hideout/components/ascii-planet/shaders/ascii-post.frag"
 )
@@ -66,6 +67,38 @@ describe("the banner raster and the globe's hologram pass", () => {
       )
     )
     expect(gapKeeps / 100).toBeCloseTo(1 - scanline, 5)
+  })
+
+  it("keep the primary phosphor hue at every brightness", () => {
+    const fill = expectOne(
+      toolkitCss,
+      /@utility crt-holo-fill\s*{([\s\S]*?)\n}/,
+      "crt-holo-fill utility"
+    )
+    const phosphor = expectOne(
+      holoShader,
+      /vec3 phosphor\(float v\)\s*{([\s\S]*?)\n}/,
+      "hologram phosphor function"
+    )
+
+    expect(fill).toContain("var(--ascii-ink) 0 3px")
+    expect(fill).not.toContain("white")
+    expect(phosphor).toContain("return uInk;")
+    expect(phosphor).not.toMatch(/mix\(uInk|uInk \* vec3/)
+  })
+})
+
+describe("the cold boot curtain", () => {
+  it("stays opaque while the boot contents animate", () => {
+    const curtain = expectOne(
+      coldBootCss,
+      /\n\.cold-boot\s*{([\s\S]*?)\n}/,
+      "cold-boot rule"
+    )
+
+    expect(curtain).not.toContain("animation:")
+    expect(curtain).not.toContain("transform")
+    expect(coldBootCss).not.toContain("@keyframes cold-boot-ground")
   })
 })
 

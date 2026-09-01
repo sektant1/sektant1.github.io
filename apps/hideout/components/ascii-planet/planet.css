@@ -3,10 +3,6 @@
  * this is plain CSS rather than utility classes: there is no JSX to put them
  * on. Every colour reads a toolkit token, so the phosphor theme drives it. */
 
-html[data-cold-boot="skip"] .cold-boot {
-  display: none;
-}
-
 .ascii-planet-scene {
   position: relative;
   display: block;
@@ -26,51 +22,6 @@ html[data-cold-boot="skip"] .cold-boot {
   animation:
     planet-boot 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 80ms forwards,
     planet-flicker 3.6s ease-in-out 1.8s infinite;
-}
-
-.cold-boot {
-  contain: layout paint;
-  transform-origin: center;
-  animation: cold-boot-ground 420ms cubic-bezier(0.16, 0.8, 0.28, 1) both;
-}
-
-.cold-boot::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  background: linear-gradient(
-    to bottom,
-    transparent 0 42%,
-    color-mix(in oklch, var(--primary) 16%, transparent) 48%,
-    color-mix(in oklch, var(--primary) 38%, transparent) 50%,
-    color-mix(in oklch, var(--primary) 16%, transparent) 52%,
-    transparent 58% 100%
-  );
-  transform: translateY(-100%);
-  will-change: transform, opacity;
-  animation: cold-boot-sweep 860ms cubic-bezier(0.18, 0.72, 0.25, 1) 80ms both;
-}
-
-.cold-boot-panel {
-  position: relative;
-  z-index: 1;
-  animation: cold-boot-panel 300ms steps(4, end) 120ms both;
-}
-
-.cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
-  will-change: transform, opacity;
-  animation: cold-boot-line 80ms steps(2, end) both;
-}
-
-.cold-boot .ascii-planet-scene pre,
-.cold-boot .ascii-planet-scene table {
-  animation: none;
-  text-shadow:
-    0 0 4px var(--primary),
-    0 0 14px color-mix(in oklch, var(--primary) 45%, transparent);
 }
 
 .ascii-planet-scene:active {
@@ -116,7 +67,24 @@ html[data-cold-boot="skip"] .cold-boot {
   left: 50%;
   margin: 0;
   transform: translate(-50%, -50%);
-  animation: planet-glow 2.8s ease-in-out infinite;
+  /* The halo pulse, on the toolkit's own crt-breathe rather than a second
+     implementation of it.
+   *
+     What was here animated text-shadow — three stops interpolating forever
+     across a block of glyphs that covers a viewport-square. text-shadow is
+     paint, not composite, so every frame of that repainted the whole globe,
+     continuously, for as long as the front page was open. It was the most
+     expensive thing on the site and it was decorative.
+   *
+     crt-breathe is the same gesture built on drop-shadow: composited, sized in
+     em so the halo tracks the art rather than the viewport, and already the
+     definition every other piece of lit art on this site shares. Two
+     implementations of one look, and the costly one was the one on the home
+     page. */
+  animation: crt-breathe 2.8s ease-in-out infinite;
+  /* crt-breathe reads its colour from --ascii-ink, which is set on banner art;
+     the globe drives the beam directly. */
+  --ascii-ink: var(--primary);
 }
 
 /* ── Location markers ──────────────────────────────────────────────────
@@ -352,85 +320,6 @@ html[data-cold-boot="skip"] .cold-boot {
   }
 }
 
-@keyframes cold-boot-ground {
-  0% {
-    opacity: 0;
-    transform: scaleX(0.72) scaleY(0.015);
-  }
-
-  45% {
-    opacity: 1;
-    transform: scaleX(1.03) scaleY(0.025);
-  }
-
-  75% {
-    transform: scaleX(1) scaleY(1.015);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes cold-boot-panel {
-  0% {
-    opacity: 0;
-    transform: translateX(-0.6rem);
-  }
-
-  45% {
-    opacity: 1;
-    transform: translateX(0.15rem);
-  }
-
-  60% {
-    opacity: 0.55;
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes cold-boot-sweep {
-  0% {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-
-  12% {
-    opacity: 1;
-  }
-
-  82% {
-    opacity: 0.9;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-}
-
-@keyframes cold-boot-line {
-  0% {
-    opacity: 0.25;
-    transform: translateX(0.4rem);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translateX(-0.08rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 /* Two brief dropouts in a long quiet stretch: a tube that occasionally loses
    a little brightness, not a strobe. */
 @keyframes planet-flicker {
@@ -453,21 +342,9 @@ html[data-cold-boot="skip"] .cold-boot {
   }
 }
 
-@keyframes planet-glow {
-  0%,
-  100% {
-    text-shadow:
-      0 0 3px color-mix(in oklch, var(--primary) 80%, transparent),
-      0 0 10px color-mix(in oklch, var(--primary) 45%, transparent),
-      0 0 24px color-mix(in oklch, var(--primary) 28%, transparent);
-  }
-  50% {
-    text-shadow:
-      0 0 5px var(--primary),
-      0 0 16px color-mix(in oklch, var(--primary) 60%, transparent),
-      0 0 36px color-mix(in oklch, var(--primary) 40%, transparent);
-  }
-}
+/* planet-glow was here: the same pulse as crt-breathe in the toolkit, written
+   in text-shadow instead of drop-shadow. The scene now uses crt-breathe, which
+   composites rather than repaints and is sized in em. */
 
 @keyframes planet-pin {
   0%,
@@ -485,17 +362,6 @@ html[data-cold-boot="skip"] .cold-boot {
   .ascii-planet-scene table,
   .ascii-planet-location-target {
     animation: none;
-  }
-
-  .cold-boot,
-  .cold-boot::before,
-  .cold-boot-panel,
-  .cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
-    animation: none;
-  }
-
-  .cold-boot::before {
-    display: none;
   }
 
   .ascii-planet-scene {

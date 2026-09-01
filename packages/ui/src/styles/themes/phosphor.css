@@ -23,7 +23,10 @@
  *
  * A phosphor tube has no light mode — a green-on-white terminal is a
  * simulation of paper, not of a screen — so the tokens are declared once and
- * repeated under .dark rather than split into two schemes. */
+ * repeated under .dark rather than split into two schemes. The axis this file
+ * spends instead is the phosphor itself: green (P1) below is the default, and
+ * amber (P3) at the foot of the file is the other tube these terminals were
+ * built with. `data-tube` selects between them. */
 
 :root,
 .dark {
@@ -64,8 +67,16 @@
   --destructive: oklch(0.6544 0.2317 26.4739); /* #ff3a3a */
   --destructive-foreground: oklch(0.931 0.1116 155.9673);
 
-  --border: oklch(0.4373 0.1104 150.3163); /* #12622f */
-  --input: oklch(0.4373 0.1104 150.3163);
+  /* The border is the only visible boundary a control has on this screen —
+     there is no radius, no shadow and no fill to separate an input from the
+     panel it sits in — so it is held to the 3:1 that WCAG asks of a non-text
+     UI boundary rather than to whatever looked quiet enough. It sat at #12622f
+     for a long time, which is 2.48:1 on the ground, and --terminal-rule takes
+     85% of it and landed at 2.13:1. At #188038 the border is 3.69:1 and the
+     rule derived from it is 3.01:1, so both clear it, and the hue does not
+     move: this is the same green a step further up the beam's own ramp. */
+  --border: oklch(0.527 0.141 148.3852); /* #188038 */
+  --input: oklch(0.527 0.141 148.3852);
   --ring: oklch(0.8398 0.2181 149.9797);
 
   /* Charts read as one beam at decreasing intensity rather than as five
@@ -87,9 +98,17 @@
   --sidebar-ring: oklch(0.8398 0.2181 149.9797);
 }
 
-/* The terminal roles are defined against --primary and --foreground in
-   globals.css, but they resolve where they are written — so they still carry
-   the red theme's values here and have to be restated against the new ones. */
+/* The terminal roles restated for the tube.
+ *
+ * Not because of where they resolve — globals.css now declares them on
+ * `:root, .dark` after both colour blocks, so a mix written there already
+ * picks up whatever --primary and --foreground finally won on the element,
+ * this file's values included. These eight are here because the tube wants
+ * genuinely different *formulas*, not because it wants the same formula
+ * recomputed: chrome is mixed toward pale mint rather than held back with
+ * transparency, ink-dim sits at 80% where the base theme puts it at 58%, and
+ * the rule and edge are both driven considerably harder. Every line below
+ * differs from the one it overrides; none of them is a copy. */
 :root,
 .dark {
   /* Driven, not glowing. What makes a colour read as emitting on a near-black
@@ -103,7 +122,11 @@
      screen actually looks like. Chrome is the hot stop, chrome-dim is the beam
      itself — so signage sits above the readouts by level rather than by being
      a different colour. */
-  --terminal-chrome: color-mix(in oklch, var(--primary) 62%, oklch(0.95 0.09 158));
+  --terminal-chrome: color-mix(
+    in oklch,
+    var(--primary) 62%,
+    oklch(0.95 0.09 158)
+  );
   --terminal-chrome-dim: var(--primary);
   --terminal-ink: var(--foreground);
   --terminal-ink-dim: color-mix(in oklch, var(--foreground) 80%, transparent);
@@ -274,4 +297,143 @@
   .cursor-not-allowed
 ) {
   cursor: var(--cursor-disabled);
+}
+
+/* ── Amber ─────────────────────────────────────────────────────────────
+ *
+ * The other tube. Green (P1) and amber (P3) are the two phosphors these
+ * terminals were actually built with, so this is a second real screen rather
+ * than a recolour — and it is the axis this stylesheet spends instead of
+ * light/dark, which a phosphor tube does not have.
+ *
+ * Every value keeps its green counterpart's lightness exactly and moves only
+ * hue and chroma. That is what makes the port safe rather than a redraw: the
+ * contrast ratios the green ramp was tuned to are a function of lightness, so
+ * they carry over — foreground lands at 15.2:1 against the ground where green
+ * is 15.7, the beam at 11.3 against green's 12.2, and the border at 3.4, still
+ * clear of the 3:1 a control boundary needs.
+ *
+ * Chroma is capped at 94.3% of what sRGB can hold at each lightness, which is
+ * the same headroom the green beam was given and for the same reason: amber
+ * runs out of gamut sooner than green at the top of the ramp, and a colour
+ * pinned to the edge is a colour the monitor decides rather than the
+ * stylesheet. Where green's chroma fits under that ceiling it is kept; where it
+ * does not, the ceiling wins.
+ *
+ * Two tokens do not follow the tube, and that is the point of them:
+ *
+ *   --destructive stays red. It is the one hue that is not the phosphor, so a
+ *   fault cannot be read as anything else. It separates less here than it does
+ *   on green — red and amber are 50 degrees apart where red and green are 123 —
+ *   which is why a fault on this tube leans harder on hazard-stripe's shape
+ *   than on its colour.
+ *
+ *   --chart-2 stays cyan, the second gun. On amber it is very nearly the
+ *   complement, so it separates better here than it does on green.
+ */
+[data-tube="amber"] {
+  --background: oklch(0.184 0.0349 76.3908); /* #1b1001 */
+  --foreground: oklch(0.931 0.055 76.3908); /* #fee4c0 */
+
+  --card: oklch(0.2625 0.0523 76.3908); /* #332102 */
+  --card-foreground: oklch(0.931 0.055 76.3908);
+  --popover: oklch(0.2625 0.0523 76.3908);
+  --popover-foreground: oklch(0.931 0.055 76.3908);
+
+  --primary: oklch(0.8398 0.1348 76.3908); /* #fcbe5c — the beam */
+  --primary-foreground: oklch(0.1433 0.0264 76.3908); /* #100801 */
+
+  --secondary: oklch(0.2625 0.0523 76.3908);
+  --secondary-foreground: oklch(0.9644 0.0279 76.3908); /* #fef1df */
+
+  --muted: oklch(0.2625 0.0523 76.3908);
+  --muted-foreground: oklch(0.797 0.1577 76.3908); /* #f5ad27 */
+
+  --accent: oklch(0.3205 0.0637 76.3908); /* #452e04 */
+  --accent-foreground: oklch(0.9644 0.0279 76.3908);
+
+  /* Red, unported. See the note above. */
+  --destructive: oklch(0.6544 0.2317 26.4739); /* #ff3a3a */
+  --destructive-foreground: oklch(0.931 0.055 76.3908);
+
+  --border: oklch(0.527 0.1043 76.3908); /* #8d6112 — 3.44:1 on the ground */
+  --input: oklch(0.527 0.1043 76.3908);
+  --ring: oklch(0.8398 0.1348 76.3908);
+
+  --chart-1: oklch(0.8398 0.1348 76.3908);
+  --chart-2: oklch(0.7688 0.1323 191.0468); /* #00cec8 — the cyan gun */
+  --chart-3: oklch(0.797 0.1577 76.3908);
+  --chart-4: oklch(0.5098 0.1009 76.3908);
+  --chart-5: oklch(0.4373 0.0866 76.3908);
+
+  --sidebar: oklch(0.1433 0.0264 76.3908);
+  --sidebar-foreground: oklch(0.9644 0.0279 76.3908);
+  --sidebar-primary: oklch(0.8398 0.1348 76.3908);
+  --sidebar-primary-foreground: oklch(0.1433 0.0264 76.3908);
+  --sidebar-accent: oklch(0.2625 0.0523 76.3908);
+  --sidebar-accent-foreground: oklch(0.8398 0.1348 76.3908);
+  --sidebar-border: oklch(0.3205 0.0637 76.3908);
+  --sidebar-ring: oklch(0.8398 0.1348 76.3908);
+}
+
+/* The terminal roles again, for the reason they are restated for green: the
+   chrome tier is a mix toward the pale end of the ramp, and that pale end is a
+   different colour on this tube. The percentages are green's, so the two
+   screens agree about how far above the beam signage sits. */
+[data-tube="amber"] {
+  --terminal-chrome: color-mix(
+    in oklch,
+    var(--primary) 62%,
+    oklch(0.95 0.045 76.3908)
+  );
+  --terminal-chrome-dim: var(--primary);
+  --terminal-ink: var(--foreground);
+  --terminal-ink-dim: color-mix(in oklch, var(--foreground) 80%, transparent);
+  --terminal-ink-faint: color-mix(in oklch, var(--foreground) 55%, transparent);
+  --terminal-rule: color-mix(in oklch, var(--border) 85%, transparent);
+  --terminal-edge: color-mix(in oklch, var(--primary) 60%, transparent);
+  --terminal-wash: color-mix(in oklch, var(--primary) 12%, transparent);
+}
+
+/* The pointer set, recoloured rather than redrawn. Every mark sits on the same
+   pixel it does on green — the PNGs were remapped colour for colour from the
+   green originals, so the geometry the comment above insists on is preserved
+   exactly rather than re-rasterised and hoped over. */
+[data-tube="amber"] {
+  --cursor-default:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAiklEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQFD9dFMzxcF40ihk+OCdlUmCQhgKyOCZsC+aClKM6E0TBxrGGAz//41GANRJhmbBrQ1eAF0gKM///si/kvLcD4H90wvNFIiguYsPkPl2141cCci8vJMDFkNTijEV9CQgdM2OKfEEBWR3FeoBgAAPxObv5uJJGOAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23fcbe5c' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fcbe5c'/%3E%3C/svg%3E")
+      8 8,
+    default;
+  --cursor-pointer:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVR42mNgGAUUA0ZsgtICjP/xaXr64T9cHwsuRQ/XRWMVlw9aisJnotQLBA1At5FkA3B5hX5eoHk0DgMAAGOZDhH/czVPAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%231b1001'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%23fcbe5c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%231b1001'/%3E%3C/svg%3E")
+      8 8,
+    pointer;
+  --cursor-text:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAVUlEQVR42mNgoBAwYhOUFmD8j0/T0w//4fpYcCl6fGU/VnFZHUcUPhPNvQBzCbLNBL0AU4AeFsgaqeaFUQOoYAALKUkZJo4cnTgTEr6kjGwA04DnRgBu/iUhTWEfywAAAABJRU5ErkJggg==")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='7' height='3' fill='%231b1001'/%3E%3Crect x='7' y='2' width='3' height='12' fill='%231b1001'/%3E%3Crect x='5' y='12' width='7' height='3' fill='%231b1001'/%3E%3Crect x='6' y='2' width='5' height='1' fill='%23fee4c0'/%3E%3Crect x='8' y='3' width='1' height='10' fill='%23fee4c0'/%3E%3Crect x='6' y='13' width='5' height='1' fill='%23fee4c0'/%3E%3C/svg%3E")
+      8 8,
+    text;
+  --cursor-grab:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAdklEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQFD9dFMzxcF40ihk+OCdlUmCQhgKyOCZsC+aClKM6E0TBxZMCEyxZk/2PjwwALPqeiBxw2wESKf8kyAJu/STKAEGDB5398CQmvC/AlJLwGEPIvNnUU5wWKAQCT7z9xBvt2lwAAAABJRU5ErkJggg==")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%23fcbe5c' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fcbe5c'/%3E%3C/svg%3E")
+      8 8,
+    grab;
+  --cursor-grabbing:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAbElEQVR42mNgGPKAEZugtADjf1wann74z4jXRGkBxv/SAoz//z058P/fkwMYbHTDmbAZ8vjKfgZixZnwuUZWxxGFxgaYiA0sXIYQNACXd4g2AJ/zSfICWQbAnP/4yn6cXmEixdnYxKmfEukOAALmLm6oRLUtAAAAAElFTkSuQmCC")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%23fee4c0' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fee4c0'/%3E%3C/svg%3E")
+      8 8,
+    grabbing;
+  --cursor-disabled:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeUlEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQF2b78DNm+/Chi+OSYkE2FSRICyOqYsCmYuvkjijNhNEwcaxjg8z/RaqQFGP+jK8JmCCE15ANyXMCEzX+4DMGmBiMa0eMZXzrBGY34EhI6YMIW/4QAsjqK8wLFAADaAUdQDA+0eAAAAABJRU5ErkJggg==")
+      8 8,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23865d10' stroke-width='1'/%3E%3C/svg%3E")
+      8 8,
+    not-allowed;
 }

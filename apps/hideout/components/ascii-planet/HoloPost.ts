@@ -94,6 +94,10 @@ export function createHoloPost(
       material.uniforms.uCell.value.set(h, h)
     },
 
+    setInk(ink) {
+      material.uniforms.uInk.value.set(ink)
+    },
+
     setSize(nextWidth, nextHeight) {
       const w = Math.max(1, nextWidth)
       const h = Math.max(1, nextHeight)

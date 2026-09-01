@@ -103,7 +103,7 @@ function AsciiBannerView({
             // glyphs takes pixels out of the letterforms rather than shading
             // them, and at "none" the caller has asked for the art itself.
             effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
-            effect !== "none" && "crt-holo-bloom"
+            effect !== "none" && "crt-bloom"
           )}
         >
           {art}

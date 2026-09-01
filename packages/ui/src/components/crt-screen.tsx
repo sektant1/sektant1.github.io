@@ -65,40 +65,21 @@ function CrtScreen({
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-20 opacity-0 dark:opacity-100"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 60%, rgb(0 0 0 / var(--crt-vignette-opacity)) 100%)",
-        }}
+        className="pointer-events-none absolute inset-0 z-20 crt-vignette opacity-0 dark:opacity-100"
       />
 
+      {/* inset-0, not a fixed 4rem bar: the band is sized to the screen and
+          carries its light as a 4rem gradient at the top of that box, so the
+          keyframe can travel in percentages and land exactly clear of both
+          edges at any screen height. */}
       {sweep ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 z-20 hidden h-16 opacity-0 motion-safe:animate-[crt-sweep_6s_linear_infinite] dark:block"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.06), transparent)",
-          }}
+          className="pointer-events-none absolute inset-0 z-20 hidden crt-sweep-band opacity-0 motion-safe:animate-[crt-sweep_6s_linear_infinite] dark:block"
         />
       ) : null}
-
-      <style>{KEYFRAMES}</style>
     </div>
   )
 }
-
-const KEYFRAMES = `
-@keyframes crt-flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.62; }
-}
-@keyframes crt-sweep {
-  0% { transform: translateY(-4rem); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(100vh); opacity: 0; }
-}
-`
 
 export { CrtScreen, crtVariants }

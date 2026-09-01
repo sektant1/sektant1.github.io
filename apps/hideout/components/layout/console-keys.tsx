@@ -11,6 +11,7 @@ import { REPLAY_BOOT_EVENT } from "@/components/layout/cold-boot"
 import { PALETTE_EVENT } from "@/components/layout/command-palette"
 import { TOGGLE_EVENT } from "@/components/layout/site-log"
 import { crtScreenOn } from "@/lib/crt-screen"
+import { tube, type Tube } from "@/lib/tube"
 
 /**
  * The labelled keys along the bottom edge, the way a terminal of this kind
@@ -58,7 +59,44 @@ export function ConsoleKeys({ className }: { className?: string }) {
         boot
       </CommandKey>
       <CrtKey />
+      <TubeKey />
     </CommandStrip>
+  )
+}
+
+/**
+ * Which phosphor the screen is coated with.
+ *
+ * Green and amber are the two coatings these terminals shipped with, so this
+ * swaps one real screen for another rather than tinting the page. The key is
+ * lit on amber because that is the state worth reporting — green is the
+ * identity, and a console does not light a lamp to tell you it is normal.
+ */
+function TubeKey() {
+  const current = React.useSyncExternalStore(
+    tube.subscribe,
+    tube.read,
+    tube.serverSnapshot
+  )
+  const amber = current === "amber"
+
+  const toggle = () => {
+    const next: Tube = amber ? "green" : "amber"
+    // Green is the default and carries no attribute, matching the setup script.
+    if (next === "green") delete document.documentElement.dataset.tube
+    else document.documentElement.dataset.tube = next
+    tube.write(next)
+  }
+
+  return (
+    <CommandKey
+      onClick={toggle}
+      tone={amber ? "active" : "default"}
+      aria-pressed={amber}
+      title={amber ? "Back to the green tube" : "Switch to the amber tube"}
+    >
+      {amber ? "amber" : "green"}
+    </CommandKey>
   )
 }
 

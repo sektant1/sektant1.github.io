@@ -30,7 +30,9 @@ function AccordionItem({ className, ...props }: DisclosureProps) {
   return (
     <AccordionItemPrimitive
       data-slot="accordion-item"
-      className={cn("not-last:border-b", className)}
+      /* The group is what the panel reads its open state from. react-aria puts
+         data-expanded on the Disclosure, not on the panel. */
+      className={cn("group/accordion-item not-last:border-b", className)}
       {...props}
     />
   )
@@ -72,18 +74,37 @@ function AccordionContent({
   ...props
 }: DisclosurePanelProps) {
   return (
+    /* Opens and closes on grid-template-rows, 0fr to 1fr.
+     *
+     * What was here before could not have worked in either half. The height
+     * came from h-(--disclosure-panel-height), a variable react-aria does not
+     * set — an unresolvable var makes the declaration invalid at computed-value
+     * time, so the panel fell back to height:auto and the transition-[height]
+     * beside it had two auto endpoints to interpolate between. The animation
+     * came from data-open/data-closed, which are not attributes react-aria sets
+     * either (the panel gets `hidden`, the Disclosure gets `data-expanded`), and
+     * pointed at accordion-down/up keyframes that read --radix-* variables. Four
+     * things that all had to be true, and none of them was.
+     *
+     * A grid track needs no measurement, animates in every current engine, and
+     * react-aria explicitly waits on getAnimations() before it sets `hidden`,
+     * so the close plays out rather than being cut off. */
     <AccordionContentPrimitive
       data-slot="accordion-content"
-      className="data-open:animate-accordion-down data-closed:animate-accordion-up h-(--disclosure-panel-height) overflow-clip text-xs transition-[height]"
+      className="grid grid-rows-[0fr] overflow-clip text-xs opacity-0 transition-[grid-template-rows,opacity] duration-200 ease-out group-data-expanded/accordion-item:grid-rows-[1fr] group-data-expanded/accordion-item:opacity-100 motion-reduce:transition-none"
       {...props}
     >
-      <div
-        className={cn(
-          "pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-          className
-        )}
-      >
-        {children}
+      {/* min-h-0 is what lets the 0fr track actually collapse: a grid item's
+          default min-height:auto floors it at its content height. */}
+      <div className="min-h-0 overflow-hidden">
+        <div
+          className={cn(
+            "pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+            className
+          )}
+        >
+          {children}
+        </div>
       </div>
     </AccordionContentPrimitive>
   )

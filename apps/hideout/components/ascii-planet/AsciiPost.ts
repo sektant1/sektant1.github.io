@@ -108,6 +108,10 @@ export function createAsciiPost(
       material.uniforms.uCell.value.set(h * 0.6, h)
     },
 
+    setInk(ink) {
+      material.uniforms.uInk.value.set(ink)
+    },
+
     setSize(nextWidth, nextHeight) {
       const w = Math.max(1, nextWidth)
       const h = Math.max(1, nextHeight)

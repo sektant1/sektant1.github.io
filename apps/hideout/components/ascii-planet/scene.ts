@@ -330,6 +330,29 @@ export function createAsciiScene(
     renderer.render(post.scene, post.camera)
   }
 
+  /* The tube can be swapped while the scene is running.
+   *
+   * The ink is read out of --primary once, at construction, because a uniform
+   * is not a stylesheet and a canvas has no cascade to inherit from. So when
+   * the reader changes the phosphor, every surface on the page follows through
+   * CSS and this one does not — the page went amber around a globe that was
+   * still green. Watching the attribute is what puts the renderer back on the
+   * same tube as everything else, and it costs one observer rather than a
+   * rebuild: re-creating the pass would replay the boot settle and re-fetch
+   * the model to change one colour.
+   *
+   * The markers' labels, reticles and leader lines are DOM styled from the
+   * same tokens, so they were never the part that lagged. */
+  const tubeWatch = new MutationObserver(() => {
+    // Just the uniform. A scene that is paused or off screen is not drawing
+    // anything to correct, and it reads this value on the frame it resumes.
+    post.setInk(resolveThemeColor("--primary", "#32f078"))
+  })
+  tubeWatch.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-tube"],
+  })
+
   function syncRendering() {
     const next = intersects && modelLoaded && !paused
     if (next === rendering) return
@@ -398,6 +421,7 @@ export function createAsciiScene(
       cancelAnimationFrame(rafId)
       visibility.disconnect()
       ro.disconnect()
+      tubeWatch.disconnect()
       host.removeEventListener("pointerdown", onPointerDown)
       host.removeEventListener("pointermove", onPointerMove)
       host.removeEventListener("pointerup", onPointerUp)
