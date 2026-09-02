@@ -88,7 +88,10 @@ export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
           <AsciiPlanetScene
             className="ascii-planet-scene"
             ariaLabel="Rotating ASCII globe, marked with where you are reading from. Drag to spin it."
-            autoRotateSpeed={6}
+            // A globe on a tracking display turns at the speed of something being
+            // watched, not something being shown off. At six the wire crossed a
+            // cell a frame and the raster strobed against it.
+            autoRotateSpeed={1.6}
             modelScale={0.8}
             style={style}
             onLocation={onLocation}

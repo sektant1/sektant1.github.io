@@ -16,6 +16,7 @@ import {
   postCellHeightFor,
   characterResolutionFor,
   lightingFor,
+  needsLighting,
   needsEnvironment,
   postDefaultsFor,
   renderScaleFor,
@@ -186,14 +187,16 @@ export function createAsciiScene(
     pmrem.dispose()
   }
 
-  for (const light of lightingFor(subject)) {
-    if (light.kind === "ambient") {
-      scene.add(new THREE.AmbientLight(0xffffff, light.intensity))
-      continue
+  if (needsLighting(subject)) {
+    for (const light of lightingFor(subject)) {
+      if (light.kind === "ambient") {
+        scene.add(new THREE.AmbientLight(0xffffff, light.intensity))
+        continue
+      }
+      const directional = new THREE.DirectionalLight(0xffffff, light.intensity)
+      if (light.position) directional.position.set(...light.position)
+      scene.add(directional)
     }
-    const directional = new THREE.DirectionalLight(0xffffff, light.intensity)
-    if (light.position) directional.position.set(...light.position)
-    scene.add(directional)
   }
 
   let rafId = 0
@@ -207,7 +210,10 @@ export function createAsciiScene(
   let planet: PlanetHandle = modelUrl
     ? { group: new THREE.Group(), mesh: new THREE.Group(), dispose: () => {} }
     : createPlanetModel(EARTH_TEXTURE, style)
-  planet.group.rotation.y = INITIAL_PLANET_ROTATION_Y
+  // The spin is the subject's own, not its mount's. The group carries the tilt
+  // and the fit; turning it instead would swing a tilted globe's pole around a
+  // cone, which is a struck top rather than a planet.
+  planet.mesh.rotation.y = INITIAL_PLANET_ROTATION_Y
   planet.group.scale.setScalar(modelScale)
   scene.add(planet.group)
 
@@ -244,7 +250,7 @@ export function createAsciiScene(
         scene.remove(planet.group)
         planet.dispose()
         planet = next
-        planet.group.rotation.y = INITIAL_PLANET_ROTATION_Y
+        planet.mesh.rotation.y = INITIAL_PLANET_ROTATION_Y
         planet.group.scale.setScalar(modelScale)
         scene.add(planet.group)
         locationMarkers = null
@@ -281,8 +287,8 @@ export function createAsciiScene(
   }
   const onPointerMove = (event: PointerEvent) => {
     if (!dragging) return
-    planet.group.rotation.y += (event.clientX - lastX) * DRAG_SPEED
-    planet.group.rotation.x += (event.clientY - lastY) * DRAG_SPEED
+    planet.mesh.rotation.y += (event.clientX - lastX) * DRAG_SPEED
+    planet.mesh.rotation.x += (event.clientY - lastY) * DRAG_SPEED
     lastX = event.clientX
     lastY = event.clientY
   }
@@ -316,7 +322,7 @@ export function createAsciiScene(
 
     const dt = (now - lastT) / 1000
     lastT = now
-    if (!dragging) planet.group.rotation.y += spinPerSec * dt
+    if (!dragging) planet.mesh.rotation.y += spinPerSec * dt
     locationMarkers?.update()
 
     if (settling) {

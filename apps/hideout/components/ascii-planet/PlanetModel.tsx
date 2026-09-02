@@ -1,7 +1,9 @@
 import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
-import { DEFAULT_RENDER_STYLE, type RenderStyle } from "./policy"
+import GLOBE_FRAGMENT from "./shaders/globe.frag"
+import GLOBE_VERTEX from "./shaders/globe.vert"
+import { DEFAULT_RENDER_STYLE, globeTonesFor, type RenderStyle } from "./policy"
 
 export interface PlanetHandle {
   group: THREE.Group
@@ -16,6 +18,9 @@ export interface PlanetHandle {
 THREE.Cache.enabled = true
 
 const TARGET_DIAMETER = 2.8
+
+/** Earth's, in radians. The globe is a globe before it is a graphic. */
+const AXIAL_TILT = 0.41
 
 function fitObjectToTarget(
   obj: THREE.Object3D,
@@ -282,59 +287,68 @@ function loadHighContrastEarth(url: string): THREE.CanvasTexture {
   return tex
 }
 
+/**
+ * The globe's surface, emitted rather than lit.
+ *
+ * Both passes downstream read one number per cell and quantise it, so the
+ * useful thing a material can do here is name the tones instead of shading a
+ * ball and hoping the reduction lands on them. `globe.frag` carries the
+ * argument in full; `globeTonesFor` carries where the steps are.
+ */
+function globeMaterial(
+  texture: THREE.Texture,
+  style: RenderStyle
+): THREE.ShaderMaterial {
+  const tones = globeTonesFor(style)
+
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uMap: { value: texture },
+      uWater: { value: tones.water },
+      uLand: { value: tones.land },
+      uLimb: { value: tones.limb },
+      uLimbPower: { value: tones.limbPower },
+      uWire: { value: new THREE.Vector2(tones.wire[0], tones.wire[1]) },
+      uWireWidth: { value: tones.wireWidth },
+      uWireTone: { value: tones.wireTone },
+      uBackTone: { value: tones.backTone },
+    },
+    vertexShader: GLOBE_VERTEX,
+    fragmentShader: GLOBE_FRAGMENT,
+    // Both sides, and neither of them occluding the other: a projection is
+    // drawn through, so the far half of the sphere shows in the gaps of the
+    // near half. That is the whole reason the object reads as hollow.
+    side: THREE.DoubleSide,
+    transparent: true,
+    depthWrite: false,
+    // The value written is the tone the pass is meant to read. A tone curve
+    // over the top would move every one of them off the step it was put on.
+    toneMapped: false,
+  })
+}
+
 export function createPlanetModel(
   textureUrl = "/textures/earth.jpg",
   style: RenderStyle = DEFAULT_RENDER_STYLE
 ): PlanetHandle {
   const group = new THREE.Group()
-
-  if (style === "holo") {
-    // The continents are the point of this object and they live in the map,
-    // so the hologram keeps the same high-contrast texture on a flat-shaded
-    // sphere and lets the raster's few steps separate land from water.
-    //
-    // No graticule over it: a grid drawn across the coastlines competes with
-    // them for the same cells, and the coastlines are the half carrying the
-    // meaning. The faceting of the sphere is the only wire the picture needs.
-    const texture = loadHighContrastEarth(textureUrl)
-    const geometry = new THREE.SphereGeometry(1.4, 32, 24)
-    const material = new THREE.MeshLambertMaterial({
-      map: texture,
-      color: 0xffffff,
-      // Mostly self-lit, like the coin: a terminator across the map would add
-      // a tone per facet on top of land and water, and the globe would read as
-      // a shaded ball rather than as the same flat projection.
-      emissive: 0xffffff,
-      emissiveMap: texture,
-      emissiveIntensity: 0.62,
-      flatShading: true,
-    })
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.rotation.z = 0.41
-
-    group.add(mesh)
-
-    return {
-      group,
-      mesh,
-      dispose() {
-        geometry.dispose()
-        material.dispose()
-        texture.dispose()
-      },
-    }
-  }
-
   const texture = loadHighContrastEarth(textureUrl)
+  const material = globeMaterial(texture, style)
 
-  const material = new THREE.MeshToonMaterial({
-    map: texture,
-    color: 0xffffff,
-  })
-
+  // Segments are a silhouette decision now rather than a shading one. The
+  // hologram used to take its tones from a coarse sphere's own faceting, which
+  // is why it was built at 32 — with the tones named outright, the only thing
+  // the count still buys is a limb that reads as a curve rather than a polygon.
   const geometry = new THREE.SphereGeometry(1.4, 64, 48)
   const mesh = new THREE.Mesh(geometry, material)
-  mesh.rotation.z = 0.41
+
+  // The tilt goes on the group and the spin on the mesh inside it, which is the
+  // only order that turns a planet. Both used to be the other way round — the
+  // sphere tilted and its parent spun — and a parent turning about the world's
+  // vertical axis swings a tilted child's pole around a cone rather than
+  // rotating it about its own. The globe wobbled like a struck top, and every
+  // pin on it rode up and down with the wobble.
+  group.rotation.z = AXIAL_TILT
   group.add(mesh)
 
   return {

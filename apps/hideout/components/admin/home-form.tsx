@@ -315,6 +315,31 @@ export function HomeForm({ home }: { home: HomeContent }) {
           </p>
         </Group>
 
+        <Group title="recent log">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField
+              id="logTitle"
+              label="panel title"
+              value={value.hero.logTitle}
+              error={errors.logTitle}
+              placeholder={d.hero.logTitle}
+              onChange={(logTitle) => hero({ logTitle })}
+            />
+            <TextField
+              id="logRef"
+              label="panel reference"
+              value={value.hero.logRef}
+              error={errors.logRef}
+              placeholder={d.hero.logRef}
+              onChange={(logRef) => hero({ logRef })}
+            />
+          </div>
+          <p className="text-xs text-terminal-ink-faint">
+            The entries are the four most recent things in the archive, whatever
+            kind they are, so there is nothing to edit here either.
+          </p>
+        </Group>
+
         <Group title="render style">
           <SelectField
             id="renderStyle"

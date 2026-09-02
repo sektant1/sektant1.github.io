@@ -17,12 +17,23 @@ export type HeroTag = {
   count: number
 }
 
+/** One thing the archive gained, whatever kind it was. */
+export type HeroEntry = {
+  kind: "post" | "project" | "game"
+  title: string
+  href: string
+  /** ISO date, as the front matter wrote it. */
+  date: string
+}
+
 type StationHeroProps = {
   posts: number
   projects: number
   minutes: number
   /** The tags the archive actually uses, busiest first. */
   tags: HeroTag[]
+  /** The last few things the archive gained, newest first. */
+  recent: HeroEntry[]
   /** How often the archive changed, month by month. */
   activity: ActivityBucket[]
   /** Every string drawn here, editable at /admin/home. */
@@ -42,6 +53,7 @@ export function StationHero({
   projects,
   minutes,
   tags,
+  recent,
   activity,
   content,
   renderStyle,
@@ -142,7 +154,7 @@ export function StationHero({
           </div>
 
           {/* The index of what the archive covers, and the way into it. */}
-          <div className="flex min-h-0 flex-1 flex-col border-t border-terminal-rule">
+          <div className="flex flex-col border-t border-terminal-rule">
             <p className="flex items-center gap-2 px-2 pt-2 font-mono text-[0.55rem] tracking-[0.28em] text-terminal-chrome-dim uppercase">
               {content.tagsTitle}
               <span
@@ -181,6 +193,55 @@ export function StationHero({
               </p>
             )}
           </div>
+
+          {/* The tail of the archive, and what closes the panel.
+
+              The counts say how much is here and the index says what it is
+              about; neither says what happened last, and the column under the
+              tags was empty enough that the panel ended a third of the way up
+              the globe beside it. One line per entry, newest first, with the
+              kind in the gutter — a log, which is the one thing on this page
+              that reports a date. */}
+          <div className="flex min-h-0 flex-1 flex-col border-t border-terminal-rule">
+            <p className="flex items-center gap-2 px-2 pt-2 font-mono text-[0.55rem] tracking-[0.28em] text-terminal-chrome-dim uppercase">
+              {content.logTitle}
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-terminal-rule"
+              />
+              <span className="text-terminal-ink-faint">{content.logRef}</span>
+            </p>
+
+            {recent.length ? (
+              <ul className="flex flex-col p-1">
+                {recent.map((entry) => (
+                  <li key={entry.href}>
+                    <Link
+                      href={entry.href}
+                      className="group/log flex items-baseline gap-2 px-1 py-1 font-mono text-[0.62rem] text-terminal-ink-dim crt-persist hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="w-8 shrink-0 text-[0.55rem] tracking-[0.1em] text-terminal-chrome-dim uppercase"
+                      >
+                        {KINDS[entry.kind]}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate lowercase">
+                        {entry.title}
+                      </span>
+                      <span className="shrink-0 text-[0.58rem] text-terminal-ink-faint tabular-nums group-hover/log:text-primary">
+                        {stampDate(entry.date)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="p-2 font-mono text-[0.62rem] text-terminal-ink-faint lowercase">
+                nothing logged yet
+              </p>
+            )}
+          </div>
         </TerminalFrame>
 
         <GeoPanel
@@ -193,6 +254,40 @@ export function StationHero({
     </section>
   )
 }
+
+/** What each kind is called in the log's gutter. */
+const KINDS: Record<HeroEntry["kind"], string> = {
+  post: "PST",
+  project: "PRJ",
+  game: "GME",
+}
+
+/**
+ * A date the way the rest of the station prints one: the day, then the month,
+ * with no year — a log four entries long never crosses one.
+ */
+function stampDate(iso: string) {
+  const at = new Date(iso)
+  if (Number.isNaN(at.getTime())) return iso
+
+  const pad = (value: number) => String(value).padStart(2, "0")
+  return `${pad(at.getUTCDate())} ${MONTHS[at.getUTCMonth()]}`
+}
+
+const MONTHS = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+]
 
 /**
  * The hero ships every face and lets CSS pick one, so the reader's stored
