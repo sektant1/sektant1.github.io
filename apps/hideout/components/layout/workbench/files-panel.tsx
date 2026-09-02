@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { IconX } from "@tabler/icons-react"
-import { FontPicker } from "@workspace/ui/components/font-picker"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { ContentTree } from "@/components/layout/content-tree"
@@ -17,7 +16,7 @@ import type { ContentTreeNode } from "@/lib/content/types"
  * The three used to be one undifferentiated column — four link rows, then the
  * tree, then a font control — which read as a menu that had grown a file
  * browser. They are three jobs, so they get three bands: where to go, what to
- * look for, and what is there.
+ * look for, and what is there. The font control was a fourth, and left.
  *
  * The listing row is not the tree repeated. `content/` holds documents;
  * `/posts`, `/projects` and `/games` are the pages that index them, and
@@ -98,20 +97,11 @@ export function FilesPanel({
         ) : null}
       </div>
 
+      {/* The tree runs to the foot of the panel. The reading face used to be
+          pinned below it; it is a console setting, and it sits with the other
+          console settings in the stash. */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         <ContentTree tree={tree} filter={filter} />
-      </div>
-
-      {/* The reading face. Pinned to the foot of the panel rather than left to
-          scroll off the end of the archive: it is a setting, not an entry. */}
-      <div className="flex shrink-0 items-center gap-2 border-t border-sidebar-border px-3 py-2">
-        <span className="font-mono text-[0.6rem] tracking-[0.2em] text-terminal-chrome-dim uppercase">
-          шрифт
-        </span>
-        <FontPicker
-          defaultFace="Bender"
-          className="ms-auto size-6 rounded-none border border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:bg-transparent hover:text-primary"
-        />
       </div>
     </div>
   )

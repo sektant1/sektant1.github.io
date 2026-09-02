@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
   CommandKey,
   CommandStrip,
@@ -19,27 +18,13 @@ import { useCrtScreen, useTube } from "@/lib/console-controls"
  * than for the machinery behind it.
  *
  * What it does not carry is a second way to do something already offered a
- * few pixels away. FIND sat here while the rail and the tab bar both opened
- * the same palette, and LOG sat directly beside the counts key that toggles
- * the same panel and says how many problems are in it. What is left is the
- * console proper: where the buffer is, and how the screen behaves.
+ * few pixels away, which is why it is down to the phone's sheet: on a wide
+ * screen the console panel carries these same three, and two banks for one set
+ * of switches is how they end up disagreeing about which is lit.
  */
 export function ConsoleKeys({ className }: { className?: string }) {
-  const scrollBufferToTop = () => {
-    const buffer = document.querySelector<HTMLElement>('[data-slot="buffer"]')
-    buffer?.scrollTo({
-      top: 0,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-    })
-  }
-
   return (
     <CommandStrip className={className}>
-      <CommandKey onClick={scrollBufferToTop} title="Back to the top">
-        top
-      </CommandKey>
       <CommandKey
         onClick={() => fire("boot")}
         title="Run the boot sequence again"

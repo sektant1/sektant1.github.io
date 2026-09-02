@@ -9,6 +9,7 @@ import { buildCommandIndex } from "@/lib/content/command-index"
 import { BYLINE, SOCIAL_LINKS } from "@/lib/navigation"
 import { getHomeContent } from "@/lib/content/home"
 import { isAdminVisible } from "@/lib/runtime/mode"
+import { getFleaPrices } from "@/lib/tarkov"
 import type { ContentTreeNode } from "@/lib/content/types"
 
 type SiteShellProps = {
@@ -37,9 +38,10 @@ export async function SiteShell({
   gauge,
   children,
 }: SiteShellProps) {
-  const [commandIndex, home] = await Promise.all([
+  const [commandIndex, home, flea] = await Promise.all([
     buildCommandIndex(),
     getHomeContent(),
+    getFleaPrices(),
   ])
 
   return (
@@ -47,11 +49,7 @@ export async function SiteShell({
       <Workbench
         path={path}
         files={<FilesPanel tree={tree} />}
-        objects={
-          commandIndex.posts.length +
-          commandIndex.projects.length +
-          commandIndex.games.length
-        }
+        flea={flea}
         links={SOCIAL_LINKS}
         byline={BYLINE}
         status={status}

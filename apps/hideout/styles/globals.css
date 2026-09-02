@@ -3,8 +3,14 @@
    below redefines a token: an edit in packages/ui lands here directly. */
 @import "@workspace/ui/globals.css";
 @import "@workspace/ui/themes/phosphor.css";
-@import "./prose.css";
-@import "./cold-boot.css";
+/* Into `components`, which Tailwind declares ahead of `utilities`: a bare
+   class beats every utility otherwise, whatever order the two are written in,
+   and a document styled by class then quietly ignores the utility written on
+   the element to override it. effects.css imports flat because it declares a
+   @utility of its own, which cannot sit inside a layer; it carries the same
+   `@layer components` around its class rules internally. */
+@import "./prose.css" layer(components);
+@import "./cold-boot.css" layer(components);
 @import "./effects.css";
 
 /* Tailwind's source detection is rooted at the file that imports it, which
@@ -277,8 +283,9 @@ html[data-crt="off"] .ascii-planet-scene {
    corners down — both of them light and shade spread over body copy, which is
    the same thing the beam and the raster were removed for. Lifting the glass
    with data-crt="off" already took all three; asking the system for contrast
-   now takes the same three. */
-Forced colours asks for the same thing for a different reason: the reader's
+   now takes the same three.
+ *
+   Forced colours asks for the same thing for a different reason: the reader's
    OS owns the palette now, and every layer of the face is light in a colour we
    no longer control. Two conditions, one answer, so one rule — the toolkit's
    own effects are handled in packages/ui. */
@@ -320,6 +327,57 @@ Forced colours asks for the same thing for a different reason: the reader's
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
+}
+
+/* ── The console's four type sizes ─────────────────────────────────────
+ *
+ * A panel on this workbench is signage, labels, readouts and the human voice,
+ * and each of those is one size. They were nine — every row picking its own
+ * arbitrary value somewhere between 0.58rem and 0.86rem, which is a scale
+ * nobody set and every new row re-guesses.
+ *
+ * The floor is 0.7rem, about 11px. Below that the tube's own raster is landing
+ * across most of a stroke and the counters start closing; 0.58rem was 9px of
+ * mono asked to carry the only prose on the panel, which is the one thing a
+ * screen this dense cannot make the reader squint at.
+ *
+ * Size, tracking and case only. Colour stays a class on the element, because
+ * the emission rule keys off the colour roles — a label that stops saying
+ * `text-terminal-chrome-dim` stops glowing, and signage that does not glow is
+ * not signage on this screen. */
+@utility console-sign {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+@utility console-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@utility console-value {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility console-figure {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one register that is not a readout: sentences, lowercase, set with the
+   leading a paragraph needs rather than the leading a row of figures does. */
+@utility console-note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.65;
+  text-transform: lowercase;
 }
 
 @utility field-frame {

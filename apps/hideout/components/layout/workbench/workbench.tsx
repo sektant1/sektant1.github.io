@@ -7,6 +7,7 @@ import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-prefer
 import { ConsoleKeys } from "@/components/layout/console-keys"
 import { SiteLog } from "@/components/layout/site-log"
 import { StatusBar, type StatusField } from "@/components/layout/status-bar"
+import type { FleaState } from "@/lib/tarkov"
 import { ActivityRail } from "@/components/layout/workbench/activity-rail"
 import { BreadcrumbBar } from "@/components/layout/workbench/breadcrumb-bar"
 import {
@@ -45,8 +46,8 @@ export type WorkbenchProps = {
   files: React.ReactNode
   links: { label: string; href: string }[]
   byline: { name: string; href: string }
-  /** Everything the archive holds: the stash reports it. */
-  objects: number
+  /** Flea prices for the item the instrument draws, read on the server. */
+  flea: FleaState
   status?: StatusField[]
   /** Rendered above the buffer, edge to edge: the reading progress rule. */
   gauge?: React.ReactNode
@@ -58,7 +59,7 @@ export function Workbench({
   files,
   links,
   byline,
-  objects,
+  flea,
   status,
   gauge,
   children,
@@ -85,7 +86,7 @@ export function Workbench({
         files={files}
         links={links}
         byline={byline}
-        objects={objects}
+        flea={flea}
         className="hidden md:flex"
       />
 
@@ -107,10 +108,10 @@ export function Workbench({
 
         <SiteLog />
 
-        {/* One bar along the bottom, not two. On a narrow screen the tab bar
-            already offers find and the log, and what the status bar has left
-            is readouts — so the keys move into the console sheet and the bar
-            stays with the width that has room to report. */}
+        {/* Readouts only. The keys that used to sit here — the screen, the
+            phosphor, the boot sequence — are the console panel's rows now, and
+            a second copy a few pixels away is how two controls for one setting
+            end up disagreeing about which is lit. */}
         <StatusBar fields={status} className="hidden md:flex" />
 
         <MobileTabBar

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { SiteMark } from "@/components/layout/site-mark"
+import { BtcFarmPanel } from "@/components/layout/workbench/btc-farm-panel"
 import { StashPanel } from "@/components/layout/workbench/stash-panel"
 import {
   Visor,
@@ -13,6 +14,7 @@ import {
 } from "@/components/layout/workbench/visor"
 import { useInstrument } from "@/components/layout/workbench/use-instrument"
 import type { SidePanel as SidePanelId } from "@/lib/workbench"
+import type { FleaState } from "@/lib/tarkov"
 
 /**
  * The panel the rail selects.
@@ -29,8 +31,8 @@ export type SidePanelProps = {
   files: React.ReactNode
   links: { label: string; href: string }[]
   byline: { name: string; href: string }
-  /** Everything the archive holds, for the stash's own readout. */
-  objects: number
+  /** Flea prices for the item in the viewer, read on the server. */
+  flea: FleaState
   className?: string
 }
 
@@ -39,7 +41,7 @@ export function SidePanelView({
   files,
   links,
   byline,
-  objects,
+  flea,
   className,
 }: SidePanelProps) {
   if (panel === null) return null
@@ -62,9 +64,9 @@ export function SidePanelView({
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto">
           {panel === "visor" ? (
-            <VisorPanel />
+            <VisorPanel flea={flea} />
           ) : panel === "stash" ? (
-            <StashPanel objects={objects} />
+            <StashPanel />
           ) : (
             <LinksPanel links={links} byline={byline} />
           )}
@@ -80,7 +82,7 @@ const CAPTIONS: Record<
 > = {
   files: { caption: "АРХИВ", aria: "Content" },
   visor: { caption: "ВИЗОР", aria: "Instrument" },
-  stash: { caption: "СКЛАД", aria: "Stash" },
+  stash: { caption: "ПУЛЬТ", aria: "Console" },
   links: { caption: "СВЯЗЬ", aria: "Contact" },
 }
 
@@ -91,16 +93,20 @@ const CAPTIONS: Record<
  * not take the viewer off the dock the reader just opened, or off the preview
  * under their pointer. When it loses, it says which surface has it.
  */
-function VisorPanel() {
+function VisorPanel({ flea }: { flea: FleaState }) {
   const busy = useInstrument("panel")
 
   return (
-    <div className="flex flex-col gap-2 p-3">
+    <div className="flex flex-col gap-3 p-3">
       {busy ? <VisorPlate reason={busy} /> : <Visor />}
       <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
         <span>модель</span>
         <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
       </p>
+
+      {/* The model is a Tarkov item, so the panel under it can run the farm
+          that produces one instead of naming the file twice. */}
+      <BtcFarmPanel report={flea} />
     </div>
   )
 }

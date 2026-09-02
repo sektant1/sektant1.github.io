@@ -4,7 +4,7 @@ import type * as React from "react"
 import {
   IconBinaryTree,
   IconBoxMultiple,
-  IconCube3dSphere,
+  IconCoinBitcoin,
   IconSearch,
   IconAntenna,
 } from "@tabler/icons-react"
@@ -15,7 +15,7 @@ import type { SidePanel } from "@/lib/workbench"
 /**
  * The rail down the left edge: which panel the side of the workbench shows.
  *
- * The archive, the search, the instrument, the stash and the ways to reach
+ * The archive, the search, the instrument, the console and the ways to reach
  * the operator. Pressing the lit key collapses the panel, the way a rail
  * behaves in an editor: the key reports what is open, and pressing what is
  * already open closes it.
@@ -37,13 +37,13 @@ const ITEMS: RailItem[] = [
   {
     id: "visor",
     label: "ВИЗОР",
-    hint: "The instrument",
-    Icon: IconCube3dSphere,
+    hint: "The instrument and the farm",
+    Icon: IconCoinBitcoin,
   },
   {
     id: "stash",
-    label: "СКЛАД",
-    hint: "What the station is carrying",
+    label: "ПУЛЬТ",
+    hint: "Console",
     Icon: IconBoxMultiple,
   },
   {
@@ -90,13 +90,13 @@ export function ActivityRail({
                 : onSelect(active ? null : (item.id as SidePanel))
             }
             className={cn(
-              "key-sweep flex size-9 items-center justify-center border crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+              "key-sweep flex size-10 items-center justify-center border crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
               active
                 ? "border-primary text-primary crt-glow-soft"
                 : "border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:text-foreground"
             )}
           >
-            <item.Icon className="size-4" />
+            <item.Icon className="size-5" />
             <span className="sr-only">{item.hint}</span>
           </button>
         )

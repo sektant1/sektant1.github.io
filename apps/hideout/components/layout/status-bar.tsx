@@ -1,7 +1,6 @@
 import type * as React from "react"
 import { cn } from "@workspace/ui/lib/utils"
 
-import { ConsoleKeys } from "@/components/layout/console-keys"
 import { LinkStatus } from "@/components/layout/link-status"
 import { SiteLogToggle } from "@/components/layout/site-log"
 import { ZuluClock } from "@/components/layout/zulu-clock"
@@ -45,22 +44,6 @@ export function StatusBar({
           reason to look, so it leads. */}
       <SiteLogToggle />
 
-      {/* The key bank, on every width: these are the only controls the site
-          has, and hiding them on a phone left the bar reporting without
-          offering anything to press. The keys themselves drop the ones that
-          make no sense there.
-
-          flex-1, not shrink. `shrink` is the default, so it said nothing, and
-          the strip was sized to its content and then squeezed by whatever the
-          clock and the log toggle left over — on a phone that is narrower than
-          the keys, so the last of them sat outside the viewport with the
-          footer's overflow-hidden cutting them off rather than letting them
-          scroll. Given the remaining space as its box, the strip scrolls inside
-          it and every key stays reachable. */}
-      <ConsoleKeys className="min-w-0 flex-1" />
-
-      {/* Held back until there is room for the keys first: a half-cut key
-          reads as a broken bar, a missing count reads as a quiet one. */}
       {fields.map((field) => (
         <span key={field.label} className="hidden shrink-0 gap-1 lg:flex">
           <span className="text-terminal-ink-faint">{field.label}</span>

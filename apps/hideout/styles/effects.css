@@ -1,7 +1,7 @@
 /* Chrome that behaves like hardware.
  *
  * Everything here is a hover, a focus or a mount effect on a piece of the
- * workbench. Three rules hold across all of it:
+ * workbench. Four rules hold across all of it:
  *
  *   only transform and opacity are animated, so nothing here can cost a
  *   layout or a paint on a scrolling page;
@@ -11,7 +11,12 @@
  *   running under that is the flicker the key was pressed to stop;
  *
  *   reduced motion removes the movement and keeps the state, so a control
- *   that lights on hover still lights, it just does not travel.
+ *   that lights on hover still lights, it just does not travel;
+ *
+ *   the class rules live in the `components` layer, so a utility written on
+ *   the element wins. A bare class outranks every Tailwind utility no matter
+ *   what order it is written in, which turns `hover:border-primary` on a
+ *   `.stash-switch` into a line that silently does nothing.
  */
 
 /* The beam crossing a key.
@@ -29,6 +34,8 @@
   }
 }
 
+/* A Tailwind utility rather than a class, so it is already in the utilities
+   layer and stays outside the block below. */
 @utility key-sweep {
   position: relative;
   overflow: hidden;
@@ -59,99 +66,242 @@
   }
 }
 
-/* The stash.
- *
- * A slot is a physical thing in a rack: it catches the light at its top edge
- * and it sits a hair proud of the board when the pointer is on it. The lift is
- * a translate of one pixel — enough to read as depth on a screen this flat,
- * small enough that a grid of them does not appear to breathe. */
-.stash-slot {
-  transition:
-    transform 160ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.stash-slot::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  /* The light lying on the slot: strongest at the top edge, gone by a third
-     of the way down, the way a shelf lit from above reads. */
-  background-image: linear-gradient(
-    to bottom,
-    color-mix(in oklch, var(--primary) 7%, transparent),
-    transparent 35%
-  );
-}
-
-.stash-slot:is(:hover, :focus-within) {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 0 0 color-mix(in oklch, var(--primary) 18%, transparent);
-}
-
-/* Empty slots are the rack, not cargo: they hold the grid's shape and stay
-   out of the way until the eye is looking for a gap. */
-.stash-slot-empty {
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent 0 5px,
-    color-mix(in oklch, var(--primary) 4%, transparent) 5px 6px
-  );
-}
-
-/* The preview panel under the pointer.
- *
- * It arrives the way a tube draws a new frame: a fast rise from nothing with
- * a short travel, not a slide. The brackets on its corners are the same
- * field-frame idiom the instrument panels use, at the one size where drawing
- * all four corners would be more chrome than card. */
-@keyframes instrument-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(-2px) scaleY(0.98);
+@layer components {
+  /* The stash.
+   *
+   * A key on this panel is a physical thing on a front plate: it catches the
+   * light at its top edge and sits a hair proud of the board when the pointer
+   * is on it. The lift is a translate of one pixel — enough to read as depth on
+   * a screen this flat, small enough that a stack of them does not breathe. */
+  .stash-switch {
+    position: relative;
+    transition:
+      transform 160ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
-  to {
-    opacity: 1;
+
+  .stash-switch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* The light lying on the key: strongest at the top edge, gone by a third of
+       the way down, the way a plate lit from above reads. */
+    background-image: linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--primary) 7%, transparent),
+      transparent 35%
+    );
+  }
+
+  .stash-switch:is(:hover, :focus-visible) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 0 0 color-mix(in oklch, var(--primary) 18%, transparent);
+  }
+
+  /* The throw. The block occupies half the track and slides to the side the
+     switch is set to, so the position is readable with the phosphor ignored —
+     colour alone would carry the state past anyone who cannot see it. */
+  .stash-track::after {
+    content: "";
+    position: absolute;
+    inset-block: 1px;
+    inset-inline-start: 1px;
+    width: calc(50% - 2px);
+    /* Not `--terminal-chrome-dim`: the phosphor theme resolves that to the
+       primary itself, and an off block lit like an on one says nothing. */
+    background-color: color-mix(in oklch, var(--primary) 32%, transparent);
+    transition: translate 140ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  /* Position and phosphor are two facts, not one. A switch is thrown or not and
+     lit or not; a setting that is always one of two things is thrown either way
+     and lit either way. */
+  .stash-track[data-thrown]::after {
+    translate: 100% 0;
+  }
+
+  .stash-track[data-lit]::after {
+    background-color: var(--primary);
+  }
+
+  /* A buffer arriving in the strip.
+   *
+   * One frame of overdrive as the tab lights, which is what a phosphor does
+   * when a cell is driven from cold — it overshoots, then settles. Opacity
+   * only, and once: a strip that pulses is a strip that is asking for attention
+   * it does not need after the first beat. */
+  [data-slot="buffer-tab"][aria-selected="true"] {
+    animation: buffer-strike 260ms steps(6, end);
+  }
+
+  /* Glass off: the page, with nothing painted over it and nothing moving on it.
+   * Motion goes; the states the motion decorated stay. */
+  html[data-crt="off"] .stash-switch {
+    animation: none;
+    transition: none;
     transform: none;
+    box-shadow: none;
+  }
+
+  html[data-crt="off"] .key-sweep::after,
+  html[data-crt="off"] .stash-switch::before {
+    background-image: none;
+  }
+
+  /* The throw keeps its position with the glass off — it is state, not motion —
+     and loses only the travel. */
+  html[data-crt="off"] .stash-track::after {
+    transition: none;
+  }
+
+  html[data-crt="off"] [data-slot="buffer-tab"][aria-selected="true"] {
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .key-sweep:is(:hover, :focus-visible)::after,
+    [data-slot="buffer-tab"][aria-selected="true"] {
+      animation: none;
+    }
+
+    .stash-switch,
+    .stash-track::after {
+      transition: none;
+    }
+
+    .stash-switch:is(:hover, :focus-visible) {
+      transform: none;
+    }
+  }
+
+  /* High contrast mode has no room for light effects: it replaces the palette
+     with the system's own, and a gradient over that is noise. */
+  @media (forced-colors: active) {
+    .key-sweep::after,
+    .stash-switch::before {
+      background-image: none;
+    }
+
+    /* The block has to keep a fill the system palette actually paints. */
+    .stash-track::after {
+      background-color: GrayText;
+    }
+
+    .stash-track[data-lit]::after {
+      background-color: Highlight;
+    }
+  }
+
+  /* The console's slider.
+   *
+   * A block in a track, like every other setting on this panel: the rail is the
+   * same hairline the rows are drawn with, and the handle is the same lit block
+   * the switches throw. Both ends of the range are always visible, so the
+   * reader can see how much rack is left before dragging.
+   *
+   * The three sizes are properties rather than numbers because the thumb has to
+   * be centred on the track by hand — a range input gives no box that does it —
+   * and the offset that centres it is arithmetic on the other two, not a value
+   * anyone should be nudging by eye. The element itself is 2.75rem tall so the
+   * whole row is a touch target; the rail stays a hairline inside it. */
+  .console-slider {
+    --_slider-track: 0.5rem;
+    --_slider-thumb-height: 1.25rem;
+    --_slider-thumb-width: 0.75rem;
+
+    appearance: none;
+    height: 2.75rem;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .console-slider::-webkit-slider-runnable-track {
+    box-sizing: border-box;
+    height: var(--_slider-track);
+    border: 1px solid var(--terminal-edge);
+    background-image: repeating-linear-gradient(
+      to right,
+      color-mix(in oklch, var(--primary) 22%, transparent) 0 1px,
+      transparent 1px 6px
+    );
+  }
+
+  .console-slider::-moz-range-track {
+    box-sizing: border-box;
+    height: var(--_slider-track);
+    border: 1px solid var(--terminal-edge);
+    background-image: repeating-linear-gradient(
+      to right,
+      color-mix(in oklch, var(--primary) 22%, transparent) 0 1px,
+      transparent 1px 6px
+    );
+  }
+
+  .console-slider::-webkit-slider-thumb {
+    appearance: none;
+    box-sizing: border-box;
+    width: var(--_slider-thumb-width);
+    height: var(--_slider-thumb-height);
+    /* WebKit hangs the thumb off the top of the track's box, so half the
+       difference between the two pulls it back onto the rail's centre line. */
+    margin-top: calc((var(--_slider-track) - var(--_slider-thumb-height)) / 2);
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
+  }
+
+  .console-slider::-moz-range-thumb {
+    box-sizing: border-box;
+    width: var(--_slider-thumb-width);
+    height: var(--_slider-thumb-height);
+    border: 1px solid var(--primary);
+    border-radius: 0;
+    background-color: var(--primary);
+  }
+
+  .console-slider:focus-visible {
+    outline: 1px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Glass off drops the track's lattice, the way it drops every other painted
+     texture on the page. The handle stays: it is the value. */
+  html[data-crt="off"] .console-slider::-webkit-slider-runnable-track {
+    background-image: none;
+  }
+
+  html[data-crt="off"] .console-slider::-moz-range-track {
+    background-image: none;
+  }
+
+  /* Forced colours drops every colour this file names, the handle's fill
+     included — and a range input whose handle is invisible is a control with no
+     value on it. Both parts are restated in system colours: the rail as a
+     border the OS actually paints, the handle as the palette's own Highlight,
+     which is the same block the switch above throws. */
+  @media (forced-colors: active) {
+    .console-slider::-webkit-slider-runnable-track {
+      border-color: CanvasText;
+      background-image: none;
+    }
+
+    .console-slider::-moz-range-track {
+      border-color: CanvasText;
+      background-image: none;
+    }
+
+    .console-slider::-webkit-slider-thumb {
+      border-color: CanvasText;
+      background-color: Highlight;
+    }
+
+    .console-slider::-moz-range-thumb {
+      border-color: CanvasText;
+      background-color: Highlight;
+    }
   }
 }
 
-.instrument-card {
-  transform-origin: top center;
-  animation: instrument-card-in 140ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.instrument-card::before,
-.instrument-card::after {
-  content: "";
-  position: absolute;
-  width: 0.5rem;
-  height: 0.5rem;
-  pointer-events: none;
-  border-color: var(--primary);
-}
-
-.instrument-card::before {
-  inset-block-start: -1px;
-  inset-inline-start: -1px;
-  border-block-start: 1px solid;
-  border-inline-start: 1px solid;
-}
-
-.instrument-card::after {
-  inset-block-end: -1px;
-  inset-inline-end: -1px;
-  border-block-end: 1px solid;
-  border-inline-end: 1px solid;
-}
-
-/* A buffer arriving in the strip.
- *
- * One frame of overdrive as the tab lights, which is what a phosphor does when
- * a cell is driven from cold — it overshoots, then settles. Opacity only, and
- * once: a strip that pulses is a strip that is asking for attention it does
- * not need after the first beat. */
 @keyframes buffer-strike {
   0% {
     opacity: 0.35;
@@ -164,54 +314,5 @@
   }
   100% {
     opacity: 1;
-  }
-}
-
-[data-slot="buffer-tab"][aria-selected="true"] {
-  animation: buffer-strike 260ms steps(6, end);
-}
-
-/* Glass off: the page, with nothing painted over it and nothing moving on it.
- * Motion goes; the states the motion decorated stay. */
-html[data-crt="off"] :is(.stash-slot, .instrument-card) {
-  animation: none;
-  transition: none;
-  transform: none;
-  box-shadow: none;
-}
-
-html[data-crt="off"] .key-sweep::after,
-html[data-crt="off"] .stash-slot::before,
-html[data-crt="off"] .stash-slot-empty {
-  background-image: none;
-}
-
-html[data-crt="off"] [data-slot="buffer-tab"][aria-selected="true"] {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .key-sweep:is(:hover, :focus-visible)::after,
-  .instrument-card,
-  [data-slot="buffer-tab"][aria-selected="true"] {
-    animation: none;
-  }
-
-  .stash-slot {
-    transition: none;
-  }
-
-  .stash-slot:is(:hover, :focus-within) {
-    transform: none;
-  }
-}
-
-/* High contrast mode has no room for light effects: it replaces the palette
-   with the system's own, and a gradient over that is noise. */
-@media (forced-colors: active) {
-  .key-sweep::after,
-  .stash-slot::before,
-  .stash-slot-empty {
-    background-image: none;
   }
 }
