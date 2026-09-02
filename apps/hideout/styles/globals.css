@@ -519,3 +519,63 @@ html[data-ascii-font="sub-zero"]
   .ascii-font-choice[data-ascii-font="sub-zero"] {
   display: block;
 }
+
+/* The gutter.
+ *
+ * An editor numbers lines because code is addressed by line. This site has no
+ * lines — it has blocks — so the column numbers blocks, which is a value the
+ * document actually has. Drawn in CSS from a counter rather than measured in
+ * JavaScript: the numbers are then aligned by the same layout pass that placed
+ * the blocks, and there is nothing to re-measure when the type reflows.
+ *
+ * Only where there is room, and that is a wider screen than it first looks:
+ * the heading anchors already live in this margin, so the column has to clear
+ * them rather than land on top of them. Below `lg` the document has the glass
+ * to itself.
+ *
+ * `content: counter() / ""` gives the pseudo-element empty alternative text,
+ * so a screen reader does not read a number before every paragraph. */
+@media (width >= 64rem) {
+  .doc-gutter .prose {
+    counter-reset: doc-block;
+    padding-inline-start: 4.75rem;
+  }
+
+  .doc-gutter .prose > * {
+    position: relative;
+    counter-increment: doc-block;
+  }
+
+  /* h2 lays its children out with flex and blockquote already spends its
+     ::before on the quote marker, so the number takes the free pseudo on each:
+     ::before everywhere, ::after on blockquote. Absolute either way, so it
+     never joins a flex row. */
+  .doc-gutter .prose > *:not(blockquote)::before,
+  .doc-gutter .prose > blockquote::after {
+    content: counter(doc-block) / "";
+    position: absolute;
+    inset-inline-start: -4.75rem;
+    top: 0;
+    width: 1.75rem;
+    color: var(--terminal-chrome-dim);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.9;
+    text-align: end;
+    user-select: none;
+  }
+}
+
+/* Where the minimap is drawn it is the scroll indicator, and two of them down
+   the same edge is one too many — an editor merges the bar into the map for
+   the same reason. Below that width the native bar is all there is, so it
+   stays. */
+@media (width >= 64rem) {
+  .doc-gutter {
+    scrollbar-width: none;
+  }
+
+  .doc-gutter::-webkit-scrollbar {
+    display: none;
+  }
+}

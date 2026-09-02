@@ -1,4 +1,5 @@
 import type * as React from "react"
+import { cn } from "@workspace/ui/lib/utils"
 
 import { ConsoleKeys } from "@/components/layout/console-keys"
 import { LinkStatus } from "@/components/layout/link-status"
@@ -17,9 +18,20 @@ export type StatusField = {
  * actually knows — a post's reading time, a listing's count. Nothing here is
  * filler: an empty field is dropped rather than shown as a dash.
  */
-export function StatusBar({ fields = [] }: { fields?: StatusField[] }) {
+export function StatusBar({
+  fields = [],
+  className,
+}: {
+  fields?: StatusField[]
+  className?: string
+}) {
   return (
-    <footer className="z-10 flex h-7 shrink-0 items-center gap-2 overflow-hidden border-t bg-sidebar px-2 font-mono text-[0.65rem] tracking-wider text-terminal-ink-dim uppercase sm:gap-3 sm:px-3">
+    <footer
+      className={cn(
+        "z-10 flex h-7 shrink-0 items-center gap-2 overflow-hidden border-t bg-sidebar px-2 font-mono text-[0.65rem] tracking-wider text-terminal-ink-dim uppercase sm:gap-3 sm:px-3",
+        className
+      )}
+    >
       {/* The mode block, inverted the way a modal editor inverts it. The site
           is read-only, and saying so is more honest than borrowing NORMAL. */}
       {/* Inverted and bracketed: a mode field on a readout, not a badge. */}

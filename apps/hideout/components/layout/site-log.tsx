@@ -8,6 +8,9 @@ import { LogConsole, useLogEntries } from "@workspace/ui/components/log-console"
 import { captureConsole, logger } from "@workspace/ui/lib/logger"
 import { cn } from "@workspace/ui/lib/utils"
 
+import { Visor } from "@/components/layout/workbench/visor"
+import { dockVisor } from "@/lib/workbench-state"
+
 export const TOGGLE_EVENT = "hideout:toggle-log"
 
 /**
@@ -56,7 +59,44 @@ export function SiteLog() {
     logger.info("router", `opened ${pathname}`)
   }, [pathname])
 
-  return <LogConsole open={open} onClose={() => setOpen(false)} />
+  return (
+    <LogConsole
+      open={open}
+      onClose={() => setOpen(false)}
+      // The instrument docks here at panel size. It is the same viewer the
+      // sidebar can show, and only one of them ever runs.
+      panels={VISOR_PANEL}
+    />
+  )
+}
+
+const VISOR_PANEL = [
+  {
+    id: "визор",
+    label: "визор",
+    render: () => <DockedVisor />,
+  },
+]
+
+/**
+ * The instrument, while it is the dock's tab.
+ *
+ * Its lifetime is the report: mounted means the dock has it, and the sidebar
+ * panel reads that and stands down rather than starting a second renderer.
+ * A callback from the panel would say the same thing one render earlier and
+ * put a store write in the middle of someone else's render.
+ */
+function DockedVisor() {
+  React.useEffect(() => {
+    dockVisor.set(true)
+    return () => dockVisor.set(false)
+  }, [])
+
+  return (
+    <div className="mx-auto w-full max-w-56">
+      <Visor resolution={0.34} />
+    </div>
+  )
 }
 
 /**

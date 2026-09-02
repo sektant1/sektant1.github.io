@@ -35,7 +35,23 @@ export function isProblem(entry: LogEntry) {
   return entry.level === "warn" || entry.level === "error"
 }
 
-type Panel = "output" | "problems"
+type Panel = string
+
+/**
+ * A view the host docks into this panel's tab strip.
+ *
+ * The panel across the bottom of an editor has always been a place other
+ * views dock into — a terminal, a debugger, a device inspector. Hosts pass
+ * theirs here rather than building a second strip above this one.
+ */
+export type LogConsolePanel = {
+  id: string
+  label: string
+  /** Drawn beside the label, like the entry counts on the built-in tabs. */
+  count?: number
+  /** Called only while the tab is selected: a docked view is not free. */
+  render: () => React.ReactNode
+}
 
 /**
  * The app's own log, as the panel an editor keeps across the bottom.
@@ -48,15 +64,22 @@ type Panel = "output" | "problems"
 export function LogConsole({
   open,
   onClose,
+  panels = [],
   className,
 }: {
   open: boolean
   onClose: () => void
+  /** Extra views in the same strip. See {@link LogConsolePanel}. */
+  panels?: LogConsolePanel[]
   className?: string
 }) {
   const entries = useLogEntries()
   const [panel, setPanel] = React.useState<Panel>("output")
   const scroller = React.useRef<HTMLDivElement>(null)
+  // Only the selected view is rendered, and it is rendered only while the
+  // panel is open: a docked view is not free, and one drawing behind a closed
+  // panel is the expensive kind of invisible.
+  const docked = open ? panels.find((view) => view.id === panel) : undefined
 
   const problems = React.useMemo(() => entries.filter(isProblem), [entries])
   const visible = panel === "problems" ? problems : entries
@@ -102,6 +125,18 @@ export function LogConsole({
           >
             problems
           </PanelTab>
+
+          {panels.map((view) => (
+            <PanelTab
+              key={view.id}
+              id={view.id}
+              active={panel}
+              onSelect={setPanel}
+              count={view.count}
+            >
+              {view.label}
+            </PanelTab>
+          ))}
         </div>
 
         <Button
@@ -124,28 +159,34 @@ export function LogConsole({
         </Button>
       </header>
 
-      <div
-        ref={scroller}
-        role="tabpanel"
-        // A log is a live region, but an assertive one would read every line
-        // aloud as it lands. Polite means it is available without hijacking.
-        aria-live="polite"
-        className="min-h-0 flex-1 overflow-y-auto p-2 font-mono text-[0.7rem] leading-relaxed"
-      >
-        {visible.length === 0 ? (
-          <p className="text-terminal-ink-faint">
-            {panel === "problems"
-              ? "No problems. Nothing has failed this session."
-              : "Nothing logged yet."}
-          </p>
-        ) : (
-          <ol className="flex flex-col">
-            {visible.map((entry) => (
-              <LogLine key={entry.id} entry={entry} />
-            ))}
-          </ol>
-        )}
-      </div>
+      {docked ? (
+        <div role="tabpanel" className="min-h-0 flex-1 overflow-y-auto p-2">
+          {docked.render()}
+        </div>
+      ) : (
+        <div
+          ref={scroller}
+          role="tabpanel"
+          // A log is a live region, but an assertive one would read every line
+          // aloud as it lands. Polite means it is available without hijacking.
+          aria-live="polite"
+          className="min-h-0 flex-1 overflow-y-auto p-2 font-mono text-[0.7rem] leading-relaxed"
+        >
+          {visible.length === 0 ? (
+            <p className="text-terminal-ink-faint">
+              {panel === "problems"
+                ? "No problems. Nothing has failed this session."
+                : "Nothing logged yet."}
+            </p>
+          ) : (
+            <ol className="flex flex-col">
+              {visible.map((entry) => (
+                <LogLine key={entry.id} entry={entry} />
+              ))}
+            </ol>
+          )}
+        </div>
+      )}
     </section>
   )
 }
@@ -160,7 +201,8 @@ function PanelTab({
 }: {
   id: Panel
   active: Panel
-  count: number
+  /** Omitted by a docked view that has nothing to count. */
+  count?: number
   emphasis?: boolean
   onSelect: (panel: Panel) => void
   children: React.ReactNode
@@ -183,14 +225,16 @@ function PanelTab({
       )}
     >
       {children}
-      <span
-        className={cn(
-          "tabular-nums",
-          emphasis ? "text-destructive" : "text-terminal-ink-faint"
-        )}
-      >
-        {count}
-      </span>
+      {count === undefined ? null : (
+        <span
+          className={cn(
+            "tabular-nums",
+            emphasis ? "text-destructive" : "text-terminal-ink-faint"
+          )}
+        >
+          {count}
+        </span>
+      )}
     </button>
   )
 }

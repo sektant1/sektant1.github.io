@@ -66,6 +66,10 @@ function Sheet({
   children,
   side = "right",
   showCloseButton = true,
+  // Lands on the dialog rather than on the overlay around it. A sheet whose
+  // content is a tree or a list has no heading to be named by, and an unnamed
+  // dialog is one a screen reader announces as nothing at all.
+  "aria-label": ariaLabel,
   ...props
 }: Omit<ModalOverlayPrimitiveProps, "className" | "children"> &
   Pick<React.ComponentProps<typeof ModalPrimitive>, "isDismissable"> & {
@@ -73,6 +77,7 @@ function Sheet({
     children: React.ReactNode
     side?: "top" | "right" | "bottom" | "left"
     showCloseButton?: boolean
+    "aria-label"?: string
   }) {
   return (
     <SheetOverlay {...props}>
@@ -86,6 +91,7 @@ function Sheet({
       >
         <SheetPrimitive
           data-slot="sheet"
+          aria-label={ariaLabel}
           className="[display:inherit] h-full max-h-[inherit] [flex-direction:inherit] [gap:inherit] outline-none"
         >
           {children}

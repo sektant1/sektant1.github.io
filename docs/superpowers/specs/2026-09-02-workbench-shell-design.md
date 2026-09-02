@@ -62,7 +62,7 @@ narrow:
 ├─────────────────────────────────────────┤
 │ document (full width, no gutter)        │
 ├─────────────────────────────────────────┤
-│ ФАЙЛЫ   ПОИСК   СЕКЦИИ   ЖУРНАЛ         │  56px, 44px targets
+│ ФАЙЛЫ   ПОИСК   ЖУРНАЛ   СВЯЗЬ          │  56px, 44px targets
 └─────────────────────────────────────────┘
 ```
 
@@ -108,12 +108,13 @@ the top of the viewport, tracked with an `IntersectionObserver` over the
 document's `h2`/`h3`. When no heading is in view the trailing element is
 dropped, not shown empty.
 
-### Gutter (≥md)
+### Gutter (≥lg)
 
-A CSS counter on the document's top-level blocks, rendered in a
-`3.5rem` column: real numbers for real blocks, `aria-hidden`, unselectable.
-Not line numbers — the site has no lines — and the status bar names the column
-`БЛОК` so the readout is honest about what it counts.
+A CSS counter on the document's top-level blocks, drawn in the margin the
+heading anchors already live in — so the column starts at `lg`, where there is
+room for both, rather than at `md`. Real numbers for real blocks, unselectable,
+and given empty alternative text so a screen reader does not read a number
+before every paragraph. Not line numbers: this site has no lines.
 
 ### Minimap (≥lg)
 
@@ -135,9 +136,9 @@ strip it already draws. That is a generalisation of the component, not a
 special case bolted to it: the panel across the bottom of an editor has always
 been a place other views dock into.
 
-Only one viewer instance exists. `visorPlacement` is `"sidebar" | "dock" |
-null`; the dock wins when both are open, and the sidebar panel then reports
-that the instrument moved rather than drawing a second canvas.
+Only one viewer instance exists. The docked view reports itself by its own
+lifetime — mounted means the dock has it — and the sidebar panel stands down
+when it does, or when the front page's globe already holds the renderer.
 
 ### Visor
 
@@ -148,9 +149,10 @@ route's bundle. It mounts only when:
 - the reader has opened a surface that shows it, and
 - reduced motion is not requested.
 
-Otherwise the slot renders server-rendered ASCII art (`renderAsciiArt` into
-`AsciiBannerView`, the path the banner already uses) with the model's name
-under it. A phone gets a picture, never a renderer.
+Otherwise the slot draws a plate that says the instrument is off and why —
+"screen too narrow", "motion held", "running in the dock", "the globe has it".
+A phone gets a readout, never a renderer, and never a still frame pretending
+to be one.
 
 Model: `bitcoin.glb` is what the repo has. The visor takes a model id, so
 adding mil-spec models later is dropping a GLB into `apps/hideout/assets/models`
@@ -160,12 +162,14 @@ earn their place: a field radio, a satellite, an ammunition crate.
 ### Mobile shell (<md)
 
 - Top bar, 44px: mark, truncated path, `ПОИСК` key.
-- Bottom tab bar, 56px, four 44px targets: `ФАЙЛЫ`, `ПОИСК`, `СЕКЦИИ`,
-  `ЖУРНАЛ`. The active one is lit.
-- `ФАЙЛЫ` and `СЕКЦИИ` open full-height sheets, not a 18rem drawer.
-- Dropped: classification bar, buffer tabs, gutter, minimap, breadcrumb, zulu
-  clock, link status, `utf-8`. They are readouts, and a phone has no room to
-  report while it is being used.
+- Bottom tab bar, 56px, four 44px targets: `ФАЙЛЫ`, `ПОИСК`, `ЖУРНАЛ`,
+  `СВЯЗЬ`. The active one is lit.
+- `ФАЙЛЫ` and `СВЯЗЬ` open full-height sheets, not an 18rem drawer.
+- Dropped: classification bar, buffer tabs, gutter, minimap, breadcrumb, and
+  the status bar itself — the tab bar already offers find and the log, and
+  what the bar had left was readouts. Its keys (top, boot, crt, phosphor) move
+  into the `СВЯЗЬ` sheet under `ПУЛЬТ`, so nothing the console could do is
+  lost with the bar.
 
 ## Affordance grammar
 
@@ -198,15 +202,21 @@ New, under `apps/hideout/components/layout/workbench/`:
 | `buffer-tabs.tsx`     | Session buffer strip                                |
 | `breadcrumb-bar.tsx`  | Path segments and the active heading                |
 | `doc-minimap.tsx`     | Tick column and viewport window                     |
-| `dock.tsx`            | Bottom dock: log and visor tabs                     |
 | `visor.tsx`           | The single 3D instrument and its fallback           |
 | `mobile-bars.tsx`     | Top bar and bottom tab bar                          |
-| `workbench-state.ts`  | Persisted panel/dock/visor state, buffer list       |
+
+The dock has no file of its own: it is `LogConsole` with the visor docked into
+the tab strip it already draws, through a new optional `panels` prop, kept
+where the log's keyboard shortcut and its lifetime already live. State splits
+in two — `lib/workbench.ts` holds the pure arithmetic (buffer list, minimap
+geometry) with the unit tests on it, and `lib/workbench-state.ts` holds the
+stores that arithmetic is kept out of.
 
 Changed: `site-shell.tsx` (composes the workbench, keeps its props),
-`status-bar.tsx` (affordance pass, `БЛОК` field), `log-console.tsx` (the
-`panels` prop), `globals.css` (grid, gutter counter, affordance utilities),
-`CONTEXT.md` (the grammar above).
+`status-bar.tsx` (takes a class, so the narrow shell can drop it),
+`log-console.tsx` (the `panels` prop), `sheet.tsx` (an `aria-label` that
+reaches the dialog rather than the overlay), `globals.css` (the gutter counter
+and the scrollbar the minimap replaces), `CONTEXT.md` (the grammar above).
 
 `site-shell.tsx` currently carries the whole shell in 235 lines; after this it
 is composition only, and each surface above is a file small enough to hold in
