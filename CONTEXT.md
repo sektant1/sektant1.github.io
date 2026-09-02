@@ -35,6 +35,29 @@ Corollaries:
   chrome is `aria-hidden` or labelled. No one has to read Russian to use the
   site.
 
+## Three affordance classes
+
+The register table says what a string sounds like. This says what an element
+does, and it is the same kind of rule: every element on screen is in exactly
+one class, and the class is legible at rest.
+
+| Class       | Looks like                                        | Used for                        |
+| ----------- | ------------------------------------------------- | ------------------------------- |
+| **Key**     | Bordered box, Latin caps, lit while active         | Anything that acts on the page  |
+| **Target**  | `>` or `[+]` marker, underline on hover and touch  | Navigation: links, tree, tabs   |
+| **Readout** | No border, no marker, chrome-dim, selectable       | Values the build knows          |
+
+Corollaries:
+
+- **Resting state carries the affordance, not hover.** A control that only
+  looks like a control under a pointer does not exist on a phone, and half
+  this site's chrome used to be in that state.
+- **A readout never borrows a key's border.** The `[ read ]` mode block is the
+  one exception on the site: it is inverted, not bordered.
+- **Disabled is a key with no phosphor**, never a key that has been removed.
+- A touch target is at least 44px on its short edge. Below `md` that outranks
+  density: a tighter row that cannot be hit is not denser, it is broken.
+
 ## Voice
 
 - Human lines are first person, lowercase, **one clause**. The lowercase is the

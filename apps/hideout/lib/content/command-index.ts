@@ -4,6 +4,7 @@ import { getPublicPostMetas } from "@/lib/content/posts"
 import { getAllGames } from "@/lib/content/games"
 import { getAllProjects } from "@/lib/content/projects"
 import type { CommandIndex } from "@/components/layout/command-palette"
+import { SECTIONS } from "@/lib/navigation"
 
 /**
  * Everything the command palette can jump to.
@@ -53,12 +54,16 @@ export const buildCommandIndex = cache(async (): Promise<CommandIndex> => {
         .join(" "),
     })),
 
+    // The listings come from the one list of them, so a section added to the
+    // rail cannot go missing from the palette. What follows are the pages that
+    // are not sections and have no key anywhere.
     pages: [
       { href: "/", label: "Home", keywords: "index start" },
-      { href: "/posts", label: "All posts", keywords: "archive writing blog" },
-      { href: "/projects", label: "All projects", keywords: "work builds" },
-      { href: "/games", label: "All games", keywords: "play itch jam" },
-      { href: "/about", label: "About", keywords: "contact email gpg radio" },
+      ...SECTIONS.map((section) => ({
+        href: section.href,
+        label: section.paletteLabel,
+        keywords: section.keywords,
+      })),
       {
         href: "/tech-passport",
         label: "Tech passport",

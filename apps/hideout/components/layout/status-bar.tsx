@@ -1,6 +1,6 @@
 import type * as React from "react"
+import { cn } from "@workspace/ui/lib/utils"
 
-import { ConsoleKeys } from "@/components/layout/console-keys"
 import { LinkStatus } from "@/components/layout/link-status"
 import { SiteLogToggle } from "@/components/layout/site-log"
 import { ZuluClock } from "@/components/layout/zulu-clock"
@@ -17,9 +17,20 @@ export type StatusField = {
  * actually knows — a post's reading time, a listing's count. Nothing here is
  * filler: an empty field is dropped rather than shown as a dash.
  */
-export function StatusBar({ fields = [] }: { fields?: StatusField[] }) {
+export function StatusBar({
+  fields = [],
+  className,
+}: {
+  fields?: StatusField[]
+  className?: string
+}) {
   return (
-    <footer className="z-10 flex h-7 shrink-0 items-center gap-2 overflow-hidden border-t bg-sidebar px-2 font-mono text-[0.65rem] tracking-wider text-terminal-ink-dim uppercase sm:gap-3 sm:px-3">
+    <footer
+      className={cn(
+        "z-10 flex h-7 shrink-0 items-center gap-2 overflow-hidden border-t bg-sidebar px-2 font-mono text-[0.65rem] tracking-wider text-terminal-ink-dim uppercase sm:gap-3 sm:px-3",
+        className
+      )}
+    >
       {/* The mode block, inverted the way a modal editor inverts it. The site
           is read-only, and saying so is more honest than borrowing NORMAL. */}
       {/* Inverted and bracketed: a mode field on a readout, not a badge. */}
@@ -33,22 +44,6 @@ export function StatusBar({ fields = [] }: { fields?: StatusField[] }) {
           reason to look, so it leads. */}
       <SiteLogToggle />
 
-      {/* The key bank, on every width: these are the only controls the site
-          has, and hiding them on a phone left the bar reporting without
-          offering anything to press. The keys themselves drop the ones that
-          make no sense there.
-
-          flex-1, not shrink. `shrink` is the default, so it said nothing, and
-          the strip was sized to its content and then squeezed by whatever the
-          clock and the log toggle left over — on a phone that is narrower than
-          the keys, so the last of them sat outside the viewport with the
-          footer's overflow-hidden cutting them off rather than letting them
-          scroll. Given the remaining space as its box, the strip scrolls inside
-          it and every key stays reachable. */}
-      <ConsoleKeys className="min-w-0 flex-1" />
-
-      {/* Held back until there is room for the keys first: a half-cut key
-          reads as a broken bar, a missing count reads as a quiet one. */}
       {fields.map((field) => (
         <span key={field.label} className="hidden shrink-0 gap-1 lg:flex">
           <span className="text-terminal-ink-faint">{field.label}</span>

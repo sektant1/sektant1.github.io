@@ -36,6 +36,10 @@ type GeoPanelProps = {
  * at — bearing and range from Prypiat, the reader's own position — so the
  * panel reports rather than decorates. Until the lookup returns it prints
  * dashes and says it is scanning, and if the lookup fails it says so.
+ *
+ * The whole report is one block in the top corner. The lock state it used to
+ * print opposite is already in the frame's stamp, and a second copy of it in
+ * the far corner was the panel saying the same word twice.
  */
 export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
   const [fix, setFix] = React.useState<Fix>(null)
@@ -66,22 +70,17 @@ export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
       {/* Headroom for the pin's label, which is drawn above the marker and
           would otherwise ride up into the title rule. */}
       <div className="relative flex flex-1 items-center justify-center p-2 pt-9">
+        {/* One cluster, not two. The panel used to report from opposite
+            corners, which read as two instruments disagreeing about which
+            fix they were describing. */}
         <Readout
           className="top-2 left-2 items-start"
           pending={!vector}
           lines={[
-            `GEO // ${STATES[state].geo}`,
-            `AZ // ${vector ? vector.azimuth : "---.-"}`,
-            `RNG // ${vector ? vector.range : "----"} KM`,
-          ]}
-        />
-
-        <Readout
-          className="right-2 bottom-2 items-end"
-          pending={!vector}
-          lines={[
+            `GEO   // ${STATES[state].geo}`,
             `TRACK // ${vector ? vector.target : "----"}`,
-            `LOCK // ${STATES[state].lock}`,
+            `AZ    // ${vector ? vector.azimuth : "---.-"}`,
+            `RNG   // ${vector ? vector.range : "----"} KM`,
           ]}
         />
 

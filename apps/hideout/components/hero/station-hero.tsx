@@ -53,19 +53,10 @@ export function StationHero({
   return (
     <section className="flex flex-col gap-4 sm:gap-5">
       <header className="field-frame overflow-hidden px-3 py-3 sm:px-5 sm:py-4">
-        <div className="mb-3 flex items-center justify-between gap-3 border-b border-terminal-rule pb-2 font-mono text-[0.58rem] tracking-[0.16em] uppercase sm:text-[0.65rem]">
-          <span className="text-terminal-chrome">
-            <span className="text-terminal-ink-faint">
-              {content.systemLabel}
-            </span>{" "}
-            {content.systemUnit}
-          </span>
-          <span className="flex shrink-0 items-center gap-1.5 text-terminal-ink-dim">
-            <span className="size-1.5 bg-primary shadow-[0_0_5px_var(--primary)]" />
-            {content.linkStatus}
-          </span>
-        </div>
-
+        {/* The banner leads. The rule that used to sit above it named the
+            station and reported the link — one of those is on the panel's own
+            foot now, and the other was a typed string saying what the status
+            bar reports live. */}
         <h1 className="sr-only">{content.srTitle}</h1>
 
         <div aria-hidden="true" className="hidden xl:block">
@@ -79,7 +70,7 @@ export function StationHero({
           <HeroBanner text={content.bannerStackedBottom} quiet />
         </div>
 
-        <div className="mt-3 grid gap-2 border-t border-terminal-rule pt-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-6">
+        <div className="mt-3 flex flex-col gap-3 border-t border-terminal-rule pt-3">
           <div>
             <p className="font-sans text-lg leading-tight font-bold tracking-[0.08em] text-primary uppercase crt-glow-soft sm:text-xl">
               {content.tagline}
@@ -88,8 +79,15 @@ export function StationHero({
               {content.description}
             </p>
           </div>
-          <p className="font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-right sm:text-[0.62rem]">
-            {content.operator}
+
+          <p className="flex items-center justify-between gap-3 border-t border-terminal-rule pt-2 font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-[0.62rem]">
+            <span>
+              <span className="text-terminal-ink-faint">
+                {content.systemLabel}
+              </span>{" "}
+              {content.systemUnit}
+            </span>
+            <span>{content.operator}</span>
           </p>
         </div>
       </header>
@@ -97,69 +95,63 @@ export function StationHero({
       {/* One rail of instruments against the subject. Three columns left a
           third of the row empty once the panels carried only real values. */}
       <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:gap-4">
-        <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">
-          <TerminalFrame
-            title={content.summaryTitle}
-            stamp={content.summaryRef}
-            footer="ARCHIVE"
-            footerStamp={`${pad(posts + projects)} OBJ`}
-            className="min-w-0"
-            bodyClassName="flex flex-col"
-          >
-            <ActivityTrace
-              buckets={activity}
-              className="h-[5.5rem] border-b border-terminal-rule"
+        {/* One panel, not two. The counts and the index answer the same
+            question — what is in the archive — and splitting them left the
+            tags in a half-empty frame beside a globe four times its height. */}
+        <TerminalFrame
+          title={content.summaryTitle}
+          stamp={content.summaryRef}
+          footer="ARCHIVE"
+          footerStamp={`${pad(posts + projects)} OBJ // ${pad(tags.length, 2)} TAG`}
+          className="order-2 min-w-0 lg:order-1"
+          bodyClassName="flex min-w-0 flex-col"
+        >
+          <ActivityTrace
+            buckets={activity}
+            className="h-[5.5rem] border-b border-terminal-rule"
+          />
+
+          <div className="flex flex-col gap-1.5 px-2 py-2.5">
+            <AsciiMeter
+              label={content.metricPosts}
+              value={posts / ceiling}
+              cells={16}
+              display={pad(posts)}
+            />
+            <AsciiMeter
+              label={content.metricProjects}
+              value={projects / ceiling}
+              cells={16}
+              display={pad(projects)}
             />
 
-            <div className="flex flex-col gap-1.5 px-2 py-2.5">
-              <AsciiMeter
-                label={content.metricPosts}
-                value={posts / ceiling}
-                cells={16}
-                display={pad(posts)}
+            {/* Reading time is a different unit, so it is a readout on a
+                leader rather than a third bar on a scale it does not share. */}
+            <p className="flex items-baseline gap-1.5 pt-0.5">
+              <span className="shrink-0 font-mono text-[0.58rem] tracking-wider text-terminal-chrome-dim uppercase">
+                {content.metricMinutes}
+              </span>
+              <span
+                aria-hidden="true"
+                className="min-w-3 flex-1 translate-y-[-0.15em] border-b border-dotted border-terminal-rule"
               />
-              <AsciiMeter
-                label={content.metricProjects}
-                value={projects / ceiling}
-                cells={16}
-                display={pad(projects)}
-              />
-            </div>
-
-            <p className="border-t border-terminal-rule px-2 py-2 font-mono text-[0.58rem] tracking-wider text-terminal-chrome-dim uppercase">
-              {content.metricMinutes}
-              <span className="ms-2 text-terminal-ink-dim">
+              <span className="shrink-0 font-mono text-[0.62rem] text-terminal-ink-dim tabular-nums">
                 {minutes ? pad(minutes) : "---"}
               </span>
             </p>
-          </TerminalFrame>
+          </div>
 
-          <TerminalFrame
-            title={content.quickAccessTitle}
-            stamp={content.quickAccessRef}
-            bodyClassName="flex flex-col"
-          >
-            <nav aria-label="Quick access" className="flex flex-col">
-              {content.quickLinks.map((link, index) => (
-                <QuickLink
-                  key={`${link.href}-${index}`}
-                  index={pad(index + 1, 2)}
-                  label={link.label}
-                  href={link.href}
-                />
-              ))}
-            </nav>
-          </TerminalFrame>
+          {/* The index of what the archive covers, and the way into it. */}
+          <div className="flex min-h-0 flex-1 flex-col border-t border-terminal-rule">
+            <p className="flex items-center gap-2 px-2 pt-2 font-mono text-[0.55rem] tracking-[0.28em] text-terminal-chrome-dim uppercase">
+              {content.tagsTitle}
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-terminal-rule"
+              />
+              <span className="text-terminal-ink-faint">{content.tagsRef}</span>
+            </p>
 
-          {/* Replaces the quote that used to sit here: the index says what the
-              archive covers, how much of each, and links straight into it. */}
-          <TerminalFrame
-            title={content.tagsTitle}
-            stamp={content.tagsRef}
-            footer={`${pad(tags.length, 2)} TAGS`}
-            className="flex-1"
-            bodyClassName="flex flex-col"
-          >
             {tags.length ? (
               <ul className="flex flex-wrap content-start gap-1 p-2">
                 {tags.map((tag) => (
@@ -184,12 +176,12 @@ export function StationHero({
                 ))}
               </ul>
             ) : (
-              <p className="p-2 font-mono text-[0.62rem] text-terminal-ink-faint uppercase">
-                no tags indexed yet
+              <p className="p-2 font-mono text-[0.62rem] text-terminal-ink-faint lowercase">
+                nothing indexed yet
               </p>
             )}
-          </TerminalFrame>
-        </div>
+          </div>
+        </TerminalFrame>
 
         <GeoPanel
           title={content.globeTitle}
@@ -242,35 +234,4 @@ function HeroBanner({
       </div>
     )
   })
-}
-
-function QuickLink({
-  index,
-  label,
-  href,
-}: {
-  index: string
-  label: string
-  href: string
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-center gap-2 border-b border-terminal-rule px-2 py-1.5 font-mono text-[0.68rem] tracking-[0.08em] uppercase crt-persist last:border-b-0 hover:bg-terminal-wash focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-    >
-      {/* The lamp column: lit on the row under the pointer, the way a console
-          shows which channel is selected. */}
-      <span
-        aria-hidden="true"
-        className="size-1.5 shrink-0 bg-terminal-rule group-hover:bg-primary group-hover:shadow-[0_0_5px_var(--primary)]"
-      />
-      <span className="text-terminal-ink-faint">{index}</span>
-      <span className="truncate text-terminal-ink-dim group-hover:text-primary">
-        {label}
-      </span>
-      <span className="ms-auto text-terminal-chrome-dim group-hover:text-primary">
-        -&gt;
-      </span>
-    </Link>
-  )
 }

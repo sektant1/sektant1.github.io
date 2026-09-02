@@ -3,8 +3,15 @@
    below redefines a token: an edit in packages/ui lands here directly. */
 @import "@workspace/ui/globals.css";
 @import "@workspace/ui/themes/phosphor.css";
-@import "./prose.css";
-@import "./cold-boot.css";
+/* Into `components`, which Tailwind declares ahead of `utilities`: a bare
+   class beats every utility otherwise, whatever order the two are written in,
+   and a document styled by class then quietly ignores the utility written on
+   the element to override it. effects.css imports flat because it declares a
+   @utility of its own, which cannot sit inside a layer; it carries the same
+   `@layer components` around its class rules internally. */
+@import "./prose.css" layer(components);
+@import "./cold-boot.css" layer(components);
+@import "./effects.css";
 
 /* Tailwind's source detection is rooted at the file that imports it, which
    lives in packages/ui. This app is outside that root and has to be named. */
@@ -276,8 +283,9 @@ html[data-crt="off"] .ascii-planet-scene {
    corners down — both of them light and shade spread over body copy, which is
    the same thing the beam and the raster were removed for. Lifting the glass
    with data-crt="off" already took all three; asking the system for contrast
-   now takes the same three. */
-Forced colours asks for the same thing for a different reason: the reader's
+   now takes the same three.
+ *
+   Forced colours asks for the same thing for a different reason: the reader's
    OS owns the palette now, and every layer of the face is light in a colour we
    no longer control. Two conditions, one answer, so one rule — the toolkit's
    own effects are handled in packages/ui. */
@@ -319,6 +327,57 @@ Forced colours asks for the same thing for a different reason: the reader's
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
+}
+
+/* ── The console's four type sizes ─────────────────────────────────────
+ *
+ * A panel on this workbench is signage, labels, readouts and the human voice,
+ * and each of those is one size. They were nine — every row picking its own
+ * arbitrary value somewhere between 0.58rem and 0.86rem, which is a scale
+ * nobody set and every new row re-guesses.
+ *
+ * The floor is 0.7rem, about 11px. Below that the tube's own raster is landing
+ * across most of a stroke and the counters start closing; 0.58rem was 9px of
+ * mono asked to carry the only prose on the panel, which is the one thing a
+ * screen this dense cannot make the reader squint at.
+ *
+ * Size, tracking and case only. Colour stays a class on the element, because
+ * the emission rule keys off the colour roles — a label that stops saying
+ * `text-terminal-chrome-dim` stops glowing, and signage that does not glow is
+ * not signage on this screen. */
+@utility console-sign {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+@utility console-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@utility console-value {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility console-figure {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one register that is not a readout: sentences, lowercase, set with the
+   leading a paragraph needs rather than the leading a row of figures does. */
+@utility console-note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.65;
+  text-transform: lowercase;
 }
 
 @utility field-frame {
@@ -518,4 +577,50 @@ html[data-ascii-font="dos-rebel"]
 html[data-ascii-font="sub-zero"]
   .ascii-font-choice[data-ascii-font="sub-zero"] {
   display: block;
+}
+
+/* The gutter.
+ *
+ * An editor numbers lines because code is addressed by line. This site has no
+ * lines — it has blocks — so the column numbers blocks, which is a value the
+ * document actually has. Drawn in CSS from a counter rather than measured in
+ * JavaScript: the numbers are then aligned by the same layout pass that placed
+ * the blocks, and there is nothing to re-measure when the type reflows.
+ *
+ * Only where there is room, and that is a wider screen than it first looks:
+ * the heading anchors already live in this margin, so the column has to clear
+ * them rather than land on top of them. Below `lg` the document has the glass
+ * to itself.
+ *
+ * `content: counter() / ""` gives the pseudo-element empty alternative text,
+ * so a screen reader does not read a number before every paragraph. */
+@media (width >= 64rem) {
+  .doc-gutter .prose {
+    counter-reset: doc-block;
+    padding-inline-start: 4.75rem;
+  }
+
+  .doc-gutter .prose > * {
+    position: relative;
+    counter-increment: doc-block;
+  }
+
+  /* h2 lays its children out with flex and blockquote already spends its
+     ::before on the quote marker, so the number takes the free pseudo on each:
+     ::before everywhere, ::after on blockquote. Absolute either way, so it
+     never joins a flex row. */
+  .doc-gutter .prose > *:not(blockquote)::before,
+  .doc-gutter .prose > blockquote::after {
+    content: counter(doc-block) / "";
+    position: absolute;
+    inset-inline-start: -4.75rem;
+    top: 0;
+    width: 1.75rem;
+    color: var(--terminal-chrome-dim);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.9;
+    text-align: end;
+    user-select: none;
+  }
 }

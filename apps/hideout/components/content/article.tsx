@@ -66,8 +66,12 @@ export function Article({
             ) : null}
           </div>
 
+          {/* Hidden where the status bar reports them: a document that prints
+              its date in the header and again along the bottom edge is telling
+              the reader the same fact twice. The narrow shell has no status
+              bar, so there this is the only place it is said. */}
           {date || readingTime ? (
-            <p className="flex flex-wrap items-center gap-x-3 font-mono text-[0.7rem] text-terminal-chrome-dim">
+            <p className="flex flex-wrap items-center gap-x-3 font-mono text-[0.7rem] text-terminal-chrome-dim md:hidden">
               {date ? <time dateTime={date}>{date}</time> : null}
               {readingTime ? <span>{readingTime}</span> : null}
             </p>

@@ -30,7 +30,13 @@ import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-prefer
  * description. A prose note beside it was a second, worse account of something
  * the reader can already see.
  */
-const FACES = ["Bender", "Play", "Jura", "Oswald", "Chakra Petch"] as const
+export const FACES = [
+  "Bender",
+  "Play",
+  "Jura",
+  "Oswald",
+  "Chakra Petch",
+] as const
 
 /**
  * The face the prose is set in. All monospace, and deliberately so: the site is
@@ -41,7 +47,7 @@ const FACES = ["Bender", "Play", "Jura", "Oswald", "Chakra Petch"] as const
  * IBM Plex Mono leads because it is what the theme already sets — picking it is
  * picking no change.
  */
-const BODY_FACES = [
+export const BODY_FACES = [
   "IBM Plex Mono",
   "JetBrains Mono",
   "Fira Mono",
@@ -58,16 +64,16 @@ const BODY_FACES = [
  * at 1.25: past that the fixed-pitch raster on the tube face starts landing
  * across the counters of the type rather than between its rows.
  */
-const SCALES = [
+export const SCALES = [
   { id: "0.9", label: "90%" },
   { id: "1", label: "100%" },
   { id: "1.1", label: "110%" },
   { id: "1.25", label: "125%" },
 ] as const
 
-type FaceId = (typeof FACES)[number]
-type BodyFaceId = (typeof BODY_FACES)[number]
-type ScaleId = (typeof SCALES)[number]["id"]
+export type FaceId = (typeof FACES)[number]
+export type BodyFaceId = (typeof BODY_FACES)[number]
+export type ScaleId = (typeof SCALES)[number]["id"]
 
 export const FONT_STORAGE_KEY = "display-face"
 export const BODY_FONT_STORAGE_KEY = "body-face"
@@ -111,24 +117,19 @@ const storedScale = createPersistedPreference<ScaleId>({
 })
 
 /**
- * Swaps the two faces the page is set in.
+ * The three settings the picker holds, for a host that wants to read them.
  *
- * `--font-display` feeds `--font-sans`, so it changes every heading and label.
- * `--font-body-face` feeds `--font-body`, which is what body copy and prose are
- * set in. Neither touches `--font-mono`: readouts, code, and the ASCII and LED
- * art stay on the instrument face, which is the register line — the machine
- * keeps its voice, the reader picks the one the human talks in.
+ * The trigger is an icon, so the values behind it are invisible until it is
+ * opened. A panel that lists them beside the control needs the same numbers the
+ * control writes, and a second copy of the storage keys is how those two drift.
  */
-export function FontPicker({
+export function useTypeSettings({
   defaultFace = "Play",
   defaultBodyFace = "IBM Plex Mono",
-  className,
 }: {
   defaultFace?: FaceId
   defaultBodyFace?: BodyFaceId
-  /** Styles the trigger, so a host can dress it as its own chrome does. */
-  className?: string
-}) {
+} = {}) {
   const [storedDisplay, chooseFace] = usePersistedPreference(storedFace)
   const [storedBody, chooseBodyFace] = usePersistedPreference(storedBodyFace)
   const [scale, chooseScale] = usePersistedPreference(storedScale)
@@ -150,6 +151,46 @@ export function FontPicker({
     document.documentElement.style.setProperty(UI_SCALE_PROPERTY, scale)
   }, [scale])
 
+  return {
+    face,
+    bodyFace,
+    scale,
+    scaleLabel: SCALES.find((step) => step.id === scale)?.label ?? scale,
+    chooseFace,
+    chooseBodyFace,
+    chooseScale,
+  }
+}
+
+/**
+ * Swaps the two faces the page is set in.
+ *
+ * `--font-display` feeds `--font-sans`, so it changes every heading and label.
+ * `--font-body-face` feeds `--font-body`, which is what body copy and prose are
+ * set in. Neither touches `--font-mono`: readouts, code, and the ASCII and LED
+ * art stay on the instrument face, which is the register line — the machine
+ * keeps its voice, the reader picks the one the human talks in.
+ */
+export function FontPicker({
+  defaultFace = "Play",
+  defaultBodyFace = "IBM Plex Mono",
+  className,
+}: {
+  defaultFace?: FaceId
+  defaultBodyFace?: BodyFaceId
+  /** Styles the trigger, so a host can dress it as its own chrome does. */
+  className?: string
+}) {
+  const {
+    face,
+    bodyFace,
+    scaleLabel,
+    chooseFace,
+    chooseBodyFace,
+    chooseScale,
+    scale,
+  } = useTypeSettings({ defaultFace, defaultBodyFace })
+
   return (
     <DropdownMenuTrigger>
       <TooltipTrigger>
@@ -162,8 +203,7 @@ export function FontPicker({
           <IconTypography />
         </Button>
         <Tooltip>
-          Display {face} — body {bodyFace} — scale{" "}
-          {SCALES.find((step) => step.id === scale)?.label}
+          Display {face} — body {bodyFace} — scale {scaleLabel}
         </Tooltip>
       </TooltipTrigger>
 
@@ -223,7 +263,7 @@ export function FontPicker({
  * eye: the menu stays open so the next one is a keypress away instead of a
  * reopen, and the page behind it has already changed.
  */
-function ChoiceSection<T extends string>({
+export function ChoiceSection<T extends string>({
   label,
   options,
   selected,

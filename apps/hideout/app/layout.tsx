@@ -169,7 +169,11 @@ export default function RootLayout({
             it away — and one element cannot carry both blend modes. */}
         <div aria-hidden="true" className="tube-raster crt-interlace" />
 
-        <ClassificationBar />
+        {/* A field document's banner line, and the first thing that says what
+            this machine is. It is a readout, though, and a phone spends its
+            glass on reading rather than on being told — so it belongs to the
+            workbench width, like the rest of the instrumentation. */}
+        <ClassificationBar className="hidden md:flex" />
 
         {/* The tube warms up once, when the document loads. It used to be on
             each page's own wrapper, so every navigation replayed a power-on —

@@ -5,7 +5,6 @@
   "hero": {
     "systemLabel": "СИСТЕМА //",
     "systemUnit": "СКТ-01",
-    "linkStatus": "СВЯЗЬ: УСТ.",
     "bannerWide": "Sektant Hideout",
     "bannerStackedTop": "Sektant",
     "bannerStackedBottom": "Hideout",
@@ -18,22 +17,6 @@
     "metricPosts": "POSTS",
     "metricProjects": "PROJECTS",
     "metricMinutes": "READ MIN",
-    "quickAccessTitle": "БЫСТРЫЙ ДОСТУП",
-    "quickAccessRef": "NAV // 03",
-    "quickLinks": [
-      {
-        "label": "ESSAYS",
-        "href": "/posts"
-      },
-      {
-        "label": "PROJECTS",
-        "href": "/projects"
-      },
-      {
-        "label": "GAMES",
-        "href": "/games"
-      }
-    ],
     "tagsTitle": "ИНДЕКС // ТЕГИ",
     "tagsRef": "IDX // TAG",
     "globeTitle": "ОБЪЕКТ 01 // GEO NODE",
