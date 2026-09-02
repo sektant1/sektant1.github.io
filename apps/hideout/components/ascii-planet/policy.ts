@@ -129,16 +129,21 @@ export function postDefaultsFor(subject: Subject): PostDefaults {
  * edges are the geometry, and there is no gradient to break up. What the
  * projection wants instead is its raster and how many steps it holds.
  *
- * The step count is where the two subjects part. A coin is a relief with an
- * engraving to resolve, and five steps is what separates the ₿ from the field
- * it is cut into. A globe only has to say land, water, and edge: more steps
- * there turn the graticule and the facets into a third and fourth tone, and
- * the object stops reading as one projected surface.
+ * Five steps for both subjects, for the same reason at two scales. On the coin
+ * it is what separates the ₿ from the field it is cut into. On the globe it is
+ * what separates the continents from the wire drawn over them: the phosphor's
+ * own stops are not evenly spread — the dimmest is a third of the ink and the
+ * next is nearly two thirds — so a pass with fewer steps cannot reach the
+ * bottom of that ramp at all, and land and wire come out a shade apart on a
+ * screen with no shades to spare.
+ *
+ * The globe used to run on three, on the argument that a fourth tone would
+ * turn the sphere's own faceting into one. Nothing is shaded any more —
+ * `globe.frag` emits the tones outright — so there is no faceting left to
+ * quantise, only the tones that were asked for.
  */
-export function holoDefaultsFor(subject: Subject): HoloDefaults {
-  return subject === "relief"
-    ? { scanline: 0.45, levels: 5 }
-    : { scanline: 0.45, levels: 3 }
+export function holoDefaultsFor(_subject: Subject): HoloDefaults {
+  return { scanline: 0.45, levels: 5 }
 }
 
 /** Characters per pixel. Higher resolves more detail and costs more. */
@@ -253,6 +258,94 @@ export function deviceCellHeightFor(
   renderScale: number
 ): number {
   return Math.max(cssCellHeight * renderScale, MIN_DEVICE_CELL_HEIGHT)
+}
+
+export interface GlobeTones {
+  /** The ocean, and with it the body of the sphere. */
+  water: number
+  /** Every coastline the map draws. */
+  land: number
+  /** How far the limb climbs above the tone under it. */
+  limb: number
+  /** How tightly the limb hugs the edge. Higher is a thinner ring. */
+  limbPower: number
+  /** Meridians and parallels the sphere is sliced into. */
+  wire: readonly [number, number]
+  /** How wide a wire is drawn, in pixels of the pass that will read it. */
+  wireWidth: number
+  /** The tone a wire is drawn at. */
+  wireTone: number
+  /** The tone the far side's wire is drawn at, seen through the near side. */
+  backTone: number
+}
+
+/**
+ * Where the globe's tones sit, per pass.
+ *
+ * A tone is only a tone if it lands on a step, and it is only a *different*
+ * tone if it lands on a step the eye can tell from its neighbour. Both passes
+ * quantise twice over — the raster to four levels and then to five phosphor
+ * stops, the grid to nine glyphs — and the stops are not evenly spaced, so the
+ * figures below are aimed at the stops rather than spread across the range.
+ *
+ * The ocean is nothing at all. Filling it was the first attempt at giving the
+ * continents a body to sit on, and it failed on the tube's own arithmetic:
+ * the raster's dimmest *lit* stop is already 62% of the ink, so a filled ocean
+ * came out as a solid ball with the coastlines barely a shade above it. The
+ * wire is what carries the body instead — a hologram is drawn as the lines the
+ * shape was built from, not as a painted sphere — and the water is the gap
+ * those lines cross. Land takes the middle stop and the wire takes the top, so
+ * the whole picture is two tones and a void, which is what a projection at
+ * this resolution can actually say.
+ *
+ * The limb is thinner on the raster: its cells are square and small, so a wide
+ * ring there is a band of solid pixels around the disc rather than an edge.
+ *
+ * The wire is the other way round. The raster takes the brightest sample in
+ * each cell, so it finds a hairline and dilates it onto the whole cell — that
+ * pass was written for a wireframe. The character grid samples the middle of a
+ * cell and nothing else, so a line thin enough to fall between two of them is
+ * a line that flickers as the globe turns, and it is drawn heavier to be found.
+ *
+ * Twenty-four by twelve is fifteen degrees each way — the divisions a globe is
+ * printed with, and few enough that the coastlines stay the thing being read.
+ */
+export function globeTonesFor(style: RenderStyle): GlobeTones {
+  const wire = [12, 6] as const
+
+  return style === "holo"
+    ? {
+        water: 0,
+        land: 1,
+        limb: 1,
+        limbPower: 11,
+        wire,
+        wireWidth: 0.9,
+        wireTone: 0.42,
+        backTone: 0.22,
+      }
+    : {
+        water: 0,
+        land: 1,
+        limb: 1,
+        limbPower: 7,
+        wire,
+        wireWidth: 2,
+        wireTone: 0.42,
+        backTone: 0.22,
+      }
+}
+
+/**
+ * A rig is only built for something that answers to light.
+ *
+ * The globe emits its own tones — see `globe.frag` — so in both styles it is
+ * lit by nothing, and three lights were being uploaded for a scene with no
+ * material left to read them. A GLB still needs the rig in both: the coin is a
+ * metal under the character grid and a Lambert fill under the wire.
+ */
+export function needsLighting(subject: Subject): boolean {
+  return subject === "relief"
 }
 
 /**

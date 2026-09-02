@@ -47,6 +47,31 @@ export default async function HomePage() {
   // Everything the archive holds, on one timeline. The trace reports that the
   // station was worked on and how often, not what any entry was, so the three
   // kinds are counted together.
+  // The tail of the same timeline the trace draws, as entries rather than as a
+  // count: the trace says the station was worked on, the log says what on.
+  const recent = [
+    ...posts.map((post) => ({
+      kind: "post" as const,
+      title: post.title,
+      href: `/posts/${post.slug}`,
+      date: post.date,
+    })),
+    ...projects.map((project) => ({
+      kind: "project" as const,
+      title: project.meta.title,
+      href: `/projects/${project.meta.slug}`,
+      date: project.meta.date,
+    })),
+    ...games.map((game) => ({
+      kind: "game" as const,
+      title: game.meta.title,
+      href: `/games/${game.meta.slug}`,
+      date: game.meta.date,
+    })),
+  ]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 4)
+
   const activity = buildActivity([
     ...posts.map((post) => post.date),
     ...projects.map((project) => project.meta.date),
@@ -63,6 +88,7 @@ export default async function HomePage() {
           projects={projects.length}
           minutes={minutes}
           tags={tags}
+          recent={recent}
           activity={activity}
           content={home.hero}
           renderStyle={home.render.style}

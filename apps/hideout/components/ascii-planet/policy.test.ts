@@ -7,8 +7,10 @@ import {
   HOLO_COLUMNS,
   MIN_HOLO_DEVICE_CELL,
   holoCellHeightFor,
+  globeTonesFor,
   holoDefaultsFor,
   lightingFor,
+  needsLighting,
   postCellHeightFor,
   needsEnvironment,
   postDefaultsFor,
@@ -100,10 +102,12 @@ describe("characterResolutionFor", () => {
 })
 
 describe("holoDefaultsFor", () => {
-  it("gives the coin more steps than the globe", () => {
-    expect(holoDefaultsFor("relief").levels).toBeGreaterThan(
-      holoDefaultsFor("texture").levels
-    )
+  it("keeps enough steps to reach the phosphor's dimmest stop", () => {
+    // Under five, the bottom of the ramp is unreachable and every lit thing on
+    // the projection comes out within a shade of everything else.
+    for (const subject of ["relief", "texture"] as const) {
+      expect(holoDefaultsFor(subject).levels).toBeGreaterThanOrEqual(5)
+    }
   })
 })
 
@@ -160,6 +164,70 @@ describe("renderScaleFor", () => {
   it("never goes below one, whatever the browser reports", () => {
     expect(renderScaleFor(0)).toBe(1)
     expect(renderScaleFor(Number.NaN)).toBe(1)
+  })
+})
+
+describe("needsLighting", () => {
+  it("builds a rig only for what answers to light", () => {
+    expect(needsLighting("relief")).toBe(true)
+    // The globe emits its own tones, in both styles.
+    expect(needsLighting("texture")).toBe(false)
+  })
+})
+
+describe("globeTonesFor", () => {
+  it("leaves the ocean under the first step, as a void the wire crosses", () => {
+    // The raster's dimmest lit stop is already most of the ink, so a filled
+    // ocean is a solid ball with the coastlines a shade above it.
+    const step = 1 / holoDefaultsFor("texture").levels
+    expect(globeTonesFor("holo").water).toBeLessThan(step)
+  })
+
+  it("keeps the land above the wire, in both passes", () => {
+    // The continents are the subject and the graticule is the instrument
+    // around them; a wire brighter than the coastlines reads as a cage with a
+    // map behind it.
+    for (const style of ["holo", "ascii"] as const) {
+      const tones = globeTonesFor(style)
+      expect(tones.land).toBeGreaterThan(tones.wireTone)
+    }
+  })
+
+  it("drops the far side's wire below the near side's", () => {
+    for (const style of ["holo", "ascii"] as const) {
+      const tones = globeTonesFor(style)
+      expect(tones.backTone).toBeLessThan(tones.wireTone)
+    }
+  })
+
+  it("leaves two raster steps empty between the land and the wire", () => {
+    const levels = holoDefaultsFor("texture").levels
+    const tones = globeTonesFor("holo")
+    const step = (tone: number) => Math.floor(tone * levels)
+    expect(step(tones.land) - step(tones.wireTone)).toBeGreaterThanOrEqual(3)
+  })
+
+  it("draws a heavier wire for the pass that point-samples its cells", () => {
+    // The raster takes the brightest sample in a cell and finds a hairline.
+    // The character grid takes the middle of one and misses it.
+    expect(globeTonesFor("ascii").wireWidth).toBeGreaterThan(
+      globeTonesFor("holo").wireWidth
+    )
+  })
+
+  it("drives the limb to the top of the ramp from the empty ocean", () => {
+    // The edge is drawn over water more often than over anything else, and a
+    // silhouette that lands a stop short of the top is not a silhouette.
+    for (const style of ["holo", "ascii"] as const) {
+      const tones = globeTonesFor(style)
+      expect(tones.water + tones.limb).toBeGreaterThanOrEqual(1)
+    }
+  })
+
+  it("draws a thinner ring on the raster, whose cells are square", () => {
+    expect(globeTonesFor("holo").limbPower).toBeGreaterThan(
+      globeTonesFor("ascii").limbPower
+    )
   })
 })
 

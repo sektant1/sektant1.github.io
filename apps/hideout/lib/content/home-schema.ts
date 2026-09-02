@@ -44,6 +44,8 @@ export type HomeContent = {
     metricMinutes: string
     tagsTitle: string
     tagsRef: string
+    logTitle: string
+    logRef: string
     globeTitle: string
     globeFooterEnd: string
   }
@@ -73,6 +75,8 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     metricMinutes: "READ MIN",
     tagsTitle: "ИНДЕКС // ТЕГИ",
     tagsRef: "IDX // TAG",
+    logTitle: "ЖУРНАЛ // ПОСЛЕДНЕЕ",
+    logRef: "LOG // UTC",
     globeTitle: "ОБЪЕКТ 01 // GEO NODE",
     globeFooterEnd: "DRAG // SLEW",
   },
@@ -266,6 +270,8 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         48
       ),
       tagsRef: asText(hero.tagsRef, d.hero.tagsRef, "Tag index reference", 24),
+      logTitle: asText(hero.logTitle, d.hero.logTitle, "Recent log title", 48),
+      logRef: asText(hero.logRef, d.hero.logRef, "Recent log reference", 24),
       globeTitle: asText(
         hero.globeTitle,
         d.hero.globeTitle,
