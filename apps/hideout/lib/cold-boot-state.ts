@@ -44,7 +44,8 @@ export const coldBootLastSeen = createPersistedPreference<number>({
  *
  * The comparison is on distance, in either direction, and the reason is the
  * one that broke this: `now` is read once when the document opens, and the
- * stamp is written later, when the reader dismisses the curtain. So the site's
+ * stamp is written later — when the sequence starts, and again when the reader
+ * dismisses the curtain, both after that reading. So the site's
  * own stamp is routinely *ahead* of the reading it is compared against, and a
  * rule that treated any future stamp as a moved clock ran the whole sequence
  * again on the next page the reader opened.

@@ -159,7 +159,11 @@ export function ColdBoot({
   const [lastSeen, markSeen] = usePersistedPreference(coldBootLastSeen)
   // The server has no storage, so it renders the curtain and the head script
   // hides it before first paint when the last viewing is still fresh.
-  const due = bootDueOnThisLoad(lastSeen)
+  //
+  // Latched on the first render rather than read every one, because the stamp
+  // is now written as the sequence starts: recomputing would answer "not due"
+  // one tick in and pull the curtain out from under the reader watching it.
+  const [due] = React.useState(() => bootDueOnThisLoad(lastSeen))
 
   const [dismissed, setDismissed] = React.useState(false)
   // Asked for explicitly, so it overrides both the stored state and the
@@ -196,7 +200,15 @@ export function ColdBoot({
       return
     }
     logger.info("boot", "cold boot sequence")
-  }, [running])
+    // The viewing counts from the moment the machine switches on, not from the
+    // press that clears it. ColdBoot is mounted by SiteShell, so it is torn
+    // down and rebuilt on every route — and a reader who leaves the curtain by
+    // any door other than that press (Ctrl-K and a command, the back button,
+    // a link opened from another tab) left no stamp behind, so the next page
+    // found the sequence due and ran the whole thing again. And the one after
+    // that.
+    markSeen(Date.now())
+  }, [running, markSeen])
 
   React.useEffect(() => {
     if (!running || !complete) return
