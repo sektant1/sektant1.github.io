@@ -9,11 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from "@workspace/ui/components/command"
-import { CommandKey } from "@workspace/ui/components/command-strip"
-import { Kbd } from "@workspace/ui/components/kbd"
-
-import { REPLAY_BOOT_EVENT } from "@/components/layout/cold-boot"
-import { cn } from "@workspace/ui/lib/utils"
+import { CONSOLE, fire } from "@/lib/navigation"
 
 export type CommandEntry = {
   /** Where it goes. External project links are absolute. */
@@ -24,12 +20,6 @@ export type CommandEntry = {
   /** Extra words the query matches on but that are not displayed. */
   keywords?: string
 }
-
-/** The header trigger and the dialog are siblings, not parent and child. */
-export const PALETTE_EVENT = "hideout:open-palette"
-
-/** The platform does not change while the page is open. */
-const subscribeToNothing = () => () => {}
 
 export type CommandIndex = {
   posts: CommandEntry[]
@@ -64,11 +54,11 @@ export function CommandPalette({ index }: { index: CommandIndex }) {
     const onRequest = () => setOpen(true)
 
     window.addEventListener("keydown", onKeyDown)
-    window.addEventListener(PALETTE_EVENT, onRequest)
+    window.addEventListener(CONSOLE.palette, onRequest)
 
     return () => {
       window.removeEventListener("keydown", onKeyDown)
-      window.removeEventListener(PALETTE_EVENT, onRequest)
+      window.removeEventListener(CONSOLE.palette, onRequest)
     }
   }, [])
 
@@ -134,44 +124,12 @@ export function CommandPalette({ index }: { index: CommandIndex }) {
           <CommandItem
             id="boot"
             textValue="run boot sequence cold start post replay"
-            onAction={() =>
-              run(() => window.dispatchEvent(new Event(REPLAY_BOOT_EVENT)))
-            }
+            onAction={() => run(() => fire("boot"))}
           >
             <span className="truncate">Run the boot sequence</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>
-  )
-}
-
-/**
- * The header's way in. A palette nobody knows about is a palette nobody uses,
- * so the shortcut is printed on the control that opens it.
- */
-export function CommandTrigger({ className }: { className?: string }) {
-  // ⌘ on a Mac, ctrl everywhere else. The server cannot know which, so it
-  // renders neither and the client fills it in during hydration. Read through
-  // useSyncExternalStore rather than an effect so the two never disagree.
-  const modifier = React.useSyncExternalStore(
-    subscribeToNothing,
-    () => (/mac/i.test(navigator.userAgent) ? "⌘" : "ctrl"),
-    () => null
-  )
-
-  // The same key the status bar carries, so the header reads as another bank
-  // of the same console rather than as a search box borrowed from a web app.
-  return (
-    <CommandKey
-      onClick={() => window.dispatchEvent(new Event(PALETTE_EVENT))}
-      title="Search everything (ctrl+k)"
-      className={cn("gap-2", className)}
-    >
-      find
-      <Kbd className="bg-transparent text-terminal-chrome-dim normal-case">
-        {modifier ? `${modifier} K` : " "}
-      </Kbd>
-    </CommandKey>
   )
 }

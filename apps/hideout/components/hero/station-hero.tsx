@@ -80,26 +80,6 @@ export function StationHero({
             </p>
           </div>
 
-          {/* The operator's own ways in, as keys rather than as a panel of
-              their own. They used to be a framed list in the left column,
-              three rows deep, listing the same three sections the archive
-              panel and the section headings below already offer — the same
-              journey drawn three times. As a strip they are an offer, not a
-              third menu. */}
-          <nav
-            aria-label="Quick access"
-            className="flex flex-wrap items-center gap-1.5"
-          >
-            {content.quickLinks.map((link, index) => (
-              <QuickLink
-                key={`${link.href}-${index}`}
-                index={pad(index + 1, 2)}
-                label={link.label}
-                href={link.href}
-              />
-            ))}
-          </nav>
-
           <p className="flex items-center justify-between gap-3 border-t border-terminal-rule pt-2 font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-[0.62rem]">
             <span>
               <span className="text-terminal-ink-faint">
@@ -243,37 +223,4 @@ function HeroBanner({
       </div>
     )
   })
-}
-
-/**
- * One way in, drawn as a key.
- *
- * The site's affordance grammar has one shape for a thing that acts and one
- * for a thing that reports; this acts, so it is bordered, and it is a 44px
- * target on a phone where there is no pointer to discover it with.
- */
-function QuickLink({
-  index,
-  label,
-  href,
-}: {
-  index: string
-  label: string
-  href: string
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex min-h-11 items-center gap-2 border border-terminal-rule px-2.5 font-mono text-[0.68rem] tracking-[0.08em] text-terminal-ink-dim uppercase crt-persist hover:border-primary hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:min-h-9"
-    >
-      {/* The lamp: lit on the key under the pointer, the way a console shows
-          which channel is selected. */}
-      <span
-        aria-hidden="true"
-        className="size-1.5 shrink-0 bg-terminal-rule group-hover:bg-primary group-hover:shadow-[0_0_5px_var(--primary)]"
-      />
-      <span className="text-terminal-ink-faint">{index}</span>
-      <span className="truncate">{label}</span>
-    </Link>
-  )
 }

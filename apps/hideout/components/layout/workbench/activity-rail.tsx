@@ -3,6 +3,7 @@
 import type * as React from "react"
 import {
   IconBinaryTree,
+  IconBoxMultiple,
   IconCube3dSphere,
   IconSearch,
   IconAntenna,
@@ -14,10 +15,10 @@ import type { SidePanel } from "@/lib/workbench"
 /**
  * The rail down the left edge: which panel the side of the workbench shows.
  *
- * Four keys, because four is what this station has to show — the archive, the
- * search, the instrument, and the ways to reach the operator. Pressing the lit
- * key collapses the panel, the way a rail behaves in an editor: the key
- * reports what is open, and pressing what is already open closes it.
+ * The archive, the search, the instrument, the stash and the ways to reach
+ * the operator. Pressing the lit key collapses the panel, the way a rail
+ * behaves in an editor: the key reports what is open, and pressing what is
+ * already open closes it.
  *
  * Each is a key by the site's affordance grammar — a bordered box, lit while
  * active — so nothing here depends on a hover to say it can be pressed.
@@ -38,6 +39,12 @@ const ITEMS: RailItem[] = [
     label: "ВИЗОР",
     hint: "The instrument",
     Icon: IconCube3dSphere,
+  },
+  {
+    id: "stash",
+    label: "СКЛАД",
+    hint: "What the station is carrying",
+    Icon: IconBoxMultiple,
   },
   {
     id: "links",
@@ -83,7 +90,7 @@ export function ActivityRail({
                 : onSelect(active ? null : (item.id as SidePanel))
             }
             className={cn(
-              "flex size-9 items-center justify-center border crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+              "key-sweep flex size-9 items-center justify-center border crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
               active
                 ? "border-primary text-primary crt-glow-soft"
                 : "border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:text-foreground"

@@ -5,11 +5,13 @@ import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { SiteMark } from "@/components/layout/site-mark"
+import { StashPanel } from "@/components/layout/workbench/stash-panel"
 import {
   Visor,
   MODEL_LABEL,
   VisorPlate,
 } from "@/components/layout/workbench/visor"
+import { useInstrument } from "@/components/layout/workbench/use-instrument"
 import type { SidePanel as SidePanelId } from "@/lib/workbench"
 
 /**
@@ -27,11 +29,8 @@ export type SidePanelProps = {
   files: React.ReactNode
   links: { label: string; href: string }[]
   byline: { name: string; href: string }
-  /**
-   * Why the panel is not drawing the instrument, if it is not. There is one
-   * renderer on this site, and something else on screen may already have it.
-   */
-  visorBusy: string | null
+  /** Everything the archive holds, for the stash's own readout. */
+  objects: number
   className?: string
 }
 
@@ -40,7 +39,7 @@ export function SidePanelView({
   files,
   links,
   byline,
-  visorBusy,
+  objects,
   className,
 }: SidePanelProps) {
   if (panel === null) return null
@@ -63,19 +62,14 @@ export function SidePanelView({
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto">
           {panel === "visor" ? (
-            <div className="flex flex-col gap-2 p-3">
-              {visorBusy ? <VisorPlate reason={visorBusy} /> : <Visor />}
-              <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
-                <span>модель</span>
-                <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
-              </p>
-            </div>
+            <VisorPanel />
+          ) : panel === "stash" ? (
+            <StashPanel objects={objects} />
           ) : (
             <LinksPanel links={links} byline={byline} />
           )}
         </div>
       )}
-
     </aside>
   )
 }
@@ -86,22 +80,49 @@ const CAPTIONS: Record<
 > = {
   files: { caption: "АРХИВ", aria: "Content" },
   visor: { caption: "ВИЗОР", aria: "Instrument" },
+  stash: { caption: "СКЛАД", aria: "Stash" },
   links: { caption: "СВЯЗЬ", aria: "Contact" },
+}
+
+/**
+ * The instrument, in the panel the rail opens for it.
+ *
+ * The lowest-standing claim of the three: a panel left open a week ago should
+ * not take the viewer off the dock the reader just opened, or off the preview
+ * under their pointer. When it loses, it says which surface has it.
+ */
+function VisorPanel() {
+  const busy = useInstrument("panel")
+
+  return (
+    <div className="flex flex-col gap-2 p-3">
+      {busy ? <VisorPlate reason={busy} /> : <Visor />}
+      <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
+        <span>модель</span>
+        <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
+      </p>
+    </div>
+  )
 }
 
 function PanelHead({ caption }: { caption: string }) {
   return (
     <div className="flex h-11 shrink-0 items-center gap-2 border-b border-sidebar-border px-3">
+      {/* The mark is the way home; the callsign beside it is a readout — the
+          machine naming itself, not a field and not a second control. It is
+          `select-none` so a drag across the panel head does not put it in the
+          reader's clipboard like a value they meant to copy. */}
       <Link
         href="/"
         aria-label="Sektant's Hideout, home"
-        className="group/mark flex min-w-0 items-center gap-2 leading-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+        className="flex shrink-0 items-center leading-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
       >
-        <SiteMark className="size-4 shrink-0 crt-glow-soft" />
-        <span className="truncate font-mono text-[0.62rem] tracking-[0.2em] text-primary uppercase crt-glow">
-          sektant
-        </span>
+        <SiteMark className="size-4 crt-glow-soft" />
       </Link>
+
+      <span className="truncate font-mono text-[0.62rem] tracking-[0.2em] text-primary lowercase crt-glow select-none">
+        sektant.gab
+      </span>
 
       <span
         aria-hidden="true"

@@ -12,15 +12,14 @@ import { Sheet } from "@workspace/ui/components/sheet"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { SiteMark } from "@/components/layout/site-mark"
-import { PALETTE_EVENT } from "@/components/layout/command-palette"
-import { TOGGLE_EVENT } from "@/components/layout/site-log"
+import { fire } from "@/lib/navigation"
 
 /**
  * The narrow-screen shell.
  *
- * Not the workbench squeezed. The rail, the tabs, the gutter, the minimap and
- * the breadcrumb are instruments for a pointer and a wide screen, and a phone
- * that carries them spends most of its glass reporting instead of reading.
+ * Not the workbench squeezed. The rail, the tabs, the gutter and the
+ * breadcrumb are instruments for a pointer and a wide screen, and a phone that
+ * carries them spends most of its glass reporting instead of reading.
  * What is left is a bar that says where you are and a bar you can press:
  * four targets, each 44px, each lit while its surface is open.
  *
@@ -93,12 +92,12 @@ export function MobileTabBar({
         />
         <TabTarget
           label="поиск"
-          onPress={() => window.dispatchEvent(new Event(PALETTE_EVENT))}
+          onPress={() => fire("palette")}
           Icon={IconSearch}
         />
         <TabTarget
           label="журнал"
-          onPress={() => window.dispatchEvent(new Event(TOGGLE_EVENT))}
+          onPress={() => fire("log")}
           Icon={IconTerminal2}
         />
         <TabTarget

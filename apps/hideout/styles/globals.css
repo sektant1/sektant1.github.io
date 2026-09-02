@@ -5,6 +5,7 @@
 @import "@workspace/ui/themes/phosphor.css";
 @import "./prose.css";
 @import "./cold-boot.css";
+@import "./effects.css";
 
 /* Tailwind's source detection is rooted at the file that imports it, which
    lives in packages/ui. This app is outside that root and has to be named. */
@@ -563,19 +564,5 @@ html[data-ascii-font="sub-zero"]
     line-height: 1.9;
     text-align: end;
     user-select: none;
-  }
-}
-
-/* Where the minimap is drawn it is the scroll indicator, and two of them down
-   the same edge is one too many — an editor merges the bar into the map for
-   the same reason. Below that width the native bar is all there is, so it
-   stays. */
-@media (width >= 64rem) {
-  .doc-gutter {
-    scrollbar-width: none;
-  }
-
-  .doc-gutter::-webkit-scrollbar {
-    display: none;
   }
 }

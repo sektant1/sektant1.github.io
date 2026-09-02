@@ -5,6 +5,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@workspace/ui/lib/utils"
 
+import { SECTIONS } from "@/lib/navigation"
+
 /**
  * Where you are, as a path you can walk back up.
  *
@@ -18,12 +20,15 @@ import { cn } from "@workspace/ui/lib/utils"
  * in `index.mdx` stopped being useful three screens ago.
  */
 
-/** Segments that name a listing the site actually has. */
-const SECTION_HREF: Record<string, string> = {
-  posts: "/posts",
-  projects: "/projects",
-  games: "/games",
-}
+/**
+ * Segments that name a listing, from the one list of them.
+ *
+ * `about` is in that list and lands here too: `content/pages/about` walks up
+ * to the same page the rail key opens, which is the point of a breadcrumb.
+ */
+const SECTION_HREF: Record<string, string> = Object.fromEntries(
+  SECTIONS.map((section) => [section.id, section.href])
+)
 
 export function BreadcrumbBar({
   path,

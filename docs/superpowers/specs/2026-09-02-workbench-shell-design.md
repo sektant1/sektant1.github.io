@@ -42,11 +42,11 @@ ergonomics, not the workbench squeezed.
 │┌──┬────────────────┬──────────────────────────────────────────────┬────┐│
 ││ R│  side panel    │ buffer tabs                                  │ m  ││
 ││ a│  (files /      ├──────────────────────────────────────────────┤ i  ││
-││ i│   search /     │ breadcrumb                                   │ n  ││
-││ l│   visor /      ├───┬──────────────────────────────────────────┤ i  ││
-││  │   links)       │ g │ document                                 │ m  ││
-││  │                │ u │                                          │ a  ││
-││  │                │ t │                                          │ p  ││
+││ i│   search /     │ breadcrumb                                   │    ││
+││ l│   visor /      ├───┬──────────────────────────────────────────┤    ││
+││  │   stash /      │ g │ document                                 │    ││
+││  │   links)       │ u │                                          │    ││
+││  │                │ t │                                          │    ││
 │└──┴────────────────┴───┴──────────────────────────────────────────┴────┘│
 │┌────────────────────────────────────────────────────────────────────────┐│
 ││ dock: ЖУРНАЛ | ВИЗОР                            (ctrl+`, on demand)    ││
@@ -67,11 +67,15 @@ narrow:
 ```
 
 The document is rendered once, as `children`, inside a grid slot both
-compositions style. Media queries hide the rail, the tabs, the gutter and the
-minimap below `md`/`lg` and hide the mobile bars above it. Nothing heavy is
-rendered twice: the pieces that only exist on one side are chrome measured in
-bytes, and the two pieces that cost something — the 3D visor and the minimap's
-measuring loop — gate on `matchMedia` in an effect, so a phone never runs them.
+compositions style. Media queries hide the rail, the tabs and the gutter below
+`md`/`lg` and hide the mobile bars above it. Nothing heavy is rendered twice:
+the pieces that only exist on one side are chrome measured in bytes, and the
+one piece that costs something — the 3D viewer — gates on `matchMedia` in an
+effect, so a phone never starts a renderer it cannot show.
+
+A minimap was built here and taken out again: a column of ticks beside a
+document that already has an outline on one side and a scrollbar on the other
+was a third answer to a question nobody was asking twice.
 
 ## Surfaces
 
@@ -82,10 +86,11 @@ active one collapses the panel, which is how an editor's rail behaves.
 
 | Key      | Panel                                            |
 | -------- | ------------------------------------------------ |
-| `ФАЙЛЫ`  | Sections nav + `ContentTree`                      |
-| `ПОИСК`  | Opens the command palette (`PALETTE_EVENT`)       |
-| `ВИЗОР`  | The instrument: the ASCII 3D viewer               |
-| `СВЯЗЬ`  | Social links + byline, moved out of the tree      |
+| `ФАЙЛЫ`  | Section keys, a name filter, and `ContentTree`     |
+| `ПОИСК`  | Opens the command palette                          |
+| `ВИЗОР`  | The instrument: the ASCII 3D viewer                |
+| `СКЛАД`  | The stash: what the build ships, on a slot grid     |
+| `СВЯЗЬ`  | Social links + byline, moved out of the tree       |
 
 Which panel is open persists through `createPersistedPreference`
 (`workbench-panel`), like every other reader choice on the site.
@@ -116,14 +121,6 @@ room for both, rather than at `md`. Real numbers for real blocks, unselectable,
 and given empty alternative text so a screen reader does not read a number
 before every paragraph. Not line numbers: this site has no lines.
 
-### Minimap (≥lg)
-
-Not a miniature of the page. A column of phosphor ticks, one per top-level
-block, height proportional to the block's height, brighter for headings; a
-window frames the viewport and tracks scroll. Click jumps. Built from
-`getBoundingClientRect` on the buffer's blocks, recomputed on `ResizeObserver`
-and on route change, throttled to animation frames on scroll.
-
 ### Dock (all widths, on demand)
 
 The bottom panel, opened with `ctrl+\`` or from the status bar. Two tabs:
@@ -136,9 +133,11 @@ strip it already draws. That is a generalisation of the component, not a
 special case bolted to it: the panel across the bottom of an editor has always
 been a place other views dock into.
 
-Only one viewer instance exists. The docked view reports itself by its own
-lifetime — mounted means the dock has it — and the sidebar panel stands down
-when it does, or when the front page's globe already holds the renderer.
+Only one viewer instance exists, and three surfaces can ask for it: the dock,
+the hover preview and the panel, in that order of standing. Each claims for as
+long as it is mounted; whoever loses draws a plate naming the surface that won.
+Opening the dock's tab is a decision, hovering is a glance, and a panel left
+open is a setting from last week — the order is how deliberate the ask was.
 
 ### Visor
 
@@ -165,7 +164,7 @@ earn their place: a field radio, a satellite, an ammunition crate.
 - Bottom tab bar, 56px, four 44px targets: `ФАЙЛЫ`, `ПОИСК`, `ЖУРНАЛ`,
   `СВЯЗЬ`. The active one is lit.
 - `ФАЙЛЫ` and `СВЯЗЬ` open full-height sheets, not an 18rem drawer.
-- Dropped: classification bar, buffer tabs, gutter, minimap, breadcrumb, and
+- Dropped: classification bar, buffer tabs, gutter, breadcrumb, and
   the status bar itself — the tab bar already offers find and the log, and
   what the bar had left was readouts. Its keys (top, boot, crt, phosphor) move
   into the `СВЯЗЬ` sheet under `ПУЛЬТ`, so nothing the console could do is
@@ -201,22 +200,27 @@ New, under `apps/hideout/components/layout/workbench/`:
 | `side-panel.tsx`      | Files / links panels around existing components     |
 | `buffer-tabs.tsx`     | Session buffer strip                                |
 | `breadcrumb-bar.tsx`  | Path segments and the active heading                |
-| `doc-minimap.tsx`     | Tick column and viewport window                     |
 | `visor.tsx`           | The single 3D instrument and its fallback           |
+| `instrument-hover.tsx`| The viewer as a preview under the pointer          |
+| `stash-panel.tsx`     | The slot grid and what sits in it                  |
+| `files-panel.tsx`     | Section keys, the tree filter, the face control    |
+| `use-instrument.ts`   | Claiming the one viewer, and losing it gracefully  |
 | `mobile-bars.tsx`     | Top bar and bottom tab bar                          |
 
 The dock has no file of its own: it is `LogConsole` with the visor docked into
 the tab strip it already draws, through a new optional `panels` prop, kept
 where the log's keyboard shortcut and its lifetime already live. State splits
-in two — `lib/workbench.ts` holds the pure arithmetic (buffer list, minimap
-geometry) with the unit tests on it, and `lib/workbench-state.ts` holds the
-stores that arithmetic is kept out of.
+in two — `lib/workbench.ts` holds the pure arithmetic (the buffer list) with
+the unit tests on it, and `lib/workbench-state.ts` holds the stores that
+arithmetic is kept out of. `lib/navigation.ts` is the one list of sections,
+links and console commands every surface reads.
 
 Changed: `site-shell.tsx` (composes the workbench, keeps its props),
 `status-bar.tsx` (takes a class, so the narrow shell can drop it),
 `log-console.tsx` (the `panels` prop), `sheet.tsx` (an `aria-label` that
 reaches the dialog rather than the overlay), `globals.css` (the gutter counter
-and the scrollbar the minimap replaces), `CONTEXT.md` (the grammar above).
+), `styles/effects.css` (the hover and mount effects), `CONTEXT.md` (the
+grammar above).
 
 `site-shell.tsx` currently carries the whole shell in 235 lines; after this it
 is composition only, and each surface above is a file small enough to hold in
@@ -225,8 +229,7 @@ one context.
 ## Testing
 
 - Unit (`vitest`): buffer list reducer — append, dedupe, cap, close active,
-  close last. Minimap geometry — block rects to tick heights and window
-  position. Both are pure functions kept out of the components for that reason.
+  close last. Pure functions kept out of the components for that reason.
 - `make check` green (registry drift included: `log-console.tsx` changes, so
   `make registry` runs and `registry.json` is committed with it).
 - Playwright pass on the dev server at 390px, 768px and 1440px: every rail
@@ -235,12 +238,12 @@ one context.
 
 ## Risks
 
-- **Bundle.** Everything new is chrome, but the minimap and the tabs are
-  client components on every route. Both are small and neither imports beyond
-  React and existing utilities.
+- **Bundle.** Everything new is chrome, and the tabs, the rail and the panels
+  are client components on every route. All of them are small, and the only
+  heavy import on the site still arrives through the lazy seam.
 - **Hydration.** Persisted panel state renders its fallback on the server, as
   every other preference here does; the panel that opens is settled before
   first paint by the same head-script pattern used for the tube and the CRT.
-- **Scope creep into content.** The gutter and the minimap read the document's
-  blocks. If a page's markup makes that unreliable, the fix is a `data-doc`
-  attribute on the container, not a change to how the document is written.
+- **Scope creep into content.** The gutter counts the document's top-level
+  blocks. If a page's markup makes that unreliable, the fix is an attribute on
+  the container, not a change to how the document is written.

@@ -18,9 +18,7 @@ import {
 } from "@/lib/render-style"
 import {
   DEFAULT_HOME_CONTENT,
-  MAX_QUICK_LINKS,
   type HomeContent,
-  type HomeQuickLink,
 } from "@/lib/content/home-schema"
 
 type Errors = Record<string, string>
@@ -80,10 +78,6 @@ export function HomeForm({ home }: { home: HomeContent }) {
         [key]: { ...current.sections[key], ...next },
       },
     }))
-  }
-
-  function quickLinks(next: HomeQuickLink[]) {
-    hero({ quickLinks: next })
   }
 
   async function save() {
@@ -296,82 +290,6 @@ export function HomeForm({ home }: { home: HomeContent }) {
           </div>
         </Group>
 
-        <Group title="quick access">
-          <div className="grid gap-4 sm:grid-cols-2">
-          </div>
-
-          <ul className="flex flex-col gap-3">
-            {value.hero.quickLinks.map((link, index) => (
-              <li
-                key={index}
-                className="flex flex-col gap-3 border-s-2 border-terminal-rule ps-3 sm:flex-row sm:items-end"
-              >
-                {/* The number is the row's position, the way the page draws
-                    it — moving a row renumbers it, so it is not editable. */}
-                <span className="font-mono text-[0.7rem] text-terminal-chrome-dim sm:pb-2.5">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <TextField
-                    id={`quickLink-${index}-label`}
-                    label="label"
-                    value={link.label}
-                    error={errors[`quickLink${index}Label`]}
-                    onChange={(label) =>
-                      quickLinks(
-                        value.hero.quickLinks.map((entry, position) =>
-                          position === index ? { ...entry, label } : entry
-                        )
-                      )
-                    }
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <TextField
-                    id={`quickLink-${index}-href`}
-                    label="destination"
-                    value={link.href}
-                    error={errors[`quickLink${index}Href`]}
-                    onChange={(href) =>
-                      quickLinks(
-                        value.hero.quickLinks.map((entry, position) =>
-                          position === index ? { ...entry, href } : entry
-                        )
-                      )
-                    }
-                  />
-                </div>
-                <Button
-                  size="xs"
-                  variant="outline"
-                  className="sm:mb-0.5"
-                  onPress={() =>
-                    quickLinks(
-                      value.hero.quickLinks.filter(
-                        (_, position) => position !== index
-                      )
-                    )
-                  }
-                >
-                  Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
-
-          <Button
-            size="xs"
-            variant="outline"
-            className="self-start"
-            isDisabled={value.hero.quickLinks.length >= MAX_QUICK_LINKS}
-            onPress={() =>
-              quickLinks([...value.hero.quickLinks, { label: "", href: "/" }])
-            }
-          >
-            Add a link
-          </Button>
-        </Group>
-
         <Group title="tag index">
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
@@ -510,20 +428,6 @@ function validate(value: HomeContent): Errors {
       errors[field] = "The ASCII font has no glyph for these characters."
     }
   }
-
-  value.hero.quickLinks.forEach((link, index) => {
-    const label = link.label.trim()
-    const href = link.href.trim()
-    // A row with nothing in it is dropped on save rather than rejected.
-    if (!label && !href) return
-    if (!label) errors[`quickLink${index}Label`] = "A label is required."
-    if (!href) errors[`quickLink${index}Href`] = "A destination is required."
-    else if (!href.startsWith("/") && !/^https?:\/\//i.test(href)) {
-      errors[`quickLink${index}Href`] = "Use /posts, or a full https:// URL."
-    } else if (href.includes("..")) {
-      errors[`quickLink${index}Href`] = "A path cannot contain '..'."
-    }
-  })
 
   return errors
 }

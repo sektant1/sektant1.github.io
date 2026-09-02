@@ -8,7 +8,7 @@ import { openBuffer, closeBuffer, type Buffer } from "@/lib/workbench"
 export const SIDE_PANEL_STORAGE_KEY = "workbench-panel"
 
 /** `off` rather than an absent value: a collapsed panel is a choice. */
-const PANEL_IDS = ["files", "links", "visor", "off"] as const
+const PANEL_IDS = ["files", "links", "visor", "stash", "off"] as const
 export type StoredPanel = (typeof PANEL_IDS)[number]
 
 /**
@@ -25,31 +25,62 @@ export const sidePanel = createPersistedPreference<StoredPanel>({
 })
 
 /**
- * Whether the dock is currently drawing the instrument.
+ * Who is drawing the instrument.
  *
- * There is one viewer, and it costs a WebGL context and a render loop. The
- * dock owns it while its tab is selected; the sidebar panel reads this and
- * reports that the instrument moved rather than starting a second one.
+ * There is one viewer and it costs a WebGL context, a render loop and about
+ * 560 KB of renderer. Three surfaces can ask for it — the dock, the archive
+ * rail's panel, and the hover preview — so they do not get to decide among
+ * themselves: they claim, and the claim with the highest standing wins.
+ *
+ * The order is by how deliberate the ask was. Opening the dock's tab is a
+ * decision; hovering something is a glance; leaving the panel open is a
+ * setting from last week. Whoever loses draws the plate that says so.
  *
  * Not persisted: it describes what is on screen right now.
  */
-const visorListeners = new Set<() => void>()
-let visorInDock = false
+export type InstrumentOwner = "dock" | "hover" | "panel"
 
-export const dockVisor = {
-  read: () => visorInDock,
-  serverSnapshot: () => false,
+const STANDING: InstrumentOwner[] = ["dock", "hover", "panel"]
+
+const instrumentListeners = new Set<() => void>()
+const claims = new Set<InstrumentOwner>()
+
+export const instrument = {
+  /** The owner drawing it, or null while nobody has asked. */
+  read(): InstrumentOwner | null {
+    return STANDING.find((owner) => claims.has(owner)) ?? null
+  },
+
+  serverSnapshot: () => null,
+
   subscribe(listener: () => void) {
-    visorListeners.add(listener)
+    instrumentListeners.add(listener)
     return () => {
-      visorListeners.delete(listener)
+      instrumentListeners.delete(listener)
     }
   },
-  set(next: boolean) {
-    if (next === visorInDock) return
-    visorInDock = next
-    for (const listener of visorListeners) listener()
+
+  claim(owner: InstrumentOwner) {
+    if (claims.has(owner)) return
+    claims.add(owner)
+    announceInstrument()
   },
+
+  release(owner: InstrumentOwner) {
+    if (!claims.delete(owner)) return
+    announceInstrument()
+  },
+}
+
+/** What to tell the reader when someone else has it. */
+export const INSTRUMENT_BUSY: Record<InstrumentOwner, string> = {
+  dock: "running in the dock",
+  hover: "running in the preview",
+  panel: "running in the panel",
+}
+
+function announceInstrument() {
+  for (const listener of instrumentListeners) listener()
 }
 
 export const BUFFERS_STORAGE_KEY = "workbench-buffers"

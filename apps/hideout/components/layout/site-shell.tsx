@@ -6,21 +6,10 @@ import { FilesPanel } from "@/components/layout/workbench/files-panel"
 import { Workbench } from "@/components/layout/workbench/workbench"
 import type { StatusField } from "@/components/layout/status-bar"
 import { buildCommandIndex } from "@/lib/content/command-index"
+import { BYLINE, SOCIAL_LINKS } from "@/lib/navigation"
 import { getHomeContent } from "@/lib/content/home"
 import { isAdminVisible } from "@/lib/runtime/mode"
 import type { ContentTreeNode } from "@/lib/content/types"
-
-const SOCIAL_LINKS = [
-  { label: "github", href: "https://github.com/sektant1" },
-  { label: "youtube", href: "https://youtube.com/@sektant1swe" },
-  { label: "rss", href: "/rss.xml" },
-]
-
-/** The person behind the operator callsign. */
-const BYLINE = {
-  name: "gabriel fernandes",
-  href: "https://www.linkedin.com/in/gabrielfernandesbr/",
-}
 
 type SiteShellProps = {
   /** The file path of the open document, without the leading `~/`. */
@@ -58,6 +47,11 @@ export async function SiteShell({
       <Workbench
         path={path}
         files={<FilesPanel tree={tree} />}
+        objects={
+          commandIndex.posts.length +
+          commandIndex.projects.length +
+          commandIndex.games.length
+        }
         links={SOCIAL_LINKS}
         byline={BYLINE}
         status={status}

@@ -8,6 +8,7 @@ import { FontPicker } from "@workspace/ui/components/font-picker"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { ContentTree } from "@/components/layout/content-tree"
+import { SECTIONS, isSectionActive } from "@/lib/navigation"
 import type { ContentTreeNode } from "@/lib/content/types"
 
 /**
@@ -22,13 +23,6 @@ import type { ContentTreeNode } from "@/lib/content/types"
  * `/posts`, `/projects` and `/games` are the pages that index them, and
  * `/games` has no directory at all — without this row it cannot be reached.
  */
-
-const SECTIONS = [
-  { label: "posts", href: "/posts" },
-  { label: "projects", href: "/projects" },
-  { label: "games", href: "/games" },
-  { label: "about", href: "/about" },
-]
 
 export function FilesPanel({
   tree,
@@ -49,16 +43,15 @@ export function FilesPanel({
         className="grid shrink-0 grid-cols-2 gap-1 border-b border-sidebar-border p-2"
       >
         {SECTIONS.map((section) => {
-          const active =
-            pathname === section.href || pathname.startsWith(`${section.href}/`)
+          const active = isSectionActive(pathname, section.href)
 
           return (
             <Link
-              key={section.href}
+              key={section.id}
               href={section.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-11 items-center gap-1.5 border px-2 font-mono text-[0.68rem] tracking-[0.08em] uppercase crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none md:min-h-8",
+                "key-sweep flex min-h-11 items-center gap-1.5 border px-2 font-mono text-[0.68rem] tracking-[0.08em] uppercase crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none md:min-h-8",
                 active
                   ? "border-primary text-primary crt-glow-soft"
                   : "border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:text-foreground"

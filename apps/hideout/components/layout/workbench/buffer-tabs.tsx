@@ -82,6 +82,7 @@ export function BufferTabs({
             <Link
               href={buffer.href}
               role="tab"
+              data-slot="buffer-tab"
               aria-selected={active}
               onAuxClick={(event) => {
                 // Middle click closes, as it does in a browser and an editor.

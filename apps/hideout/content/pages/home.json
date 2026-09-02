@@ -17,20 +17,6 @@
     "metricPosts": "POSTS",
     "metricProjects": "PROJECTS",
     "metricMinutes": "READ MIN",
-    "quickLinks": [
-      {
-        "label": "ESSAYS",
-        "href": "/posts"
-      },
-      {
-        "label": "PROJECTS",
-        "href": "/projects"
-      },
-      {
-        "label": "GAMES",
-        "href": "/games"
-      }
-    ],
     "tagsTitle": "ИНДЕКС // ТЕГИ",
     "tagsRef": "IDX // TAG",
     "globeTitle": "ОБЪЕКТ 01 // GEO NODE",

@@ -16,11 +16,6 @@ import {
   type RenderStyle,
 } from "../render-style"
 
-export type HomeQuickLink = {
-  label: string
-  href: string
-}
-
 export type HomeSection = {
   path: string
   title: string
@@ -47,7 +42,6 @@ export type HomeContent = {
     metricPosts: string
     metricProjects: string
     metricMinutes: string
-    quickLinks: HomeQuickLink[]
     tagsTitle: string
     tagsRef: string
     globeTitle: string
@@ -77,11 +71,6 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     metricPosts: "POSTS",
     metricProjects: "PROJECTS",
     metricMinutes: "READ MIN",
-    quickLinks: [
-      { label: "FIELD NOTES", href: "/posts" },
-      { label: "PROJECT ARCHIVE", href: "/projects" },
-      { label: "PLAYABLE BUILDS", href: "/games" },
-    ],
     tagsTitle: "ИНДЕКС // ТЕГИ",
     tagsRef: "IDX // TAG",
     globeTitle: "ОБЪЕКТ 01 // GEO NODE",
@@ -118,7 +107,6 @@ const BANNER_FIELDS = [
 ] as const
 
 const MAX_LENGTH = 240
-const MAX_QUICK_LINKS = 8
 
 export class HomeContentError extends Error {}
 
@@ -162,37 +150,6 @@ function asHref(value: unknown, fallback: string, label: string) {
   }
   if (/^https?:\/\/\S+$/i.test(href)) return href
   fail(`${label} must be a site path like /posts, or a full http(s) URL.`)
-}
-
-function asQuickLinks(value: unknown, fallback: HomeQuickLink[]) {
-  if (value === undefined || value === null) return fallback
-  if (!Array.isArray(value)) fail("Quick links must be a list.")
-
-  const links = value
-    // A row the editor blanked out entirely is a removal, not an error.
-    .filter((entry) => {
-      if (!entry || typeof entry !== "object") return false
-      const data = entry as Record<string, unknown>
-      return Boolean(asString(data.label) || asString(data.href))
-    })
-    .map((entry, index) => {
-      const data = entry as Record<string, unknown>
-      const position = `Quick link ${index + 1}`
-      const label = asString(data.label)
-      const href = asString(data.href)
-      if (!label) fail(`${position} needs a label.`)
-      if (!href) fail(`${position} needs a destination.`)
-      return {
-        label: asText(label, "", `${position} label`, 48),
-        href: asHref(href, "", `${position} destination`),
-      }
-    })
-
-  if (!links.length) return fallback
-  if (links.length > MAX_QUICK_LINKS) {
-    fail(`Quick access takes at most ${MAX_QUICK_LINKS} links.`)
-  }
-  return links
 }
 
 function asString(value: unknown) {
@@ -302,7 +259,6 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         "Reading metric label",
         24
       ),
-      quickLinks: asQuickLinks(hero.quickLinks, d.hero.quickLinks),
       tagsTitle: asText(
         hero.tagsTitle,
         d.hero.tagsTitle,
@@ -345,4 +301,4 @@ export function normalizeHomeContent(input: unknown): HomeContent {
   return normalized
 }
 
-export { BANNER_FIELDS, MAX_QUICK_LINKS }
+export { BANNER_FIELDS }

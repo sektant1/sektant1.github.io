@@ -1,0 +1,217 @@
+/* Chrome that behaves like hardware.
+ *
+ * Everything here is a hover, a focus or a mount effect on a piece of the
+ * workbench. Three rules hold across all of it:
+ *
+ *   only transform and opacity are animated, so nothing here can cost a
+ *   layout or a paint on a scrolling page;
+ *
+ *   the glass being off switches it off — `data-crt="off"` is the reader
+ *   saying they want the page and not the tube, and an effect that keeps
+ *   running under that is the flicker the key was pressed to stop;
+ *
+ *   reduced motion removes the movement and keeps the state, so a control
+ *   that lights on hover still lights, it just does not travel.
+ */
+
+/* The beam crossing a key.
+ *
+ * A single band swept across the face once, on hover — the same light the
+ * screen's own sweep uses, borrowed at key scale. It lives on a pseudo so the
+ * key's own background, border and text are untouched, and it is clipped by
+ * the key rather than masked, which keeps it to one composited layer. */
+@keyframes key-sweep {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@utility key-sweep {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 45%;
+    pointer-events: none;
+    opacity: 0;
+    /* Neutral light, not the phosphor's own green: a beam brightens every
+       channel by the same factor. The same argument crt-beam makes. */
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      rgb(255 255 255 / 0.09),
+      transparent
+    );
+    transform: translateX(-120%);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 1;
+    animation: key-sweep 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+
+/* The stash.
+ *
+ * A slot is a physical thing in a rack: it catches the light at its top edge
+ * and it sits a hair proud of the board when the pointer is on it. The lift is
+ * a translate of one pixel — enough to read as depth on a screen this flat,
+ * small enough that a grid of them does not appear to breathe. */
+.stash-slot {
+  transition:
+    transform 160ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.stash-slot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* The light lying on the slot: strongest at the top edge, gone by a third
+     of the way down, the way a shelf lit from above reads. */
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--primary) 7%, transparent),
+    transparent 35%
+  );
+}
+
+.stash-slot:is(:hover, :focus-within) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 0 color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+/* Empty slots are the rack, not cargo: they hold the grid's shape and stay
+   out of the way until the eye is looking for a gap. */
+.stash-slot-empty {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 5px,
+    color-mix(in oklch, var(--primary) 4%, transparent) 5px 6px
+  );
+}
+
+/* The preview panel under the pointer.
+ *
+ * It arrives the way a tube draws a new frame: a fast rise from nothing with
+ * a short travel, not a slide. The brackets on its corners are the same
+ * field-frame idiom the instrument panels use, at the one size where drawing
+ * all four corners would be more chrome than card. */
+@keyframes instrument-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px) scaleY(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.instrument-card {
+  transform-origin: top center;
+  animation: instrument-card-in 140ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.instrument-card::before,
+.instrument-card::after {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  pointer-events: none;
+  border-color: var(--primary);
+}
+
+.instrument-card::before {
+  inset-block-start: -1px;
+  inset-inline-start: -1px;
+  border-block-start: 1px solid;
+  border-inline-start: 1px solid;
+}
+
+.instrument-card::after {
+  inset-block-end: -1px;
+  inset-inline-end: -1px;
+  border-block-end: 1px solid;
+  border-inline-end: 1px solid;
+}
+
+/* A buffer arriving in the strip.
+ *
+ * One frame of overdrive as the tab lights, which is what a phosphor does when
+ * a cell is driven from cold — it overshoots, then settles. Opacity only, and
+ * once: a strip that pulses is a strip that is asking for attention it does
+ * not need after the first beat. */
+@keyframes buffer-strike {
+  0% {
+    opacity: 0.35;
+  }
+  40% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+[data-slot="buffer-tab"][aria-selected="true"] {
+  animation: buffer-strike 260ms steps(6, end);
+}
+
+/* Glass off: the page, with nothing painted over it and nothing moving on it.
+ * Motion goes; the states the motion decorated stay. */
+html[data-crt="off"] :is(.stash-slot, .instrument-card) {
+  animation: none;
+  transition: none;
+  transform: none;
+  box-shadow: none;
+}
+
+html[data-crt="off"] .key-sweep::after,
+html[data-crt="off"] .stash-slot::before,
+html[data-crt="off"] .stash-slot-empty {
+  background-image: none;
+}
+
+html[data-crt="off"] [data-slot="buffer-tab"][aria-selected="true"] {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key-sweep:is(:hover, :focus-visible)::after,
+  .instrument-card,
+  [data-slot="buffer-tab"][aria-selected="true"] {
+    animation: none;
+  }
+
+  .stash-slot {
+    transition: none;
+  }
+
+  .stash-slot:is(:hover, :focus-within) {
+    transform: none;
+  }
+}
+
+/* High contrast mode has no room for light effects: it replaces the palette
+   with the system's own, and a gradient over that is noise. */
+@media (forced-colors: active) {
+  .key-sweep::after,
+  .stash-slot::before,
+  .stash-slot-empty {
+    background-image: none;
+  }
+}

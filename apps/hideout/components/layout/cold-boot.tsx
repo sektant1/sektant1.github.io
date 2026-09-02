@@ -11,6 +11,7 @@ import { logger } from "@workspace/ui/lib/logger"
 import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 import { usePrefersReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
 import { bootDueOnThisLoad, coldBootLastSeen } from "@/lib/cold-boot-state"
+import { CONSOLE } from "@/lib/navigation"
 import { pad } from "@/lib/format"
 
 /**
@@ -43,9 +44,6 @@ import { pad } from "@/lib/format"
 const COIN_MODEL = "/models/bitcoin.glb"
 const COIN_SURFACE = { roughness: 0.42, metalness: 0.62, normalScale: 1.5 }
 const COIN_POST = { edge: 0.72, dither: 0.035, contrast: 1.18 }
-
-/** Runs the sequence again, whatever the stored state says. */
-export const REPLAY_BOOT_EVENT = "hideout:replay-boot"
 
 /** A dense kernel log: fast enough to feel machine-driven, slow enough to scan. */
 const LINE_INTERVAL = 118
@@ -190,8 +188,8 @@ export function ColdBoot({
       setCoinReady(false)
       setReplaying(true)
     }
-    window.addEventListener(REPLAY_BOOT_EVENT, replay)
-    return () => window.removeEventListener(REPLAY_BOOT_EVENT, replay)
+    window.addEventListener(CONSOLE.boot, replay)
+    return () => window.removeEventListener(CONSOLE.boot, replay)
   }, [])
 
   React.useEffect(() => {

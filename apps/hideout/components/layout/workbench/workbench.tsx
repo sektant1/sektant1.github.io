@@ -4,7 +4,6 @@ import * as React from "react"
 import { usePathname } from "next/navigation"
 import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 
-import { PALETTE_EVENT } from "@/components/layout/command-palette"
 import { ConsoleKeys } from "@/components/layout/console-keys"
 import { SiteLog } from "@/components/layout/site-log"
 import { StatusBar, type StatusField } from "@/components/layout/status-bar"
@@ -14,13 +13,13 @@ import {
   BufferTabs,
   useBufferRecord,
 } from "@/components/layout/workbench/buffer-tabs"
-import { DocMinimap } from "@/components/layout/workbench/doc-minimap"
 import {
   MobileTabBar,
   MobileTopBar,
 } from "@/components/layout/workbench/mobile-bars"
 import { SidePanelView } from "@/components/layout/workbench/side-panel"
-import { dockVisor, sidePanel } from "@/lib/workbench-state"
+import { BYLINE, SOCIAL_LINKS, fire } from "@/lib/navigation"
+import { sidePanel } from "@/lib/workbench-state"
 import type { Buffer, SidePanel } from "@/lib/workbench"
 
 /**
@@ -28,15 +27,15 @@ import type { Buffer, SidePanel } from "@/lib/workbench"
  *
  * One document, two compositions. On a wide screen it is an editor: a rail of
  * panels down the left edge, the strip of what is open across the top, the
- * path and the section you are in under it, the document between a gutter and
- * a minimap, the dock across the bottom. On a narrow one it is a reader with a
+ * path and the section you are in under it, the document in a numbered
+ * gutter, the dock across the bottom. On a narrow one it is a reader with a
  * bar it can be driven from, and every instrument that was reporting rather
  * than working has been taken off the glass.
  *
  * The two are the same DOM. The document is rendered once, as children, and
- * the surfaces around it are shown or hidden by width — a phone never mounts
- * the minimap's measuring loop or the viewer's renderer, because both gate on
- * `matchMedia` rather than on a class.
+ * the surfaces around it are shown or hidden by width — the one piece that
+ * costs something, the viewer, gates on `matchMedia` rather than on a class,
+ * so a phone never starts a renderer it cannot show.
  */
 
 export type WorkbenchProps = {
@@ -46,6 +45,8 @@ export type WorkbenchProps = {
   files: React.ReactNode
   links: { label: string; href: string }[]
   byline: { name: string; href: string }
+  /** Everything the archive holds: the stash reports it. */
+  objects: number
   status?: StatusField[]
   /** Rendered above the buffer, edge to edge: the reading progress rule. */
   gauge?: React.ReactNode
@@ -57,6 +58,7 @@ export function Workbench({
   files,
   links,
   byline,
+  objects,
   status,
   gauge,
   children,
@@ -64,26 +66,10 @@ export function Workbench({
   const pathname = usePathname()
   const [stored, storePanel] = usePersistedPreference(sidePanel)
   const panel: SidePanel = stored === "off" ? null : stored
-  const visorInDock = React.useSyncExternalStore(
-    dockVisor.subscribe,
-    dockVisor.read,
-    dockVisor.serverSnapshot
-  )
-
   useBufferRecord(React.useMemo(() => describe(pathname), [pathname]))
 
-  // One renderer on this site. The dock takes it when its tab is open, and the
-  // front page has it already — the globe up there is the same scene, and a
-  // second canvas beside it would be two WebGL contexts drawing the same
-  // instrument at once.
-  const instrumentBusy = visorInDock
-    ? "running in the dock"
-    : pathname === "/"
-      ? "the globe has it"
-      : null
-
   const selectPanel = (next: SidePanel) => storePanel(next ?? "off")
-  const openPalette = () => window.dispatchEvent(new Event(PALETTE_EVENT))
+  const openPalette = () => fire("palette")
 
   return (
     <div className="flex h-full min-h-0 w-full">
@@ -99,7 +85,7 @@ export function Workbench({
         files={files}
         links={links}
         byline={byline}
-        visorBusy={instrumentBusy}
+        objects={objects}
         className="hidden md:flex"
       />
 
@@ -110,17 +96,13 @@ export function Workbench({
 
         {gauge}
 
-        <div className="flex min-h-0 flex-1">
-          {/* scroll-smooth belongs here, not on <html>: this element is what
-              actually scrolls, so it is what a TOC anchor jump moves. */}
-          <div
-            data-slot="buffer"
-            className="doc-gutter relative z-1 min-w-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth motion-reduce:scroll-auto"
-          >
-            {children}
-          </div>
-
-          <DocMinimap className="hidden lg:block" />
+        {/* scroll-smooth belongs here, not on <html>: this element is what
+            actually scrolls, so it is what a TOC anchor jump moves. */}
+        <div
+          data-slot="buffer"
+          className="doc-gutter relative z-1 min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth motion-reduce:scroll-auto"
+        >
+          {children}
         </div>
 
         <SiteLog />

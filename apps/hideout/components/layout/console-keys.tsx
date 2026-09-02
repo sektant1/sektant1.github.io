@@ -7,11 +7,8 @@ import {
   CommandStripDivider,
 } from "@workspace/ui/components/command-strip"
 
-import { REPLAY_BOOT_EVENT } from "@/components/layout/cold-boot"
-import { PALETTE_EVENT } from "@/components/layout/command-palette"
-import { TOGGLE_EVENT } from "@/components/layout/site-log"
-import { crtScreenOn } from "@/lib/crt-screen"
-import { tube, type Tube } from "@/lib/tube"
+import { fire } from "@/lib/navigation"
+import { useCrtScreen, useTube } from "@/lib/console-controls"
 
 /**
  * The labelled keys along the bottom edge, the way a terminal of this kind
@@ -20,6 +17,12 @@ import { tube, type Tube } from "@/lib/tube"
  * Every key does something this page can actually do — there is no decorative
  * SCAN or PRIME here — and each is named for the thing it produces rather
  * than for the machinery behind it.
+ *
+ * What it does not carry is a second way to do something already offered a
+ * few pixels away. FIND sat here while the rail and the tab bar both opened
+ * the same palette, and LOG sat directly beside the counts key that toggles
+ * the same panel and says how many problems are in it. What is left is the
+ * console proper: where the buffer is, and how the screen behaves.
  */
 export function ConsoleKeys({ className }: { className?: string }) {
   const scrollBufferToTop = () => {
@@ -34,30 +37,17 @@ export function ConsoleKeys({ className }: { className?: string }) {
 
   return (
     <CommandStrip className={className}>
-      <CommandKey
-        onClick={() => window.dispatchEvent(new Event(PALETTE_EVENT))}
-        title="Search everything (ctrl+k)"
-      >
-        find
-      </CommandKey>
-      <CommandKey
-        onClick={() => window.dispatchEvent(new Event(TOGGLE_EVENT))}
-        title="Open the log panel (ctrl+`)"
-      >
-        log
-      </CommandKey>
-
-      <CommandStripDivider />
-
       <CommandKey onClick={scrollBufferToTop} title="Back to the top">
         top
       </CommandKey>
       <CommandKey
-        onClick={() => window.dispatchEvent(new Event(REPLAY_BOOT_EVENT))}
+        onClick={() => fire("boot")}
         title="Run the boot sequence again"
       >
         boot
       </CommandKey>
+
+      <CommandStripDivider />
       <CrtKey />
       <TubeKey />
     </CommandStrip>
@@ -73,20 +63,8 @@ export function ConsoleKeys({ className }: { className?: string }) {
  * identity, and a console does not light a lamp to tell you it is normal.
  */
 function TubeKey() {
-  const current = React.useSyncExternalStore(
-    tube.subscribe,
-    tube.read,
-    tube.serverSnapshot
-  )
+  const [current, toggle] = useTube()
   const amber = current === "amber"
-
-  const toggle = () => {
-    const next: Tube = amber ? "green" : "amber"
-    // Green is the default and carries no attribute, matching the setup script.
-    if (next === "green") delete document.documentElement.dataset.tube
-    else document.documentElement.dataset.tube = next
-    tube.write(next)
-  }
 
   return (
     <CommandKey
@@ -112,17 +90,7 @@ function TubeKey() {
  * not what pressing it will do, the way a lit indicator on a console does.
  */
 function CrtKey() {
-  const on = React.useSyncExternalStore(
-    crtScreenOn.subscribe,
-    crtScreenOn.read,
-    crtScreenOn.serverSnapshot
-  )
-
-  const toggle = () => {
-    const next = !on
-    document.documentElement.dataset.crt = next ? "on" : "off"
-    crtScreenOn.write(next)
-  }
+  const [on, toggle] = useCrtScreen()
 
   return (
     <CommandKey

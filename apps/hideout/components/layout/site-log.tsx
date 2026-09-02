@@ -8,10 +8,9 @@ import { LogConsole, useLogEntries } from "@workspace/ui/components/log-console"
 import { captureConsole, logger } from "@workspace/ui/lib/logger"
 import { cn } from "@workspace/ui/lib/utils"
 
-import { Visor } from "@/components/layout/workbench/visor"
-import { dockVisor } from "@/lib/workbench-state"
-
-export const TOGGLE_EVENT = "hideout:toggle-log"
+import { Visor, VisorPlate } from "@/components/layout/workbench/visor"
+import { useInstrument } from "@/components/layout/workbench/use-instrument"
+import { CONSOLE, fire } from "@/lib/navigation"
 
 /**
  * The integrated terminal.
@@ -46,11 +45,11 @@ export function SiteLog() {
     const onRequest = () => setOpen((current) => !current)
 
     window.addEventListener("keydown", onKeyDown)
-    window.addEventListener(TOGGLE_EVENT, onRequest)
+    window.addEventListener(CONSOLE.log, onRequest)
 
     return () => {
       window.removeEventListener("keydown", onKeyDown)
-      window.removeEventListener(TOGGLE_EVENT, onRequest)
+      window.removeEventListener(CONSOLE.log, onRequest)
       restore()
     }
   }, [])
@@ -81,20 +80,16 @@ const VISOR_PANEL = [
 /**
  * The instrument, while it is the dock's tab.
  *
- * Its lifetime is the report: mounted means the dock has it, and the sidebar
- * panel reads that and stands down rather than starting a second renderer.
- * A callback from the panel would say the same thing one render earlier and
- * put a store write in the middle of someone else's render.
+ * Its lifetime is the claim: mounted means the dock is asking for the viewer,
+ * and the dock outranks every other surface that can ask, so it gets it. The
+ * panel and the hover preview read the same store and stand down.
  */
 function DockedVisor() {
-  React.useEffect(() => {
-    dockVisor.set(true)
-    return () => dockVisor.set(false)
-  }, [])
+  const busy = useInstrument("dock")
 
   return (
     <div className="mx-auto w-full max-w-56">
-      <Visor resolution={0.34} />
+      {busy ? <VisorPlate reason={busy} /> : <Visor resolution={0.34} />}
     </div>
   )
 }
@@ -114,7 +109,7 @@ export function SiteLogToggle({ className }: { className?: string }) {
 
   return (
     <CommandKey
-      onClick={() => window.dispatchEvent(new Event(TOGGLE_EVENT))}
+      onClick={() => fire("log")}
       title="Toggle the panel (ctrl+`)"
       tone={errors > 0 ? "alert" : "default"}
       className={cn("gap-2 px-1.5", className)}
