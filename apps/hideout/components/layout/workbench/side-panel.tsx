@@ -55,21 +55,27 @@ export function SidePanelView({
     >
       <PanelHead caption={CAPTIONS[panel].caption} />
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {panel === "files" ? files : null}
-        {panel === "visor" ? (
-          <div className="flex flex-col gap-2 p-3">
-            {visorBusy ? <VisorPlate reason={visorBusy} /> : <Visor />}
-            <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
-              <span>модель</span>
-              <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
-            </p>
-          </div>
-        ) : null}
-        {panel === "links" ? (
-          <LinksPanel links={links} byline={byline} />
-        ) : null}
-      </div>
+      {/* The archive pins its listings, its filter and the face control and
+          scrolls only the tree between them, so it is handed the space rather
+          than a scroller. The other two are short enough to scroll whole. */}
+      {panel === "files" ? (
+        files
+      ) : (
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          {panel === "visor" ? (
+            <div className="flex flex-col gap-2 p-3">
+              {visorBusy ? <VisorPlate reason={visorBusy} /> : <Visor />}
+              <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
+                <span>модель</span>
+                <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
+              </p>
+            </div>
+          ) : (
+            <LinksPanel links={links} byline={byline} />
+          )}
+        </div>
+      )}
+
     </aside>
   )
 }

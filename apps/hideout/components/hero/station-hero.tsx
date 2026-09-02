@@ -53,19 +53,10 @@ export function StationHero({
   return (
     <section className="flex flex-col gap-4 sm:gap-5">
       <header className="field-frame overflow-hidden px-3 py-3 sm:px-5 sm:py-4">
-        <div className="mb-3 flex items-center justify-between gap-3 border-b border-terminal-rule pb-2 font-mono text-[0.58rem] tracking-[0.16em] uppercase sm:text-[0.65rem]">
-          <span className="text-terminal-chrome">
-            <span className="text-terminal-ink-faint">
-              {content.systemLabel}
-            </span>{" "}
-            {content.systemUnit}
-          </span>
-          <span className="flex shrink-0 items-center gap-1.5 text-terminal-ink-dim">
-            <span className="size-1.5 bg-primary shadow-[0_0_5px_var(--primary)]" />
-            {content.linkStatus}
-          </span>
-        </div>
-
+        {/* The banner leads. The rule that used to sit above it named the
+            station and reported the link — one of those is on the panel's own
+            foot now, and the other was a typed string saying what the status
+            bar reports live. */}
         <h1 className="sr-only">{content.srTitle}</h1>
 
         <div aria-hidden="true" className="hidden xl:block">
@@ -79,7 +70,7 @@ export function StationHero({
           <HeroBanner text={content.bannerStackedBottom} quiet />
         </div>
 
-        <div className="mt-3 grid gap-2 border-t border-terminal-rule pt-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-6">
+        <div className="mt-3 flex flex-col gap-3 border-t border-terminal-rule pt-3">
           <div>
             <p className="font-sans text-lg leading-tight font-bold tracking-[0.08em] text-primary uppercase crt-glow-soft sm:text-xl">
               {content.tagline}
@@ -88,8 +79,35 @@ export function StationHero({
               {content.description}
             </p>
           </div>
-          <p className="font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-right sm:text-[0.62rem]">
-            {content.operator}
+
+          {/* The operator's own ways in, as keys rather than as a panel of
+              their own. They used to be a framed list in the left column,
+              three rows deep, listing the same three sections the archive
+              panel and the section headings below already offer — the same
+              journey drawn three times. As a strip they are an offer, not a
+              third menu. */}
+          <nav
+            aria-label="Quick access"
+            className="flex flex-wrap items-center gap-1.5"
+          >
+            {content.quickLinks.map((link, index) => (
+              <QuickLink
+                key={`${link.href}-${index}`}
+                index={pad(index + 1, 2)}
+                label={link.label}
+                href={link.href}
+              />
+            ))}
+          </nav>
+
+          <p className="flex items-center justify-between gap-3 border-t border-terminal-rule pt-2 font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-[0.62rem]">
+            <span>
+              <span className="text-terminal-ink-faint">
+                {content.systemLabel}
+              </span>{" "}
+              {content.systemUnit}
+            </span>
+            <span>{content.operator}</span>
           </p>
         </div>
       </header>
@@ -132,23 +150,6 @@ export function StationHero({
                 {minutes ? pad(minutes) : "---"}
               </span>
             </p>
-          </TerminalFrame>
-
-          <TerminalFrame
-            title={content.quickAccessTitle}
-            stamp={content.quickAccessRef}
-            bodyClassName="flex flex-col"
-          >
-            <nav aria-label="Quick access" className="flex flex-col">
-              {content.quickLinks.map((link, index) => (
-                <QuickLink
-                  key={`${link.href}-${index}`}
-                  index={pad(index + 1, 2)}
-                  label={link.label}
-                  href={link.href}
-                />
-              ))}
-            </nav>
           </TerminalFrame>
 
           {/* Replaces the quote that used to sit here: the index says what the
@@ -244,6 +245,13 @@ function HeroBanner({
   })
 }
 
+/**
+ * One way in, drawn as a key.
+ *
+ * The site's affordance grammar has one shape for a thing that acts and one
+ * for a thing that reports; this acts, so it is bordered, and it is a 44px
+ * target on a phone where there is no pointer to discover it with.
+ */
 function QuickLink({
   index,
   label,
@@ -256,21 +264,16 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 border-b border-terminal-rule px-2 py-1.5 font-mono text-[0.68rem] tracking-[0.08em] uppercase crt-persist last:border-b-0 hover:bg-terminal-wash focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+      className="group flex min-h-11 items-center gap-2 border border-terminal-rule px-2.5 font-mono text-[0.68rem] tracking-[0.08em] text-terminal-ink-dim uppercase crt-persist hover:border-primary hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none sm:min-h-9"
     >
-      {/* The lamp column: lit on the row under the pointer, the way a console
-          shows which channel is selected. */}
+      {/* The lamp: lit on the key under the pointer, the way a console shows
+          which channel is selected. */}
       <span
         aria-hidden="true"
         className="size-1.5 shrink-0 bg-terminal-rule group-hover:bg-primary group-hover:shadow-[0_0_5px_var(--primary)]"
       />
       <span className="text-terminal-ink-faint">{index}</span>
-      <span className="truncate text-terminal-ink-dim group-hover:text-primary">
-        {label}
-      </span>
-      <span className="ms-auto text-terminal-chrome-dim group-hover:text-primary">
-        -&gt;
-      </span>
+      <span className="truncate">{label}</span>
     </Link>
   )
 }

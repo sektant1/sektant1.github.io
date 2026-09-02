@@ -35,7 +35,6 @@ export type HomeContent = {
   hero: {
     systemLabel: string
     systemUnit: string
-    linkStatus: string
     bannerWide: string
     bannerStackedTop: string
     bannerStackedBottom: string
@@ -48,8 +47,6 @@ export type HomeContent = {
     metricPosts: string
     metricProjects: string
     metricMinutes: string
-    quickAccessTitle: string
-    quickAccessRef: string
     quickLinks: HomeQuickLink[]
     tagsTitle: string
     tagsRef: string
@@ -68,7 +65,6 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
   hero: {
     systemLabel: "СИСТЕМА //",
     systemUnit: "СКТ-01",
-    linkStatus: "СВЯЗЬ: УСТ.",
     bannerWide: "SEKTANT HIDEOUT",
     bannerStackedTop: "SEKTANT",
     bannerStackedBottom: "HIDEOUT",
@@ -81,8 +77,6 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     metricPosts: "POSTS",
     metricProjects: "PROJECTS",
     metricMinutes: "READ MIN",
-    quickAccessTitle: "БЫСТРЫЙ ДОСТУП",
-    quickAccessRef: "NAV // 03",
     quickLinks: [
       { label: "FIELD NOTES", href: "/posts" },
       { label: "PROJECT ARCHIVE", href: "/projects" },
@@ -258,7 +252,6 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         48
       ),
       systemUnit: asText(hero.systemUnit, d.hero.systemUnit, "System unit", 48),
-      linkStatus: asText(hero.linkStatus, d.hero.linkStatus, "Link status", 48),
       bannerWide: asAscii(hero.bannerWide, d.hero.bannerWide, "Wide banner"),
       bannerStackedTop: asAscii(
         hero.bannerStackedTop,
@@ -307,18 +300,6 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         hero.metricMinutes,
         d.hero.metricMinutes,
         "Reading metric label",
-        24
-      ),
-      quickAccessTitle: asText(
-        hero.quickAccessTitle,
-        d.hero.quickAccessTitle,
-        "Quick access title",
-        48
-      ),
-      quickAccessRef: asText(
-        hero.quickAccessRef,
-        d.hero.quickAccessRef,
-        "Quick access reference",
         24
       ),
       quickLinks: asQuickLinks(hero.quickLinks, d.hero.quickLinks),

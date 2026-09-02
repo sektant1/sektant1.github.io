@@ -54,15 +54,10 @@ export default async function HomePage() {
   ])
 
   return (
-    <SiteShell
-      path="index"
-      tree={tree}
-      status={[
-        { label: "posts", value: posts.length },
-        { label: "projects", value: projects.length },
-      ]}
-    >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-8 md:px-6 md:py-12">
+    // No status fields: the hero's own meters report the counts, and a bar
+    // repeating them under the panel that draws them is the same number twice.
+    <SiteShell path="index" tree={tree}>
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-6 md:px-6 md:py-8">
         <StationHero
           posts={posts.length}
           projects={projects.length}

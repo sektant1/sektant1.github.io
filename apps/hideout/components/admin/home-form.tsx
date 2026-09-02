@@ -254,14 +254,6 @@ export function HomeForm({ home }: { home: HomeContent }) {
               onChange={(systemUnit) => hero({ systemUnit })}
             />
             <TextField
-              id="linkStatus"
-              label="link status"
-              value={value.hero.linkStatus}
-              error={errors.linkStatus}
-              placeholder={d.hero.linkStatus}
-              onChange={(linkStatus) => hero({ linkStatus })}
-            />
-            <TextField
               id="summaryTitle"
               label="summary title"
               value={value.hero.summaryTitle}
@@ -306,22 +298,6 @@ export function HomeForm({ home }: { home: HomeContent }) {
 
         <Group title="quick access">
           <div className="grid gap-4 sm:grid-cols-2">
-            <TextField
-              id="quickAccessTitle"
-              label="panel title"
-              value={value.hero.quickAccessTitle}
-              error={errors.quickAccessTitle}
-              placeholder={d.hero.quickAccessTitle}
-              onChange={(quickAccessTitle) => hero({ quickAccessTitle })}
-            />
-            <TextField
-              id="quickAccessRef"
-              label="panel reference"
-              value={value.hero.quickAccessRef}
-              error={errors.quickAccessRef}
-              placeholder={d.hero.quickAccessRef}
-              onChange={(quickAccessRef) => hero({ quickAccessRef })}
-            />
           </div>
 
           <ul className="flex flex-col gap-3">
