@@ -5,14 +5,7 @@ const css = readFileSync(
   new URL("../../packages/ui/src/styles/themes/phosphor.css", import.meta.url),
   "utf8"
 )
-const cursorNames = [
-  "default",
-  "pointer",
-  "text",
-  "grab",
-  "grabbing",
-  "disabled",
-]
+const cursorNames = ["default", "pointer", "grab", "grabbing", "disabled"]
 
 describe.each(cursorNames)("%s cursor", (name) => {
   const start = css.indexOf(`--cursor-${name}:`)

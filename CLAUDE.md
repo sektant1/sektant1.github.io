@@ -10,7 +10,7 @@ them is not finished work.
 
 ### Issue tracker
 
-Issues live in GitHub Issues on `sektant1/skt-ui-toolkit`, driven by the `gh`
+Issues live in GitHub Issues on `sektant1/sektant1.github.io`, driven by the `gh`
 CLI. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
