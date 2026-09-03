@@ -49,14 +49,7 @@ const COIN_POST = { edge: 0.72, dither: 0.035, contrast: 1.18 }
 const LINE_INTERVAL = 118
 const LINES_PER_TICK = 1
 
-/**
- * How long the finished log holds before a press can dismiss it.
- *
- * Without it the sequence ends under whatever the reader's hand was already
- * doing — a click aimed at the page underneath lands the same frame the last
- * line prints, and the curtain is gone before the prompt has been read.
- */
-const ARM_DELAY = 700
+const AUTO_EXIT_DELAY = 700
 
 type ColdBootProps = {
   /** Real counts from the build, so the log reports this site, not a fiction. */
@@ -168,7 +161,6 @@ export function ColdBoot({
   // reduced-motion default: someone who runs the command wants to watch it.
   const [replaying, setReplaying] = React.useState(false)
   const [progress, setProgress] = React.useState(0)
-  const [armed, setArmed] = React.useState(false)
   const [coinReady, setCoinReady] = React.useState(false)
   const running = replaying || (due && !reduceMotion && !dismissed)
   const complete = progress >= 1
@@ -184,7 +176,6 @@ export function ColdBoot({
     const replay = () => {
       document.documentElement.dataset.coldBoot = "run"
       setProgress(0)
-      setArmed(false)
       setCoinReady(false)
       setReplaying(true)
     }
@@ -198,30 +189,15 @@ export function ColdBoot({
       return
     }
     logger.info("boot", "cold boot sequence")
-    // The viewing counts from the moment the machine switches on, not from the
-    // press that clears it. ColdBoot is mounted by SiteShell, so it is torn
-    // down and rebuilt on every route — and a reader who leaves the curtain by
-    // any door other than that press (Ctrl-K and a command, the back button,
-    // a link opened from another tab) left no stamp behind, so the next page
-    // found the sequence due and ran the whole thing again. And the one after
-    // that.
     markSeen(Date.now())
   }, [running, markSeen])
 
   React.useEffect(() => {
     if (!running || !complete) return
 
-    const arm = setTimeout(() => {
-      setArmed(true)
-      window.addEventListener("keydown", finish)
-      window.addEventListener("pointerdown", finish)
-    }, ARM_DELAY)
+    const exit = setTimeout(finish, AUTO_EXIT_DELAY)
 
-    return () => {
-      clearTimeout(arm)
-      window.removeEventListener("keydown", finish)
-      window.removeEventListener("pointerdown", finish)
-    }
+    return () => clearTimeout(exit)
   }, [running, complete, finish])
 
   if (!running) return null
@@ -231,6 +207,7 @@ export function ColdBoot({
       // aria-hidden: the real page is already rendered underneath and is what
       // a screen reader should be reading. This is a visual curtain.
       aria-hidden="true"
+      data-complete={complete || undefined}
       className="cold-boot fixed inset-0 z-[70] flex flex-col justify-start overflow-y-auto bg-background px-4 py-6 sm:px-8 sm:py-10 md:justify-center md:overflow-hidden md:px-12"
     >
       <div className="cold-boot-panel mx-auto grid w-full max-w-4xl items-center gap-4 sm:gap-6 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] md:gap-8">
@@ -284,11 +261,7 @@ export function ColdBoot({
               interval={LINE_INTERVAL}
               batchSize={LINES_PER_TICK}
               windowSize={18}
-              // The log's caret marks where the next line will print. Once the
-              // prompt is armed nothing more will print, so the caret hands
-              // over: one blinking block on screen, and it is the one asking
-              // for a key.
-              cursor={!armed}
+              cursor={!complete}
               onReveal={setProgress}
               className="px-1 text-[0.62rem] leading-[1.4] uppercase sm:px-2 sm:text-[0.68rem] sm:leading-[1.5] md:text-[0.72rem]"
             />
@@ -302,21 +275,6 @@ export function ColdBoot({
             className="px-1 sm:px-2"
           />
         </div>
-      </div>
-
-      {/* The prompt is the machine addressing the reader, so it sits under
-          the whole panel on its own rule rather than trailing the log like a
-          caption. It is held back until a press will actually do something —
-          an offer the console cannot honour yet is worse than no offer. */}
-      <div
-        className={`cold-boot-prompt mx-auto mt-4 flex w-full max-w-4xl items-center justify-center gap-2 border border-terminal-rule px-3 py-2 font-mono text-[0.7rem] tracking-[0.14em] uppercase transition-opacity duration-300 sm:mt-6 sm:text-xs sm:tracking-[0.2em] ${armed ? "border-primary/50 text-primary opacity-100 crt-glow" : "text-terminal-chrome-dim opacity-0"}`}
-      >
-        <span aria-hidden="true" className="text-terminal-chrome-dim">
-          &gt;
-        </span>
-        <span className="sm:hidden">tap the screen to continue</span>
-        <span className="hidden sm:inline">press any key to continue</span>
-        <span className="caret" aria-hidden="true" />
       </div>
     </div>
   )

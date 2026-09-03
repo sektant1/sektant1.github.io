@@ -51,7 +51,7 @@ export function MobileTopBar({
       <Link
         href="/"
         aria-label="Sektant's Hideout, home"
-        className="flex shrink-0 items-center gap-2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+        className="-ms-3 flex size-11 shrink-0 items-center justify-center focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
       >
         <SiteMark className="size-5 crt-glow-soft" />
       </Link>
@@ -116,7 +116,7 @@ export function MobileTabBar({
         side="left"
         isDismissable
         aria-label={surface === "links" ? "Contact" : "Content"}
-        className="w-[88%] max-w-sm bg-sidebar"
+        className="mobile-sheet w-[88%] max-w-sm bg-sidebar"
       >
         <div className="flex h-11 shrink-0 items-center border-b border-sidebar-border px-3 font-mono text-[0.62rem] tracking-[0.2em] text-terminal-chrome-dim uppercase">
           {surface === "links" ? "связь" : "архив"}

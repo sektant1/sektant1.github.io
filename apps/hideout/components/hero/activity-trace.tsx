@@ -1,6 +1,3 @@
-"use client"
-
-import { Tooltip, TooltipTrigger } from "@workspace/ui/components/tooltip"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { pad } from "@/lib/format"
@@ -19,6 +16,11 @@ import {
  *
  * The scale is the busiest month rather than a fixed ceiling, so a quiet year
  * still reads as a line with shape rather than a flat trace along the floor.
+ *
+ * The axis is a row of its own under the plot rather than a strip laid over
+ * it. Printed on top, the three stamps sat in the area fill and on the rule
+ * that closes the panel's first block, and the month a reader is looking for
+ * was the one thing on the trace they had to read through something else.
  */
 export function ActivityTrace({
   buckets,
@@ -35,9 +37,10 @@ export function ActivityTrace({
   const points = buckets.map((bucket, index) => ({
     ...bucket,
     x: index * step,
-    // Off the floor by four, so a run of empty months reads as a trace lying
-    // low rather than as a missing line along the bottom rule.
-    y: 84 - (bucket.count / ceiling) * 70,
+    // Off the floor by eight, so a run of empty months reads as a trace lying
+    // low rather than as a missing line along the bottom rule. The plot has
+    // the whole box now that the axis prints below it rather than inside it.
+    y: 92 - (bucket.count / ceiling) * 78,
   }))
 
   const line = points.map(
@@ -47,16 +50,20 @@ export function ActivityTrace({
   const last = points.at(-1)
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative flex flex-col", className)}>
       <svg
         role="img"
         aria-label={`Archive activity. ${describeActivity(buckets)}`}
         viewBox={`0 0 ${width} ${height}`}
         preserveAspectRatio="none"
-        className="size-full"
+        // The plot takes whatever height the panel hands it. In the two-column
+        // split the counters beside it are shorter than the index opposite,
+        // and a trace that grows into that difference is the block absorbing
+        // it — the alternative is a divider drawn down an empty half-panel.
+        className="w-full min-h-0 flex-1"
       >
         <g stroke="var(--terminal-rule)" strokeWidth="0.4">
-          {[14, 38, 62].map((y) => (
+          {[16, 44, 72].map((y) => (
             <line key={y} x1="0" y1={y} x2={width} y2={y} />
           ))}
           {points.map((point) => (
@@ -111,35 +118,18 @@ export function ActivityTrace({
         ) : null}
       </svg>
 
-      {/* One hit target per month, over the plot rather than in it: an SVG
-          circle is not focusable, and a column is a bigger target than a dot
-          on a phone. Each lights its own guide line while it is held. */}
-      <div className="absolute inset-x-0 top-0 bottom-4">
-        {points.map((point) => (
-          <TooltipTrigger key={point.month} delay={120}>
-            <button
-              type="button"
-              style={{ left: `${(point.x / width) * 100}%` }}
-              className="group absolute inset-y-0 -translate-x-1/2 px-2 focus-visible:outline-none"
-              aria-label={`${monthLabel(point.month)}: ${point.count} entries`}
-            >
-              <span
-                aria-hidden="true"
-                className="block h-full w-px bg-transparent group-hover:bg-primary/40 group-focus-visible:bg-primary/70"
-              />
-            </button>
-            <Tooltip className="font-mono tracking-widest uppercase">
-              {`${monthLabel(point.month)} // ${pad(point.count, 2)}`}
-            </Tooltip>
-          </TooltipTrigger>
-        ))}
-      </div>
+      <span
+        aria-hidden="true"
+        className="absolute top-1 left-1 bg-background/80 px-1 font-mono text-[0.55rem] tracking-widest text-terminal-chrome-dim uppercase"
+      >
+        changes / month
+      </span>
 
       {/* The axis: where the window starts, and where it ends. Twelve ticks
           would not survive the panel's width. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 flex items-baseline justify-between px-1 font-mono text-[0.5rem] tracking-widest text-terminal-chrome-dim uppercase"
+        className="flex shrink-0 items-baseline justify-between gap-2 border-t border-terminal-rule px-1.5 py-0.5 font-mono text-[0.55rem] tracking-[0.12em] text-terminal-chrome-dim uppercase tabular-nums"
       >
         <span>{buckets.length ? monthLabel(buckets[0].month) : "---"}</span>
         <span className="text-terminal-ink-faint">PEAK {pad(ceiling, 2)}</span>

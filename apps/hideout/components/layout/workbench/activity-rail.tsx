@@ -2,11 +2,11 @@
 
 import type * as React from "react"
 import {
-  IconBinaryTree,
-  IconBoxMultiple,
-  IconCoinBitcoin,
-  IconSearch,
-  IconAntenna,
+  IconArchive,
+  IconBinoculars,
+  IconCrosshair,
+  IconDeviceDesktop,
+  IconRadio,
 } from "@tabler/icons-react"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -32,25 +32,30 @@ type RailItem = {
 }
 
 const ITEMS: RailItem[] = [
-  { id: "files", label: "ФАЙЛЫ", hint: "Content tree", Icon: IconBinaryTree },
-  { id: "search", label: "ПОИСК", hint: "Search (ctrl+k)", Icon: IconSearch },
+  { id: "files", label: "АРХИВ", hint: "Archive", Icon: IconArchive },
+  {
+    id: "search",
+    label: "ПОИСК",
+    hint: "Recon search (ctrl+k)",
+    Icon: IconBinoculars,
+  },
   {
     id: "visor",
     label: "ВИЗОР",
-    hint: "The instrument and the farm",
-    Icon: IconCoinBitcoin,
+    hint: "Optics and farm",
+    Icon: IconCrosshair,
   },
   {
     id: "stash",
     label: "ПУЛЬТ",
     hint: "Console",
-    Icon: IconBoxMultiple,
+    Icon: IconDeviceDesktop,
   },
   {
     id: "links",
     label: "СВЯЗЬ",
-    hint: "Ways to reach the operator",
-    Icon: IconAntenna,
+    hint: "Radio links",
+    Icon: IconRadio,
   },
 ]
 

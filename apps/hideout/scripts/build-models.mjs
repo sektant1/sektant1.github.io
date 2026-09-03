@@ -1,18 +1,14 @@
 // Compiles the source GLBs in assets/models/ into the ones the site serves.
 //
-// A model authored for a renderer and a model consumed by a nine-level glyph
-// quantiser are not the same file. The coin arrives with three 2048² textures
-// — 2.9 MB, 99.6% of its weight — and is drawn at roughly a quarter of a
-// character per pixel, where 2048² and 512² are indistinguishable. So the
-// textures are downscaled here, once, at build time, instead of being fetched
-// by every reader on the boot screen.
+// A model authored for a renderer and one drawn on this terminal are not the
+// same file. The visor resolves texture detail at 512²; the price models land
+// in 30 CSS pixels at a capped 1.5 device scale, where 128² already oversamples
+// the output. Textures are reduced here once instead of by every reader.
 //
 // Two more cuts follow from how the model is shaded rather than how it looks:
 //
-//   The metallic-roughness map is dropped. PlanetModel builds its own
-//   MeshStandardMaterial with scalar roughness and metalness, so the map was
-//   downloaded and uploaded to the GPU to be multiplied by values the code had
-//   already decided on.
+//   The metallic-roughness map is dropped. Both renderers build their own
+//   MeshStandardMaterial with scalar roughness and metalness.
 //
 //   Base colour becomes JPEG. Only its luminance survives the ramp, and JPEG
 //   is core glTF — no extension, no loader flag.
@@ -28,8 +24,8 @@ const root = process.cwd()
 const sourceDir = path.join(root, "assets", "models")
 const outDir = path.join(root, "public", "models")
 
-/** Beyond this the character grid cannot resolve the extra texels. */
-const MAX_TEXTURE = 512
+const VISOR_TEXTURE = 512
+const ICON_TEXTURE = 128
 
 const GLB_MAGIC = 0x46546c67
 const JSON_CHUNK = 0x4e4f534a
@@ -109,8 +105,8 @@ function imageBytes(json, bin, image) {
  * one that would object in a normal renderer, so it keeps a higher quality —
  * still an order of magnitude below the PNG it replaces.
  */
-async function encode(bytes, role) {
-  const pipeline = sharp(bytes).resize(MAX_TEXTURE, MAX_TEXTURE, {
+async function encode(bytes, role, maxTexture) {
+  const pipeline = sharp(bytes).resize(maxTexture, maxTexture, {
     fit: "inside",
     withoutEnlargement: true,
   })
@@ -123,9 +119,9 @@ async function encode(bytes, role) {
   }
 }
 
-async function compile(json, bin) {
-  // Every bufferView an accessor reads, copied through untouched: geometry is
-  // 148 vertices and has nothing to gain from being rewritten.
+async function compile(json, bin, maxTexture) {
+  // Every bufferView an accessor reads is copied through untouched. Geometry
+  // remains source-authored; this pass only removes runtime texture waste.
   const keptViews = []
   const viewRemap = new Map()
   for (const accessor of json.accessors ?? []) {
@@ -180,7 +176,8 @@ async function compile(json, bin) {
     const image = json.images[texture.source]
     const { data, mimeType } = await encode(
       imageBytes(json, bin, image),
-      roles.get(sourceIndex)
+      roles.get(sourceIndex),
+      maxTexture
     )
 
     const viewIndex = keptViews.length
@@ -247,7 +244,8 @@ for (const file of sources) {
 
   const buffer = await fs.readFile(sourcePath)
   const parsed = parseGlb(buffer)
-  const compiled = await compile(parsed.json, parsed.bin)
+  const maxTexture = file === "bitcoin.glb" ? VISOR_TEXTURE : ICON_TEXTURE
+  const compiled = await compile(parsed.json, parsed.bin, maxTexture)
   const output = writeGlb(compiled.json, compiled.bin)
 
   await fs.writeFile(targetPath, output)

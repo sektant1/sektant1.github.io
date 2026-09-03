@@ -50,11 +50,14 @@ export function SidePanelView({
     <aside
       aria-label={CAPTIONS[panel].aria}
       className={cn(
-        "flex w-64 shrink-0 flex-col overflow-hidden border-e border-sidebar-border bg-sidebar",
+        "flex w-[clamp(16rem,22vw,20rem)] shrink-0 flex-col overflow-hidden border-e border-sidebar-border bg-sidebar",
         className
       )}
     >
-      <PanelHead caption={CAPTIONS[panel].caption} />
+      <PanelHead
+        caption={CAPTIONS[panel].caption}
+        english={CAPTIONS[panel].english}
+      />
 
       {/* The archive pins its listings, its filter and the face control and
           scrolls only the tree between them, so it is handed the space rather
@@ -78,12 +81,12 @@ export function SidePanelView({
 
 const CAPTIONS: Record<
   Exclude<SidePanelId, null>,
-  { caption: string; aria: string }
+  { caption: string; english: string; aria: string }
 > = {
-  files: { caption: "АРХИВ", aria: "Content" },
-  visor: { caption: "ВИЗОР", aria: "Instrument" },
-  stash: { caption: "ПУЛЬТ", aria: "Console" },
-  links: { caption: "СВЯЗЬ", aria: "Contact" },
+  files: { caption: "АРХИВ", english: "ARCHIVE", aria: "Content" },
+  visor: { caption: "ВИЗОР", english: "VISOR", aria: "Instrument" },
+  stash: { caption: "ПУЛЬТ", english: "CONSOLE", aria: "Console" },
+  links: { caption: "СВЯЗЬ", english: "COMMS", aria: "Contact" },
 }
 
 /**
@@ -111,7 +114,7 @@ function VisorPanel({ flea }: { flea: FleaState }) {
   )
 }
 
-function PanelHead({ caption }: { caption: string }) {
+function PanelHead({ caption, english }: { caption: string; english: string }) {
   return (
     <div className="flex h-11 shrink-0 items-center gap-2 border-b border-sidebar-border px-3">
       {/* The mark is the way home; the callsign beside it is a readout — the
@@ -130,11 +133,12 @@ function PanelHead({ caption }: { caption: string }) {
         sektant.gab
       </span>
 
-      <span
-        aria-hidden="true"
-        className="ms-auto font-mono text-[0.6rem] tracking-[0.2em] text-terminal-chrome-dim uppercase"
-      >
-        {caption}
+      <span className="ms-auto flex shrink-0 items-center gap-1.5 font-mono text-[0.6rem] tracking-[0.16em] uppercase">
+        <span className="text-terminal-chrome-dim">{caption}</span>
+        <span aria-hidden="true" className="text-terminal-rule">
+          /
+        </span>
+        <span className="text-terminal-ink-faint">{english}</span>
       </span>
     </div>
   )

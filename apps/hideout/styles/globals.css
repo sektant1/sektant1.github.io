@@ -237,6 +237,15 @@ html[data-crt="off"] body {
   text-shadow: none;
 }
 
+@media (width < 48rem) {
+  .mobile-sheet [data-slot="sheet-close"] {
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 /* And the unsteadiness goes with it.
  *
  * Switching the glass off used to hide the overlays and leave every loop
@@ -378,6 +387,101 @@ html[data-crt="off"] .ascii-planet-scene {
   font-size: 0.7rem;
   line-height: 1.65;
   text-transform: lowercase;
+}
+
+@layer components {
+  .btc-farm-panel {
+    container: btc-farm / inline-size;
+  }
+
+  .btc-farm-rack {
+    display: grid;
+    grid-template-columns: repeat(25, minmax(0, 1fr));
+    gap: 0.375rem 0.125rem;
+  }
+
+  .btc-farm-rack > span {
+    block-size: 0.5rem;
+    border: 1px solid var(--terminal-rule);
+    opacity: 0.55;
+  }
+
+  .btc-farm-rack > span[data-filled] {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    opacity: 1;
+  }
+
+  .btc-farm-result-value {
+    font-size: clamp(0.9rem, 5cqi, 1.1rem);
+  }
+
+  .btc-farm-price-row {
+    display: grid;
+    grid-template-columns: 2.75rem 3.25rem minmax(0, 1fr);
+  }
+
+  .btc-farm-price-input {
+    appearance: textfield;
+  }
+
+  .btc-farm-price-input::-webkit-inner-spin-button,
+  .btc-farm-price-input::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+  }
+
+  .model-icon-fallback {
+    transition: opacity 120ms steps(2, end);
+  }
+
+  .model-icon-target[data-model-ready] .model-icon-fallback {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .model-icon-fallback {
+      transition: none;
+    }
+  }
+
+  .btc-farm-market-help > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  @container btc-farm (inline-size < 13rem) {
+    .btc-farm-price-row {
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+    }
+
+    .btc-farm-price-control {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container btc-farm (inline-size >= 18rem) {
+    .btc-farm-price-row {
+      grid-template-columns: 2.75rem 4rem minmax(0, 1fr);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .model-icon-layer {
+      display: none;
+    }
+
+    .model-icon-target[data-model-ready] .model-icon-fallback {
+      opacity: 1;
+    }
+
+    .btc-farm-rack > span {
+      border-color: CanvasText;
+    }
+
+    .btc-farm-rack > span[data-filled] {
+      background-color: Highlight;
+    }
+  }
 }
 
 @utility field-frame {

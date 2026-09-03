@@ -242,6 +242,37 @@ export function renderScaleFor(devicePixelRatio: number): number {
   return Math.min(devicePixelRatio, 2)
 }
 
+interface RenderBudgetInput {
+  devicePixelRatio: number
+  hardwareConcurrency?: number
+  deviceMemory?: number
+  saveData?: boolean
+  reduceMotion: boolean
+}
+
+export function renderBudgetFor({
+  devicePixelRatio,
+  hardwareConcurrency,
+  deviceMemory,
+  saveData,
+  reduceMotion,
+}: RenderBudgetInput) {
+  const constrained =
+    saveData === true ||
+    (typeof hardwareConcurrency === "number" && hardwareConcurrency <= 4) ||
+    (typeof deviceMemory === "number" && deviceMemory <= 4)
+
+  return {
+    frameRate: reduceMotion ? 0 : constrained ? 10 : 30,
+    ambientDuration: reduceMotion
+      ? 0
+      : constrained
+        ? 4_000
+        : Number.POSITIVE_INFINITY,
+    renderScale: renderScaleFor(devicePixelRatio),
+  }
+}
+
 /**
  * The cell the shader is handed, in the drawing buffer's own pixels.
  *

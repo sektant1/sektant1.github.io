@@ -19,7 +19,7 @@ import {
   needsLighting,
   needsEnvironment,
   postDefaultsFor,
-  renderScaleFor,
+  renderBudgetFor,
   subjectFor,
   toneMappingFor,
 } from "./policy"
@@ -37,7 +37,6 @@ import type { RenderStyle } from "./policy"
 
 const INITIAL_PLANET_ROTATION_Y = -0.28
 const EARTH_TEXTURE = "/textures/earth.jpg"
-const FRAME_RATE = 30
 const DRAG_SPEED = 0.005
 /** How long the sync-tear settles over, in ms. */
 const BOOT_SETTLE = 1600
@@ -97,6 +96,17 @@ export function createAsciiScene(
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches
+  const device = navigator as Navigator & {
+    deviceMemory?: number
+    connection?: { saveData?: boolean }
+  }
+  const { frameRate, ambientDuration, renderScale } = renderBudgetFor({
+    devicePixelRatio: window.devicePixelRatio,
+    hardwareConcurrency: device.hardwareConcurrency,
+    deviceMemory: device.deviceMemory,
+    saveData: device.connection?.saveData,
+    reduceMotion,
+  })
   const characterResolution = characterResolutionFor(
     window.innerWidth,
     resolution
@@ -108,7 +118,6 @@ export function createAsciiScene(
   // Everything below the renderer is measured in CSS pixels and multiplied up
   // by this: the glyph grid is a layout decision, the pixel ratio is only how
   // finely each glyph gets drawn.
-  const renderScale = renderScaleFor(window.devicePixelRatio)
   let cellHeight = cellHeightFor(initialW, characterResolution)
 
   // A context is not guaranteed. Browsers with fingerprinting protection turn
@@ -231,6 +240,7 @@ export function createAsciiScene(
         return
       }
       locationMarkers?.addLocation(location)
+      queueFrame()
       onLocation?.(location)
       logger.info("planet", `pinned you at ${location.name}`, {
         lat: location.lat,
@@ -271,9 +281,10 @@ export function createAsciiScene(
   }
 
   const spinPerSec = reduceMotion ? 0 : (autoRotateSpeed * Math.PI) / 30
-  const FRAME_MS = 1000 / FRAME_RATE
+  const FRAME_MS = frameRate ? 1000 / frameRate : 0
   let lastFrame = 0
   let lastT = performance.now()
+  let ambientElapsed = 0
   let dragging = false
   let lastX = 0
   let lastY = 0
@@ -284,6 +295,7 @@ export function createAsciiScene(
     lastY = event.clientY
     host.setPointerCapture(event.pointerId)
     host.style.cursor = "var(--cursor-grabbing, grabbing)"
+    queueFrame()
   }
   const onPointerMove = (event: PointerEvent) => {
     if (!dragging) return
@@ -291,11 +303,13 @@ export function createAsciiScene(
     planet.mesh.rotation.x += (event.clientY - lastY) * DRAG_SPEED
     lastX = event.clientX
     lastY = event.clientY
+    queueFrame()
   }
   const onPointerUp = (event: PointerEvent) => {
     dragging = false
     host.releasePointerCapture?.(event.pointerId)
     host.style.cursor = "var(--cursor-grab, grab)"
+    queueFrame()
   }
   host.addEventListener("pointerdown", onPointerDown)
   host.addEventListener("pointermove", onPointerMove)
@@ -306,23 +320,30 @@ export function createAsciiScene(
   // screen, so the loop stops when the subject is not visible and picks the
   // clock back up where it left off.
   let intersects = true
+  let pageVisible = !document.hidden
   let paused = false
   let rendering = false
   let settleStartedAt: number | null = null
 
   const renderFrame = () => {
+    rafId = 0
     if (disposed || !rendering) return
-    rafId = requestAnimationFrame(renderFrame)
 
     const now = performance.now()
     // A drag is direct manipulation and has to track the pointer, so the cap
     // is lifted while the reader is holding the subject.
-    if (!dragging && now - lastFrame < FRAME_MS) return
+    if (!dragging && frameRate && now - lastFrame < FRAME_MS) {
+      queueFrame()
+      return
+    }
     lastFrame = now
 
     const dt = (now - lastT) / 1000
     lastT = now
-    if (!dragging) planet.mesh.rotation.y += spinPerSec * dt
+    if (!dragging) {
+      planet.mesh.rotation.y += spinPerSec * dt
+      ambientElapsed += dt * 1000
+    }
     locationMarkers?.update()
 
     if (settling) {
@@ -334,6 +355,15 @@ export function createAsciiScene(
     renderer.setRenderTarget(null)
     renderer.clear()
     renderer.render(post.scene, post.camera)
+
+    if (dragging || (frameRate && ambientElapsed < ambientDuration)) {
+      queueFrame()
+    }
+  }
+
+  function queueFrame() {
+    if (disposed || !rendering || rafId) return
+    rafId = requestAnimationFrame(renderFrame)
   }
 
   /* The tube can be swapped while the scene is running.
@@ -353,6 +383,7 @@ export function createAsciiScene(
     // Just the uniform. A scene that is paused or off screen is not drawing
     // anything to correct, and it reads this value on the frame it resumes.
     post.setInk(resolveThemeColor("--primary", "#32f078"))
+    queueFrame()
   })
   tubeWatch.observe(document.documentElement, {
     attributes: true,
@@ -360,7 +391,7 @@ export function createAsciiScene(
   })
 
   function syncRendering() {
-    const next = intersects && modelLoaded && !paused
+    const next = intersects && pageVisible && modelLoaded && !paused
     if (next === rendering) return
 
     locationMarkers?.setVisible(next)
@@ -368,10 +399,11 @@ export function createAsciiScene(
     if (rendering) {
       lastT = performance.now()
       if (settling && settleStartedAt === null) settleStartedAt = lastT
-      rafId = requestAnimationFrame(renderFrame)
+      queueFrame()
       logger.debug("planet", "back on screen, resuming")
     } else {
       cancelAnimationFrame(rafId)
+      rafId = 0
       logger.debug("planet", "off screen, render paused")
     }
   }
@@ -384,6 +416,12 @@ export function createAsciiScene(
     { rootMargin: "100px" }
   )
   visibility.observe(host)
+
+  const onVisibilityChange = () => {
+    pageVisible = !document.hidden
+    syncRendering()
+  }
+  document.addEventListener("visibilitychange", onVisibilityChange)
 
   syncRendering()
 
@@ -400,6 +438,7 @@ export function createAsciiScene(
       postCellHeightFor(style, cellHeight, renderScale, w * renderScale)
     )
     post.setSize(w * renderScale, h * renderScale)
+    queueFrame()
   }
   const ro = new ResizeObserver(onResize)
   ro.observe(host)
@@ -410,7 +449,7 @@ export function createAsciiScene(
     resolution: characterResolution,
     columns: Math.floor(initialW / (cellHeight * 0.6)),
     renderScale,
-    fps: reduceMotion ? 0 : FRAME_RATE,
+    fps: frameRate,
     reducedMotion: reduceMotion,
   })
 
@@ -428,6 +467,7 @@ export function createAsciiScene(
       visibility.disconnect()
       ro.disconnect()
       tubeWatch.disconnect()
+      document.removeEventListener("visibilitychange", onVisibilityChange)
       host.removeEventListener("pointerdown", onPointerDown)
       host.removeEventListener("pointermove", onPointerMove)
       host.removeEventListener("pointerup", onPointerUp)

@@ -1,7 +1,18 @@
 "use client"
 
 import * as React from "react"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupCaret,
+  InputGroupInput,
+} from "@workspace/ui/components/input-group"
 
+import {
+  ModelIcon,
+  ModelIconLayer,
+  type ModelFront,
+} from "@/components/models/model-icon"
 import { MAX_CARDS, clampCards, runFarm } from "@/lib/btc-farm"
 import { formatRoubles, type FleaState, type TrackedKey } from "@/lib/tarkov"
 
@@ -25,8 +36,6 @@ import { formatRoubles, type FleaState, type TrackedKey } from "@/lib/tarkov"
  * moves its blocks around when the sum completes tears the field the reader is
  * typing into out of the tree on that keystroke. One order, one line.
  *
- * Same rows as the console band — a label, a value on a leader — because a
- * second grammar for a second panel is how a console stops being one machine.
  */
 export function BtcFarmPanel({ report }: { report: FleaState }) {
   const market = readMarket(report)
@@ -41,6 +50,9 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
     gpu: typed.gpu ?? market.gpu.price,
     fuel: typed.fuel ?? market.fuel.price,
   }
+  const missing = PRICES.filter(({ key }) => !prices[key]).map(({ label }) =>
+    label.toLowerCase()
+  )
 
   const farm =
     prices.bitcoin && prices.gpu && prices.fuel
@@ -56,12 +68,15 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
   /* The answer, and the working that reached it. The two figures the reader
      came for are drawn a tier above the rows that explain them. */
   const result = (
-    <div className="flex flex-col gap-1">
-      <Rule label="Result" stamp={`${cards} cards${solar ? " · solar" : ""}`} />
+    <div className="flex flex-col gap-1.5">
+      <Rule
+        label="Result"
+        stamp={`${String(cards).padStart(2, "0")} gpu · ${solar ? "solar" : "generator"}`}
+      />
 
       {farm ? (
         <>
-          <div className="grid grid-cols-2 gap-1">
+          <div className="grid grid-cols-2 divide-x divide-terminal-rule bg-terminal-wash/30 py-2">
             <Figure
               label="Net / day"
               value={formatRoubles(Math.round(farm.netPerDay))}
@@ -78,24 +93,30 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
             />
           </div>
 
-          <Line label="Rate" value={`${farm.coinsPerDay.toFixed(2)} btc`} />
-          <Line label="Cycle" value={`${farm.cycleHours.toFixed(1)} h`} />
-          <Line
-            label="Gross"
-            value={formatRoubles(Math.round(farm.grossPerDay))}
-          />
-          <Line
-            label="Fuel"
-            value={`-${formatRoubles(Math.round(farm.fuelPerDay))}`}
-          />
-          <Line label="Rack" value={formatRoubles(farm.buildCost)} />
+          <div className="flex flex-col gap-1">
+            <Line label="Rate" value={`${farm.coinsPerDay.toFixed(2)} btc`} />
+            <Line label="Cycle" value={`${farm.cycleHours.toFixed(1)} h`} />
+            <Line
+              label="Gross"
+              value={formatRoubles(Math.round(farm.grossPerDay))}
+            />
+            <Line
+              label="Fuel"
+              value={`-${formatRoubles(Math.round(farm.fuelPerDay))}`}
+            />
+            <Line label="Rack" value={formatRoubles(farm.buildCost)} />
+          </div>
         </>
       ) : (
-        /* No figure without a price behind it — and no row of dashes standing
-           in for one either. One line saying what is missing. */
-        <p className="console-note text-terminal-ink-dim">
-          the farm runs on all three prices below.
-        </p>
+        <div className="flex min-h-16 flex-col justify-center gap-0.5 bg-terminal-wash/20 px-2.5 py-2">
+          <p className="console-label text-terminal-chrome-dim">
+            Input required
+          </p>
+          <p className="console-note text-terminal-ink-dim">
+            enter {missing.join(" / ")}{" "}
+            {missing.length === 1 ? "price" : "prices"} below.
+          </p>
+        </div>
       )}
     </div>
   )
@@ -110,11 +131,16 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
           exact count. */}
       <div className="flex flex-col border border-terminal-rule bg-terminal-wash/20 px-2.5 pt-2">
         <p className="console-label flex items-baseline justify-between text-terminal-chrome-dim">
-          <label htmlFor="farm-cards">Cards</label>
-          <span className="text-terminal-ink tabular-nums">
+          <label htmlFor="farm-cards">Gpu rack</label>
+          <output
+            htmlFor="farm-cards"
+            className="text-terminal-ink tabular-nums"
+          >
             {String(cards).padStart(2, "0")} / {MAX_CARDS}
-          </span>
+          </output>
         </p>
+
+        <Rack cards={cards} />
 
         <input
           id="farm-cards"
@@ -126,6 +152,7 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
           max={MAX_CARDS}
           step={1}
           value={cards}
+          aria-valuetext={`${cards} of ${MAX_CARDS} graphics cards`}
           onChange={(event) => setCards(clampCards(event.target.valueAsNumber))}
           className="console-slider w-full"
         />
@@ -147,8 +174,8 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
         <span className="console-label min-w-0 flex-1 truncate text-terminal-chrome-dim">
           Solar
         </span>
-        <span className="console-value shrink-0 text-terminal-ink lowercase">
-          {solar ? "built" : "none"}
+        <span className="console-value shrink-0 text-terminal-ink">
+          {solar ? "BUILT" : "ABSENT"}
         </span>
       </button>
     </div>
@@ -156,27 +183,30 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
 
   /* The prices, editable whether or not a market answered. */
   const priceBlock = (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1.5">
       <Rule label="Prices" stamp="₽ each" />
 
-      {PRICES.map((field) => (
-        <PriceField
-          key={field.key}
-          label={field.label}
-          icon={market[field.key].icon}
-          name={market[field.key].name}
-          value={prices[field.key]}
-          fromMarket={
-            typed[field.key] === undefined && market[field.key].price !== null
-          }
-          onChange={(next) =>
-            setTyped((current) => ({
-              ...current,
-              [field.key]: next ?? undefined,
-            }))
-          }
-        />
-      ))}
+      <div className="relative flex flex-col gap-1.5">
+        <ModelIconLayer />
+        {PRICES.map((field) => (
+          <PriceField
+            key={field.key}
+            label={field.label}
+            model={field.model}
+            name={market[field.key].name}
+            value={prices[field.key]}
+            fromMarket={
+              typed[field.key] === undefined && market[field.key].price !== null
+            }
+            onChange={(next) =>
+              setTyped((current) => ({
+                ...current,
+                [field.key]: next ?? undefined,
+              }))
+            }
+          />
+        ))}
+      </div>
 
       {"error" in report ? (
         <MarketDown keyed={report.keyed} />
@@ -192,10 +222,9 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
      would tear the price fields out of the tree and build them again at a new
      index on the very keystroke that completed the sum — React reconciles a
      fragment by position, and the field the reader is typing into would lose
-     the caret at the moment it finally answered. The empty result is one line
-     instead, which is small enough to sit above the fields it is asking for. */
+     the caret at the moment it finally answered. */
   return (
-    <section className="flex flex-col gap-3">
+    <section className="btc-farm-panel flex flex-col gap-4">
       {result}
       {controls}
       {priceBlock}
@@ -205,24 +234,41 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
 
 type PriceKey = TrackedKey
 
-const PRICES: { key: PriceKey; label: string }[] = [
-  { key: "bitcoin", label: "Btc" },
-  { key: "gpu", label: "Gpu" },
-  { key: "fuel", label: "Fuel" },
+type PriceModel = { src: string; front: ModelFront; fallback: string }
+
+const PRICE_MODELS: Record<PriceKey, PriceModel> = {
+  bitcoin: { src: "/models/bitcoin.glb", front: "z", fallback: "₿" },
+  gpu: { src: "/models/gpu.glb", front: "-y", fallback: "GPU" },
+  fuel: { src: "/models/fuel_can.glb", front: "z", fallback: "FUEL" },
+}
+
+const PRICES: { key: PriceKey; label: string; model: PriceModel }[] = [
+  { key: "bitcoin", label: "Btc", model: PRICE_MODELS.bitcoin },
+  { key: "gpu", label: "Gpu", model: PRICE_MODELS.gpu },
+  { key: "fuel", label: "Fuel", model: PRICE_MODELS.fuel },
 ]
 
-type MarketRow = { price: number | null; icon: string | null; name: string }
+type MarketRow = { price: number | null; name: string }
+
+function Rack({ cards }: { cards: number }) {
+  return (
+    <div aria-hidden="true" className="btc-farm-rack mt-2">
+      {Array.from({ length: MAX_CARDS }, (_, index) => (
+        <span key={index} data-filled={index < cards || undefined} />
+      ))}
+    </div>
+  )
+}
 
 /** The three items the market supplied, each of which may be missing. */
 function readMarket(report: FleaState): Record<PriceKey, MarketRow> {
-  const blank = { price: null, icon: null, name: "" }
+  const blank = { price: null, name: "" }
   if ("error" in report) return { bitcoin: blank, gpu: blank, fuel: blank }
 
   const row = (key: PriceKey): MarketRow => {
     const item = report.items.find((candidate) => candidate.key === key)
     return {
       price: item?.price ?? null,
-      icon: item?.icon ?? null,
       name: item?.name ?? "",
     }
   }
@@ -245,14 +291,14 @@ function readMarket(report: FleaState): Record<PriceKey, MarketRow> {
  */
 function PriceField({
   label,
-  icon,
+  model,
   name,
   value,
   fromMarket,
   onChange,
 }: {
   label: string
-  icon: string | null
+  model: PriceModel
   name: string
   value: number | null
   fromMarket: boolean
@@ -260,80 +306,76 @@ function PriceField({
 }) {
   const id = `farm-price-${label.toLowerCase()}`
   const sourceId = `${id}-source`
-  const source = fromMarket ? "from the market" : value ? "set by you" : ""
+  const source = fromMarket ? "MKT" : value ? "SET" : "REQ"
+  const sourceLabel = fromMarket
+    ? "market price"
+    : value
+      ? "price set by you"
+      : "price required"
 
   return (
-    <p className="flex items-center gap-1.5">
-      {/* The item, as the market draws it. A plain img: the Pages build is a
-          static export, where next/image cannot optimise a remote host
-          anyway, and a missing icon has to cost the row nothing. */}
-      <span
-        aria-hidden="true"
-        className="flex size-8 shrink-0 items-center justify-center border border-terminal-rule bg-terminal-wash/20"
-      >
-        {icon ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={icon}
-            alt=""
-            loading="lazy"
-            className="size-7 object-contain"
-          />
-        ) : (
-          <span className="console-value text-terminal-chrome-dim">?</span>
-        )}
-      </span>
+    <div className="btc-farm-price-row min-w-0 items-center gap-1.5">
+      <ModelIcon
+        src={model.src}
+        front={model.front}
+        fallback={
+          <span className="console-sign text-terminal-chrome-dim">
+            {model.fallback}
+          </span>
+        }
+        className="size-11 border border-terminal-rule bg-terminal-wash/20"
+      />
 
       {/* The market's full name for the item rides in the label rather than in
           a title attribute: a tooltip on the row was reachable with a pointer
           and with nothing else. */}
       <label
         htmlFor={id}
-        className="console-label w-9 shrink-0 text-terminal-chrome-dim"
+        className="flex min-w-0 flex-col justify-center leading-none"
       >
-        {label}
-        {name ? <span className="sr-only"> — {name}</span> : null}
+        <span className="console-label truncate text-terminal-chrome-dim">
+          {label}
+        </span>
+        <span
+          aria-hidden="true"
+          className="console-value truncate text-terminal-ink-faint"
+        >
+          {source}
+        </span>
+        <span className="sr-only">
+          {name ? ` — ${name}` : null} price in roubles
+        </span>
       </label>
 
-      <input
-        id={id}
-        type="number"
-        inputMode="numeric"
-        autoComplete="off"
-        min={0}
-        step={1000}
-        value={value ?? ""}
-        placeholder="—"
-        aria-describedby={source ? sourceId : undefined}
-        onChange={(event) => {
-          if (event.target.value === "") return onChange(null)
-          const next = event.target.valueAsNumber
-          onChange(Number.isFinite(next) ? Math.max(0, next) : null)
-        }}
-        className="console-value min-h-11 min-w-0 flex-1 border border-terminal-rule bg-terminal-wash/20 px-2 text-end text-terminal-ink placeholder:text-terminal-ink-faint focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-      />
-
-      <span
-        aria-hidden="true"
-        className="console-value shrink-0 text-terminal-chrome-dim"
-      >
-        ₽
+      <InputGroup className="btc-farm-price-control min-h-11 rounded-none border-terminal-rule bg-terminal-wash/20 transition-none dark:bg-terminal-wash/20">
+        <InputGroupInput
+          id={id}
+          type="number"
+          inputMode="numeric"
+          autoComplete="off"
+          min={0}
+          step={1000}
+          value={value ?? ""}
+          aria-describedby={sourceId}
+          onChange={(event) => {
+            if (event.target.value === "") return onChange(null)
+            const next = event.target.valueAsNumber
+            onChange(Number.isFinite(next) ? Math.max(0, next) : null)
+          }}
+          className="btc-farm-price-input console-value min-h-11 py-0 text-end text-terminal-ink placeholder:text-terminal-ink-faint"
+        />
+        <InputGroupCaret className="end-4 text-primary" />
+        <InputGroupAddon
+          align="inline-end"
+          className="console-value text-terminal-chrome-dim"
+        >
+          ₽
+        </InputGroupAddon>
+      </InputGroup>
+      <span id={sourceId} className="sr-only">
+        {sourceLabel}
       </span>
-
-      {/* Where the figure came from, said at the row rather than in a legend:
-          the reader is about to trust one of them. The column holds its width
-          on an empty row so the three fields stay in one line, and the mark is
-          three letters to the eye and a sentence to a screen reader. */}
-      <span
-        id={sourceId}
-        className="console-note w-6 shrink-0 text-terminal-ink-faint"
-      >
-        <span aria-hidden="true">
-          {fromMarket ? "mkt" : value ? "set" : ""}
-        </span>
-        <span className="sr-only">{source}</span>
-      </span>
-    </p>
+    </div>
   )
 }
 
@@ -342,48 +384,54 @@ function MarketDown({ keyed }: { keyed: boolean }) {
   return (
     <div className="flex flex-col gap-1.5 pt-1">
       <p className="console-note text-terminal-ink-dim">
-        no live prices. type them in and the farm runs anyway.
+        no live prices. enter prices above to run it manually.
       </p>
 
       {keyed ? null : (
-        <>
-          <p className="console-note text-terminal-ink-faint">
-            to wire the backup market up:
-          </p>
-
-          <ol className="console-note flex flex-col gap-1 text-terminal-ink-faint">
-            {STEPS.map((step, index) => (
-              <li key={step.text} className="flex gap-1.5">
-                <span
-                  aria-hidden="true"
-                  className="shrink-0 text-terminal-chrome-dim tabular-nums"
-                >
-                  {index + 1}.
-                </span>
-                <span className="min-w-0">
-                  {step.text}
-                  {step.code ? (
-                    <code className="ms-1 break-all text-primary normal-case">
-                      {step.code}
-                    </code>
-                  ) : null}
-                </span>
-              </li>
-            ))}
-          </ol>
-
-          <a
-            href="https://tarkov-market.com/dev/api"
-            target="_blank"
-            rel="noreferrer"
-            className="console-note inline-flex min-h-11 w-fit items-center gap-1.5 border border-terminal-rule px-2 text-terminal-ink-dim crt-persist hover:border-primary hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            <span aria-hidden="true" className="text-terminal-chrome-dim">
-              &gt;
+        <details className="btc-farm-market-help group border border-terminal-rule bg-terminal-wash/20">
+          <summary className="console-label flex min-h-11 cursor-pointer list-none items-center gap-2 px-2.5 text-terminal-chrome-dim focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none">
+            <span aria-hidden="true" className="w-4 text-primary">
+              <span className="group-open:hidden">[+]</span>
+              <span className="hidden group-open:inline">[-]</span>
             </span>
-            get a key
-          </a>
-        </>
+            Wire market feed
+          </summary>
+
+          <div className="flex flex-col gap-2 border-t border-terminal-rule px-2.5 py-2.5">
+            <ol className="console-note flex flex-col gap-1 text-terminal-ink-faint">
+              {STEPS.map((step, index) => (
+                <li key={step.text} className="flex gap-1.5">
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 text-terminal-chrome-dim tabular-nums"
+                  >
+                    {index + 1}.
+                  </span>
+                  <span className="min-w-0">
+                    {step.text}
+                    {step.code ? (
+                      <code className="ms-1 break-all text-primary normal-case">
+                        {step.code}
+                      </code>
+                    ) : null}
+                  </span>
+                </li>
+              ))}
+            </ol>
+
+            <a
+              href="https://tarkov-market.com/dev/api"
+              target="_blank"
+              rel="noreferrer"
+              className="console-note inline-flex min-h-11 w-fit items-center gap-1.5 text-terminal-ink-dim underline underline-offset-4 crt-persist hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              <span aria-hidden="true" className="text-terminal-chrome-dim">
+                &gt;
+              </span>
+              get a market key
+            </a>
+          </div>
+        </details>
       )}
     </div>
   )
@@ -424,15 +472,15 @@ function Figure({
   lit?: boolean
 }) {
   return (
-    <p className="flex min-w-0 flex-col gap-0.5 border border-terminal-rule bg-terminal-wash/20 px-2 py-1.5">
+    <p className="flex min-w-0 flex-col gap-0.5 px-2.5">
       <span className="console-label truncate text-terminal-chrome-dim">
         {label}
       </span>
       <span
         className={
           lit
-            ? "console-figure truncate text-primary crt-glow-soft"
-            : "console-figure truncate text-terminal-ink"
+            ? "btc-farm-result-value truncate font-mono text-primary tabular-nums crt-glow-soft"
+            : "btc-farm-result-value truncate font-mono text-terminal-ink tabular-nums"
         }
       >
         {value}
