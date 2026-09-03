@@ -2,7 +2,7 @@
 #
 # Installs sektant.dev on a Debian/Ubuntu box.
 #
-#   curl -fsSL https://raw.githubusercontent.com/sektant1/skt-ui-toolkit/master/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/sektant1/sektant1.github.io/master/scripts/install.sh | bash
 #
 # Always installs what is on master. Merging to master publishes a new image
 # and re-running this picks it up; `development` is for work in progress and is

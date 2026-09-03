@@ -180,7 +180,7 @@ release-preflight: ## Check that a release can run, without changing anything
 		|| { echo "Working tree is dirty. Commit or stash first."; exit 1; }
 	@git remote get-url origin >/dev/null 2>&1 || { \
 		echo "No 'origin' remote. Releasing pushes to GitHub, so add one:"; \
-		echo "  git remote add origin git@github.com:sektant1/skt-ui-toolkit.git"; \
+		echo "  git remote add origin git@github.com:sektant1/sektant1.github.io.git"; \
 		exit 1; }
 	@git show-ref --verify --quiet refs/heads/development || { \
 		echo "No 'development' branch. Work lands there before it reaches master:"; \

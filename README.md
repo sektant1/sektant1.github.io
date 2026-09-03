@@ -156,7 +156,7 @@ a Debian or Ubuntu box, via Docker Compose where Docker is present and a
 systemd unit where it is not:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/sektant1/skt-ui-toolkit/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sektant1/sektant1.github.io/master/scripts/install.sh | bash
 ```
 
 ## Consuming from RSC
