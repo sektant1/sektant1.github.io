@@ -64,8 +64,8 @@ export function GeoPanel({ title, hint, style, className }: GeoPanelProps) {
       stamp={STATES[state].stamp}
       footer={`PRYPIAT ${formatCoordinate(STATION)}`}
       footerStamp={hint}
-      className={className}
-      bodyClassName="flex min-h-[26rem] flex-col overflow-hidden"
+      className={cn("@container", className)}
+      bodyClassName="flex min-h-[clamp(19rem,82cqi,27rem)] flex-col overflow-hidden"
     >
       {/* Headroom for the pin's label, which is drawn above the marker and
           would otherwise ride up into the title rule. */}

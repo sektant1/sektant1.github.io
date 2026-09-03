@@ -6,6 +6,10 @@ html[data-cold-boot="skip"] .cold-boot {
   contain: layout paint;
 }
 
+.cold-boot[data-complete] {
+  animation: cold-boot-exit 700ms steps(5, end) forwards;
+}
+
 .cold-boot::before {
   content: "";
   position: fixed;
@@ -110,8 +114,20 @@ html[data-cold-boot="skip"] .cold-boot {
   }
 }
 
+@keyframes cold-boot-exit {
+  0%,
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cold-boot::before,
+  .cold-boot[data-complete],
   .cold-boot-panel,
   .cold-boot [data-slot="boot-log"] [aria-hidden="true"] > div {
     animation: none;

@@ -69,7 +69,7 @@ export function FilesPanel({
           nothing else — the palette (ctrl+k) is what reads the text of every
           document, and two things that both say "search" have to differ in
           what they promise. */}
-      <div className="flex h-9 shrink-0 items-center gap-2 border-b border-sidebar-border px-2">
+      <div className="flex h-11 shrink-0 items-center gap-2 border-b border-sidebar-border px-2 md:h-9">
         <label
           htmlFor="tree-filter"
           className="font-mono text-[0.6rem] tracking-[0.15em] text-terminal-chrome-dim uppercase"
@@ -83,14 +83,14 @@ export function FilesPanel({
           placeholder="name"
           autoComplete="off"
           spellCheck={false}
-          className="min-w-0 flex-1 bg-transparent font-mono text-[0.7rem] text-terminal-ink placeholder:text-terminal-ink-faint focus-visible:outline-none"
+          className="h-full min-w-0 flex-1 bg-transparent font-mono text-[0.7rem] text-terminal-ink placeholder:text-terminal-ink-faint focus-visible:outline-none"
         />
         {filter ? (
           <button
             type="button"
             onClick={() => setFilter("")}
             aria-label="Clear the filter"
-            className="flex size-5 shrink-0 items-center justify-center border border-terminal-rule text-terminal-chrome-dim crt-persist hover:border-terminal-edge hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            className="-me-2 flex size-11 shrink-0 items-center justify-center border border-terminal-rule text-terminal-chrome-dim crt-persist hover:border-terminal-edge hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none md:me-0 md:size-5"
           >
             <IconX className="size-3" />
           </button>

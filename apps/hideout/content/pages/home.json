@@ -16,11 +16,13 @@
     "summaryRef": "BUF 001",
     "metricPosts": "POSTS",
     "metricProjects": "PROJECTS",
-    "metricMinutes": "READ MIN",
-    "tagsTitle": "ИНДЕКС // ТЕГИ",
-    "tagsRef": "IDX // TAG",
-    "globeTitle": "ОБЪЕКТ 01 // GEO NODE",
-    "globeFooterEnd": "- DRAG -"
+    "metricMinutes": "READING",
+    "tagsTitle": "TOPICS",
+    "tagsRef": "LINKS",
+    "logTitle": "LATEST",
+    "logRef": "UTC",
+    "globeTitle": "ОБЪЕКТ 01 // EARTH",
+    "globeFooterEnd": "DRAG TO ROTATE"
   },
   "sections": {
     "posts": {

@@ -14,6 +14,7 @@ import {
   postCellHeightFor,
   needsEnvironment,
   postDefaultsFor,
+  renderBudgetFor,
   renderScaleFor,
   subjectFor,
   toneMappingFor,
@@ -164,6 +165,52 @@ describe("renderScaleFor", () => {
   it("never goes below one, whatever the browser reports", () => {
     expect(renderScaleFor(0)).toBe(1)
     expect(renderScaleFor(Number.NaN)).toBe(1)
+  })
+})
+
+describe("renderBudgetFor", () => {
+  it("cuts frame rate without reducing model quality on constrained hardware", () => {
+    expect(
+      renderBudgetFor({
+        devicePixelRatio: 2,
+        hardwareConcurrency: 4,
+        deviceMemory: 4,
+        saveData: false,
+        reduceMotion: false,
+      })
+    ).toEqual({
+      frameRate: 10,
+      ambientDuration: 4_000,
+      renderScale: 2,
+    })
+  })
+
+  it("keeps full quality on capable hardware", () => {
+    expect(
+      renderBudgetFor({
+        devicePixelRatio: 3,
+        hardwareConcurrency: 8,
+        deviceMemory: 8,
+        saveData: false,
+        reduceMotion: false,
+      })
+    ).toEqual({
+      frameRate: 30,
+      ambientDuration: Number.POSITIVE_INFINITY,
+      renderScale: 2,
+    })
+  })
+
+  it("renders on demand when reduced motion is requested", () => {
+    expect(
+      renderBudgetFor({
+        devicePixelRatio: 2,
+        hardwareConcurrency: 8,
+        deviceMemory: 8,
+        saveData: false,
+        reduceMotion: true,
+      })
+    ).toEqual({ frameRate: 0, ambientDuration: 0, renderScale: 2 })
   })
 })
 

@@ -63,7 +63,7 @@ export function StationHero({
   const ceiling = Math.max(posts, projects, 1)
 
   return (
-    <section className="flex flex-col gap-4 sm:gap-5">
+    <section className="@container flex flex-col gap-4 sm:gap-5">
       <header className="field-frame overflow-hidden px-3 py-3 sm:px-5 sm:py-4">
         {/* The banner leads. The rule that used to sit above it named the
             station and reported the link — one of those is on the panel's own
@@ -104,143 +104,146 @@ export function StationHero({
         </div>
       </header>
 
-      {/* One rail of instruments against the subject. Three columns left a
-          third of the row empty once the panels carried only real values. */}
-      <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:gap-4">
-        {/* One panel, not two. The counts and the index answer the same
-            question — what is in the archive — and splitting them left the
-            tags in a half-empty frame beside a globe four times its height. */}
+      <div className="grid items-stretch gap-4 @min-[56rem]:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.45fr)]">
         <TerminalFrame
           title={content.summaryTitle}
-          stamp={content.summaryRef}
-          footer="ARCHIVE"
-          footerStamp={`${pad(posts + projects)} OBJ // ${pad(tags.length, 2)} TAG`}
-          className="order-2 min-w-0 lg:order-1"
-          bodyClassName="flex min-w-0 flex-col"
+          stamp={`${pad(posts + projects)} ITEMS`}
+          // Both frames on this row carry a footer rule, because the pair reads
+          // as one instrument only while the two have the same anatomy: a
+          // titled plate, a body, and a foot. One panel closing on a border and
+          // the one beside it closing on a labelled rule is two objects.
+          footer={content.summaryRef}
+          footerStamp={`${pad(minutes)} MIN READ`}
+          className="@container order-2 min-w-0 @min-[56rem]:order-1"
+          bodyClassName="grid min-w-0 grid-cols-1 @min-[40rem]:grid-cols-2"
         >
-          <ActivityTrace
-            buckets={activity}
-            className="h-[5.5rem] border-b border-terminal-rule"
-          />
-
-          <div className="flex flex-col gap-1.5 px-2 py-2.5">
-            <AsciiMeter
-              label={content.metricPosts}
-              value={posts / ceiling}
-              cells={16}
-              display={pad(posts)}
-            />
-            <AsciiMeter
-              label={content.metricProjects}
-              value={projects / ceiling}
-              cells={16}
-              display={pad(projects)}
+          {/* The counters, and the shape of the same fact over time. The
+              column is a flex box rather than a stack so the trace can take
+              the height the index opposite runs past it by: split in two, the
+              two halves are never the same length, and the difference has to
+              land somewhere that reads as instrument rather than as a rule
+              drawn down a gap. */}
+          <div className="flex min-w-0 flex-col @min-[40rem]:border-e @min-[40rem]:border-terminal-rule">
+            <ActivityTrace
+              buckets={activity}
+              className="min-h-24 flex-1 border-b border-terminal-rule"
             />
 
-            {/* Reading time is a different unit, so it is a readout on a
-                leader rather than a third bar on a scale it does not share. */}
-            <p className="flex items-baseline gap-1.5 pt-0.5">
-              <span className="shrink-0 font-mono text-[0.58rem] tracking-wider text-terminal-chrome-dim uppercase">
-                {content.metricMinutes}
-              </span>
-              <span
-                aria-hidden="true"
-                className="min-w-3 flex-1 translate-y-[-0.15em] border-b border-dotted border-terminal-rule"
+            <div className="flex shrink-0 flex-col gap-1.5 px-2 py-2.5">
+              <AsciiMeter
+                label={content.metricPosts}
+                value={posts / ceiling}
+                cells={16}
+                display={pad(posts)}
               />
-              <span className="shrink-0 font-mono text-[0.62rem] text-terminal-ink-dim tabular-nums">
-                {minutes ? pad(minutes) : "---"}
-              </span>
-            </p>
-          </div>
-
-          {/* The index of what the archive covers, and the way into it. */}
-          <div className="flex flex-col border-t border-terminal-rule">
-            <p className="flex items-center gap-2 px-2 pt-2 font-mono text-[0.55rem] tracking-[0.28em] text-terminal-chrome-dim uppercase">
-              {content.tagsTitle}
-              <span
-                aria-hidden="true"
-                className="h-px flex-1 bg-terminal-rule"
+              <AsciiMeter
+                label={content.metricProjects}
+                value={projects / ceiling}
+                cells={16}
+                display={pad(projects)}
               />
-              <span className="text-terminal-ink-faint">{content.tagsRef}</span>
-            </p>
 
-            {tags.length ? (
-              <ul className="flex flex-wrap content-start gap-1 p-2">
-                {tags.map((tag) => (
-                  <li key={tag.name}>
-                    <Link
-                      href={`/posts?tag=${encodeURIComponent(tag.name)}`}
-                      // Under the pointer the chip inverts rather than
-                      // brightening: a tube highlights by driving the whole
-                      // cell and letting the glyphs fall out of it, which is
-                      // the same thing the page's own selection does.
-                      className="group/tag flex items-center gap-1.5 border border-terminal-rule px-1.5 py-0.5 font-mono text-[0.62rem] tracking-wider text-terminal-ink-dim lowercase crt-persist hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-                    >
-                      <span className="text-terminal-chrome-dim group-hover/tag:text-primary-foreground">
-                        #
-                      </span>
-                      <span className="truncate">{tag.name}</span>
-                      <span className="text-terminal-ink-faint tabular-nums group-hover/tag:text-primary-foreground">
-                        {pad(tag.count, 2)}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="p-2 font-mono text-[0.62rem] text-terminal-ink-faint lowercase">
-                nothing indexed yet
+              <p className="flex items-baseline gap-1.5 pt-0.5">
+                <span className="console-label shrink-0 text-terminal-chrome-dim">
+                  {content.metricMinutes}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="min-w-3 flex-1 translate-y-[-0.15em] border-b border-dotted border-terminal-rule"
+                />
+                <span className="console-value shrink-0 text-terminal-ink-dim">
+                  {minutes ? `${pad(minutes)} MIN` : "--- MIN"}
+                </span>
               </p>
-            )}
+            </div>
           </div>
 
-          {/* The tail of the archive, and what closes the panel.
+          <div className="flex min-h-0 flex-col border-t border-terminal-rule @min-[40rem]:border-t-0">
+            <div className="flex flex-col">
+              <p className="console-sign flex items-center gap-2 px-2 pt-2 text-terminal-chrome-dim">
+                {content.tagsTitle}
+                <span
+                  aria-hidden="true"
+                  className="h-px flex-1 bg-terminal-rule"
+                />
+                <span className="text-terminal-ink-faint">
+                  {pad(tags.length, 2)} LINKS
+                </span>
+              </p>
 
-              The counts say how much is here and the index says what it is
-              about; neither says what happened last, and the column under the
-              tags was empty enough that the panel ended a third of the way up
-              the globe beside it. One line per entry, newest first, with the
-              kind in the gutter — a log, which is the one thing on this page
-              that reports a date. */}
-          <div className="flex min-h-0 flex-1 flex-col border-t border-terminal-rule">
-            <p className="flex items-center gap-2 px-2 pt-2 font-mono text-[0.55rem] tracking-[0.28em] text-terminal-chrome-dim uppercase">
-              {content.logTitle}
-              <span
-                aria-hidden="true"
-                className="h-px flex-1 bg-terminal-rule"
-              />
-              <span className="text-terminal-ink-faint">{content.logRef}</span>
-            </p>
-
-            {recent.length ? (
-              <ul className="flex flex-col p-1">
-                {recent.map((entry) => (
-                  <li key={entry.href}>
-                    <Link
-                      href={entry.href}
-                      className="group/log flex items-baseline gap-2 px-1 py-1 font-mono text-[0.62rem] text-terminal-ink-dim crt-persist hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="w-8 shrink-0 text-[0.55rem] tracking-[0.1em] text-terminal-chrome-dim uppercase"
+              {tags.length ? (
+                <ul className="flex flex-wrap content-start gap-x-1 px-1 py-1.5">
+                  {tags.map((tag) => (
+                    <li key={tag.name}>
+                      <Link
+                        href={`/posts?tag=${encodeURIComponent(tag.name)}`}
+                        className="group/tag flex min-h-11 items-center gap-1.5 px-1.5 font-mono text-[0.7rem] tracking-wide text-terminal-ink-dim lowercase crt-persist hover:bg-terminal-wash hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none md:min-h-0 md:py-1"
                       >
-                        {KINDS[entry.kind]}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate lowercase">
-                        {entry.title}
-                      </span>
-                      <span className="shrink-0 text-[0.58rem] text-terminal-ink-faint tabular-nums group-hover/log:text-primary">
-                        {stampDate(entry.date)}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="p-2 font-mono text-[0.62rem] text-terminal-ink-faint lowercase">
-                nothing logged yet
+                        <span
+                          aria-hidden="true"
+                          className="text-terminal-chrome-dim group-hover/tag:text-primary"
+                        >
+                          &gt;
+                        </span>
+                        <span className="truncate underline decoration-dotted underline-offset-4 group-hover/tag:decoration-solid">
+                          #{tag.name}
+                        </span>
+                        <span className="text-terminal-ink-faint tabular-nums group-hover/tag:text-primary">
+                          {pad(tag.count, 2)}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="console-note p-2 text-terminal-ink-faint">
+                  no topics yet
+                </p>
+              )}
+            </div>
+
+            <div className="flex min-h-0 flex-1 flex-col border-t border-terminal-rule">
+              <p className="console-sign flex items-center gap-2 px-2 pt-2 text-terminal-chrome-dim">
+                {content.logTitle}
+                <span
+                  aria-hidden="true"
+                  className="h-px flex-1 bg-terminal-rule"
+                />
+                <span className="text-terminal-ink-faint">
+                  {content.logRef}
+                </span>
               </p>
-            )}
+
+              {recent.length ? (
+                <ul className="flex flex-col p-1">
+                  {recent.map((entry) => (
+                    <li key={entry.href}>
+                      <Link
+                        href={entry.href}
+                        className="group/log flex min-h-11 items-center gap-2 px-1 font-mono text-[0.7rem] text-terminal-ink-dim crt-persist hover:bg-terminal-wash hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none md:min-h-0 md:py-1"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="w-10 shrink-0 text-[0.65rem] tracking-[0.08em] text-terminal-chrome-dim uppercase group-hover/log:text-primary"
+                        >
+                          &gt; {KINDS[entry.kind]}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate lowercase underline decoration-dotted underline-offset-4 group-hover/log:decoration-solid">
+                          {entry.title}
+                        </span>
+                        <span className="shrink-0 text-[0.65rem] text-terminal-ink-faint tabular-nums group-hover/log:text-primary">
+                          {stampDate(entry.date)}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="console-note p-2 text-terminal-ink-faint">
+                  no recent work yet
+                </p>
+              )}
+            </div>
           </div>
         </TerminalFrame>
 
@@ -248,7 +251,7 @@ export function StationHero({
           title={content.globeTitle}
           hint={content.globeFooterEnd}
           style={renderStyle}
-          className="geo-display order-1 min-w-0 lg:order-2"
+          className="geo-display order-1 min-w-0 @min-[56rem]:order-2"
         />
       </div>
     </section>

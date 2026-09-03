@@ -164,8 +164,6 @@
  *            of it as a hole. Which is exactly what this site's own hover
  *            does everywhere else: a tag under the pointer drives the whole
  *            cell and lets the glyphs drop out of it. Same idea, 16 pixels.
- *   text     a one-pixel caret axis, shelled so it keeps its place between
- *            two characters on both dark and driven cells.
  *   grab     two open clamp jaws around the target pixel.
  *   grabbing those jaws contract and rise to the tube's hot level.
  *   disabled the ticks alone, dimmed, with no dot at the centre. The
@@ -212,12 +210,6 @@
     url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%2304170c'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%2332f078'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2304170c'/%3E%3C/svg%3E")
       8 8,
     pointer;
-  --cursor-text:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABaSURBVDjLY2CgEDBiE2QR5/mPT9Ofl1/g+lhwKVr6Yi9W8WgJZxQ+E829AHMJss0EvQBTgB4WyBqp5oVRA6hgANZoxJWUYeLI0YkzIeFLysgG0D4pYwPILgAAa0klIQwlJZwAAAAASUVORK5CYII=")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='7' height='3' fill='%2304170c'/%3E%3Crect x='7' y='2' width='3' height='12' fill='%2304170c'/%3E%3Crect x='5' y='12' width='7' height='3' fill='%2304170c'/%3E%3Crect x='6' y='2' width='5' height='1' fill='%23a9ffc9'/%3E%3Crect x='8' y='3' width='1' height='10' fill='%23a9ffc9'/%3E%3Crect x='6' y='13' width='5' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
-      8 8,
-    text;
   --cursor-grab:
     url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAAB+SURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBXo3cxgYGBgYLqlPgSvEJ8eEbCpMASGArI4JmwJkG5BpmDgywGoAuv+x8eFex+dU9IDDBpgIKSAULgQNwOZvkgwgBHCGAYs4z398CQmvC2D+hmlCT0g4DSDkX2zqKM4LFAMAGapBHJas8vIAAAAASUVORK5CYII=")
       8 8,
@@ -272,14 +264,78 @@
 }
 
 :where(
-  input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not(
-      [type="radio"]
-    ),
+  input:not([type]),
+  input:is(
+    [type="text"],
+    [type="search"],
+    [type="email"],
+    [type="password"],
+    [type="url"],
+    [type="tel"],
+    [type="number"]
+  ),
   textarea,
   [contenteditable="true"],
   .cursor-text
 ) {
-  cursor: var(--cursor-text);
+  cursor: text;
+  caret-color: var(--primary);
+  caret-shape: block;
+}
+
+:where(
+  input:not([type]),
+  input:is(
+    [type="text"],
+    [type="search"],
+    [type="email"],
+    [type="password"],
+    [type="url"],
+    [type="tel"],
+    [type="number"]
+  )
+) {
+  padding-inline-start: 1.5rem;
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent 43%,
+      var(--terminal-chrome-dim) 44% 56%,
+      transparent 57%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 43%,
+      var(--terminal-chrome-dim) 44% 56%,
+      transparent 57%
+    );
+  background-position:
+    0.65rem calc(50% - 0.15rem),
+    0.65rem calc(50% + 0.15rem);
+  background-repeat: no-repeat;
+  background-size: 0.38rem 0.38rem;
+}
+
+:where(textarea, [contenteditable="true"]) {
+  padding-inline-start: 1.5rem;
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent 43%,
+      var(--terminal-chrome-dim) 44% 56%,
+      transparent 57%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 43%,
+      var(--terminal-chrome-dim) 44% 56%,
+      transparent 57%
+    );
+  background-position:
+    0.65rem 0.72rem,
+    0.65rem 1.02rem;
+  background-repeat: no-repeat;
+  background-size: 0.38rem 0.38rem;
 }
 
 :where(.cursor-grab) {
@@ -412,12 +468,6 @@
     url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%231b1001'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%23fcbe5c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%231b1001'/%3E%3C/svg%3E")
       8 8,
     pointer;
-  --cursor-text:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAVUlEQVR42mNgoBAwYhOUFmD8j0/T0w//4fpYcCl6fGU/VnFZHUcUPhPNvQBzCbLNBL0AU4AeFsgaqeaFUQOoYAALKUkZJo4cnTgTEr6kjGwA04DnRgBu/iUhTWEfywAAAABJRU5ErkJggg==")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='1' width='7' height='3' fill='%231b1001'/%3E%3Crect x='7' y='2' width='3' height='12' fill='%231b1001'/%3E%3Crect x='5' y='12' width='7' height='3' fill='%231b1001'/%3E%3Crect x='6' y='2' width='5' height='1' fill='%23fee4c0'/%3E%3Crect x='8' y='3' width='1' height='10' fill='%23fee4c0'/%3E%3Crect x='6' y='13' width='5' height='1' fill='%23fee4c0'/%3E%3C/svg%3E")
-      8 8,
-    text;
   --cursor-grab:
     url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAdklEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQFD9dFMzxcF40ihk+OCdlUmCQhgKyOCZsC+aClKM6E0TBxZMCEyxZk/2PjwwALPqeiBxw2wESKf8kyAJu/STKAEGDB5398CQmvC/AlJLwGEPIvNnUU5wWKAQCT7z9xBvt2lwAAAABJRU5ErkJggg==")
       8 8,
