@@ -79,7 +79,7 @@ third party being up.
 
 | File | Holds | Feeds |
 | --- | --- | --- |
-| `tasks.json` | id, name, normalizedName, trader, map ids, faction, minPlayerLevel, kappaRequired, lightkeeperRequired, taskRequirements, experience, wikiLink, neededKeys, objectives (type, description, count, optional, maps, item, foundInRaid) | everything |
+| `tasks.json` | id, name, normalizedName, trader, map ids, faction, minPlayerLevel, kappaRequired, lightkeeperRequired, taskRequirements, traderRequirements, experience, wikiLink, neededKeys, objectives (type, description, count, optional, maps, items, foundInRaid) | everything |
 | `maps.json` | id, name, normalizedName, extracts reduced to `{ name, faction, transferItem }`, bosses as `{ name, spawnChance }` resolved through `mobs` | map bar, checklist, boss intel |
 | `traders.json` | id, name, normalizedName, imageLink, levels (`level`, `requiredPlayerLevel`, `requiredReputation`), resetTime | trader panel, stat cards |
 | `hideout.json` | stations, levels, item requirements | hideout stat card |
@@ -96,8 +96,11 @@ the state the GraphQL API was in during this design — cannot empty a screen.
 
 Deliberately absent, because a daily snapshot cannot honestly serve them:
 flea spikes, profitable crafts, currency conversion, and the goons tracker
-(`goonReports` is present in the maps dump but arrived empty). The Story stat
-card is out for the same reason: `data.story` is empty upstream.
+(`goonReports` is present in the maps dump but arrived empty). The Story card
+is out because `data.story` is empty upstream. The Achievements card is out
+because nothing in this app can move it — no import carries achievement state
+— so it would be a permanent `0 / 123`, which is the invented telemetry
+`CONTEXT.md` forbids.
 
 ## Modules
 
@@ -118,7 +121,7 @@ storage, no DOM.
   repairs) plus entries derived from the map: an extract with `transferItem`
   yields "bring N × item", an extract behind a key yields that key.
 - `stats.ts` — the dashboard cards: tasks, objectives, kappa, lightkeeper,
-  hideout, achievements; and per-trader task progress.
+  hideout; and per-trader task progress.
 
 **`src/state/`** — `progress.ts` holds the player: `level`, `faction`,
 `gameEdition`, `prestige`, `gameMode`, `taskCompletions`, `objectiveCounts`,
@@ -139,10 +142,11 @@ only.
 
 ### `/` dashboard
 
-- **Stat cards** — tasks, objectives, kappa, lightkeeper, hideout,
-  achievements; each `done / total` with a percentage, each a link into the
-  raid planner filtered accordingly. A card whose total is zero is not
-  rendered.
+- **Stat cards** — tasks, objectives, kappa, lightkeeper, hideout; each
+  `done / total` with a percentage, each a link into the raid planner filtered
+  accordingly. A card whose total is zero is not rendered. Hideout levels have
+  no editor in this app — they arrive by import, and the card reads what is
+  there.
 - **Map priority** — maps ordered by active task count, with a kappa-only
   toggle; each row links to that map in the planner.
 - **Traders** — per trader: current level against `requiredPlayerLevel` and
@@ -176,8 +180,10 @@ only.
   write) → the store runs in memory and the shell says so once.
 - An import that does not validate → the preview reports what was rejected and
   nothing is applied.
-- A task referencing an id absent from the snapshot → skipped, and counted in
-  a single readout rather than crashing a list.
+- A task whose prerequisite id is absent from the snapshot → it stays locked,
+  which is the honest reading: nothing on hand says it opened.
+- An item id absent from the snapshot → the list shows the id rather than
+  dropping the row, so a stale snapshot is visible instead of silent.
 
 ## Testing
 
