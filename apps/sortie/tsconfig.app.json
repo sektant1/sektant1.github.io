@@ -6,6 +6,9 @@
     "module": "esnext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    /* The Tarkov snapshot ships as JSON and is typed at one seam, in
+       src/data/snapshot/index.ts. */
+    "resolveJsonModule": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

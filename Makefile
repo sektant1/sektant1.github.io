@@ -94,6 +94,18 @@ registry: ## Regenerate registry.json and the served /r/*.json
 registry-check: ## Fail if registry.json and the components directory disagree
 	npm run registry:check
 
+##@ Tarkov data
+
+.PHONY: snapshot
+snapshot: ## Regenerate the Tarkov snapshot apps/sortie serves from
+	npm run snapshot:build
+
+# Not part of `check`: it needs the network, and the game gains tasks, so an
+# unrelated PR would start failing the moment upstream shipped a patch.
+.PHONY: snapshot-check
+snapshot-check: ## Fail if the committed snapshot no longer matches upstream
+	npm run snapshot:check
+
 ##@ Build
 
 .PHONY: build
