@@ -46,10 +46,23 @@ export function buildTaskStatuses(
         (context.traderLevels[requirement.trader] ?? 1) >= requirement.level
     )
 
-    statuses[task.id] =
-      factionOk && levelOk && prerequisitesOk && tradersOk
-        ? "available"
-        : "locked"
+    // Inferred from the name, not given by the game — see the snapshot
+    // script. Treated as a prerequisite because a "Part 3" nobody has done
+    // "Part 2" of is not a task anyone can start.
+    const seriesOk =
+      task.seriesPredecessor === null ||
+      context.completions[task.seriesPredecessor] === "complete"
+
+    if (!(factionOk && levelOk && prerequisitesOk && tradersOk && seriesOk)) {
+      statuses[task.id] = "locked"
+      continue
+    }
+
+    // Everything this app can check is satisfied, but the game holds this one
+    // behind a storyline variable it does not publish. Saying "available"
+    // would be a guess; saying "locked" would hide a task that may well be
+    // open. It gets its own answer, and the planner shows those on request.
+    statuses[task.id] = task.storylineGated ? "gated" : "available"
   }
 
   return statuses

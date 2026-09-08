@@ -5,7 +5,6 @@ import { KeyButton } from "@/components/key-button"
 import { Panel } from "@/components/panel"
 import { mapTaskCounts, partitionActiveTasks } from "@/domain/active-tasks"
 import type { SnapshotMap, SnapshotTask, TaskStatus } from "@/domain/types"
-import { listRow } from "@/components/layout"
 import { cn } from "@workspace/ui/lib/utils"
 
 /**
@@ -37,8 +36,7 @@ export function MapPriority({
 
   return (
     <Panel
-      title="ПРИОРИТЕТ"
-      srTitle="Map priority"
+      title="Map priority"
       controls={
         <KeyButton
           className="min-h-8 md:min-h-0"
@@ -54,19 +52,25 @@ export function MapPriority({
           <li key={map.id}>
             <Link
               to={`/raid?map=${map.normalizedName}`}
-              className={cn(listRow, "hover:text-primary")}
+              className={cn(
+                "grid min-h-11 grid-cols-[9rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 border-b border-terminal-rule/40 py-1.5 hover:text-primary"
+              )}
             >
-              <span className="w-44 shrink-0 truncate font-mono text-xs text-foreground">
+              <span className="truncate font-mono text-xs text-foreground">
                 {map.name}
               </span>
+              {/* One rule per row, filled against the busiest map: the
+                  comparison between maps is the whole point of the panel. */}
               <span
                 aria-hidden="true"
-                className="h-1.5 min-w-px bg-primary/70"
-                style={{
-                  width: `${highest ? (count / highest) * 100 : 0}%`,
-                }}
-              />
-              <span className="ml-auto shrink-0 font-mono text-[0.7rem] text-primary tabular-nums">
+                className="flex h-2 border border-terminal-rule/60"
+              >
+                <span
+                  className="bg-primary/70"
+                  style={{ width: `${highest ? (count / highest) * 100 : 0}%` }}
+                />
+              </span>
+              <span className="text-right font-mono text-[0.7rem] text-primary tabular-nums">
                 {count}
               </span>
             </Link>

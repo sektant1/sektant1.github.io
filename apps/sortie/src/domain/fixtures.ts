@@ -30,6 +30,8 @@ export function makeTask(overrides: Partial<SnapshotTask> = {}): SnapshotTask {
     experience: 1000,
     wikiLink: null,
     imageLink: null,
+    storylineGated: false,
+    seriesPredecessor: null,
     taskRequirements: [],
     traderRequirements: [],
     neededKeys: [],

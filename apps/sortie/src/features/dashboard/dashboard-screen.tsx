@@ -2,14 +2,15 @@ import * as React from "react"
 
 import { AppShell } from "@/components/app-shell"
 import { snapshot } from "@/data/snapshot"
+import { buildNextActions } from "@/domain/next-actions"
 import { buildStatCards, buildTraderStats } from "@/domain/stats"
 import { buildTaskStatuses } from "@/domain/task-graph"
 import { useProgress, useProgressActions } from "@/state/progress"
 import { BossIntel } from "./boss-intel"
 import { DataPanel } from "./data-panel"
 import { MapPriority } from "./map-priority"
+import { NextActions } from "./next-actions"
 import { OpsCenter } from "./ops-center"
-import { StatCards } from "./stat-cards"
 import { TraderPanel } from "./trader-panel"
 import { splitGrid, stack } from "@/components/layout"
 import { cn } from "@workspace/ui/lib/utils"
@@ -46,6 +47,11 @@ export function DashboardScreen() {
     [statuses, progress.objectiveCounts, progress.hideoutLevels]
   )
 
+  const actions = React.useMemo(
+    () => buildNextActions(snapshot.tasks, statuses, 5),
+    [statuses]
+  )
+
   const traderStats = React.useMemo(
     () =>
       buildTraderStats(
@@ -60,7 +66,12 @@ export function DashboardScreen() {
   return (
     <AppShell>
       <div className={stack}>
-        <StatCards cards={cards} />
+        <NextActions
+          actions={actions}
+          cards={cards}
+          traders={snapshot.traders}
+          maps={snapshot.maps}
+        />
 
         <div className={splitGrid}>
           <MapPriority

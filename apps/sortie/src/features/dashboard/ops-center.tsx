@@ -27,7 +27,7 @@ export function OpsCenter() {
   const { left, right } = tarkovTime(now)
 
   return (
-    <Panel title="ВРЕМЯ" srTitle="Raid clocks">
+    <Panel title="Raid clocks" tone="quiet">
       <div className="flex gap-2">
         <Clock label="Server 1" value={left} />
         <Clock label="Server 2" value={right} />

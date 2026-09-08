@@ -24,12 +24,10 @@ function itemName(items: Record<string, SnapshotItem>, id: string) {
  */
 function Section({
   title,
-  srTitle,
   count,
   children,
 }: {
   title: string
-  srTitle: string
   count: number
   children: React.ReactNode
 }) {
@@ -45,8 +43,7 @@ function Section({
           <span className="group-open:hidden">[+]</span>
           <span className="hidden group-open:inline">[-]</span>
         </span>
-        <span aria-hidden="true">{title}</span>
-        <span className="sr-only">{srTitle}</span>
+        {title}
         <span className="text-terminal-chrome-dim tabular-nums">{count}</span>
       </summary>
       <div className="mt-1.5 max-h-96 overflow-y-auto pr-1">
@@ -117,9 +114,9 @@ export function KitPanel({
   onObjectiveCount: (objectiveId: string, count: number) => void
 }) {
   return (
-    <Panel title="СНАРЯЖЕНИЕ" srTitle="What to bring and what to find">
+    <Panel title="Raid kit">
       <div className="flex flex-col gap-4">
-        <Section title="КЛЮЧИ" srTitle="Keys to bring" count={kit.keys.length}>
+        <Section title="Keys to bring" count={kit.keys.length}>
           <ul className="flex flex-wrap gap-1.5">
             {kit.keys.map((key) => (
               <li
@@ -147,11 +144,7 @@ export function KitPanel({
           </ul>
         </Section>
 
-        <Section
-          title="НАЙТИ В РЕЙДЕ"
-          srTitle="Find in raid"
-          count={kit.findInRaid.length}
-        >
+        <Section title="Find in raid" count={kit.findInRaid.length}>
           <ul className="flex flex-col">
             {kit.findInRaid.map((row) => (
               <ItemRow
@@ -165,11 +158,7 @@ export function KitPanel({
           </ul>
         </Section>
 
-        <Section
-          title="ВЗЯТЬ И УСТАНОВИТЬ"
-          srTitle="Bring and plant"
-          count={kit.bringAndPlant.length}
-        >
+        <Section title="Bring and plant" count={kit.bringAndPlant.length}>
           <ul className="flex flex-col">
             {kit.bringAndPlant.map((row) => (
               <ItemRow

@@ -30,7 +30,7 @@ export function TraderPanel({
   const shown = stats.filter((stat) => stat.total > 0)
 
   return (
-    <Panel title="ТОРГОВЦЫ" srTitle="Traders">
+    <Panel title="Traders">
       <ul className="grid gap-3 sm:grid-cols-2">
         {shown.map((stat) => {
           const trader = byId.get(stat.id)

@@ -4,16 +4,20 @@ import { useSearchParams } from "react-router"
 import { AppShell } from "@/components/app-shell"
 import { snapshot } from "@/data/snapshot"
 import {
+  frontOfEachLine,
+  gatedCountForMap,
   mapTaskCounts,
   partitionActiveTasks,
   tasksForMap,
 } from "@/domain/active-tasks"
+import { buildChecklist } from "@/domain/checklist"
 import { buildRaidKit } from "@/domain/raid-kit"
 import { buildTaskStatuses } from "@/domain/task-graph"
 import { useProgress, useProgressActions } from "@/state/progress"
 import { ChecklistPanel } from "./checklist-panel"
 import { KitPanel } from "./kit-panel"
 import { MapBar } from "./map-bar"
+import { PackState } from "./pack-state"
 import { TaskList } from "./task-list"
 import { stack } from "@/components/layout"
 import { cn } from "@workspace/ui/lib/utils"
@@ -32,6 +36,7 @@ export function RaidScreen() {
     setObjectiveCount,
     setTaskCompletion,
     toggleChecklistEntry,
+    setChecklistEntries,
     setNote,
   } = useProgressActions()
   const [params, setParams] = useSearchParams()
@@ -68,19 +73,60 @@ export function RaidScreen() {
     snapshot.maps.find((entry) => entry.normalizedName === requested) ?? busiest
 
   const includeGlobal = params.get("global") !== "0"
+  // Off by default: these are the ones the app cannot prove are open.
+  const includeGated = params.get("gated") === "1"
 
+  // The map's own tasks and the anywhere ones are kept apart all the way to
+  // the list, which shows them as two groups.
   const tasks = React.useMemo(
-    () => tasksForMap(active, map.id, includeGlobal),
-    [active, map.id, includeGlobal]
+    () => tasksForMap(active, map.id, false, includeGated),
+    [active, map.id, includeGated]
   )
-  const kit = React.useMemo(() => buildRaidKit(tasks, map.id), [tasks, map.id])
+  const anywhere = React.useMemo(() => {
+    if (!includeGlobal) return []
+    return [...active.global, ...(includeGated ? active.gatedGlobal : [])]
+  }, [active, includeGlobal, includeGated])
+  const gatedCount = gatedCountForMap(active, map.id, includeGlobal)
 
-  function update(next: { map?: string; global?: boolean }) {
+  // The questline view is the default: one task per trader. Everything the
+  // app believes is open sits behind the control in the task list.
+  const showAll = params.get("all") === "1"
+  const shown = React.useMemo(
+    () => (showAll ? tasks : frontOfEachLine(tasks)),
+    [tasks, showAll]
+  )
+  const shownAnywhere = React.useMemo(
+    () => (showAll ? anywhere : frontOfEachLine(anywhere)),
+    [anywhere, showAll]
+  )
+  const kit = React.useMemo(
+    () => buildRaidKit([...tasks, ...anywhere], map.id),
+    [tasks, anywhere, map.id]
+  )
+  const entries = React.useMemo(
+    () => buildChecklist(map, snapshot.items),
+    [map]
+  )
+
+  function update(next: {
+    map?: string
+    global?: boolean
+    gated?: boolean
+    all?: boolean
+  }) {
     const merged = new URLSearchParams(params)
     if (next.map !== undefined) merged.set("map", next.map)
     if (next.global !== undefined) {
       if (next.global) merged.delete("global")
       else merged.set("global", "0")
+    }
+    if (next.gated !== undefined) {
+      if (next.gated) merged.set("gated", "1")
+      else merged.delete("gated")
+    }
+    if (next.all !== undefined) {
+      if (next.all) merged.set("all", "1")
+      else merged.delete("all")
     }
     setParams(merged, { replace: true })
   }
@@ -102,6 +148,16 @@ export function RaidScreen() {
           />
         </div>
 
+        <PackState
+          map={map}
+          entries={entries}
+          ticked={progress.checklistTicks[map.id] ?? []}
+          kit={kit}
+          tasks={tasks}
+          anywhereTasks={anywhere}
+          objectiveCounts={progress.objectiveCounts}
+        />
+
         {/* What you pack on the left, what you are packing for on the right.
             The kit sat above the tasks at first, and its fifty-odd rows put
             the task list a screen and a half down. */}
@@ -109,10 +165,13 @@ export function RaidScreen() {
           <div className={cn(stack, "min-w-0")}>
             <ChecklistPanel
               map={map}
-              items={snapshot.items}
+              entries={entries}
               ticked={progress.checklistTicks[map.id] ?? []}
               note={progress.notes[map.id] ?? ""}
               onToggle={(entryId) => toggleChecklistEntry(map.id, entryId)}
+              onSetAll={(entryIds, ticked) =>
+                setChecklistEntries(map.id, entryIds, ticked)
+              }
               onNoteChange={(note) => setNote(map.id, note)}
             />
             <KitPanel
@@ -124,8 +183,16 @@ export function RaidScreen() {
           </div>
 
           <TaskList
-            tasks={tasks}
+            tasks={shown}
+            anywhereTasks={shownAnywhere}
+            openCount={tasks.length + anywhere.length}
+            showAll={showAll}
+            onToggleAll={() => update({ all: !showAll })}
             traders={snapshot.traders}
+            items={snapshot.items}
+            gatedCount={gatedCount}
+            includeGated={includeGated}
+            onToggleGated={() => update({ gated: !includeGated })}
             unlockCounts={unlockCounts}
             objectiveCounts={progress.objectiveCounts}
             onObjectiveCount={setObjectiveCount}

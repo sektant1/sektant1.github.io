@@ -1,6 +1,7 @@
 export type Faction = "USEC" | "BEAR"
 export type GameMode = "regular" | "pve"
-export type TaskStatus = "locked" | "available" | "complete" | "failed"
+export type TaskStatus =
+  "locked" | "gated" | "available" | "complete" | "failed"
 export type TaskCompletion = "complete" | "failed"
 
 /** An objective, reduced to what the two screens read. */
@@ -33,6 +34,14 @@ export type SnapshotTask = {
   wikiLink: string | null
   /** The task's portrait on assets.tarkov.dev, or null. */
   imageLink: string | null
+  /** Held behind a storyline variable the game does not publish. */
+  storylineGated: boolean
+  /**
+   * The task this one plainly follows by name — "Part 3" after "Part 2".
+   * Inferred here because the dump has lost many real prerequisites; kept
+   * apart from taskRequirements, which are the game's own.
+   */
+  seriesPredecessor: string | null
   taskRequirements: { task: string; status: string[] }[]
   traderRequirements: { trader: string; level: number }[]
   /** Keys the task needs, grouped by the map they are used on. */

@@ -124,6 +124,64 @@ describe("buildTaskStatuses", () => {
     expect(statuses.second).toBe("available")
   })
 
+  it("locks a numbered sequel until its predecessor is done", () => {
+    const tasks = [
+      makeTask({ id: "part-1", name: "Chemical - Part 1" }),
+      makeTask({
+        id: "part-2",
+        name: "Chemical - Part 2",
+        seriesPredecessor: "part-1",
+      }),
+    ]
+
+    expect(buildTaskStatuses(tasks, context)["part-2"]).toBe("locked")
+  })
+
+  it("opens the sequel once the predecessor is complete", () => {
+    const tasks = [
+      makeTask({ id: "part-1", name: "Chemical - Part 1" }),
+      makeTask({
+        id: "part-2",
+        name: "Chemical - Part 2",
+        seriesPredecessor: "part-1",
+      }),
+    ]
+
+    const statuses = buildTaskStatuses(tasks, {
+      ...context,
+      completions: { "part-1": "complete" },
+    })
+
+    expect(statuses["part-2"]).toBe("available")
+  })
+
+  it("holds a storyline-gated task apart from an open one", () => {
+    const statuses = buildTaskStatuses(
+      [makeTask({ storylineGated: true })],
+      context
+    )
+
+    expect(statuses["task-1"]).toBe("gated")
+  })
+
+  it("locks a gated task whose other requirements are not met either", () => {
+    const statuses = buildTaskStatuses(
+      [makeTask({ storylineGated: true, minPlayerLevel: 40 })],
+      context
+    )
+
+    expect(statuses["task-1"]).toBe("locked")
+  })
+
+  it("still reports a gated task the player has finished as complete", () => {
+    const statuses = buildTaskStatuses([makeTask({ storylineGated: true })], {
+      ...context,
+      completions: { "task-1": "complete" },
+    })
+
+    expect(statuses["task-1"]).toBe("complete")
+  })
+
   it("ignores a requirement pointing at a task the snapshot does not carry", () => {
     const task = makeTask({
       taskRequirements: [{ task: "missing", status: ["complete"] }],

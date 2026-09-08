@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import {
+  frontOfEachLine,
   mapTaskCounts,
   partitionActiveTasks,
   tasksForMap,
@@ -75,11 +76,94 @@ describe("tasksForMap", () => {
   })
 })
 
+describe("gated tasks", () => {
+  it("keeps gated tasks out of the available lists", () => {
+    const pool = [
+      makeTask({ id: "open", maps: ["customs"] }),
+      makeTask({ id: "held", maps: ["customs"], storylineGated: true }),
+    ]
+
+    const active = partitionActiveTasks(pool, {
+      open: "available",
+      held: "gated",
+    })
+
+    expect(active.byMap.customs.map((task) => task.id)).toEqual(["open"])
+    expect(active.gatedByMap.customs.map((task) => task.id)).toEqual(["held"])
+  })
+
+  it("adds them back when the caller asks for them", () => {
+    const pool = [
+      makeTask({ id: "open", maps: ["customs"] }),
+      makeTask({ id: "held", maps: ["customs"], storylineGated: true }),
+    ]
+    const active = partitionActiveTasks(pool, {
+      open: "available",
+      held: "gated",
+    })
+
+    expect(
+      tasksForMap(active, "customs", false, true).map((task) => task.id)
+    ).toEqual(["open", "held"])
+  })
+})
+
 describe("mapTaskCounts", () => {
   it("counts the available tasks on each map", () => {
     expect(mapTaskCounts(partitionActiveTasks(tasks, statuses))).toEqual({
       customs: 3,
       woods: 2,
     })
+  })
+})
+
+describe("tasks that name most of the map list", () => {
+  it("treats a task spanning six maps as doable anywhere", () => {
+    const pool = [
+      makeTask({
+        id: "roam",
+        maps: ["a", "b", "c", "d", "e", "f"],
+      }),
+    ]
+
+    const active = partitionActiveTasks(pool, { roam: "available" })
+
+    expect(active.global.map((task) => task.id)).toEqual(["roam"])
+    expect(active.byMap.a).toBeUndefined()
+  })
+
+  it("still ties a task on five maps to each of them", () => {
+    const pool = [makeTask({ id: "five", maps: ["a", "b", "c", "d", "e"] })]
+
+    const active = partitionActiveTasks(pool, { five: "available" })
+
+    expect(active.global).toEqual([])
+    expect(active.byMap.a.map((task) => task.id)).toEqual(["five"])
+  })
+})
+
+describe("frontOfEachLine", () => {
+  it("keeps the lowest-level task per trader", () => {
+    const pool = [
+      makeTask({ id: "late", trader: "prapor", minPlayerLevel: 15 }),
+      makeTask({ id: "first", trader: "prapor", minPlayerLevel: 1 }),
+      makeTask({ id: "therapist", trader: "therapist", minPlayerLevel: 8 }),
+    ]
+
+    expect(
+      frontOfEachLine(pool)
+        .map((task) => task.id)
+        .sort()
+    ).toEqual(["first", "therapist"])
+  })
+
+  it("breaks a level tie by name, so the order never wobbles", () => {
+    const pool = [
+      makeTask({ id: "b", name: "Beta", trader: "prapor" }),
+      makeTask({ id: "a", name: "Alpha", trader: "prapor" }),
+    ]
+
+    expect(frontOfEachLine(pool)).toHaveLength(1)
+    expect(frontOfEachLine(pool)[0].id).toBe("a")
   })
 })

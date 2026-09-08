@@ -1,7 +1,7 @@
 import { GameImage } from "@/components/game-image"
 import { Panel } from "@/components/panel"
 import type { SnapshotMap } from "@/domain/types"
-import { chip, sectionHeading } from "@/components/layout"
+import { sectionHeading } from "@/components/layout"
 
 /**
  * Who spawns where, and how often. Straight from the snapshot: these are the
@@ -34,26 +34,37 @@ export function BossIntel({ maps }: { maps: SnapshotMap[] }) {
           .sort((a, b) => b.spawnChance - a.spawnChance),
       }
     })
+    .sort((a, b) => b.bosses.length - a.bosses.length)
 
   return (
-    <Panel title="РАЗВЕДКА" srTitle="Boss intel">
-      <ul className="flex flex-col gap-3">
+    <Panel title="Boss intel" tone="quiet">
+      {/* One column per map, one row per boss, so the percentages line up
+          down the panel and can be read against each other — which is the
+          only reason to put them on one screen. */}
+      <ul className="grid gap-x-4 gap-y-3 sm:grid-cols-2 xl:grid-cols-3">
         {rows.map(({ map, bosses }) => (
-          <li key={map.id} className="flex flex-col gap-1.5">
-            <h3 className={sectionHeading}>{map.name}</h3>
-            <ul className="flex flex-wrap gap-1.5">
+          <li key={map.id} className="flex min-w-0 flex-col gap-1">
+            <h3
+              className={`${sectionHeading} border-b border-terminal-rule/40 pb-1`}
+            >
+              {map.name}
+            </h3>
+            <ul className="flex flex-col">
               {bosses.map((boss) => (
-                <li key={`${map.id}-${boss.name}`} className={chip}>
+                <li
+                  key={`${map.id}-${boss.name}`}
+                  className="grid min-h-9 grid-cols-[1.75rem_minmax(0,1fr)_3rem] items-center gap-x-2"
+                >
                   <GameImage
                     src={boss.portrait}
                     alt=""
                     fit="cover"
-                    className="size-8"
+                    className="size-7"
                   />
-                  <span className="font-mono text-[0.7rem] text-foreground">
+                  <span className="truncate font-mono text-[0.7rem] text-foreground">
                     {boss.name}
                   </span>
-                  <span className="font-mono text-[0.7rem] text-primary tabular-nums">
+                  <span className="text-right font-mono text-[0.7rem] text-primary tabular-nums">
                     {Math.round(boss.spawnChance * 100)}%
                   </span>
                 </li>

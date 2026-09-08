@@ -68,12 +68,32 @@ const { data: rawHideout, translate: tHideout } = await fetchEndpoint("hideout")
 /** Every item id the kept data points at. The items dump is filtered to it. */
 const referencedItems = new Set()
 
+// Quest items — the briefcase, the letter, the marked key — are their own
+// collection, not part of the items dump, and objectives point at them
+// through `questItem` rather than `items`. They are folded into the same map
+// the app resolves every icon through.
+const questItems = {}
+for (const item of toArray(rawTasks.questItems)) {
+  questItems[item.id] = {
+    id: item.id,
+    name: tTasks(item.name),
+    shortName: tTasks(item.shortName),
+    iconLink: item.iconLink ?? null,
+  }
+}
+
 const tasks = toArray(rawTasks.tasks).map((task) => {
   const objectives = toArray(task.objectives).map((objective) => {
     const items = toArray(objective.items).filter(
       (id) => typeof id === "string"
     )
     for (const id of items) referencedItems.add(id)
+    // A quest item counts as this objective's item: the reader wants to see
+    // the thing they are looking for, whichever collection it lives in.
+    if (typeof objective.questItem === "string") {
+      items.push(objective.questItem)
+    }
+
     return {
       id: objective.id,
       type: objective.type,
@@ -82,7 +102,10 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
       optional: objective.optional === true,
       maps: toArray(objective.maps).filter((id) => typeof id === "string"),
       items,
-      foundInRaid: objective.foundInRaid === true,
+      // A quest item is by definition found in the raid it spawns in.
+      foundInRaid:
+        objective.foundInRaid === true ||
+        objective.type === "findQuestItem",
     }
   })
 
@@ -117,6 +140,13 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
     experience: task.experience ?? 0,
     wikiLink: task.wikiLink ?? null,
     imageLink: task.taskImageLink ?? null,
+    // The game moved many prerequisites out of taskRequirements and into
+    // global variables whose value it does not publish; 164 tasks carry one.
+    // The gate is real and knowable, only its state is not, so the app shows
+    // these apart rather than pretending they are open.
+    storylineGated: toArray(task.otherRequirements).some(
+      (requirement) => requirement?.type === "globalVariable"
+    ),
     taskRequirements: toArray(task.taskRequirements)
       .map((requirement) => ({
         task: readId(requirement.task),
@@ -136,6 +166,27 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
     objectives,
   }
 })
+
+// The dump has lost many prerequisites — "The Punisher - Part 1" and
+// "Search Mission" arrive with none at all, and the GraphQL API that still
+// carries them is unreachable from a browser and was down while this was
+// written. What survives in every case is the name: a task called "X - Part
+// 4" plainly follows "X - Part 3". That inference is recorded separately
+// from the game's own taskRequirements so it is never mistaken for them.
+const SERIES = /^(.*?)\s*[-–]\s*Part\s+(\d+)$/i
+const byName = new Map(tasks.map((task) => [task.name, task]))
+for (const task of tasks) {
+  const match = SERIES.exec(task.name)
+  task.seriesPredecessor = null
+  if (!match) continue
+  const [, stem, part] = match
+  const previous = Number(part) - 1
+  if (previous < 1) continue
+  const earlier =
+    byName.get(`${stem} - Part ${previous}`) ??
+    byName.get(`${stem} – Part ${previous}`)
+  if (earlier && earlier.id !== task.id) task.seriesPredecessor = earlier.id
+}
 
 // A map names its bosses by mob id; the names and portraits live in a
 // sibling collection.
@@ -204,7 +255,7 @@ const hideout = toArray(rawHideout).map((station) => ({
 // Last, because it is filtered by what everything above referenced. The full
 // dump is ~16 MB; shipping it would be most of the app's weight.
 const { data: rawItems, translate: tItems } = await fetchEndpoint("items")
-const items = {}
+const items = { ...questItems }
 for (const item of toArray(rawItems.items)) {
   if (!referencedItems.has(item.id)) continue
   items[item.id] = {

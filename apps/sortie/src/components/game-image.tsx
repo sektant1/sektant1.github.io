@@ -19,11 +19,14 @@ import { cn } from "@workspace/ui/lib/utils"
 export function GameImage({
   src,
   alt,
+  title,
   fit = "contain",
   className,
 }: {
   src: string | null
   alt: string
+  /** Hover text, for an icon standing in for a name. */
+  title?: string
   fit?: "contain" | "cover"
   className?: string
 }) {
@@ -31,6 +34,7 @@ export function GameImage({
 
   return (
     <span
+      title={title}
       className={cn(
         "grid shrink-0 place-content-center overflow-hidden border border-terminal-rule/60 bg-sidebar/60",
         className

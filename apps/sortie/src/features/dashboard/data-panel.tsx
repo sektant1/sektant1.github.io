@@ -45,7 +45,7 @@ export function DataPanel({
   }
 
   return (
-    <Panel title="ДАННЫЕ" srTitle="Snapshot and progress files">
+    <Panel title="Snapshot and files" tone="quiet">
       <dl className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-[0.65rem] text-terminal-ink-dim uppercase">
         <div className="flex justify-between gap-2">
           <dt>built</dt>

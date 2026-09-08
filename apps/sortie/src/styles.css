@@ -4,3 +4,15 @@
    post-processing. */
 @import "@workspace/ui/globals.css";
 @import "@workspace/ui/themes/phosphor.css";
+
+:root {
+  /* Bender, the same face sektant.dev is set in. The toolkit cannot default
+     to it because it carries no Cyrillic; this app's signage is Latin, so it
+     can. Declared in CSS rather than from an effect so the first paint is
+     not Play corrected to Bender a frame later. */
+  --font-display: Bender;
+
+  /* Prose here is mono for the reason it is on the site: this is a terminal
+     before it is a document. */
+  --font-body: IBM Plex Mono, ui-monospace, monospace;
+}

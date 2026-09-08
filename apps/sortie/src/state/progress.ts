@@ -106,6 +106,25 @@ export function useProgressActions() {
             checklistTicks: withEntry(progress.checklistTicks, mapId, next),
           }
         }),
+      setChecklistEntries: (
+        mapId: string,
+        entryIds: string[],
+        ticked: boolean
+      ) =>
+        progressStore.update((progress) => {
+          const current = progress.checklistTicks[mapId] ?? []
+          const next = ticked
+            ? [...new Set([...current, ...entryIds])]
+            : current.filter((id) => !entryIds.includes(id))
+          return {
+            ...progress,
+            checklistTicks: withEntry(
+              progress.checklistTicks,
+              mapId,
+              next.length ? next : undefined
+            ),
+          }
+        }),
       setNote: (mapId: string, note: string) =>
         progressStore.update((progress) => ({
           ...progress,
