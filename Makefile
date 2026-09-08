@@ -33,7 +33,7 @@ install: ## Install dependencies for every workspace
 
 .PHONY: clean
 clean: ## Remove build output and caches (keeps node_modules)
-	rm -rf apps/web/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
+	rm -rf apps/web/dist apps/sortie/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
 	find . -name '*.tsbuildinfo' -not -path './node_modules/*' -delete
 
 .PHONY: reset
@@ -54,6 +54,10 @@ dev-site: ## Run just sektant.dev, on :3000
 .PHONY: dev-showcase
 dev-showcase: ## Run just the component showcase, on :5173
 	npm run dev --workspace web
+
+.PHONY: dev-sortie
+dev-sortie: ## Run just the raid planner, on :5174
+	npm run dev --workspace sortie
 
 ##@ Verify
 

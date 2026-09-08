@@ -1,0 +1,6 @@
+/* Tokens and the green tube, both from the toolkit. Nothing is redefined
+   here: this app wears the identity the way the showcase does — type, colour
+   and the crt-* utilities — without the hideout's tube-face or its
+   post-processing. */
+@import "@workspace/ui/globals.css";
+@import "@workspace/ui/themes/phosphor.css";
