@@ -45,6 +45,20 @@ export default defineConfig({
       },
       {
         test: {
+          name: "sortie",
+          root: dir("./apps/sortie"),
+          include: ["src/**/*.test.{ts,tsx}"],
+          exclude: ["**/node_modules/**", "**/dist/**"],
+        },
+        resolve: {
+          alias: {
+            "@workspace/ui": dir("./packages/ui/src"),
+            "@": dir("./apps/sortie/src"),
+          },
+        },
+      },
+      {
+        test: {
           name: "ui",
           root: dir("./packages/ui"),
           include: ["src/**/*.test.{ts,tsx}"],
