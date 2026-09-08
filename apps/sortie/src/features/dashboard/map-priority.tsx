@@ -3,11 +3,10 @@ import { Link } from "react-router"
 
 import { KeyButton } from "@/components/key-button"
 import { Panel } from "@/components/panel"
-import {
-  mapTaskCounts,
-  partitionActiveTasks,
-} from "@/domain/active-tasks"
+import { mapTaskCounts, partitionActiveTasks } from "@/domain/active-tasks"
 import type { SnapshotMap, SnapshotTask, TaskStatus } from "@/domain/types"
+import { listRow } from "@/components/layout"
+import { cn } from "@workspace/ui/lib/utils"
 
 /**
  * Which map to run next, ranked by what is actually available there. The
@@ -55,7 +54,7 @@ export function MapPriority({
           <li key={map.id}>
             <Link
               to={`/raid?map=${map.normalizedName}`}
-              className="flex min-h-11 items-center gap-3 border-b border-terminal-rule/40 py-1.5 last:border-b-0 hover:text-primary"
+              className={cn(listRow, "hover:text-primary")}
             >
               <span className="w-44 shrink-0 truncate font-mono text-xs text-foreground">
                 {map.name}

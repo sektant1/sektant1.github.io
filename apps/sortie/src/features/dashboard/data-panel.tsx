@@ -108,8 +108,7 @@ export function DataPanel({
         </div>
       ) : (
         <p className="mt-2 font-mono text-[0.65rem] text-terminal-ink-dim">
-          reads a sortie export, a TarkovTracker backup, or a tarkov.dev
-          profile
+          reads a sortie export, a TarkovTracker backup, or a tarkov.dev profile
         </p>
       )}
     </Panel>

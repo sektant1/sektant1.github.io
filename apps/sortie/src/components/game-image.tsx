@@ -10,14 +10,21 @@ import { cn } from "@workspace/ui/lib/utils"
  * That is the one thing this app loads at runtime, so it is built to do
  * without: a failed or slow image leaves a bordered well the same size, and
  * the name beside it always carries the meaning on its own.
+ *
+ * `fit` is not decoration. Item icons are drawn to their own bounds and have
+ * to be contained or they crop; task art and portraits are photographs at
+ * their own aspect and have to be covered or they letterbox inside a frame
+ * three times their height.
  */
 export function GameImage({
   src,
   alt,
+  fit = "contain",
   className,
 }: {
   src: string | null
   alt: string
+  fit?: "contain" | "cover"
   className?: string
 }) {
   const [failed, setFailed] = React.useState(false)
@@ -35,7 +42,10 @@ export function GameImage({
           alt={alt}
           loading="lazy"
           decoding="async"
-          className="size-full object-contain"
+          className={cn(
+            "size-full",
+            fit === "cover" ? "object-cover" : "object-contain"
+          )}
           onError={() => setFailed(true)}
         />
       ) : (

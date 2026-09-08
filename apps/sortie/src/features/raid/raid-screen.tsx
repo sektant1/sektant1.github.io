@@ -15,6 +15,8 @@ import { ChecklistPanel } from "./checklist-panel"
 import { KitPanel } from "./kit-panel"
 import { MapBar } from "./map-bar"
 import { TaskList } from "./task-list"
+import { stack } from "@/components/layout"
+import { cn } from "@workspace/ui/lib/utils"
 
 /** How many tasks name each task as a prerequisite. Fixed by the snapshot. */
 const unlockCounts: Record<string, number> = {}
@@ -85,7 +87,7 @@ export function RaidScreen() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-3">
+      <div className={stack}>
         {/* The task list runs long, and the map you are packing for is the one
             thing you must be able to see while scrolling it. */}
         <div className="sticky top-0 z-10 -mx-3 bg-background/95 px-3 py-2 backdrop-blur md:-mx-4 md:px-4">
@@ -104,7 +106,7 @@ export function RaidScreen() {
             The kit sat above the tasks at first, and its fifty-odd rows put
             the task list a screen and a half down. */}
         <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)]">
-          <div className="flex min-w-0 flex-col gap-3">
+          <div className={cn(stack, "min-w-0")}>
             <ChecklistPanel
               map={map}
               items={snapshot.items}

@@ -42,10 +42,13 @@ function TaskCard({
   return (
     <li className="flex flex-col border border-terminal-rule">
       <div className="flex items-start gap-3 border-b border-terminal-rule/60 p-3">
+        {/* Task art is a wide still, not an icon: contained in a square it
+            sat in a letterbox two thirds empty. */}
         <GameImage
           src={task.imageLink}
           alt=""
-          className="hidden size-14 sm:grid"
+          fit="cover"
+          className="hidden aspect-video w-28 sm:grid"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
@@ -69,6 +72,7 @@ function TaskCard({
               <GameImage
                 src={trader?.imageLink ?? null}
                 alt=""
+                fit="cover"
                 className="size-5"
               />
               {trader?.name ?? task.trader}

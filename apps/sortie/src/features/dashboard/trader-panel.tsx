@@ -31,7 +31,7 @@ export function TraderPanel({
 
   return (
     <Panel title="ТОРГОВЦЫ" srTitle="Traders">
-      <ul className="grid gap-2 sm:grid-cols-2">
+      <ul className="grid gap-3 sm:grid-cols-2">
         {shown.map((stat) => {
           const trader = byId.get(stat.id)
           const next = trader ? nextLevel(trader, stat.level) : null
@@ -43,7 +43,12 @@ export function TraderPanel({
               className="flex flex-col gap-2 border border-terminal-rule p-2"
             >
               <div className="flex items-center gap-2">
-                <GameImage src={stat.imageLink} alt="" className="size-10" />
+                <GameImage
+                  src={stat.imageLink}
+                  alt=""
+                  fit="cover"
+                  className="size-10"
+                />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Link
                     to="/raid"

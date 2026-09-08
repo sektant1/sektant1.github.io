@@ -55,7 +55,23 @@ describe("buildChecklist", () => {
     })
   })
 
-  it("carries no icon for a fixed entry", () => {
+  it("gives a fixed entry the icon of the item that stands for it", () => {
+    const withMedKit: Record<string, SnapshotItem> = {
+      ...items,
+      "544fb45d4bdc2dee738b4568": {
+        id: "544fb45d4bdc2dee738b4568",
+        name: "Salewa first aid kit",
+        shortName: "Salewa",
+        iconLink: "https://assets.tarkov.dev/salewa-icon.webp",
+      },
+    }
+
+    expect(buildChecklist(customs, withMedKit)[0].icon).toBe(
+      "https://assets.tarkov.dev/salewa-icon.webp"
+    )
+  })
+
+  it("leaves a fixed entry without an icon when the snapshot lacks the item", () => {
     expect(buildChecklist(customs, items)[0].icon).toBeNull()
   })
 

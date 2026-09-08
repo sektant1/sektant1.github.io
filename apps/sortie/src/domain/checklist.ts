@@ -11,34 +11,41 @@ export type ChecklistEntry = {
   derived: boolean
 }
 
-const FIXED: ChecklistEntry[] = [
+/**
+ * The fixed entries stand for a kind of thing, not for one item, so each
+ * borrows the icon of the item that reads as that kind. The ids are stable
+ * game ids; an id the snapshot has dropped simply leaves the entry without a
+ * picture, which is why the lookup is a fallback and not an assertion.
+ */
+const FIXED: {
+  id: string
+  label: string
+  detail: string | null
+  item: string
+}[] = [
   {
     id: "med-kit",
     label: "full med kit",
     detail: "heavy and light bleed, splint, meds, painkiller",
-    icon: null,
-    derived: false,
+    item: "544fb45d4bdc2dee738b4568", // Salewa first aid kit
   },
   {
     id: "food-water",
     label: "food and water",
     detail: null,
-    icon: null,
-    derived: false,
+    item: "5448fee04bdc2dbc018b4567", // Bottle of water (0.6L)
   },
   {
     id: "ammo-mags",
     label: "refill ammo, mags and grenades",
     detail: null,
-    icon: null,
-    derived: false,
+    item: "56dfef82d2720bbd668b4567", // 5.45x39mm BP gs
   },
   {
     id: "repair",
     label: "repair weapons and armour",
     detail: null,
-    icon: null,
-    derived: false,
+    item: "5910968f86f77425cf569c32", // Weapon repair kit
   },
 ]
 
@@ -72,5 +79,13 @@ export function buildChecklist(
       }
     })
 
-  return [...FIXED, ...derived]
+  const fixed = FIXED.map((entry) => ({
+    id: entry.id,
+    label: entry.label,
+    detail: entry.detail,
+    icon: items[entry.item]?.iconLink ?? null,
+    derived: false,
+  }))
+
+  return [...fixed, ...derived]
 }

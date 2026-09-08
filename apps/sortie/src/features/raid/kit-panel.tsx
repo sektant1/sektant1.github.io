@@ -5,6 +5,8 @@ import { GameImage } from "@/components/game-image"
 import { Panel } from "@/components/panel"
 import type { KitItem, RaidKit } from "@/domain/raid-kit"
 import type { SnapshotItem } from "@/domain/types"
+import { chip, listRowWrapping, sectionHeading } from "@/components/layout"
+import { cn } from "@workspace/ui/lib/utils"
 
 /**
  * An id that is not in the snapshot is shown as itself rather than dropped:
@@ -33,7 +35,12 @@ function Section({
 }) {
   return (
     <details open={count > 0} className="group flex flex-col gap-1.5">
-      <summary className="flex cursor-pointer list-none items-baseline gap-2 font-mono text-[0.65rem] tracking-[0.18em] text-terminal-chrome uppercase marker:content-none hover:text-primary">
+      <summary
+        className={cn(
+          sectionHeading,
+          "flex cursor-pointer list-none items-baseline gap-2 marker:content-none hover:text-primary"
+        )}
+      >
         <span aria-hidden="true" className="text-terminal-chrome-dim">
           <span className="group-open:hidden">[+]</span>
           <span className="hidden group-open:inline">[-]</span>
@@ -68,7 +75,7 @@ function ItemRow({
   const done = count >= row.count
 
   return (
-    <li className="flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 border-b border-terminal-rule/50 py-1.5 last:border-b-0">
+    <li className={listRowWrapping}>
       <GameImage
         src={items[row.itemId]?.iconLink ?? null}
         alt=""
@@ -117,7 +124,7 @@ export function KitPanel({
             {kit.keys.map((key) => (
               <li
                 key={key.itemId}
-                className="flex items-center gap-2 border border-terminal-rule py-1 pr-2 pl-1"
+                className={chip}
                 title={`needed by ${key.taskIds.length} task${
                   key.taskIds.length === 1 ? "" : "s"
                 }`}

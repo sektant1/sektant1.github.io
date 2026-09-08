@@ -11,6 +11,8 @@ import { MapPriority } from "./map-priority"
 import { OpsCenter } from "./ops-center"
 import { StatCards } from "./stat-cards"
 import { TraderPanel } from "./trader-panel"
+import { splitGrid, stack } from "@/components/layout"
+import { cn } from "@workspace/ui/lib/utils"
 
 export function DashboardScreen() {
   const progress = useProgress()
@@ -57,16 +59,16 @@ export function DashboardScreen() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-3">
+      <div className={stack}>
         <StatCards cards={cards} />
 
-        <div className="grid items-start gap-3 lg:grid-cols-2">
+        <div className={splitGrid}>
           <MapPriority
             maps={snapshot.maps}
             tasks={snapshot.tasks}
             statuses={statuses}
           />
-          <div className="flex min-w-0 flex-col gap-3">
+          <div className={cn(stack, "min-w-0")}>
             <OpsCenter />
             <DataPanel progress={progress} onApply={replaceAll} />
           </div>

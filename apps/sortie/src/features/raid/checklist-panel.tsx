@@ -4,6 +4,7 @@ import { GameImage } from "@/components/game-image"
 import { Panel } from "@/components/panel"
 import { buildChecklist } from "@/domain/checklist"
 import type { SnapshotItem, SnapshotMap } from "@/domain/types"
+import { listRow, readoutDim, stack } from "@/components/layout"
 
 export function ChecklistPanel({
   map,
@@ -24,12 +25,12 @@ export function ChecklistPanel({
   const done = entries.filter((entry) => ticked.includes(entry.id)).length
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={stack}>
       <Panel
         title="СБОРЫ"
         srTitle="Pre-raid checklist"
         controls={
-          <span className="font-mono text-[0.65rem] text-terminal-chrome-dim tabular-nums">
+          <span className={readoutDim}>
             {done} / {entries.length}
           </span>
         }
@@ -38,10 +39,7 @@ export function ChecklistPanel({
           {entries.map((entry) => {
             const isTicked = ticked.includes(entry.id)
             return (
-              <li
-                key={entry.id}
-                className="flex min-h-11 items-center gap-3 border-b border-terminal-rule/50 py-2 last:border-b-0"
-              >
+              <li key={entry.id} className={listRow}>
                 <Checkbox
                   aria-label={entry.label}
                   isSelected={isTicked}

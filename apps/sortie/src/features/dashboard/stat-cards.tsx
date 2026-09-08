@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import { AsciiMeter } from "@workspace/ui/components/ascii-meter"
 
 import type { StatCard } from "@/domain/stats"
+import { cardGrid, readoutDim } from "@/components/layout"
 
 /**
  * The six readings that answer "where am I". Each one links into the planner
@@ -9,7 +10,7 @@ import type { StatCard } from "@/domain/stats"
  */
 export function StatCards({ cards }: { cards: StatCard[] }) {
   return (
-    <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+    <ul className={cardGrid}>
       {cards.map((card) => (
         <li key={card.id}>
           <Link
@@ -24,7 +25,7 @@ export function StatCards({ cards }: { cards: StatCard[] }) {
               cells={20}
               display={`${card.done} / ${card.total}`}
             />
-            <span className="font-mono text-[0.65rem] text-terminal-ink-dim tabular-nums">
+            <span className={readoutDim}>
               {card.total === 0
                 ? "0%"
                 : `${Math.round((card.done / card.total) * 100)}%`}
