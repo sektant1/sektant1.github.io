@@ -5,6 +5,8 @@ export type ChecklistEntry = {
   /** Lowercase Latin: the operator talking to themselves, not signage. */
   label: string
   detail: string | null
+  /** The item's icon, when the entry names one. */
+  icon: string | null
   /** True when the entry comes from this map rather than the fixed set. */
   derived: boolean
 }
@@ -14,19 +16,28 @@ const FIXED: ChecklistEntry[] = [
     id: "med-kit",
     label: "full med kit",
     detail: "heavy and light bleed, splint, meds, painkiller",
+    icon: null,
     derived: false,
   },
-  { id: "food-water", label: "food and water", detail: null, derived: false },
+  {
+    id: "food-water",
+    label: "food and water",
+    detail: null,
+    icon: null,
+    derived: false,
+  },
   {
     id: "ammo-mags",
     label: "refill ammo, mags and grenades",
     detail: null,
+    icon: null,
     derived: false,
   },
   {
     id: "repair",
     label: "repair weapons and armour",
     detail: null,
+    icon: null,
     derived: false,
   },
 ]
@@ -51,11 +62,12 @@ export function buildChecklist(
     .filter((extract) => extract.transferItem !== null)
     .map((extract) => {
       const transfer = extract.transferItem!
-      const name = items[transfer.item]?.name ?? transfer.item
+      const item = items[transfer.item]
       return {
         id: `transfer-${slug(extract.name)}`,
-        label: `bring ${transfer.count} × ${name}`,
+        label: `bring ${transfer.count} × ${item?.name ?? transfer.item}`,
         detail: extract.name,
+        icon: item?.iconLink ?? null,
         derived: true,
       }
     })

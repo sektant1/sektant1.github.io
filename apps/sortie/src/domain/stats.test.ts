@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest"
 
 import { makeObjective, makeTask } from "./fixtures"
 import { buildStatCards, buildTraderStats } from "./stats"
-import type { SnapshotHideoutStation, SnapshotTrader, TaskStatus } from "./types"
+import type {
+  SnapshotHideoutStation,
+  SnapshotTrader,
+  TaskStatus,
+} from "./types"
 
 const tasks = [
   makeTask({

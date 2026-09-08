@@ -57,12 +57,9 @@ describe("tasksForMap", () => {
   it("appends the global tasks when asked to", () => {
     const active = partitionActiveTasks(tasks, statuses)
 
-    expect(tasksForMap(active, "customs", true).map((task) => task.id)).toEqual([
-      "customs-one",
-      "customs-two",
-      "both",
-      "anywhere",
-    ])
+    expect(tasksForMap(active, "customs", true).map((task) => task.id)).toEqual(
+      ["customs-one", "customs-two", "both", "anywhere"]
+    )
   })
 
   it("leaves the global tasks out when not", () => {

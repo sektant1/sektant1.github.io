@@ -40,7 +40,8 @@ export function readTarkovDevProfile(raw: Record<string, unknown>): {
   const info = raw.info as Record<string, unknown>
   const progress = emptyProgress()
 
-  progress.faction = String(info.side).toUpperCase() === "BEAR" ? "BEAR" : "USEC"
+  progress.faction =
+    String(info.side).toUpperCase() === "BEAR" ? "BEAR" : "USEC"
   progress.gameEdition = editionFromMemberCategory(info.memberCategory)
   if (typeof info.prestigeLevel === "number") {
     progress.prestige = info.prestigeLevel

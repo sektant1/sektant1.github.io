@@ -4,7 +4,12 @@ import { buildChecklist } from "./checklist"
 import type { SnapshotItem, SnapshotMap } from "./types"
 
 const items: Record<string, SnapshotItem> = {
-  roubles: { id: "roubles", name: "Roubles", shortName: "RUB", iconLink: null },
+  roubles: {
+    id: "roubles",
+    name: "Roubles",
+    shortName: "RUB",
+    iconLink: "https://assets.tarkov.dev/roubles-icon.webp",
+  },
 }
 
 const customs: SnapshotMap = {
@@ -45,8 +50,13 @@ describe("buildChecklist", () => {
       id: "transfer-dorms-v-ex",
       label: "bring 20000 × Roubles",
       detail: "Dorms V-Ex",
+      icon: "https://assets.tarkov.dev/roubles-icon.webp",
       derived: true,
     })
+  })
+
+  it("carries no icon for a fixed entry", () => {
+    expect(buildChecklist(customs, items)[0].icon).toBeNull()
   })
 
   it("derives nothing from a free extract", () => {

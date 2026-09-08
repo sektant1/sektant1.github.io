@@ -109,7 +109,11 @@ export function useProgressActions() {
       setNote: (mapId: string, note: string) =>
         progressStore.update((progress) => ({
           ...progress,
-          notes: withEntry(progress.notes, mapId, note === "" ? undefined : note),
+          notes: withEntry(
+            progress.notes,
+            mapId,
+            note === "" ? undefined : note
+          ),
         })),
       replaceAll: (progress: Progress) => progressStore.replace(progress),
     }),

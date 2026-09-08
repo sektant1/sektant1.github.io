@@ -31,6 +31,8 @@ export type SnapshotTask = {
   lightkeeperRequired: boolean
   experience: number
   wikiLink: string | null
+  /** The task's portrait on assets.tarkov.dev, or null. */
+  imageLink: string | null
   taskRequirements: { task: string; status: string[] }[]
   traderRequirements: { trader: string; level: number }[]
   /** Keys the task needs, grouped by the map they are used on. */
@@ -50,7 +52,7 @@ export type SnapshotMap = {
   name: string
   normalizedName: string
   extracts: SnapshotExtract[]
-  bosses: { name: string; spawnChance: number }[]
+  bosses: { name: string; portrait: string | null; spawnChance: number }[]
 }
 
 export type SnapshotTrader = {

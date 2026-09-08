@@ -116,6 +116,7 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
     lightkeeperRequired: task.lightkeeperRequired === true,
     experience: task.experience ?? 0,
     wikiLink: task.wikiLink ?? null,
+    imageLink: task.taskImageLink ?? null,
     taskRequirements: toArray(task.taskRequirements)
       .map((requirement) => ({
         task: readId(requirement.task),
@@ -136,9 +137,13 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
   }
 })
 
-// A map names its bosses by mob id; the names live in a sibling collection.
-const mobNames = new Map(
-  toArray(rawMaps.mobs).map((mob) => [mob.id, tMaps(mob.name)])
+// A map names its bosses by mob id; the names and portraits live in a
+// sibling collection.
+const mobs = new Map(
+  toArray(rawMaps.mobs).map((mob) => [
+    mob.id,
+    { name: tMaps(mob.name), portrait: mob.imagePortraitLink ?? null },
+  ])
 )
 
 const maps = toArray(rawMaps.maps).map((map) => ({
@@ -161,7 +166,8 @@ const maps = toArray(rawMaps.maps).map((map) => ({
     }
   }),
   bosses: toArray(map.bosses).map((boss) => ({
-    name: mobNames.get(boss.mob) ?? boss.mob,
+    name: mobs.get(boss.mob)?.name ?? boss.mob,
+    portrait: mobs.get(boss.mob)?.portrait ?? null,
     spawnChance: boss.spawnChance ?? 0,
   })),
 }))

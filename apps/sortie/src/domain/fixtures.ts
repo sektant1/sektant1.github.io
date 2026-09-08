@@ -29,6 +29,7 @@ export function makeTask(overrides: Partial<SnapshotTask> = {}): SnapshotTask {
     lightkeeperRequired: false,
     experience: 1000,
     wikiLink: null,
+    imageLink: null,
     taskRequirements: [],
     traderRequirements: [],
     neededKeys: [],

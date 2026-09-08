@@ -40,6 +40,12 @@ export function buildRaidKit(tasks: SnapshotTask[], mapId: string): RaidKit {
       }
     }
 
+    // The dump splits one requirement into a findItem and a giveItem
+    // objective — find three Salewa, then hand three Salewa in. They are one
+    // line on a packing list, and the hand-over is the half that completes,
+    // so it is the one that keeps the counter.
+    const pending = new Map<string, KitItem>()
+
     for (const objective of task.objectives) {
       const itemId = firstItem(objective.items)
       if (!itemId) continue
@@ -50,9 +56,23 @@ export function buildRaidKit(tasks: SnapshotTask[], mapId: string): RaidKit {
         taskName: task.name,
         objectiveId: objective.id,
       }
-      if (objective.type === "plantItem") bringAndPlant.push(row)
-      else if (objective.foundInRaid) findInRaid.push(row)
+
+      if (objective.type === "plantItem") {
+        bringAndPlant.push(row)
+        continue
+      }
+      if (!objective.foundInRaid) continue
+
+      const pair = `${itemId}:${objective.count}`
+      const existing = pending.get(pair)
+      if (!existing) {
+        pending.set(pair, row)
+      } else if (objective.type === "giveItem") {
+        pending.set(pair, row)
+      }
     }
+
+    findInRaid.push(...pending.values())
   }
 
   return {
