@@ -60,10 +60,17 @@ function readId(value) {
   return null
 }
 
-const { data: rawTasks, translate: tTasks } = await fetchEndpoint("tasks")
-const { data: rawMaps, translate: tMaps } = await fetchEndpoint("maps")
-const { data: rawTraders, translate: tTraders } = await fetchEndpoint("traders")
-const { data: rawHideout, translate: tHideout } = await fetchEndpoint("hideout")
+// Independent downloads, so they run together. Items is filtered last, by
+// what everything else references, but nothing stops it downloading first.
+const [
+  { data: rawTasks, translate: tTasks },
+  { data: rawMaps, translate: tMaps },
+  { data: rawTraders, translate: tTraders },
+  { data: rawHideout, translate: tHideout },
+  { data: rawItems, translate: tItems },
+] = await Promise.all(
+  ["tasks", "maps", "traders", "hideout", "items"].map(fetchEndpoint)
+)
 
 /** Every item id the kept data points at. The items dump is filtered to it. */
 const referencedItems = new Set()
@@ -268,7 +275,6 @@ const hideout = toArray(rawHideout).map((station) => ({
 
 // Last, because it is filtered by what everything above referenced. The full
 // dump is ~16 MB; shipping it would be most of the app's weight.
-const { data: rawItems, translate: tItems } = await fetchEndpoint("items")
 const items = { ...questItems }
 for (const item of toArray(rawItems.items)) {
   if (!referencedItems.has(item.id)) continue

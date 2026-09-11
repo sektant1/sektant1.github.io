@@ -4,8 +4,8 @@ import { AppShell } from "@/components/app-shell"
 import { snapshot } from "@/data/snapshot"
 import { buildNextActions } from "@/domain/next-actions"
 import { buildStatCards, buildTraderStats } from "@/domain/stats"
-import { buildTaskStatuses } from "@/domain/task-graph"
 import { useProgress, useProgressActions } from "@/state/progress"
+import { useTaskStatuses } from "@/state/task-statuses"
 import { BossIntel } from "./boss-intel"
 import { DataPanel } from "./data-panel"
 import { MapPriority } from "./map-priority"
@@ -19,21 +19,7 @@ export function DashboardScreen() {
   const progress = useProgress()
   const { setTraderLevel, setTraderRep, replaceAll } = useProgressActions()
 
-  const statuses = React.useMemo(
-    () =>
-      buildTaskStatuses(snapshot.tasks, {
-        completions: progress.taskCompletions,
-        level: progress.level,
-        faction: progress.faction,
-        traderLevels: progress.traderLevels,
-      }),
-    [
-      progress.taskCompletions,
-      progress.level,
-      progress.faction,
-      progress.traderLevels,
-    ]
-  )
+  const statuses = useTaskStatuses(progress)
 
   const cards = React.useMemo(
     () =>

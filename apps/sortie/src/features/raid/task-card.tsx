@@ -5,6 +5,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { Counter } from "@/components/counter"
 import { GameImage } from "@/components/game-image"
 import { KeyButton } from "@/components/key-button"
+import { listRowWrapping } from "@/components/layout"
 import type {
   SnapshotItem,
   SnapshotTask,
@@ -244,7 +245,7 @@ export function TaskCard({
             <li
               key={objective.id}
               className={cn(
-                "flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 border-b border-terminal-rule/40 py-2 last:border-b-0",
+                listRowWrapping,
                 settled && "opacity-60"
               )}
             >

@@ -1,0 +1,76 @@
+---
+title: "sortie"
+slug: "sortie"
+description: "A pre-raid planner for Escape from Tarkov: what to pack, what to do on this map, and which task to run next."
+date: "2026-09-11"
+status: "active"
+tags:
+  - "tarkov"
+  - "react"
+  - "tool"
+stack:
+  - "react"
+  - "vite"
+  - "typescript"
+  - "tailwind"
+href: "https://sektant.dev/sortie/"
+repo: "https://github.com/sektant1/sektant1.github.io/tree/master/apps/sortie"
+open: "website"
+thumbnail: "./assets/cover.png"
+---
+
+**Вылазка** is Russian for a sortie: you go out, do the job, and come back with more than you took. Or you don't come back.
+
+sortie is the tab I keep open between raids. Pick the map you are loading into and it lists what to bring, which tasks you can work on there, and what to pick up before you extract.
+
+## Briefing
+
+```text
+OPERATION   sortie
+AREA        17 maps, Factory to The Lab
+TARGETS     515 tasks, 1442 objectives, 16 traders, 26 hideout stations
+INTEL       json.tarkov.dev, snapshot built 2026-09-08
+COMMS       none: nothing you enter leaves your browser
+```
+
+## Raid planner
+
+![The raid planner on Customs](/content-assets/projects/sortie/assets/raid-planner.png)
+
+The strip across the top lists every map, ordered by how many open tasks it has. Pick one and the whole page is about that raid.
+
+- **Pre-raid checklist.** Meds, food, ammo and repairs on every raid, plus whatever this map charges to leave. Car extracts and paid exits list their fare, so you never walk to Smugglers' Boat without the note.
+- **Raid kit.** Keys to bring, items to find in raid and items to plant, collected from your open tasks, with a counter on each.
+- **Active tasks.** You see the next task in each trader's line first, the one the game wants you on. *Everything* shows all open tasks. Filter by Kappa, Lightkeeper, trader or name.
+- **Storyline gates.** 164 tasks are locked behind a story flag the game does not publish. They are hidden unless you turn them on, so the default list only holds tasks you can definitely take.
+
+![Task cards with objective counters](/content-assets/projects/sortie/assets/raid-tasks.png)
+
+## Dashboard
+
+![The progression dashboard](/content-assets/projects/sortie/assets/dashboard.png)
+
+- **Do this next.** Available tasks, ranked by how many other tasks they unlock. When two unlock the same number, the Kappa task comes first.
+- **Map priority.** How many open tasks each map holds, with a Kappa-only view.
+- **Raid clocks.** The in-raid time on both servers. Tarkov time runs seven times faster than real time, and the two servers are twelve hours apart.
+- **Traders and bosses.** Your loyalty level with each trader, and the spawn chance of every boss on every map.
+
+## Your progress
+
+Progress is saved in your browser. There is no account and no server. **Export** saves it to a file. **Import** reads a sortie export, a TarkovTracker backup or a tarkov.dev profile.
+
+<C>a TarkovTracker backup holds both PvP and PvE; only the mode it was saved in is read</C>
+
+## Where the data comes from
+
+The game data is a snapshot. A script builds it from `json.tarkov.dev`, and the result is committed to the repo, so the site never calls another server at runtime and a build still works when tarkov.dev is down.
+
+```sh
+make snapshot         # download the dumps and rebuild the data
+make snapshot-check   # fail if the committed data is out of date
+make dev-sortie       # run the app on :5174
+```
+
+The dumps are missing some prerequisites. "The Punisher - Part 1", for example, arrives with none. sortie infers the order from the "Part N" names and keeps those guesses apart from the game's own requirements.
+
+<C>not affiliated with Battlestate Games. удачи на вылазке.</C>

@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import type { Faction, GameMode, TaskCompletion } from "@/domain/types"
+import type { Faction, TaskCompletion } from "@/domain/types"
 import { loadProgress, saveProgress, type Progress } from "./storage"
 
 /**
@@ -12,6 +12,12 @@ function createProgressStore() {
   let current = loadProgress()
   const listeners = new Set<() => void>()
 
+  function update(recipe: (progress: Progress) => Progress) {
+    current = recipe(current)
+    saveProgress(current)
+    for (const listener of listeners) listener()
+  }
+
   return {
     getSnapshot: () => current,
     subscribe(listener: () => void) {
@@ -20,16 +26,8 @@ function createProgressStore() {
         listeners.delete(listener)
       }
     },
-    update(recipe: (progress: Progress) => Progress) {
-      current = recipe(current)
-      saveProgress(current)
-      for (const listener of listeners) listener()
-    },
-    replace(progress: Progress) {
-      current = progress
-      saveProgress(current)
-      for (const listener of listeners) listener()
-    },
+    update,
+    replace: (progress: Progress) => update(() => progress),
   }
 }
 
@@ -60,8 +58,6 @@ export function useProgressActions() {
         progressStore.update((progress) => ({ ...progress, level })),
       setFaction: (faction: Faction) =>
         progressStore.update((progress) => ({ ...progress, faction })),
-      setGameMode: (gameMode: GameMode) =>
-        progressStore.update((progress) => ({ ...progress, gameMode })),
       setFenceRep: (fenceRep: number) =>
         progressStore.update((progress) => ({ ...progress, fenceRep })),
       setTaskCompletion: (

@@ -58,11 +58,14 @@ export function TaskList({
 
   const tradersById = new Map(traders.map((entry) => [entry.id, entry]))
 
+  const traderCounts = new Map<string, number>()
+  for (const task of [...tasks, ...anywhereTasks]) {
+    traderCounts.set(task.trader, (traderCounts.get(task.trader) ?? 0) + 1)
+  }
+
   // Only the traders who actually have something here. A row of sixteen
   // portraits, half of them greyed out, is a worse control than five.
-  const onOffer = [
-    ...new Set([...tasks, ...anywhereTasks].map((task) => task.trader)),
-  ]
+  const onOffer = [...traderCounts.keys()]
     .map((id) => tradersById.get(id))
     .filter((entry): entry is SnapshotTrader => Boolean(entry))
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -80,7 +83,15 @@ export function TaskList({
   }
 
   const shown = tasks.filter(matches)
-  const shownAnywhere = anywhereTasks.filter(matches)
+
+  // Two groups, because they answer different questions: what this map has,
+  // and what you could finish on any raid. Mixed together, a BTR Driver task
+  // that names no map looked like it had been filed under every map by
+  // mistake.
+  const groups = [
+    { title: "on this map", tasks: shown },
+    { title: "anywhere", tasks: anywhereTasks.filter(matches) },
+  ].filter((group) => group.tasks.length)
 
   return (
     <Panel
@@ -172,9 +183,7 @@ export function TaskList({
               all traders
             </button>
             {onOffer.map((entry) => {
-              const count = [...tasks, ...anywhereTasks].filter(
-                (task) => task.trader === entry.id
-              ).length
+              const count = traderCounts.get(entry.id) ?? 0
               const active = trader === entry.id
               return (
                 <button
@@ -213,22 +222,18 @@ export function TaskList({
         ) : null}
       </div>
 
-      {/* Two groups, because they answer different questions: what this map
-          has, and what you could finish on any raid. Mixed together, a BTR
-          Driver task that names no map looked like it had been filed under
-          every map by mistake. */}
-      {shown.length || shownAnywhere.length ? (
+      {groups.length ? (
         <div className="flex flex-col gap-4">
-          {shown.length ? (
-            <section className="flex flex-col gap-2">
+          {groups.map((group) => (
+            <section key={group.title} className="flex flex-col gap-2">
               <h3 className={sectionHeading}>
-                on this map
+                {group.title}
                 <span className="ml-2 text-terminal-chrome-dim tabular-nums">
-                  {shown.length}
+                  {group.tasks.length}
                 </span>
               </h3>
               <ul className="flex flex-col gap-2">
-                {shown.map((task) => (
+                {group.tasks.map((task) => (
                   <TaskCard
                     key={task.id}
                     task={task}
@@ -242,32 +247,7 @@ export function TaskList({
                 ))}
               </ul>
             </section>
-          ) : null}
-
-          {shownAnywhere.length ? (
-            <section className="flex flex-col gap-2">
-              <h3 className={sectionHeading}>
-                anywhere
-                <span className="ml-2 text-terminal-chrome-dim tabular-nums">
-                  {shownAnywhere.length}
-                </span>
-              </h3>
-              <ul className="flex flex-col gap-2">
-                {shownAnywhere.map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    trader={tradersById.get(task.trader)}
-                    items={items}
-                    unlocks={unlockCounts[task.id] ?? 0}
-                    objectiveCounts={objectiveCounts}
-                    onObjectiveCount={onObjectiveCount}
-                    onComplete={(completion) => onComplete(task.id, completion)}
-                  />
-                ))}
-              </ul>
-            </section>
-          ) : null}
+          ))}
         </div>
       ) : (
         <p className="font-mono text-xs text-terminal-ink-dim">

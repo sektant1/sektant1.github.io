@@ -29,3 +29,8 @@ export const snapshot: Snapshot = {
   hideout: hideout as SnapshotHideoutStation[],
   items: items as Record<string, SnapshotItem>,
 }
+
+/** The day the snapshot was built. */
+export function snapshotDate() {
+  return snapshot.meta.generatedAt.slice(0, 10)
+}

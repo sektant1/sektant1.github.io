@@ -7,7 +7,6 @@ export type SegmentedOption<T extends string> = {
   label: React.ReactNode
   /** A count, a portrait — anything that trails the label. */
   trailing?: React.ReactNode
-  leading?: React.ReactNode
   title?: string
 }
 
@@ -65,7 +64,6 @@ export function Segmented<T extends string>({
                 : "text-terminal-chrome hover:bg-primary/5 hover:text-primary"
             )}
           >
-            {option.leading}
             <span className="truncate">{option.label}</span>
             {option.trailing ? (
               <span
