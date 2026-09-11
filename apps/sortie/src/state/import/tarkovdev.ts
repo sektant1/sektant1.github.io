@@ -1,8 +1,4 @@
-import { emptyProgress, type Progress } from "../storage"
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-}
+import { emptyProgress, isRecord, type Progress } from "../storage"
 
 export function isTarkovDevProfile(raw: unknown) {
   if (!isRecord(raw) || typeof raw.aid !== "number") return false

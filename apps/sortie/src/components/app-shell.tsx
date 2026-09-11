@@ -3,7 +3,7 @@ import { NavLink } from "react-router"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-import { snapshot } from "@/data/snapshot"
+import { snapshotDate } from "@/data/snapshot"
 import { useProgress, useProgressActions } from "@/state/progress"
 import { storageAvailable } from "@/state/storage"
 import { Segmented } from "./segmented"
@@ -15,10 +15,6 @@ const NAV = [
 
 /** Read once: whether this browser will keep anything at all. */
 const canStore = storageAvailable()
-
-function snapshotDate() {
-  return snapshot.meta.generatedAt.slice(0, 10)
-}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const progress = useProgress()

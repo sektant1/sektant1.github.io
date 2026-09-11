@@ -40,12 +40,12 @@ export function emptyProgress(): Progress {
   }
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
 function readNumber(value: unknown, fallback: number) {
-  return typeof value === "number" && Number.isFinite(value) ? value : fallback
+  return isNumber(value) ? value : fallback
 }
 
 function readMap<T>(value: unknown, guard: (entry: unknown) => entry is T) {

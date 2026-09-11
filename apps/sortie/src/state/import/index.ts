@@ -1,4 +1,4 @@
-import { migrateProgress, type Progress } from "../storage"
+import { isRecord, migrateProgress, type Progress } from "../storage"
 import { isTarkovDevProfile, readTarkovDevProfile } from "./tarkovdev"
 import { isTarkovTrackerBackup, readTarkovTrackerBackup } from "./tarkovtracker"
 
@@ -9,10 +9,6 @@ export type ImportPreview =
       summary: string[]
     }
   | { source: null; error: string }
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-}
 
 /**
  * Nothing is applied here. The caller shows the preview and the player

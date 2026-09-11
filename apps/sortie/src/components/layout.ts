@@ -18,9 +18,6 @@ export const listRowWrapping = `${listRow} flex-wrap gap-y-1`
 export const chip =
   "flex items-center gap-2 border border-terminal-rule py-1 pr-2 pl-1"
 
-/** Cards that read as a set: the stat row, the trader grid. */
-export const cardGrid = "grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
-
 /** Two panels side by side above lg, stacked below, aligned at the top. */
 export const splitGrid = "grid items-start gap-3 lg:grid-cols-2"
 
@@ -31,9 +28,6 @@ export const stack = "flex flex-col gap-3"
 export const sectionHeading =
   "font-mono text-[0.65rem] tracking-[0.16em] text-terminal-chrome uppercase"
 
-/** A value the build or the player's progress knows. */
-export const readout = "font-mono text-[0.7rem] text-primary tabular-nums"
-
-/** The dimmer sibling of a readout: context, never the value itself. */
+/** Context beside a value the build or the player's progress knows. */
 export const readoutDim =
   "font-mono text-[0.65rem] text-terminal-ink-dim tabular-nums"

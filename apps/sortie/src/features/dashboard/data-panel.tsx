@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { KeyButton } from "@/components/key-button"
 import { Panel } from "@/components/panel"
-import { snapshot } from "@/data/snapshot"
+import { snapshotDate } from "@/data/snapshot"
 import { buildExport, readImport, type ImportPreview } from "@/state/import"
 import type { Progress } from "@/state/storage"
 
@@ -50,7 +50,7 @@ export function DataPanel({
         <div className="flex justify-between gap-2">
           <dt>built</dt>
           <dd className="text-primary tabular-nums">
-            {snapshot.meta.generatedAt.slice(0, 10)}
+            {snapshotDate()}
           </dd>
         </div>
         {Object.entries(snapshot.meta.counts).map(([key, value]) => (

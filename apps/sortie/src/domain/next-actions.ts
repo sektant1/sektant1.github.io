@@ -12,6 +12,17 @@ export type NextAction = {
   maps: string[]
 }
 
+/** How many tasks name each task as a prerequisite. */
+export function countUnlocks(tasks: SnapshotTask[]): Record<string, number> {
+  const unlocks: Record<string, number> = {}
+  for (const task of tasks) {
+    for (const requirement of task.taskRequirements) {
+      unlocks[requirement.task] = (unlocks[requirement.task] ?? 0) + 1
+    }
+  }
+  return unlocks
+}
+
 /**
  * What to do next, ranked by leverage: an available task that four others
  * wait on opens more of the game than one that ends where it starts.
@@ -25,12 +36,7 @@ export function buildNextActions(
   statuses: Record<string, TaskStatus>,
   limit: number
 ): NextAction[] {
-  const unlocks: Record<string, number> = {}
-  for (const task of tasks) {
-    for (const requirement of task.taskRequirements) {
-      unlocks[requirement.task] = (unlocks[requirement.task] ?? 0) + 1
-    }
-  }
+  const unlocks = countUnlocks(tasks)
 
   return tasks
     .filter((task) => statuses[task.id] === "available")

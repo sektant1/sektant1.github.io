@@ -11,9 +11,10 @@ import {
   tasksForMap,
 } from "@/domain/active-tasks"
 import { buildChecklist } from "@/domain/checklist"
+import { countUnlocks } from "@/domain/next-actions"
 import { buildRaidKit } from "@/domain/raid-kit"
-import { buildTaskStatuses } from "@/domain/task-graph"
 import { useProgress, useProgressActions } from "@/state/progress"
+import { useTaskStatuses } from "@/state/task-statuses"
 import { ChecklistPanel } from "./checklist-panel"
 import { KitPanel } from "./kit-panel"
 import { MapBar } from "./map-bar"
@@ -22,13 +23,8 @@ import { TaskList } from "./task-list"
 import { stack } from "@/components/layout"
 import { cn } from "@workspace/ui/lib/utils"
 
-/** How many tasks name each task as a prerequisite. Fixed by the snapshot. */
-const unlockCounts: Record<string, number> = {}
-for (const task of snapshot.tasks) {
-  for (const requirement of task.taskRequirements) {
-    unlockCounts[requirement.task] = (unlockCounts[requirement.task] ?? 0) + 1
-  }
-}
+/** Fixed by the snapshot, so counted once. */
+const unlockCounts = countUnlocks(snapshot.tasks)
 
 export function RaidScreen() {
   const progress = useProgress()
@@ -41,21 +37,7 @@ export function RaidScreen() {
   } = useProgressActions()
   const [params, setParams] = useSearchParams()
 
-  const statuses = React.useMemo(
-    () =>
-      buildTaskStatuses(snapshot.tasks, {
-        completions: progress.taskCompletions,
-        level: progress.level,
-        faction: progress.faction,
-        traderLevels: progress.traderLevels,
-      }),
-    [
-      progress.taskCompletions,
-      progress.level,
-      progress.faction,
-      progress.traderLevels,
-    ]
-  )
+  const statuses = useTaskStatuses(progress)
 
   const active = React.useMemo(
     () => partitionActiveTasks(snapshot.tasks, statuses),
