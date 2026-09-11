@@ -1,26 +1,70 @@
 ---
 title: "monad-engine"
 slug: "monad-game-engine"
-description: "Small C++17 game engine for learning. OpenGL 3.3 and Vulkan"
+description: "Small C++17 game engine I built to learn engine programming. OpenGL 3.3, Bullet physics, JSON scenes and a first-person sandbox."
 date: "2026-05-05"
-status: "published"
+status: "archived"
 tags:
-  - "3d"
   - "opengl"
-  - "vulkan"
-  - "graphics"
+  - "c++"
+  - "game engine"
 stack:
-  - "3d"
+  - "c++17"
   - "opengl"
-  - "vulkan"
-  - "graphics"
+  - "glfw"
+  - "glew"
+  - "bullet"
+  - "assimp"
+  - "imgui"
+  - "miniaudio"
+  - "glm"
 repo: "https://github.com/sektant1/monad-engine"
 href: "https://sektant.dev/monad-engine"
 open: "website"
-thumbnail: "logo.png"
+thumbnail: "./assets/cover.png"
 ---
 
-## what
+monad is a small C++17 engine I wrote to learn how game engines fit together. It started alongside a lesson series on engine programming and kept growing after that, until it ran a first-person sandbox with a sword, a carbine and an enemy to use them on.
 
+![The testing scene: checker-textured walls and three physics spheres](/content-assets/projects/monad-game-engine/assets/arena.png)
 
-## why
+## What's in it
+
+- OpenGL 3.3 core renderer. Game code submits mesh and material pairs to a render queue, and the engine draws them after the update.
+- A pixel-art post-pass based on the three.js pixelation example: color, depth and normal samples snap to a grid, with optional depth and normal edge outlines. Debug views show the raw depth and normals.
+- Scenes as JSON files of game objects and components: camera, mesh, light, physics, audio, health, particle emitter, player controller, animation and skinned mesh. A game adds its own types with the `GAMEOBJECT` and `COMPONENT` macros.
+- Bullet for rigid bodies, a kinematic character controller, raycasts and contact callbacks.
+- glTF through cgltf. FBX and OBJ through Assimp, including skeletons up to 128 bones and animation clips skinned on the GPU.
+- Positional audio through miniaudio.
+- Particles, plus a sprite and text renderer used for the FPS counter.
+- A Dear ImGui editor on F1 with hierarchy, inspector, console and stats windows, and tabs for render, physics and player settings. Games can add panels to it.
+
+## The sandbox
+
+`source/` is the game that runs by default. It loads `scenes/testing.json`: a player, an enemy, a jump platform and about 40 physics bodies. 1 picks the sword and 2 the carbine. Left click shoots or swings, right click blocks.
+
+![Turning from the enemy to the rest of the scene](/content-assets/projects/monad-game-engine/assets/turn.gif)
+
+The game adds editor panels of its own: one to reseed and test its RNG streams, one listing every health component with damage, kill and revive buttons, and one for raycasts.
+
+## About Vulkan
+
+There is no Vulkan renderer. `engine/source/graphics/vulkan/` holds a separate preview program that creates a device, a swapchain and a render pass, then clears the window to a slowly shifting color. It is kept out of the engine library, and asking CMake for any backend other than OpenGL stops with "not implemented". The Vulkan renderer I did finish is in [raven-engine](/projects/raven-engine).
+
+## Build
+
+Everything is vendored under `engine/thirdparty/` and built from source, so the first build takes a while. The script needs CMake and Ninja, and uses mold or lld when it finds them.
+
+```sh
+./compile.sh            # debug build + run
+./compile.sh --release  # release build + run
+./compile.sh --vulkan   # build and run the Vulkan preview instead
+```
+
+The binary lands in `bin/<type>/monad-engine`. Shaders load from `assets/` relative to the working directory, which is why the script changes to the repo root first.
+
+API docs come from Doxygen, and a GitHub Actions workflow publishes them to GitHub Pages on every push to master:
+
+```sh
+cmake --build bin/debug --target engine-docs
+```

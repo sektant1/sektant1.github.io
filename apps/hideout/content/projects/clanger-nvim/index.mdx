@@ -1,0 +1,84 @@
+---
+title: "clanger.nvim"
+slug: "clanger-nvim"
+description: "C++ class wizard for Neovim: new classes from templates, header/source switching and method stubs."
+date: "2026-04-16"
+status: "wip"
+tags:
+  - "neovim"
+  - "plugin"
+  - "c++"
+stack:
+  - "lua"
+  - "neovim"
+repo: "https://github.com/sektant1/clanger.nvim"
+thumbnail: "./assets/cover.png"
+open: "repo"
+---
+
+clanger.nvim is the "Add Class" dialog from Visual Studio, for Neovim. `:CreateClass Widget` asks which folder to use and writes `Widget.h` and `Widget.cpp` from a template. It also jumps between header and source and turns a declaration into a stub in the source file. Per-project settings go in a `.clanger` JSON file.
+
+<C>early: two commits and no test suite yet</C>
+
+![:CreateClass Widget, picking the include folder, then :GenerateImpl on the constructor and :CppSwitch to the stub](/content-assets/projects/clanger-nvim/assets/demo.gif)
+
+## Commands
+
+```text
+:CreateClass [Name]       header and source from the class template
+:CreateStruct [Name]      header only
+:CreateEnum [Name]        header with an enum class
+:CreateInterface [Name]   header with a virtual destructor
+:CppNewFile [Name]        pick a template kind, then a name
+:CppSwitch                header <-> source (alias :SwitchHeaderSource)
+:GenerateImpl             stub the declaration under the cursor
+:CppAddGuard              add an include guard or #pragma once
+:CppRenameSymbol Old New  rename a class in every C/C++ file
+:CppProjectInfo           root, loaded .clanger, picker and keymaps
+```
+
+The create commands prompt for a name if you leave it out. The folder list holds the `include_dirs` and `source_dirs` that exist under the project root, their direct subfolders, and the root. Both files of a class go into the folder you pick. The list opens in whichever of snacks.picker, fzf-lua, telescope or mini.pick it finds first, and falls back to `vim.ui.select`.
+
+## How the C++ parts work
+
+- `:CppSwitch` first looks next to the current file, then searches `include_dirs` or `source_dirs`. If nothing matches it offers to create an empty counterpart.
+- `:GenerateImpl` reads lines up to the `;`, not a syntax tree. It drops `virtual`, `static`, `explicit`, `inline`, `override` and default arguments, keeps `const`, `noexcept` and trailing return types, and prefixes the enclosing class name. The stub is appended to the end of the source file, which in the default template is after the closing namespace brace. With no source file it goes to the clipboard instead.
+- `:CppRenameSymbol` is a whole-word text replace, not an LSP rename. Files named after the old class are renamed too. It skips hidden folders, `build`, `out` and `node_modules`.
+
+## Project config
+
+The root is found from markers such as `.clanger`, `compile_commands.json`, `CMakeLists.txt` and `.git`. A `.clanger` file there is merged over your `setup()` options:
+
+```json
+{
+  "default_namespace": "Game",
+  "author": "Gabriel Fernandes",
+  "guard_style": "pragma",
+  "include_dirs": ["include"],
+  "source_dirs": ["src"],
+  "default_boilerplates": {
+    "struct": { "header": "{GUARD_OPEN}\n\nstruct {CLASS_NAME} {\n};\n\n{GUARD_CLOSE}\n" }
+  }
+}
+```
+
+Templates take placeholders such as `{CLASS_NAME}`, `{NAMESPACE}`, `{GUARD_OPEN}`, `{AUTHOR}` and `{DATE}`. Unknown placeholders are left in the output, so a typo is easy to spot. A template without a `cpp` entry only produces a header. With the default `upper` guard style, namespace `MyProject` and class `Widget` give `MY_PROJECT_WIDGET_H`.
+
+The merged config is cached per root. After editing `.clanger`, run `:lua require("clanger").reload()`.
+
+## Install
+
+Neovim 0.10 or newer (`:checkhealth clanger` recommends 0.12). No required dependencies.
+
+```lua
+{
+  "sektant1/clanger.nvim",
+  opts = {
+    author = "Your Name",
+    default_namespace = "MyProject",
+    keymaps = { enabled = true },
+  },
+}
+```
+
+Keymaps are off unless you enable them. With `enabled = true` they sit under `<leader>c`: `c` class, `s` struct, `e` enum, `i` interface, `n` new file, `p` info, `r` rename. In C and C++ buffers there are also `o` switch, `g` generate and `h` guard. In `commands`, a string renames a command and `false` removes it.

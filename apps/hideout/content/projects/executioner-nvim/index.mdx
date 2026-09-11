@@ -1,22 +1,92 @@
 ---
 title: "executioner.nvim"
 slug: "executioner-nvim"
-description: "Telescope-powered script runner plugin for Neovim 0.10+"
+description: "Telescope picker for running project scripts and CMake, Make or Meson build targets from Neovim."
 date: "2026-05-05"
-status: "published"
+status: "active"
 tags:
-  - "vim"
-  - "script"
+  - "neovim"
   - "plugin"
+  - "telescope"
+  - "build"
 stack:
-  - "vim"
-  - "script"
-  - "plugin"
+  - "lua"
+  - "neovim"
+  - "telescope.nvim"
 repo: "https://github.com/sektant1/executioner.nvim"
 open: "repo"
-thumbnail: "logo.png"
+thumbnail: "./assets/cover.png"
 ---
 
-## what
+executioner.nvim finds the scripts in your project, lets you pick one in Telescope and runs it in a terminal buffer. It also builds CMake, Make and Meson targets from the same kind of picker, and can create a new C or C++ project.
 
-## why
+![Picking and running a script](/content-assets/projects/executioner-nvim/assets/demo.gif)
+
+## Running scripts
+
+`:Executioner` scans the working directory (three levels deep by default) for files with a known extension or the executable bit. When you pick one:
+
+1. An executable file with a `#!` line runs directly.
+2. Otherwise the extension picks the interpreter: `sh` runs with `bash`, `py` with `python3`, `lua` with `nvim -l`, `ts` with `tsx`.
+3. An executable with neither also runs directly.
+
+The argument prompt is pre-filled with whatever you passed to that script last time. Those arguments live in `executioner_args.json` in Neovim's state directory, so they survive a restart. `:ExecutionerRerun` repeats the last run without the picker. Output goes to a split, a float or toggleterm, and `q` closes it.
+
+## Building
+
+`:ExecutionerBuild` walks up from the working directory to the first `CMakeLists.txt`, `meson.build` or Makefile (CMake wins, then Meson) and lists its targets:
+
+```text
+cmake   cmake --build <dir> --target help
+meson   meson introspect --targets <dir>
+make    .PHONY lines and rule names in the Makefile
+```
+
+CMake and Meson need `:ExecutionerConfigure` first. `:ExecutionerBuild myapp` skips the picker (target names tab-complete), and `:ExecutionerBuildLast` repeats the last build.
+
+<C>nothing goes through a shell, so $(nproc) in build args arrives as literal text</C>
+
+## New projects
+
+`:CreateProject` asks for a name, build system, C or C++, a standard, and whether to add a `.gitignore` and run `git init`. Project types: executable, static library, shared library, header-only library, or a library plus an executable. It writes the build file, stubs in `src/` and `include/`, and a `.clangd`. CMake, C++, library plus executable:
+
+```text
+myapp/
+  .clangd
+  CMakeLists.txt
+  include/myapp.hpp
+  src/main.cpp
+  src/myapp.cpp
+```
+
+## Install
+
+Needs telescope.nvim and plenary.nvim. The plugin refuses Neovim older than 0.10, but the terminal runner calls `jobstart()` with `term = true`, which Neovim added in 0.11, so use 0.11 or newer.
+
+```lua
+{
+  "sektant1/executioner.nvim",
+  dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+  cmd = { "Executioner", "ExecutionerRerun", "ExecutionerConfigure",
+          "ExecutionerBuild", "ExecutionerBuildLast", "CreateProject" },
+  keys = {
+    { "<leader>er", function() require("executioner").run_scripts() end, desc = "Run script" },
+    { "<leader>eb", function() require("executioner").build() end, desc = "Build target" },
+  },
+  opts = {},
+}
+```
+
+It is also on LuaRocks: `:Rocks install executioner.nvim`.
+
+## Config
+
+`setup()` takes the scan directory and depth, the terminal type (split, float or toggleterm), the CMake and Meson build directories, and keymaps. Adding an interpreter looks like this:
+
+```lua
+require("executioner").setup({
+  extensions = { rs = "cargo run --" },  -- merged into the built-in map
+})
+```
+
+`:checkhealth executioner` reports the dependencies, the interpreters and build tools on your PATH, and the build system it detects.
