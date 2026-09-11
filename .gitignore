@@ -38,3 +38,12 @@ dist-pages
 apps/hideout/public/models/
 .playwright-mcp/
 /boot.png
+
+# third-party source read for reference only, never built or shipped
+templates/references/
+
+# local screenshots
+/dash.png
+/dash2.png
+/fix1.png
+/ice.png
