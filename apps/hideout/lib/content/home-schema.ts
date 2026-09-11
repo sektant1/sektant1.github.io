@@ -34,6 +34,8 @@ export type HomeContent = {
     bannerStackedTop: string
     bannerStackedBottom: string
     srTitle: string
+    /** What the operator does, in one line: the first thing a visitor reads. */
+    role: string
     tagline: string
     description: string
     operator: string
@@ -65,6 +67,7 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     bannerStackedTop: "SEKTANT",
     bannerStackedBottom: "HIDEOUT",
     srTitle: "Sektant's Hideout",
+    role: "engine and tools programmer — c++, vulkan, react",
     tagline: "// TUBE WARM. LOG OPEN.",
     description: "man cave for essays, tinkering, and things I built",
     operator: "ОПЕРАТОР // SEKTANT1",
@@ -225,6 +228,7 @@ export function normalizeHomeContent(input: unknown): HomeContent {
         "Stacked banner, second line"
       ),
       srTitle: asText(hero.srTitle, d.hero.srTitle, "Screen-reader title", 80),
+      role: asText(hero.role, d.hero.role, "Role", 120),
       tagline: asText(hero.tagline, d.hero.tagline, "Tagline"),
       description: asText(
         hero.description,

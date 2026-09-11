@@ -33,7 +33,7 @@ install: ## Install dependencies for every workspace
 
 .PHONY: clean
 clean: ## Remove build output and caches (keeps node_modules)
-	rm -rf apps/web/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
+	rm -rf apps/web/dist apps/sortie/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
 	find . -name '*.tsbuildinfo' -not -path './node_modules/*' -delete
 
 .PHONY: reset
@@ -54,6 +54,10 @@ dev-site: ## Run just sektant.dev, on :3000
 .PHONY: dev-showcase
 dev-showcase: ## Run just the component showcase, on :5173
 	npm run dev --workspace web
+
+.PHONY: dev-sortie
+dev-sortie: ## Run just the raid planner, on :5174
+	npm run dev --workspace sortie
 
 ##@ Verify
 
@@ -89,6 +93,18 @@ registry: ## Regenerate registry.json and the served /r/*.json
 .PHONY: registry-check
 registry-check: ## Fail if registry.json and the components directory disagree
 	npm run registry:check
+
+##@ Tarkov data
+
+.PHONY: snapshot
+snapshot: ## Regenerate the Tarkov snapshot apps/sortie serves from
+	npm run snapshot:build
+
+# Not part of `check`: it needs the network, and the game gains tasks, so an
+# unrelated PR would start failing the moment upstream shipped a patch.
+.PHONY: snapshot-check
+snapshot-check: ## Fail if the committed snapshot no longer matches upstream
+	npm run snapshot:check
 
 ##@ Build
 

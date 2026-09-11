@@ -11,13 +11,16 @@ covers what is not obvious from the tree.
 | `packages/ui`              | `@workspace/ui` — components, hooks, lib, theme. Source.  |
 | `apps/web`                 | Vite showcase, served at `/showcase`                      |
 | `apps/hideout`             | Next.js `sektant.dev` — devlog, project index, MDX CMS    |
+| `apps/sortie`              | Vite Tarkov raid planner and dashboard, served at `/sortie` |
 | `scripts`                  | registry generator, Pages assembler                       |
 | `registry.json`            | **generated** from `packages/ui/src/components`           |
 | `apps/hideout/assets`      | source assets you edit; compiled into `public/`           |
 | `apps/hideout/public/models` | **generated** from `assets/models`, git-ignored          |
+| `apps/sortie/src/data/snapshot` | **generated** by `make snapshot`, committed           |
 
 `apps/hideout` has its own `AGENTS.md`: its Next.js version differs from
-training data, so read that before writing code there.
+training data, so read that before writing code there. `apps/sortie` has one
+too, for how its game data is built and why it cannot be fetched.
 
 ## Commands
 
@@ -55,11 +58,18 @@ scripts; it is the documented interface.
   from the modules that own them. The flag is already in the npm scripts —
   don't drop it, and don't drop `engines.node` below 22.6, which is where node
   learned to run TypeScript.
+- **The Tarkov data is baked, not fetched.** `api.tarkov.dev` sends no CORS
+  header, so `apps/sortie` reads a snapshot built from `json.tarkov.dev` by
+  `make snapshot` and committed. A runtime fetch cannot work from a browser,
+  and `make snapshot-check` is deliberately outside `make check` because it
+  needs the network.
 - **`dist-pages/` is build output**, assembled by `make pages`. Never hand-edit.
 - **Copy and chrome follow a register system.** Cyrillic caps for signage,
   Latin caps for readouts, lowercase Latin for the human voice — and readouts
   carry real values, never invented telemetry. `CONTEXT.md` is the rule; a
-  string that ignores it is a bug.
+  string that ignores it is a bug. `apps/sortie` is the one exception, and it
+  is written down in that app's `AGENTS.md`: its headings name things the
+  reader has to act on, so its signage is Latin.
 - Formatting is Prettier with no semicolons and double quotes; `make format`
   settles it.
 

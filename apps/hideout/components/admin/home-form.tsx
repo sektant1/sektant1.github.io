@@ -204,6 +204,15 @@ export function HomeForm({ home }: { home: HomeContent }) {
 
         <Group title="intro">
           <TextField
+            id="role"
+            label="role"
+            value={value.hero.role}
+            error={errors.role}
+            placeholder={d.hero.role}
+            hint="What you do, in one line. It leads the page, above the description."
+            onChange={(role) => hero({ role })}
+          />
+          <TextField
             id="tagline"
             label="tagline"
             value={value.hero.tagline}

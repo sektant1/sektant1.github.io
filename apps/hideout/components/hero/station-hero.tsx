@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { AsciiBannerView } from "@workspace/ui/components/ascii-banner-view"
-import { AsciiMeter } from "@workspace/ui/components/ascii-meter"
 import { TerminalFrame } from "@workspace/ui/components/terminal-frame"
 import { renderAsciiArt } from "@workspace/ui/lib/ascii-art"
 
@@ -43,7 +42,56 @@ type StationHeroProps = {
 }
 
 /**
- * The front page as an instrument panel.
+ * The plate the front page opens on: the station's name and what its operator
+ * does.
+ *
+ * Split from the instruments so the work index can sit between the two — a
+ * recruiter gives a page about ten seconds, and the work has to be inside them.
+ */
+export function StationBanner({ content }: { content: HomeContent["hero"] }) {
+  return (
+    <header className="field-frame overflow-hidden px-3 py-3 sm:px-5 sm:py-4">
+      <h1 className="sr-only">{content.srTitle}</h1>
+
+      <div aria-hidden="true" className="hidden xl:block">
+        <HeroBanner text={content.bannerWide} />
+      </div>
+
+      {/* Block glyphs overrun their line box, so nine rows of art collide
+          once stacked and fit to a phone. The gap pays that back. */}
+      <div aria-hidden="true" className="flex flex-col gap-4 xl:hidden">
+        <HeroBanner text={content.bannerStackedTop} />
+        <HeroBanner text={content.bannerStackedBottom} quiet />
+      </div>
+
+      {/* The role takes the loud slot: it is the line a stranger needs. The
+          motto stays on the plate, quieter, under the prose. */}
+      <div className="mt-3 flex flex-col gap-1 border-t border-terminal-rule pt-3">
+        <p className="font-sans text-base leading-tight font-bold tracking-[0.08em] text-primary uppercase crt-glow-soft sm:text-xl">
+          {content.role}
+        </p>
+        <p className="max-w-2xl text-xs leading-relaxed text-terminal-ink-dim sm:text-sm">
+          {content.description}
+        </p>
+        <p className="font-mono text-[0.68rem] text-terminal-ink-faint">
+          {content.tagline}
+        </p>
+      </div>
+
+      {/* Chrome only, so a phone spends the line on the work instead. */}
+      <p className="mt-3 hidden items-center justify-between gap-3 border-t border-terminal-rule pt-2 font-mono text-[0.62rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:flex">
+        <span>
+          <span className="text-terminal-ink-faint">{content.systemLabel}</span>{" "}
+          {content.systemUnit}
+        </span>
+        <span>{content.operator}</span>
+      </p>
+    </header>
+  )
+}
+
+/**
+ * The front page's instrument panel.
  *
  * Archive on the left, tracked object on the right. Every readout is a value
  * the build knows — a count, a reading time, a coordinate — never invented.
@@ -58,52 +106,8 @@ export function StationHero({
   content,
   renderStyle,
 }: StationHeroProps) {
-  // Posts and projects share a scale so their bars compare. Reading time is a
-  // different unit and gets a plain row instead of a bar.
-  const ceiling = Math.max(posts, projects, 1)
-
   return (
-    <section className="@container flex flex-col gap-4 sm:gap-5">
-      <header className="field-frame overflow-hidden px-3 py-3 sm:px-5 sm:py-4">
-        {/* The banner leads. The rule that used to sit above it named the
-            station and reported the link — one of those is on the panel's own
-            foot now, and the other was a typed string saying what the status
-            bar reports live. */}
-        <h1 className="sr-only">{content.srTitle}</h1>
-
-        <div aria-hidden="true" className="hidden xl:block">
-          <HeroBanner text={content.bannerWide} />
-        </div>
-
-        {/* Block glyphs overrun their line box, so nine rows of art collide
-            once stacked and fit to a phone. The gap pays that back. */}
-        <div aria-hidden="true" className="flex flex-col gap-4 xl:hidden">
-          <HeroBanner text={content.bannerStackedTop} />
-          <HeroBanner text={content.bannerStackedBottom} quiet />
-        </div>
-
-        <div className="mt-3 flex flex-col gap-3 border-t border-terminal-rule pt-3">
-          <div>
-            <p className="font-sans text-lg leading-tight font-bold tracking-[0.08em] text-primary uppercase crt-glow-soft sm:text-xl">
-              {content.tagline}
-            </p>
-            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-terminal-ink-dim sm:text-sm">
-              {content.description}
-            </p>
-          </div>
-
-          <p className="flex items-center justify-between gap-3 border-t border-terminal-rule pt-2 font-mono text-[0.58rem] tracking-[0.15em] text-terminal-chrome-dim uppercase sm:text-[0.62rem]">
-            <span>
-              <span className="text-terminal-ink-faint">
-                {content.systemLabel}
-              </span>{" "}
-              {content.systemUnit}
-            </span>
-            <span>{content.operator}</span>
-          </p>
-        </div>
-      </header>
-
+    <section className="@container">
       <div className="grid items-stretch gap-4 @min-[56rem]:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.45fr)]">
         <TerminalFrame
           title={content.summaryTitle}
@@ -124,38 +128,9 @@ export function StationHero({
               land somewhere that reads as instrument rather than as a rule
               drawn down a gap. */}
           <div className="flex min-w-0 flex-col @min-[40rem]:border-e @min-[40rem]:border-terminal-rule">
-            <ActivityTrace
-              buckets={activity}
-              className="min-h-24 flex-1 border-b border-terminal-rule"
-            />
-
-            <div className="flex shrink-0 flex-col gap-1.5 px-2 py-2.5">
-              <AsciiMeter
-                label={content.metricPosts}
-                value={posts / ceiling}
-                cells={16}
-                display={pad(posts)}
-              />
-              <AsciiMeter
-                label={content.metricProjects}
-                value={projects / ceiling}
-                cells={16}
-                display={pad(projects)}
-              />
-
-              <p className="flex items-baseline gap-1.5 pt-0.5">
-                <span className="console-label shrink-0 text-terminal-chrome-dim">
-                  {content.metricMinutes}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="min-w-3 flex-1 translate-y-[-0.15em] border-b border-dotted border-terminal-rule"
-                />
-                <span className="console-value shrink-0 text-terminal-ink-dim">
-                  {minutes ? `${pad(minutes)} MIN` : "--- MIN"}
-                </span>
-              </p>
-            </div>
+            {/* The counters that sat under this repeated the frame's own
+                stamps — items above, reading time below — so they left. */}
+            <ActivityTrace buckets={activity} className="min-h-24 flex-1" />
           </div>
 
           <div className="flex min-h-0 flex-col border-t border-terminal-rule @min-[40rem]:border-t-0">

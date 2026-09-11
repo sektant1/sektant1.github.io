@@ -9,17 +9,18 @@
     "bannerStackedTop": "Sektant",
     "bannerStackedBottom": "Hideout",
     "srTitle": "Sektant Hideout",
+    "role": "engine and tools programmer",
     "tagline": "\"as you think, so you shall be\"",
     "description": "My personal man cave for essays, tinkering, and things I built",
     "operator": "ОПЕРАТОР // SEKTANT1",
-    "summaryTitle": "АРХИВ // СВОДКА",
+    "summaryTitle": "PORTFOLIO // СВОДКА",
     "summaryRef": "BUF 001",
     "metricPosts": "POSTS",
     "metricProjects": "PROJECTS",
     "metricMinutes": "READING",
     "tagsTitle": "TOPICS",
     "tagsRef": "LINKS",
-    "logTitle": "LATEST",
+    "logTitle": "LATEST BLOG POSTS",
     "logRef": "UTC",
     "globeTitle": "ОБЪЕКТ 01 // EARTH",
     "globeFooterEnd": "DRAG TO ROTATE"
@@ -27,7 +28,7 @@
   "sections": {
     "posts": {
       "path": "content/posts",
-      "title": "LATEST",
+      "title": "LATEST BLOG POSTS",
       "actionLabel": "all posts"
     },
     "games": {
@@ -37,7 +38,7 @@
     },
     "projects": {
       "path": "content/projects",
-      "title": "THINGS I BUILT",
+      "title": "MY PROJECTS",
       "actionLabel": "all projects"
     }
   }

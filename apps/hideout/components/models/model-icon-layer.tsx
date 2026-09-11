@@ -5,10 +5,13 @@ import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { logger } from "@workspace/ui/lib/logger"
 
+import { readRenderBudget } from "@/components/ascii-planet/device-budget"
+import { frameClock } from "@/components/ascii-planet/policy"
 import { resolveThemeColor } from "@/components/ascii-planet/theme-color"
 import type { ModelFront } from "@/components/models/model-icon"
 
-const FRAME_RATE = 24
+/** Longest step the spin takes, so a resume does not jump the model round. */
+const MAX_SPIN_STEP_MS = 100
 const MODEL_SPAN = 1.66
 const CAMERA_DISTANCE = 4
 const PRESENTATION_TILT = -0.12
@@ -73,7 +76,10 @@ export function ModelIconLayer() {
       return
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
+    // The same budget as the ASCII scene: a 1.5 cap left every icon soft on a
+    // 2x or 3x screen, which is most of the screens this is drawn on.
+    const { frameRate, renderScale } = readRenderBudget()
+    renderer.setPixelRatio(renderScale)
     renderer.setClearColor(0x000000, 0)
     renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.NeutralToneMapping
@@ -111,11 +117,12 @@ export function ModelIconLayer() {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches
-    const frameDuration = 1000 / FRAME_RATE
+    const frameDuration = frameRate ? 1000 / frameRate : 0
     let disposed = false
     let intersects = true
     let rafId = 0
     let lastFrame = 0
+    let lastDraw = 0
     let rotation = -0.28
 
     const resize = () => {
@@ -141,14 +148,17 @@ export function ModelIconLayer() {
     const renderFrame = (time: number) => {
       rafId = 0
       if (disposed || !active() || models.size === 0) return
-      if (!reduceMotion && time - lastFrame < frameDuration) {
-        requestFrame()
-        return
+      if (!reduceMotion) {
+        const booked = frameClock(time, lastFrame, frameDuration)
+        if (booked === null) {
+          requestFrame()
+          return
+        }
+        lastFrame = booked
+        const elapsed = lastDraw === 0 ? 0 : time - lastDraw
+        rotation += Math.min(elapsed, MAX_SPIN_STEP_MS) * SPIN_RADIANS_PER_MS
       }
-
-      const elapsed = lastFrame === 0 ? 0 : time - lastFrame
-      lastFrame = time
-      if (!reduceMotion) rotation += elapsed * SPIN_RADIANS_PER_MS
+      lastDraw = time
 
       resize()
       const canvasRect = canvas.getBoundingClientRect()

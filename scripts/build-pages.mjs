@@ -3,6 +3,7 @@
 //   dist-pages/            the hideout static export, at the domain root
 //   dist-pages/r/          the shadcn registry, the URL `shadcn add` is given
 //   dist-pages/showcase/   the component showcase
+//   dist-pages/sortie/     the raid planner and progression dashboard
 //
 // One artifact, one deploy, one custom domain. The hideout carries the CNAME
 // in its public/ directory, so the domain survives the copy.
@@ -44,6 +45,7 @@ async function copyInto(source, target, label) {
 // it in dev. Building it first means both copies below come from one run.
 await run("npm", ["run", "registry:build"])
 await run("npm", ["run", "build", "--workspace", "web"])
+await run("npm", ["run", "build", "--workspace", "sortie"])
 await run("npm", ["run", "build:pages", "--workspace", "hideout"])
 
 await fs.rm(outDir, { recursive: true, force: true })
@@ -53,6 +55,11 @@ await copyInto(
   path.join(root, "apps/web/dist"),
   path.join(outDir, "showcase"),
   "web build"
+)
+await copyInto(
+  path.join(root, "apps/sortie/dist"),
+  path.join(outDir, "sortie"),
+  "sortie build"
 )
 await copyInto(
   path.join(root, "apps/web/public/r"),

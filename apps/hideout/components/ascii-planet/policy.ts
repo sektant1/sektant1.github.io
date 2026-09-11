@@ -201,7 +201,9 @@ export function cellHeightFor(
  * Fixing the column count instead makes the picture the same picture
  * everywhere, and the pixel ratio decides how finely it is drawn.
  */
-export const HOLO_COLUMNS = 112
+// 112 left a desktop globe at six-pixel cells, which read as low resolution
+// rather than as a raster. 176 is the most a 352px buffer holds above the floor.
+export const HOLO_COLUMNS = 176
 
 /** The smallest projected pixel worth drawing, in the drawing buffer. */
 export const MIN_HOLO_DEVICE_CELL = 2
@@ -250,6 +252,13 @@ interface RenderBudgetInput {
   reduceMotion: boolean
 }
 
+/**
+ * How often a scene draws, and for how long.
+ *
+ * Constrained hardware used to drop to 10fps and freeze after four seconds,
+ * and Chrome reports most phones at 4 GB, so that was the whole mobile site.
+ * It keeps turning at 30 now; data saver is the one reader who asked for less.
+ */
 export function renderBudgetFor({
   devicePixelRatio,
   hardwareConcurrency,
@@ -257,20 +266,40 @@ export function renderBudgetFor({
   saveData,
   reduceMotion,
 }: RenderBudgetInput) {
+  const renderScale = renderScaleFor(devicePixelRatio)
+  if (reduceMotion) return { frameRate: 0, ambientDuration: 0, renderScale }
+  if (saveData) return { frameRate: 15, ambientDuration: 4_000, renderScale }
+
   const constrained =
-    saveData === true ||
     (typeof hardwareConcurrency === "number" && hardwareConcurrency <= 4) ||
     (typeof deviceMemory === "number" && deviceMemory <= 4)
 
   return {
-    frameRate: reduceMotion ? 0 : constrained ? 10 : 30,
-    ambientDuration: reduceMotion
-      ? 0
-      : constrained
-        ? 4_000
-        : Number.POSITIVE_INFINITY,
-    renderScale: renderScaleFor(devicePixelRatio),
+    frameRate: constrained ? 30 : 60,
+    ambientDuration: Number.POSITIVE_INFINITY,
+    renderScale,
   }
+}
+
+/** How early a display refresh may land and still count as due. */
+export const FRAME_SLACK_MS = 4
+
+/**
+ * The time a frame drawn at `now` is booked at, or null to skip this refresh.
+ *
+ * Booking `last = now` lost a refresh to every rAF that landed a hair early,
+ * so a 30fps cap on a 60Hz screen ran near 20. Booking whole intervals holds
+ * the average on the cap; a stall longer than two intervals re-syncs to now.
+ */
+export function frameClock(
+  now: number,
+  last: number,
+  interval: number
+): number | null {
+  if (interval <= 0) return now
+  const since = now - last
+  if (since < interval - FRAME_SLACK_MS) return null
+  return since >= interval * 2 ? now : last + interval
 }
 
 /**

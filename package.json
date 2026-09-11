@@ -10,6 +10,8 @@
     "typecheck": "turbo typecheck",
     "test": "vitest run",
     "pages:build": "node scripts/build-pages.mjs",
+    "snapshot:build": "node scripts/build-tarkov-snapshot.mjs",
+    "snapshot:check": "node scripts/build-tarkov-snapshot.mjs --check",
     "registry:build": "node --experimental-strip-types scripts/build-registry.mjs && shadcn build --output apps/web/public/r",
     "registry:check": "node --experimental-strip-types scripts/build-registry.mjs --check"
   },

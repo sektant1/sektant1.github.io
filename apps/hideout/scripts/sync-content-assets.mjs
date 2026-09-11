@@ -108,12 +108,17 @@ async function normaliseThumbnail(servedPath) {
   const { width, height, pages } = await image.metadata();
   if (!width || !height) return null;
 
+  // A loop is encoded at two thirds of the band: a 200-frame capture came out
+  // near 3 MB at full size, and a row thumbnail never draws it that large.
+  const animated = (pages ?? 1) > 1;
+  const scale = animated ? 2 / 3 : 1;
+
   const output = await image
-    .resize(THUMB_WIDTH, THUMB_HEIGHT, {
-      // fill stretches the source to the band instead of cropping it or
-      // letterboxing it: nothing is cut off the top or bottom, and every
-      // thumbnail reaches both edges of its card.
-      fit: "fill",
+    .resize(Math.round(THUMB_WIDTH * scale), Math.round(THUMB_HEIGHT * scale), {
+      // cover crops to the band instead of stretching into it: fill squashed
+      // every square logo and every 4:3 capture out of its own proportions.
+      fit: "cover",
+      position: "centre",
     })
     .webp({ quality: 80, effort: 4 })
     .toBuffer();
@@ -126,7 +131,7 @@ async function normaliseThumbnail(servedPath) {
   return {
     before,
     after: output.length,
-    animated: (pages ?? 1) > 1,
+    animated,
     from: `${width}×${height}`,
   };
 }
