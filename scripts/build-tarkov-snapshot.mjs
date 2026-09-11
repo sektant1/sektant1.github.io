@@ -115,17 +115,31 @@ const tasks = toArray(rawTasks.tasks).map((task) => {
     return { map: typeof entry.map === "string" ? entry.map : null, keys }
   })
 
-  // A task's maps are the union of where its objectives happen, where their
-  // zones are, and where its keys are used. None of the three is complete on
-  // its own.
+  // The dump names the task's own map when it has one — this is the game's
+  // answer, and it wins outright. Without it, a task belongs to a map when
+  // something about it actually happens there.
+  // "Eliminate Scavs on any of eleven maps" is not a task about Icebreaker,
+  // and counting it as one put a dozen chores on every map's list; an
+  // objective naming more than two maps is a chore you can do anywhere, so it
+  // ties the task to none of them. Zones and keys are locations by
+  // definition and always tie.
+  const LOCALISING_LIMIT = 2
   const maps = new Set()
-  for (const objective of toArray(task.objectives)) {
-    for (const id of toArray(objective.maps)) maps.add(id)
-    for (const zone of toArray(objective.zones)) {
-      if (typeof zone?.map === "string") maps.add(zone.map)
+  const ownMap = readId(task.map)
+  if (ownMap) {
+    maps.add(ownMap)
+  } else {
+    for (const objective of toArray(task.objectives)) {
+      const named = toArray(objective.maps).filter(
+        (id) => typeof id === "string"
+      )
+      if (named.length <= LOCALISING_LIMIT) for (const id of named) maps.add(id)
+      for (const zone of toArray(objective.zones)) {
+        if (typeof zone?.map === "string") maps.add(zone.map)
+      }
     }
+    for (const entry of neededKeys) if (entry.map) maps.add(entry.map)
   }
-  for (const entry of neededKeys) if (entry.map) maps.add(entry.map)
 
   return {
     id: task.id,
