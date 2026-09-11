@@ -79,7 +79,7 @@ function GameCard({ meta }: { meta: GameMeta }) {
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            className="size-full object-fill"
+            className="size-full object-cover"
           />
         </div>
       ) : null}

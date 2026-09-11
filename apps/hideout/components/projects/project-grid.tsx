@@ -54,9 +54,9 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
 
   return (
     <li className="flex min-w-0 flex-col border border-border crt-persist hover:border-terminal-edge">
-      {/* The image fills the band edge to edge, stretched rather than
-          cropped: the whole subject stays visible and every card in the row
-          carries the same band instead of a differently-sized stamp. */}
+      {/* The image fills the band edge to edge, cropped rather than
+          stretched: every card carries the same band, and nothing in it is
+          squashed out of its own proportions. */}
       {meta.thumbnail ? (
         <div
           className="w-full overflow-hidden border-b border-border bg-card"
@@ -69,7 +69,7 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            className="size-full object-fill"
+            className="size-full object-cover"
           />
         </div>
       ) : null}

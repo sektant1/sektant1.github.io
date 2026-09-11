@@ -15,15 +15,16 @@ import {
   holoDefaultsFor,
   postCellHeightFor,
   characterResolutionFor,
+  frameClock,
   lightingFor,
   needsLighting,
   needsEnvironment,
   postDefaultsFor,
-  renderBudgetFor,
   subjectFor,
   toneMappingFor,
 } from "./policy"
 import type { RenderStyle } from "./policy"
+import { readRenderBudget } from "./device-budget"
 
 /**
  * A spinning subject, rendered to a character grid, in a host element.
@@ -96,17 +97,7 @@ export function createAsciiScene(
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches
-  const device = navigator as Navigator & {
-    deviceMemory?: number
-    connection?: { saveData?: boolean }
-  }
-  const { frameRate, ambientDuration, renderScale } = renderBudgetFor({
-    devicePixelRatio: window.devicePixelRatio,
-    hardwareConcurrency: device.hardwareConcurrency,
-    deviceMemory: device.deviceMemory,
-    saveData: device.connection?.saveData,
-    reduceMotion,
-  })
+  const { frameRate, ambientDuration, renderScale } = readRenderBudget()
   const characterResolution = characterResolutionFor(
     window.innerWidth,
     resolution
@@ -332,11 +323,13 @@ export function createAsciiScene(
     const now = performance.now()
     // A drag is direct manipulation and has to track the pointer, so the cap
     // is lifted while the reader is holding the subject.
-    if (!dragging && frameRate && now - lastFrame < FRAME_MS) {
+    const booked =
+      dragging || !frameRate ? now : frameClock(now, lastFrame, FRAME_MS)
+    if (booked === null) {
       queueFrame()
       return
     }
-    lastFrame = now
+    lastFrame = booked
 
     const dt = (now - lastT) / 1000
     lastT = now

@@ -54,10 +54,7 @@ export function SidePanelView({
         className
       )}
     >
-      <PanelHead
-        caption={CAPTIONS[panel].caption}
-        english={CAPTIONS[panel].english}
-      />
+      <PanelHead caption={CAPTIONS[panel].caption} />
 
       {/* The archive pins its listings, its filter and the face control and
           scrolls only the tree between them, so it is handed the space rather
@@ -79,14 +76,15 @@ export function SidePanelView({
   )
 }
 
+// Named as the rail key that opens it, so the key and the panel agree.
 const CAPTIONS: Record<
   Exclude<SidePanelId, null>,
-  { caption: string; english: string; aria: string }
+  { caption: string; aria: string }
 > = {
-  files: { caption: "АРХИВ", english: "ARCHIVE", aria: "Content" },
-  visor: { caption: "ВИЗОР", english: "VISOR", aria: "Instrument" },
-  stash: { caption: "ПУЛЬТ", english: "CONSOLE", aria: "Console" },
-  links: { caption: "СВЯЗЬ", english: "COMMS", aria: "Contact" },
+  files: { caption: "Files", aria: "Files" },
+  visor: { caption: "BTC farm", aria: "BTC farm" },
+  stash: { caption: "Settings", aria: "Settings" },
+  links: { caption: "Links", aria: "Links" },
 }
 
 /**
@@ -114,7 +112,7 @@ function VisorPanel({ flea }: { flea: FleaState }) {
   )
 }
 
-function PanelHead({ caption, english }: { caption: string; english: string }) {
+function PanelHead({ caption }: { caption: string }) {
   return (
     <div className="flex h-11 shrink-0 items-center gap-2 border-b border-sidebar-border px-3">
       {/* The mark is the way home; the callsign beside it is a readout — the
@@ -133,12 +131,8 @@ function PanelHead({ caption, english }: { caption: string; english: string }) {
         sektant.gab
       </span>
 
-      <span className="ms-auto flex shrink-0 items-center gap-1.5 font-mono text-[0.6rem] tracking-[0.16em] uppercase">
-        <span className="text-terminal-chrome-dim">{caption}</span>
-        <span aria-hidden="true" className="text-terminal-rule">
-          /
-        </span>
-        <span className="text-terminal-ink-faint">{english}</span>
+      <span className="ms-auto shrink-0 font-mono text-[0.6rem] tracking-[0.16em] text-terminal-chrome-dim uppercase">
+        {caption}
       </span>
     </div>
   )

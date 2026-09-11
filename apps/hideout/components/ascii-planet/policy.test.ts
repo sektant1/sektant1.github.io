@@ -4,6 +4,7 @@ import {
   MIN_COLUMNS,
   cellHeightFor,
   characterResolutionFor,
+  frameClock,
   HOLO_COLUMNS,
   MIN_HOLO_DEVICE_CELL,
   holoCellHeightFor,
@@ -169,7 +170,9 @@ describe("renderScaleFor", () => {
 })
 
 describe("renderBudgetFor", () => {
-  it("cuts frame rate without reducing model quality on constrained hardware", () => {
+  it("keeps constrained hardware turning, at half the rate", () => {
+    // Chrome reports most phones at 4 GB; a 4-second ambient window froze
+    // the globe on all of them.
     expect(
       renderBudgetFor({
         devicePixelRatio: 2,
@@ -179,8 +182,8 @@ describe("renderBudgetFor", () => {
         reduceMotion: false,
       })
     ).toEqual({
-      frameRate: 10,
-      ambientDuration: 4_000,
+      frameRate: 30,
+      ambientDuration: Number.POSITIVE_INFINITY,
       renderScale: 2,
     })
   })
@@ -195,10 +198,22 @@ describe("renderBudgetFor", () => {
         reduceMotion: false,
       })
     ).toEqual({
-      frameRate: 30,
+      frameRate: 60,
       ambientDuration: Number.POSITIVE_INFINITY,
       renderScale: 2,
     })
+  })
+
+  it("winds down for a reader on data saver", () => {
+    expect(
+      renderBudgetFor({
+        devicePixelRatio: 2,
+        hardwareConcurrency: 8,
+        deviceMemory: 8,
+        saveData: true,
+        reduceMotion: false,
+      })
+    ).toEqual({ frameRate: 15, ambientDuration: 4_000, renderScale: 2 })
   })
 
   it("renders on demand when reduced motion is requested", () => {
@@ -211,6 +226,43 @@ describe("renderBudgetFor", () => {
         reduceMotion: true,
       })
     ).toEqual({ frameRate: 0, ambientDuration: 0, renderScale: 2 })
+  })
+})
+
+describe("frameClock", () => {
+  /** Frames drawn per second against a display whose refreshes jitter. */
+  function drawnPerSecond(refreshHz: number, cap: number, seconds = 2) {
+    const refresh = 1000 / refreshHz
+    let last = 0
+    let drawn = 0
+    for (let i = 1; i * refresh <= seconds * 1000; i++) {
+      const jitter = i % 2 ? -1.5 : 1.5
+      const booked = frameClock(i * refresh + jitter, last, 1000 / cap)
+      if (booked === null) continue
+      last = booked
+      drawn++
+    }
+    return drawn / seconds
+  }
+
+  it("holds a 30fps cap on a 60Hz display whose refreshes land early", () => {
+    expect(drawnPerSecond(60, 30)).toBeGreaterThanOrEqual(29)
+  })
+
+  it("holds a 60fps cap on a 120Hz display", () => {
+    expect(drawnPerSecond(120, 60)).toBeGreaterThanOrEqual(59)
+  })
+
+  it("never draws faster than the cap", () => {
+    expect(drawnPerSecond(144, 30)).toBeLessThanOrEqual(30)
+  })
+
+  it("re-syncs to now after a stall instead of bursting to catch up", () => {
+    expect(frameClock(5_000, 1_000, 1000 / 30)).toBe(5_000)
+  })
+
+  it("draws every refresh when uncapped", () => {
+    expect(frameClock(12, 10, 0)).toBe(12)
   })
 })
 

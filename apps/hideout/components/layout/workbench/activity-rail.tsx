@@ -2,11 +2,11 @@
 
 import type * as React from "react"
 import {
-  IconArchive,
-  IconBinoculars,
-  IconCrosshair,
-  IconDeviceDesktop,
-  IconRadio,
+  IconCurrencyBitcoin,
+  IconFolder,
+  IconLink,
+  IconSearch,
+  IconSettings,
 } from "@tabler/icons-react"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -31,31 +31,33 @@ type RailItem = {
   Icon: React.ComponentType<{ className?: string }>
 }
 
+// English names under the icons every editor uses for them. The keys were
+// Cyrillic glyph-only, and a first visit had to press each to learn it.
 const ITEMS: RailItem[] = [
-  { id: "files", label: "АРХИВ", hint: "Archive", Icon: IconArchive },
+  { id: "files", label: "Files", hint: "Files", Icon: IconFolder },
   {
     id: "search",
-    label: "ПОИСК",
-    hint: "Recon search (ctrl+k)",
-    Icon: IconBinoculars,
+    label: "Search",
+    hint: "Search (ctrl+k)",
+    Icon: IconSearch,
   },
   {
     id: "visor",
-    label: "ВИЗОР",
-    hint: "Optics and farm",
-    Icon: IconCrosshair,
+    label: "Farm",
+    hint: "BTC farm",
+    Icon: IconCurrencyBitcoin,
   },
   {
     id: "stash",
-    label: "ПУЛЬТ",
-    hint: "Console",
-    Icon: IconDeviceDesktop,
+    label: "Settings",
+    hint: "Settings",
+    Icon: IconSettings,
   },
   {
     id: "links",
-    label: "СВЯЗЬ",
-    hint: "Radio links",
-    Icon: IconRadio,
+    label: "Links",
+    hint: "Links",
+    Icon: IconLink,
   },
 ]
 
@@ -95,14 +97,14 @@ export function ActivityRail({
                 : onSelect(active ? null : (item.id as SidePanel))
             }
             className={cn(
-              "key-sweep flex size-10 items-center justify-center border crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+              "key-sweep flex w-11 flex-col items-center justify-center gap-0.5 border py-1.5 font-mono text-[0.48rem] leading-none tracking-normal uppercase crt-persist focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
               active
                 ? "border-primary text-primary crt-glow-soft"
                 : "border-terminal-rule text-terminal-ink-dim hover:border-terminal-edge hover:text-foreground"
             )}
           >
             <item.Icon className="size-5" />
-            <span className="sr-only">{item.hint}</span>
+            {item.label}
           </button>
         )
       })}

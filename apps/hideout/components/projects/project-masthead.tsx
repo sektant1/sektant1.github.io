@@ -27,7 +27,7 @@ export function ProjectMasthead({ meta }: { meta: ProjectMeta }) {
             src={meta.thumbnail}
             alt=""
             aria-hidden="true"
-            className="size-full object-fill"
+            className="size-full object-cover"
           />
         </div>
       ) : null}

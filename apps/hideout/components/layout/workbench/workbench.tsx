@@ -182,9 +182,19 @@ function MobileLinks({
           the bar on a phone would have dropped them with it. */}
       <div className="flex flex-col gap-2 border-t border-sidebar-border pt-3">
         <span className="font-mono text-[0.6rem] tracking-[0.2em] text-terminal-chrome-dim uppercase">
-          пульт
+          settings
         </span>
         <ConsoleKeys />
+        {/* The log had a key on the bar; it is a console toy, so it sits with
+            the console now. The menu closes on it, or the log opens behind. */}
+        <button
+          type="button"
+          data-closes-menu
+          onClick={() => fire("log")}
+          className="key-sweep flex min-h-11 items-center justify-center border border-terminal-rule px-3 font-mono text-[0.68rem] tracking-[0.08em] text-terminal-ink-dim uppercase crt-persist hover:border-terminal-edge hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          Open log
+        </button>
       </div>
 
       <p className="font-mono text-[0.65rem] text-terminal-ink-faint">

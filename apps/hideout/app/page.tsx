@@ -1,9 +1,8 @@
-import { GameGrid } from "@/components/games/game-grid"
-import { StationHero } from "@/components/hero/station-hero"
+import { StationBanner, StationHero } from "@/components/hero/station-hero"
 import { SectionHeading } from "@/components/layout/section-heading"
 import { SiteShell } from "@/components/layout/site-shell"
 import { PostList } from "@/components/posts/post-list"
-import { ProjectGrid } from "@/components/projects/project-grid"
+import { WorkIndex, worksFrom } from "@/components/projects/work-index"
 import { getAllPosts, publicPostMeta } from "@/lib/content/posts"
 import { getAllGames } from "@/lib/content/games"
 import { getAllProjects } from "@/lib/content/projects"
@@ -44,9 +43,6 @@ export default async function HomePage() {
     0
   )
 
-  // Everything the archive holds, on one timeline. The trace reports that the
-  // station was worked on and how often, not what any entry was, so the three
-  // kinds are counted together.
   // The tail of the same timeline the trace draws, as entries rather than as a
   // count: the trace says the station was worked on, the log says what on.
   const recent = [
@@ -82,7 +78,24 @@ export default async function HomePage() {
     // No status fields: the hero's own meters report the counts, and a bar
     // repeating them under the panel that draws them is the same number twice.
     <SiteShell path="index" tree={tree}>
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-6 md:px-6 md:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-4 md:gap-8 md:px-6 md:py-8">
+        <StationBanner content={home.hero} />
+
+        {/* Every work, straight under the name. The instruments used to come
+            first and put the first project three screens down; a visitor
+            deciding in ten seconds never met it. Games are in here too. */}
+        <section className="@container flex flex-col gap-3">
+          <SectionHeading
+            path={home.sections.projects.path}
+            title={home.sections.projects.title}
+            action={{
+              label: home.sections.projects.actionLabel,
+              href: "/projects",
+            }}
+          />
+          <WorkIndex works={worksFrom(projects, games)} />
+        </section>
+
         <StationHero
           posts={posts.length}
           projects={projects.length}
@@ -101,34 +114,6 @@ export default async function HomePage() {
             action={{ label: home.sections.posts.actionLabel, href: "/posts" }}
           />
           <PostList posts={posts.slice(0, 4)} />
-        </section>
-
-        {/* Only when there is something to show — an empty section on the
-            front page reads as a site that is unfinished. */}
-        {games.length > 0 ? (
-          <section className="flex flex-col gap-4">
-            <SectionHeading
-              path={home.sections.games.path}
-              title={home.sections.games.title}
-              action={{
-                label: home.sections.games.actionLabel,
-                href: "/games",
-              }}
-            />
-            <GameGrid games={games.slice(0, 3)} />
-          </section>
-        ) : null}
-
-        <section className="flex flex-col gap-4">
-          <SectionHeading
-            path={home.sections.projects.path}
-            title={home.sections.projects.title}
-            action={{
-              label: home.sections.projects.actionLabel,
-              href: "/projects",
-            }}
-          />
-          <ProjectGrid projects={projects.slice(0, 3)} />
         </section>
       </div>
     </SiteShell>
