@@ -1,21 +1,85 @@
 ---
 title: "react-warcraft-build-order-tool"
 slug: "warcraft-build-order-tools"
-description: "A Warcraft III build order practice tool with a fully themed WC3 interface."
+description: "A Warcraft III build order trainer with a game timer, key-moment alerts, and builds you can write or import as JSON."
 date: "2026-05-05"
-status: "published"
+status: "active"
 tags:
   - "warcraft"
   - "react"
+  - "tool"
 stack:
-  - "warcraft"
   - "react"
+  - "typescript"
+  - "vite"
+  - "webgl"
+  - "war3-model"
+  - "express"
+  - "sqlite"
 href: "https://sektant.dev/warcraft-tools/"
 repo: "https://github.com/sektant1/warcraft-tools"
 open: "website"
-thumbnail: "logo.png"
+thumbnail: "./assets/cover.png"
 ---
 
-## what
+A practice tool for Warcraft III build orders. You pick a build, start the timer when your game starts, and the list keeps the current step in view. Steps flagged `isKey` pop up a notice and play a sound. The interface is drawn from the game's own textures, and those components later became [react-warcraft-ui](/projects/react-warcraft-ui).
 
-## why
+<C>fan-made, not affiliated with or endorsed by Blizzard Entertainment</C>
+
+![The practice view for Fast Expand Rifle/Caster, with the clock, Start and Reset, and the step list](/content-assets/projects/warcraft-build-order-tools/assets/practice.jpg)
+
+## Builds
+
+The app ships with 16 builds, four per race. Each has a matchup, a difficulty, its heroes, and a list of steps with a game time and a food count. 14 of them also include the hero skill order, shown with the ability icons.
+
+```text
+Human     Fast Expand Rifle/Caster          vs Undead      Intermediate
+Orc       Far Seer Headhunter Aggro         vs Human       Beginner
+Undead    Lich Fast Expansion               Mirror         Advanced
+NightElf  Warden Shadow Strike Harass       vs Human       Advanced
+```
+
+## The timer
+
+The clock counts seconds from when you press start. It reads nothing from the game, so you start it by hand. The current step is the last one whose time has passed. When that step has `isKey` set, a notice pops up and the app plays `sound/<name>.wav` from the step's `sound` field, or `key_moment.wav` if the step doesn't set one.
+
+![The clock running and the list following along](/content-assets/projects/warcraft-build-order-tools/assets/timer.gif)
+
+## Your own builds
+
+The Create Build page has a form for the build info, skill order and steps, with a "Key moment" column. You can also import a JSON file holding one build or a list of them, and export any build back to a file. The import skips entries with an unknown race or a step missing `order`, `time`, `instruction` or `food`.
+
+```json
+[
+  {
+    "name": "Fast Expand Rifle/Caster",
+    "race": "Human",
+    "vs": "Undead",
+    "difficulty": "Intermediate",
+    "steps": [
+      { "order": 1, "time": "0:00", "instruction": "4 Peasants gold, 1 Altar", "food": "5/12" },
+      { "order": 7, "time": "0:45", "instruction": "Train Archmage", "food": "12/12", "isKey": true }
+    ]
+  }
+]
+```
+
+Imported builds only live in memory, so a reload drops them.
+
+## How it's built
+
+It's React 19 on Vite. The textures and hero portraits come from the game's BLP and MDX files, drawn the same way as in [react-warcraft-ui](/projects/react-warcraft-ui), and a small WebGL renderer in `src/renderer/` batches the quads. Many sizes and offsets in the layout come straight from the game's FDF frame files (`UpperButtonBar.fdf`, `ResourceBar.fdf`), converted to viewport units.
+
+`server/` has an optional Express API with accounts (bcrypt and JWT), build CRUD, favorites and play history, stored in SQLite through `node:sqlite`. On load the client asks `/api/builds` for the list and keeps the built-in builds if that fails. The copy on sektant.dev is a static GitHub Pages build, so it always uses the built-in list and login has no server behind it.
+
+## Run it
+
+Game assets are not in the repo. Extract them from your own copy of the game into `public/`.
+
+```bash
+npm install
+npm run dev          # app on :3000, proxies /api to :3001
+npm run dev:all      # app and API together
+npm run seed         # seed the database
+npm run build        # output in dist/
+```

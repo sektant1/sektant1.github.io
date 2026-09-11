@@ -1,23 +1,76 @@
 ---
 title: "phosphor-ui"
 slug: "phosphor-ui"
-description: "My own React UI Component Library with s.t.a.l.k.e.r vibes"
+description: "My React component library for green-phosphor CRT sites: layouts, content blocks and templates for blogs, wikis and project logs."
 date: "2026-05-16"
-status: "published"
+status: "active"
 tags:
-  - "vim"
-  - "plugin"
-  - "note"
+  - "react"
+  - "ui"
+  - "design system"
+  - "storybook"
 stack:
-  - "vim"
-  - "plugin"
-  - "note"
+  - "react"
+  - "typescript"
+  - "scss"
+  - "rollup"
+  - "storybook"
+  - "shiki"
+  - "jest"
 href: "https://sektant.dev/phosphor-ui/"
 repo: "https://github.com/sektant1/phosphor-ui"
 open: "website"
-thumbnail: "logo.png"
+thumbnail: "./assets/cover.png"
 ---
 
-## what
+phosphor-ui is my React component library for sites that should look like a monochrome CRT terminal: green text, scanlines, glow, square corners. The mood comes from the PDA screens in S.T.A.L.K.E.R. and Tarkov. It targets the sites I actually build, which are blogs, wikis, course pages and project logs.
 
-## why
+![The demo site in Storybook: hero banner, post listing and an article page](/content-assets/projects/phosphor-ui/assets/demo.gif)
+
+## What's in it
+
+Everything is imported from the package root. Inside the repo the folders go from foundations and layout up through atoms, molecules, organisms and templates. A few of the pieces: `CrtShell` and `PdaWindow` (a window with rec, rx and pwr lights in the title bar) for chrome, `PostListing`, `TableOfContents` and `CodeBlock` for content, `ContentEditor` for admin screens, and `SiteShell` and `Post` as ready-made templates. The Storybook has the rest.
+
+## How it's built
+
+Components are styled with SCSS modules and bundled by Rollup to ESM and CommonJS. The CSS ships as `phosphor.css`, or split into `tokens.css`, `fonts.css`, `typography.css`, `global.css` and `components.css` if your app already handles some of that.
+
+- Themes are set with `data-theme`: `phosphor`, `amber`, `cyan` or `red`. `ThemeProvider` and `ThemeToggle` switch them, and `getInitialThemeScript` returns an inline script that applies the stored theme before React loads.
+- Colors, sizes and glows are `--pho-*` custom properties. Components carry `data-pho-component` and `data-pho-slot` attributes, so an app can restyle them without targeting generated class names.
+- `CodeBlock` colors code with Shiki using phosphor themes, and `phosphor-ui/server` exports `codeToPhosphorHtml` to do the same on the server.
+- `AsciiBanner` renders text with figlet (the Slant and Standard fonts are bundled). `VideoPlayer` wraps video.js.
+- `mdxComponents` maps MDX headings, `pre`, `blockquote`, `img`, `hr` and links to the library's components.
+
+The live link above is the Storybook, built from 86 story files. `npm run validate:package` type-checks, audits the public exports, runs Jest, builds, and smoke-tests the built package before a release. Pushes to `dev` publish prereleases to npm under `next`, and pushes to `prod` publish `latest` and redeploy Storybook.
+
+## Install
+
+```bash
+npm install phosphor-ui
+```
+
+React 17, 18 or 19 is a peer dependency. `@mdx-js/react` is optional.
+
+```tsx
+import { SiteShell, Post, Callout } from "phosphor-ui";
+import "phosphor-ui/phosphor.css";
+
+export default function App() {
+  return (
+    <SiteShell title="field notes" nav={[{ label: "notes", href: "/notes", active: true }]}>
+      <Post title="Boot sequence">
+        <Callout title="signal">Normal React or MDX content goes here.</Callout>
+      </Post>
+    </SiteShell>
+  );
+}
+```
+
+## Develop
+
+```bash
+npm install
+npm run storybook        # http://localhost:6006
+npm run typecheck
+npm run build            # rollup, output in dist/
+```

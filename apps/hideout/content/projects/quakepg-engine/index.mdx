@@ -1,0 +1,92 @@
+---
+title: "quakepg-engine"
+slug: "quakepg-engine"
+description: "A C++17 and OpenGL 3.3 engine for a PSX-looking medieval dungeon crawler. It got as far as one walkable dungeon and a sword."
+date: "2026-04-06"
+status: "archived"
+tags:
+  - "opengl"
+  - "c++"
+  - "game engine"
+stack:
+  - "c++17"
+  - "opengl"
+  - "glfw"
+  - "glad"
+  - "assimp"
+  - "imgui"
+  - "stb_image"
+repo: "https://github.com/sektant1/quakepg-engine"
+thumbnail: "./assets/cover.png"
+open: "repo"
+---
+
+quakepg was meant to become a first-person roguelike dungeon crawler with a medieval setting and a PS1 look, on an engine written from scratch. I laid it out after Jason Gregory's "Game Engine Architecture". It lasted two days of commits: you can walk around one dungeon and swing a sword at nothing.
+
+![The dungeon at 640x480, with the sword in its own projection](/content-assets/projects/quakepg-engine/assets/dungeon.png)
+
+## Layout
+
+The engine is a static library (`libquakepg_engine.a`) and the game is a separate executable that links it. The code is C with structs: plain data plus prefixed free functions in `namespace qp`, like `window_create`, `shader_bind` and `mesh_draw`.
+
+```text
+core       types, math, log, assert, console, debug UI
+platform   window, input, timer (GLFW underneath)
+renderer   shader, mesh, texture, material, camera, model
+physics    AABB collision
+```
+
+The rule was that the game only talks to that API. In practice `main.cpp` still includes GLFW to start Dear ImGui.
+
+## The PSX look
+
+The game renders at 640x480 into a framebuffer and scales it up with nearest filtering. `psx.vert` and `psx.frag` do the rest:
+
+- vertex snapping in clip space (off by default, the grid size is a slider)
+- color depth cut to 31 levels per channel, with a 4x4 Bayer dither
+- linear fog computed per vertex
+
+Affine texture warping didn't survive. The corners of the dungeon quads distorted, subdividing them only half helped, and the last rendering commit switched to perspective-correct textures.
+
+## The dungeon
+
+The map is ASCII in `game/src/main.cpp`. `#` is a wall, `.` is floor and `P` is where you spawn:
+
+```text
+################
+#......P.......#
+#..............#
+#..####..####..#
+#..#........#..#
+```
+
+`dungeon_map_load` turns it into floor, wall and ceiling meshes and a list of wall boxes. The player is an AABB that slides along those boxes, with gravity and a jump.
+
+The sword is a GLB loaded through Assimp. It gets its own 70 degree projection so it doesn't poke through walls, bobs while you walk, and plays a swing on left click. Nothing checks what the swing hits.
+
+![Walking and turning through the dungeon](/content-assets/projects/quakepg-engine/assets/walk.gif)
+
+Tab opens a Dear ImGui menu for resolution, FOV, movement, gravity, snapping, fog, dithering, color depth and the sword's transform. The backtick key opens a console that knows `help` and `clear`.
+
+## What never happened
+
+The README's next steps are still next steps: procedural maps instead of the hardcoded one, enemies, health and a HUD, audio, and a map editor.
+
+## Build
+
+Linux only as written. GLFW, glad and Dear ImGui are in `vendor/`. Assimp has to come from the system (`libassimp-dev` on Debian), which the README's package list leaves out.
+
+```sh
+sudo apt-get install build-essential cmake libx11-dev libxrandr-dev libxcursor-dev libxinerama-dev libxi-dev
+
+mkdir -p build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+make -j$(nproc)
+
+cd ..
+./quakepg_game
+```
+
+The binary lands in the repo root and loads `assets/` from the working directory, so run it from there. `scripts/run.sh` does the build and the run in one go.
+
+WASD moves, the mouse looks, Shift sprints, Space jumps, left click swings, Esc quits.

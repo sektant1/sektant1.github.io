@@ -1,0 +1,77 @@
+---
+title: "ChadShell"
+slug: "chadshell"
+description: "My Hyprland desktop config: Waybar, Rofi, an Eww hardware HUD and an ASCII audio visualizer, with scripts to install it."
+date: "2026-06-18"
+status: "active"
+tags:
+  - "linux"
+  - "hyprland"
+  - "dotfiles"
+stack:
+  - "hyprland"
+  - "waybar"
+  - "eww"
+  - "rofi"
+  - "cava"
+  - "alacritty"
+  - "bash"
+repo: "https://github.com/sektant1/dionysus"
+open: "repo"
+thumbnail: "./assets/demo-alacritty.png"
+---
+
+ChadShell is the config for my Hyprland desktop. Every program gets the same flat slate background, cyan borders and square-bracket labels, with Cyrillic where I could fit it. The repo holds each program's config and the shell scripts that link it into `~/.config`.
+
+<C>the repo is still called dionysus, the project's old name</C>
+
+## What's in it
+
+- Hyprland with vim keys for focus and window movement. Most binds check that their program is installed first, so a bind for a missing tool does nothing.
+- A terminal bind that tries alacritty, kitty, foot, wezterm, ghostty and xterm, in that order.
+- Waybar with the clock and launcher buttons on the left and system status on the right. Workspaces show as Cyrillic letters, and the active one becomes `[●]`.
+- A Rofi launcher with an image panel next to the app list.
+- `animated-neofetch.sh`, which loops ASCII frames beside cached neofetch output.
+- A zsh config.
+
+![Rofi open over the desktop, with Waybar across the top](/content-assets/projects/chadshell/assets/demo-rofi-2.png)
+
+`hypr/scripts/waybar_watcher.sh` starts at login and changes the wallpaper depending on whether the current workspace has any windows.
+
+## Eww HUD
+
+A tall column of boxed readouts, labelled as if the laptop were a reactor: uptime, CPU and GPU temperature, CPU, RAM and storage bars, power draw and voltages, fan speeds, download, upload, ping and VPN state. The box at the top is the audio visualizer. Temperatures, voltages and fans come from lm-sensors, GPU stats from nvidia-smi.
+
+![The Eww HUD](/content-assets/projects/chadshell/assets/demo-eww.gif)
+
+## Audio visualizer
+
+Hyprland starts CAVA in raw mode, writing ASCII bar values to `/tmp/cava.raw`. `audio_visualizer.py` reads that file and draws dots with a fading trail into `/tmp/visualizer.txt`, which Eww shows. A terminal can show it too:
+
+```sh
+cava -p ~/.config/cava/config
+python3 ~/.config/eww/scripts/audio/audio_visualizer.py
+watch -n0.1 cat /tmp/visualizer.txt
+```
+
+![The ASCII visualizer](/content-assets/projects/chadshell/assets/demo-cava-2.gif)
+
+## Install
+
+`scripts/install` symlinks modules from `dotfiles/` into `~/.config`, or all of them when you name none. It won't replace an existing config without `--force`, and with it the old directory is moved to `${XDG_STATE_HOME:-~/.local/state}/dionysus/backups/` first.
+
+```sh
+./scripts/install --dry-run
+./scripts/install hypr waybar rofi alacritty cava eww
+./scripts/install --force hypr waybar rofi
+```
+
+Packages are a separate step, with one script for Arch and one for Ubuntu 24.04. `scripts/doctor` lists any commands that are still missing.
+
+```sh
+./scripts/install-packages-arch --dry-run --desktop --optional --aur
+./scripts/install-packages-ubuntu --dry-run --desktop --optional
+./scripts/doctor
+```
+
+Monitor rules for one machine go in `~/.config/hypr/local.conf`, which the main config sources last.
