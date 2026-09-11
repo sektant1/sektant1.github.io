@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { KeyButton } from "@/components/key-button"
 import { Panel } from "@/components/panel"
-import { snapshotDate } from "@/data/snapshot"
+import { snapshot, snapshotDate } from "@/data/snapshot"
 import { buildExport, readImport, type ImportPreview } from "@/state/import"
 import type { Progress } from "@/state/storage"
 
