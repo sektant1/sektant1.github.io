@@ -1,0 +1,17 @@
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+// https://vite.dev/config/
+export default defineConfig({
+  // Pages serves the hideout at the domain root and this beneath it, beside
+  // the showcase. The router reads this through import.meta.env.BASE_URL.
+  base: "/sortie/",
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})

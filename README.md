@@ -41,6 +41,7 @@ and deployed on every push to `master`:
 | `/`          | `apps/hideout` static export, CMS off  |
 | `/r/*.json`  | the shadcn registry                    |
 | `/showcase/` | `apps/web`, the component showcase     |
+| `/sortie/`   | `apps/sortie`, the Tarkov raid planner |
 
 The hideout sits at the root because the custom domain belongs to it — its
 `public/CNAME` is what keeps `sektant.dev` pointed here across deploys. Serve
@@ -95,6 +96,7 @@ imports, so importing a sibling or a hook is enough — the manifest follows.
 | `scripts/` | The generator, its pure helpers, and their tests |
 | `apps/web` | SKT Codex — the showcase, and the host for `/r/*.json` |
 | `apps/hideout` | sektant.dev — the personal site, built on the toolkit |
+| `apps/sortie` | Sortie — an Escape from Tarkov raid planner and dashboard |
 | `docs/superpowers/` | The design spec and implementation plan |
 
 ## Theme

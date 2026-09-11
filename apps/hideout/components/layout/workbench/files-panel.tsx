@@ -74,7 +74,7 @@ export function FilesPanel({
           htmlFor="tree-filter"
           className="font-mono text-[0.6rem] tracking-[0.15em] text-terminal-chrome-dim uppercase"
         >
-          фильтр
+          filter
         </label>
         <input
           id="tree-filter"
