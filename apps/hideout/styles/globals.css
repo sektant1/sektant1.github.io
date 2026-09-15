@@ -465,38 +465,6 @@ html[data-crt="off"] .ascii-planet-scene {
     }
   }
 
-  /* A work's picture is drawn on the tube until it is pointed at: the image
-     keeps its luminance and the phosphor supplies the hue, amber included. */
-  .work-thumb {
-    background-color: var(--primary);
-  }
-
-  .work-thumb img {
-    mix-blend-mode: luminosity;
-    opacity: 0.9;
-    transition: opacity 160ms steps(3, end);
-  }
-
-  .group:hover .work-thumb img,
-  .group:focus-within .work-thumb img {
-    mix-blend-mode: normal;
-    opacity: 1;
-  }
-
-  /* Nothing to point with on a phone, so it shows the picture as it is. */
-  @media (hover: none) {
-    .work-thumb img {
-      mix-blend-mode: normal;
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .work-thumb img {
-      transition: none;
-    }
-  }
-
   @media (forced-colors: active) {
     .model-icon-layer {
       display: none;

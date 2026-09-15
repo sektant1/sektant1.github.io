@@ -3,32 +3,32 @@
     "style": "holo"
   },
   "hero": {
-    "systemLabel": "СИСТЕМА //",
+    "systemLabel": "СИСТЕМА // BY: GABRIEL F.",
     "systemUnit": "СКТ-01",
     "bannerWide": "Sektant Hideout",
     "bannerStackedTop": "Sektant",
     "bannerStackedBottom": "Hideout",
     "srTitle": "Sektant Hideout",
-    "role": "engine and tools programmer",
+    "role": "engine & tools programmer",
     "tagline": "\"as you think, so you shall be\"",
-    "description": "My personal man cave for essays, tinkering, and things I built",
+    "description": "My website for essays, tinkering, cool things I build or whatever new skill I'm learning atm.",
     "operator": "ОПЕРАТОР // SEKTANT1",
-    "summaryTitle": "PORTFOLIO // СВОДКА",
+    "summaryTitle": "BLOG // СВОДКА",
     "summaryRef": "BUF 001",
     "metricPosts": "POSTS",
     "metricProjects": "PROJECTS",
     "metricMinutes": "READING",
     "tagsTitle": "TOPICS",
     "tagsRef": "LINKS",
-    "logTitle": "LATEST BLOG POSTS",
+    "logTitle": "LATEST POSTS",
     "logRef": "UTC",
-    "globeTitle": "ОБЪЕКТ 01 // EARTH",
+    "globeTitle": "ОБЪЕКТ 01 // MAP",
     "globeFooterEnd": "DRAG TO ROTATE"
   },
   "sections": {
     "posts": {
       "path": "content/posts",
-      "title": "LATEST BLOG POSTS",
+      "title": "LATEST POSTS",
       "actionLabel": "all posts"
     },
     "games": {
@@ -38,7 +38,7 @@
     },
     "projects": {
       "path": "content/projects",
-      "title": "MY PROJECTS",
+      "title": "PROJECTS",
       "actionLabel": "all projects"
     }
   }

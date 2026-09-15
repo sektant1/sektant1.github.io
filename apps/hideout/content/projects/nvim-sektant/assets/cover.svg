@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">nvim-sektant</title>
+  <desc id="desc">Neovim configuration cover with a geometric N, a block cursor and Lua module names on a Tokyo Night background.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#c0caf5" stroke-opacity=".045"/>
+    </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <path d="M0 3.5H4" stroke="#1a1b26" stroke-opacity=".3"/>
+    </pattern>
+  </defs>
+  <path fill="#1a1b26" d="M0 0h960v540H0z"/>
+  <path fill="url(#grid)" d="M0 0h960v540H0z"/>
+  <path d="M40 76H920M40 462H920" stroke="#414868"/>
+  <g font-family="monospace" font-size="16" letter-spacing="2">
+    <text x="40" y="48" fill="#9ece6a">РЕДАКТОР //</text>
+    <text x="920" y="48" text-anchor="end" fill="#a9b1d6">LUA / NEOVIM</text>
+  </g>
+  <g transform="translate(48 111)">
+    <path d="M0 0h66v196H0z" fill="#7aa2f7"/>
+    <path d="M158 0h66v196h-66z" fill="#9ece6a"/>
+    <path d="M0 0h66l158 196h-66z" fill="#73daca"/>
+    <path d="M0 0h224v196H0z" fill="url(#scan)"/>
+    <path d="M249 146h28v50h-28z" fill="#c0caf5"/>
+  </g>
+  <g font-family="monospace" font-size="22">
+    <text x="390" y="144" fill="#7aa2f7">init.lua</text>
+    <path d="M390 161H912" stroke="#414868"/>
+    <text x="390" y="203"><tspan fill="#bb9af7">require </tspan><tspan fill="#9ece6a">'lazy-bootstrap'</tspan></text>
+    <text x="390" y="243"><tspan fill="#bb9af7">require </tspan><tspan fill="#9ece6a">'lazy-plugins'</tspan></text>
+    <text x="390" y="283"><tspan fill="#bb9af7">require </tspan><tspan fill="#9ece6a">'options'</tspan></text>
+    <text x="390" y="323"><tspan fill="#bb9af7">require </tspan><tspan fill="#9ece6a">'keymaps'</tspan></text>
+  </g>
+  <text x="40" y="431" fill="#c0caf5" font-family="monospace" font-size="76" font-weight="700" letter-spacing="-4">nvim-sektant</text>
+  <g font-family="monospace" font-size="16">
+    <text x="40" y="501" fill="#a9b1d6">sektant1/nvim-sektant</text>
+    <text x="920" y="501" fill="#9ece6a" text-anchor="end">vim.g.mapleader = ' '</text>
+  </g>
+</svg>
