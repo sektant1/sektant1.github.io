@@ -1,3 +1,5 @@
+@import "./phosphor-cursors.css";
+
 /* Phosphor — the green-tube variant of the toolkit identity.
  *
  * The base theme in globals.css is the red one. This file only restates the
@@ -194,41 +196,6 @@
  * because cursor: url() cannot read a custom property — they are the ramp
  * above.
  */
-:root,
-.dark {
-  /* Hotspot 8 8 throughout: the dot is what is pointing, and it stays in the
-     same place through every state so the aim never jumps on hover. */
-  --cursor-default:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAACUSURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBXo3cxgYGBgYLqlPgSvEJ8eEbCpMASGArI4JmwJkG5BpmDjWMMDnf3xqsAYiTDM2Dehq8AIWcZ7/Rh8q/rOI8/xHNwzDC+S6AG8Y4LIVRQ226LmkPoWBRZznP7aEhJ4WsEYjTBFME7pmZIBiALZ4xgaQ1VGcFygGANlCa0XK6idPAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
-      8 8,
-    default;
-  --cursor-pointer:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABASURBVDjLY2AYBRQDRmyCLOI8//Fp+vPyC1wfCy5FejdzsIpfUp+Cwmei1AsEDUC3kWQDcHmFfl4gBCiOxmEAAHVoDhHPaMdtAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%2304170c'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%2332f078'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2304170c'/%3E%3C/svg%3E")
-      8 8,
-    pointer;
-  --cursor-grab:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAAB+SURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBXo3cxgYGBgYLqlPgSvEJ8eEbCpMASGArI4JmwJkG5BpmDgywGoAuv+x8eFex+dU9IDDBpgIKSAULgQNwOZvkgwgBHCGAYs4z398CQmvC2D+hmlCT0g4DSDkX2zqKM4LFAMAGapBHJas8vIAAAAASUVORK5CYII=")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%2332f078' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%2332f078'/%3E%3C/svg%3E")
-      8 8,
-    grab;
-  --cursor-grabbing:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAABtSURBVDjLY2AY8oARmyCLOM9/XBr+vPzCyIAPsIjz/GcR5/m/8v/J/yv/n8RgoxvOhM2QpS/2MhArjtUAGIiWcEahsQG8BmAzjGQDcHmHaAPwOZ8kL5BlAMz5S1/sxekVrAbgcjY2ceqnRLoDAHBRLZFEr34JAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%23a9ffc9' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%2304170c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23a9ffc9'/%3E%3C/svg%3E")
-      8 8,
-    grabbing;
-  --cursor-disabled:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAAAAAAAAPlDu38AAAB5SURBVDjLY2AYaMCIzGER5/mPzP/z8gsjITkMBYLJ+gwMDAwM7+dehCvEJ8eEbCpMASGArI4JmwJkG5BpmDjWMMDnf6LVsIjz/EdXhM0QQmrIB+S4gOIwwIhGWBShK0ZOCwSjEd0Q9ISEDFAMwBbP2ACyOorzAsUAAJ+bUBge01WxAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%2304170c' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23157a3b' stroke-width='1'/%3E%3C/svg%3E")
-      8 8,
-    not-allowed;
-}
 
 @layer base {
   /* The icon set draws with round caps and round joins, which is every other
@@ -449,41 +416,4 @@
   --terminal-rule: color-mix(in oklch, var(--border) 85%, transparent);
   --terminal-edge: color-mix(in oklch, var(--primary) 60%, transparent);
   --terminal-wash: color-mix(in oklch, var(--primary) 12%, transparent);
-}
-
-/* The pointer set, recoloured rather than redrawn. Every mark sits on the same
-   pixel it does on green — the PNGs were remapped colour for colour from the
-   green originals, so the geometry the comment above insists on is preserved
-   exactly rather than re-rasterised and hoped over. */
-[data-tube="amber"] {
-  --cursor-default:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAiklEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQFD9dFMzxcF40ihk+OCdlUmCQhgKyOCZsC+aClKM6E0TBxrGGAz//41GANRJhmbBrQ1eAF0gKM///si/kvLcD4H90wvNFIiguYsPkPl2141cCci8vJMDFkNTijEV9CQgdM2OKfEEBWR3FeoBgAAPxObv5uJJGOAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23fcbe5c' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fcbe5c'/%3E%3C/svg%3E")
-      8 8,
-    default;
-  --cursor-pointer:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAP0lEQVR42mNgGAUUA0ZsgtICjP/xaXr64T9cHwsuRQ/XRWMVlw9aisJnotQLBA1At5FkA3B5hX5eoHk0DgMAAGOZDhH/czVPAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='7' height='7' fill='%231b1001'/%3E%3Crect x='6' y='6' width='5' height='5' fill='%23fcbe5c'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%231b1001'/%3E%3C/svg%3E")
-      8 8,
-    pointer;
-  --cursor-grab:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAdklEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQFD9dFMzxcF40ihk+OCdlUmCQhgKyOCZsC+aClKM6E0TBxZMCEyxZk/2PjwwALPqeiBxw2wESKf8kyAJu/STKAEGDB5398CQmvC/AlJLwGEPIvNnUU5wWKAQCT7z9xBvt2lwAAAABJRU5ErkJggg==")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M5.5,3.5H3.5V12.5H5.5%20M10.5,3.5H12.5V12.5H10.5' fill='none' stroke='%23fcbe5c' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fcbe5c'/%3E%3C/svg%3E")
-      8 8,
-    grab;
-  --cursor-grabbing:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAbElEQVR42mNgGPKAEZugtADjf1wann74z4jXRGkBxv/SAoz//z058P/fkwMYbHTDmbAZ8vjKfgZixZnwuUZWxxGFxgaYiA0sXIYQNACXd4g2AJ/zSfICWQbAnP/4yn6cXmEixdnYxKmfEukOAALmLm6oRLUtAAAAAElFTkSuQmCC")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M7.5,4.5H5.5V11.5H7.5%20M8.5,4.5H10.5V11.5H8.5' fill='none' stroke='%23fee4c0' stroke-width='1'/%3E%3Crect x='7' y='7' width='3' height='3' fill='%231b1001'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%23fee4c0'/%3E%3C/svg%3E")
-      8 8,
-    grabbing;
-  --cursor-disabled:
-    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeUlEQVR42mNgGGjAiMyRFmD8j8x/+uE/IyE5JnQF2b78DNm+/Chi+OSYkE2FSRICyOqYsCmYuvkjijNhNEwcaxjg8z/RaqQFGP+jK8JmCCE15ANyXMCEzX+4DMGmBiMa0eMZXzrBGY34EhI6YMIW/4QAsjqK8wLFAADaAUdQDA+0eAAAAABJRU5ErkJggg==")
-      8 8,
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%231b1001' stroke-width='3'/%3E%3Cpath d='M3.5,5.5V3.5H5.5%20M10.5,3.5H12.5V5.5%20M3.5,10.5V12.5H5.5%20M10.5,12.5H12.5V10.5' fill='none' stroke='%23865d10' stroke-width='1'/%3E%3C/svg%3E")
-      8 8,
-    not-allowed;
 }

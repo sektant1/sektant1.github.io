@@ -192,6 +192,139 @@
   color: var(--ascii-ink);
 }
 
+@keyframes terminal-ascii-signal {
+  0%,
+  7%,
+  9%,
+  72%,
+  75%,
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  8% {
+    transform: translateX(-0.04em);
+    opacity: 0.82;
+  }
+  73% {
+    transform: translateX(0.025em);
+    opacity: 0.68;
+  }
+  74% {
+    transform: translateX(-0.015em);
+    opacity: 0.92;
+  }
+}
+
+@keyframes terminal-ascii-power {
+  0%,
+  4%,
+  6%,
+  8%,
+  71%,
+  76%,
+  100% {
+    filter: brightness(1.06)
+      drop-shadow(
+        0 0 4px color-mix(in oklch, var(--ascii-ink) 38%, transparent)
+      )
+      drop-shadow(
+        0 0 15px color-mix(in oklch, var(--ascii-ink) 18%, transparent)
+      );
+  }
+  5%,
+  72% {
+    filter: brightness(0.58)
+      drop-shadow(
+        0 0 2px color-mix(in oklch, var(--ascii-ink) 18%, transparent)
+      );
+  }
+  7%,
+  74% {
+    filter: brightness(1.42)
+      drop-shadow(
+        0 0 6px color-mix(in oklch, var(--ascii-ink) 55%, transparent)
+      )
+      drop-shadow(
+        0 0 22px color-mix(in oklch, var(--ascii-ink) 28%, transparent)
+      );
+  }
+}
+
+@keyframes terminal-ascii-ghost {
+  0%,
+  70%,
+  76%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+    transform: translateX(0);
+    opacity: 0;
+  }
+  71% {
+    clip-path: inset(18% 0 63% 0);
+    transform: translateX(0.12em);
+    opacity: 0.7;
+  }
+  72% {
+    clip-path: inset(64% 0 18% 0);
+    transform: translateX(-0.09em);
+    opacity: 0.45;
+  }
+  74% {
+    clip-path: inset(42% 0 45% 0);
+    transform: translateX(0.04em);
+    opacity: 0.3;
+  }
+}
+
+@layer components {
+  [data-slot="terminal-ascii"] {
+    filter: brightness(1.06)
+      drop-shadow(
+        0 0 4px color-mix(in oklch, var(--ascii-ink) 38%, transparent)
+      )
+      drop-shadow(
+        0 0 15px color-mix(in oklch, var(--ascii-ink) 18%, transparent)
+      );
+  }
+
+  .terminal-ascii-ghost {
+    color: color-mix(in oklch, var(--ascii-ink) 72%, white);
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    text-shadow: 0 0 0.3em var(--ascii-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-slot="terminal-ascii"][data-animated] {
+      animation: terminal-ascii-power 8.2s steps(1, end) infinite;
+    }
+
+    [data-slot="terminal-ascii"][data-animated] .terminal-ascii-signal {
+      animation: terminal-ascii-signal 8.2s steps(1, end) infinite;
+    }
+
+    [data-slot="terminal-ascii"][data-animated] .terminal-ascii-ghost {
+      animation: terminal-ascii-ghost 8.2s steps(1, end) infinite;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-slot="terminal-ascii"] {
+      filter: none;
+    }
+
+    [data-slot="terminal-ascii"] .terminal-ascii-signal,
+    [data-slot="terminal-ascii"] .terminal-ascii-ghost {
+      animation: none;
+    }
+
+    [data-slot="terminal-ascii"] .terminal-ascii-ghost {
+      display: none;
+    }
+  }
+}
+
 /* A dot-matrix LED board: the sign in a station concourse, not a monitor.
  *
  * The body of the board is flat, so it can sit on the wrapper where no

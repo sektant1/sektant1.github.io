@@ -1,0 +1,28 @@
+:root,
+.dark {
+  --cursor-default:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAl0lEQVRYhdWUQQ6AMAgE9028zmf7A4yHxhRj002pwCRcGoFJhQIPamIWm8fmxwvoHXIeXQwKdY1s3kR+EQF5FxqKrohoagEhG5YUaFCFWUH3m5ANAq6/xJ7XE4DzcNYVgPNwTm8DsghIwFpqtEDDRWBlKDVagBJhvwOBRgsM1/OPxmkEvnB7gmsL4Du2o9ECjbDGaQRQkgsgQqWx4o7MsAAAAABJRU5ErkJggg==")
+      0 0,
+    default;
+  --cursor-pointer:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAjUlEQVRYhe2WSw7AIAhE50yersfuDabpwkVNDKDWD4FkNmjCi4wiYA8Wmh5cBcBX6b4+mgnCAEC0AHubkIKcAyQhPwKIswBY2TgEQGNergKgxmTleqvOAUjCUbsCyGEqpDXbUQAmkACAsQWWWcA/WtAyjGi5ni4BcnQ9RD2FtwEYYk64AYD+E1rL7wHwAAm1bAl455Y+AAAAAElFTkSuQmCC")
+      14 0,
+    pointer;
+  --cursor-grab: grab;
+  --cursor-grabbing: grabbing;
+  --cursor-disabled: not-allowed;
+}
+
+[data-tube="amber"] {
+  --cursor-default:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAlklEQVRYhdWU0QqAMAhF74f2rX2ZYPQwYkZjMtfVA76M1MPSAQ9qYhab583nC+gdch5dDAp1jWzeRH4RAXkXGoquiGhqAXE2LCnQcBX2CobfhGwQCP0l9ryeAIKHs64AgodzehuQRUAIa6lsgUaIwMpQKlvAJeL9Dg6ULTBczz8apxH4IuwJri2A79iOsgUatMZpBFCSC4okWfBLlBaMAAAAAElFTkSuQmCC")
+      0 0,
+    default;
+  --cursor-pointer:
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAjElEQVRYhe2WSwrAIAxE56A9a08mTOnCRQVJotZPSGA2UcjDjEbAHiw0PbgKgK/SfX00E4QBgGgB9jYhBTkHSEJ+BBBnAbCycQiAxrxcBUCNycr1Vp0DkISjdgWQw1RIa7ajAEwgAQBjCyyzgH+0oGUY0XI9XQLk6HqIegpvAzDEnHADAP0ntJbfA+AB+6IO2GHYHJ8AAAAASUVORK5CYII=")
+      14 0,
+    pointer;
+  --cursor-grab: grab;
+  --cursor-grabbing: grabbing;
+  --cursor-disabled: not-allowed;
+}

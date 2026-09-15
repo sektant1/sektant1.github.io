@@ -1,36 +1,34 @@
 import { readFileSync } from "node:fs"
-import { describe, expect, it } from "vitest"
+import { createRequire } from "node:module"
+import { expect, it } from "vitest"
 
+const require = createRequire(
+  new URL("../../apps/hideout/package.json", import.meta.url)
+)
+const sharp = require("sharp")
 const css = readFileSync(
-  new URL("../../packages/ui/src/styles/themes/phosphor.css", import.meta.url),
+  new URL(
+    "../../packages/ui/src/styles/themes/phosphor-cursors.css",
+    import.meta.url
+  ),
   "utf8"
 )
-const cursorNames = ["default", "pointer", "grab", "grabbing", "disabled"]
 
-describe.each(cursorNames)("%s cursor", (name) => {
-  const start = css.indexOf(`--cursor-${name}:`)
-  const nextName = cursorNames[cursorNames.indexOf(name) + 1]
-  const end = nextName
-    ? css.indexOf(`--cursor-${nextName}:`, start)
-    : css.indexOf("\n}", start)
-  const declaration = css.slice(start, end)
-
-  it("provides portable 16-pixel sources with a stable hotspot", () => {
-    const pngData = declaration.match(/data:image\/png;base64,([^"]+)/)?.[1]
-    const svgData = declaration.match(
-      /data:image\/svg\+xml;charset=utf-8,([^"]+)/
-    )?.[1]
-
-    expect(start).toBeGreaterThan(-1)
-    expect(pngData).toBeDefined()
-    expect(svgData).toBeDefined()
-    expect(declaration.indexOf("data:image/png")).toBeLessThan(
-      declaration.indexOf("data:image/svg+xml")
+it("uses only black and the selected phosphor color in every cursor", async () => {
+  const images = [...css.matchAll(/data:image\/png;base64,([^"]+)/g)]
+  expect(images).toHaveLength(4)
+  for (const [index, match] of images.entries()) {
+    const data = await sharp(Buffer.from(match[1], "base64"))
+      .ensureAlpha()
+      .raw()
+      .toBuffer()
+    const colors = new Set()
+    for (let i = 0; i < data.length; i += 4) {
+      expect([0, 255]).toContain(data[i + 3])
+      if (data[i + 3]) colors.add(`${data[i]},${data[i + 1]},${data[i + 2]}`)
+    }
+    expect(colors).toEqual(
+      new Set(["0,0,0", index < 2 ? "50,240,120" : "252,190,92"])
     )
-
-    const png = Buffer.from(pngData, "base64")
-    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([16, 16])
-    expect(decodeURIComponent(svgData)).toContain("width='16' height='16'")
-    expect(declaration.match(/\s8 8,/g)).toHaveLength(2)
-  })
+  }
 })

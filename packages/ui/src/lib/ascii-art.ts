@@ -1,8 +1,12 @@
 import figlet from "figlet"
+import ansiRegular from "figlet/importable-fonts/ANSI Regular.js"
 import banner3 from "figlet/importable-fonts/Banner3.js"
 import big from "figlet/importable-fonts/Big.js"
+import bloody from "figlet/importable-fonts/Bloody.js"
+import cyberlarge from "figlet/importable-fonts/Cyberlarge.js"
 import deltaCorpsPriest1 from "figlet/importable-fonts/Delta Corps Priest 1.js"
 import dosRebel from "figlet/importable-fonts/DOS Rebel.js"
+import electronic from "figlet/importable-fonts/Electronic.js"
 import slant from "figlet/importable-fonts/Slant.js"
 import small from "figlet/importable-fonts/Small.js"
 import standard from "figlet/importable-fonts/Standard.js"
@@ -22,6 +26,10 @@ import subZero from "figlet/importable-fonts/Sub-Zero.js"
  */
 
 const FONTS = {
+  "ANSI Regular": ansiRegular,
+  Bloody: bloody,
+  Cyberlarge: cyberlarge,
+  Electronic: electronic,
   Standard: standard,
   Slant: slant,
   Small: small,
