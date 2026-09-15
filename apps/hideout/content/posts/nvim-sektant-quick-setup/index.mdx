@@ -1,0 +1,147 @@
+---
+title: "set up my neovim config"
+slug: "nvim-sektant-quick-setup"
+description: "install nvim-sektant alongside your current config, then find files, run scripts and open notes."
+date: "2026-09-15"
+status: "published"
+tags:
+  - "neovim"
+  - "setup"
+  - "devtools"
+thumbnail: "/content-assets/projects/nvim-sektant/assets/cover.svg"
+---
+
+i keep the config i use in
+[nvim-sektant](https://github.com/sektant1/nvim-sektant). this guide installs it
+under a separate name so you can try it alongside your current setup. the
+[project page](/projects/nvim-sektant) explains what is in it.
+
+## before cloning
+
+these commands are for linux and macos with bash or zsh. install the
+[current stable neovim release](https://github.com/neovim/neovim/releases/tag/stable)
+first, then check which version your terminal runs:
+
+```sh
+nvim --version
+```
+
+you also need git, make, unzip, tar, curl and a c compiler. telescope's search
+uses ripgrep; fd is useful for finding files. the config uses the `main` branch
+of nvim-treesitter, which requires the `tree-sitter` cli, currently version
+0.26.1 or newer.
+
+install node.js and npm for javascript/typescript tooling. language tools have
+their own requirements: python needs a python installation, and c# tooling needs
+the .net sdk. install cmake and a c++ compiler for c++ projects. mason downloads
+editor tools, but does not replace those runtimes or project dependencies.
+
+select a nerd font in your terminal, or set `vim.g.have_nerd_font = false` in
+`init.lua` after cloning.
+
+## install alongside your current config
+
+```sh
+mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}"
+git clone https://github.com/sektant1/nvim-sektant.git \
+  "${XDG_CONFIG_HOME:-$HOME/.config}/nvim-sektant"
+env NVIM_APPNAME=nvim-sektant nvim
+```
+
+[`NVIM_APPNAME`](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME) changes
+the directories neovim uses for config, data, state and cache. this launch reads
+`nvim-sektant`; a plain `nvim` still reads your usual config. if the clone
+destination already exists, git stops rather than replacing it.
+
+lazy.nvim installs plugins on the first launch. let it finish, then close and
+reopen with the same command. mason and treesitter also download language tools
+and parsers, so the first setup needs internet access.
+
+## check the first launch
+
+this config swaps `:` and `;` in normal mode. press `;` to open the command line,
+then type `Lazy` and press enter. the commands below use vim's usual `:` notation:
+
+```vim
+:Lazy
+:Mason
+:checkhealth
+:checkhealth nvim-treesitter
+```
+
+if a download or parser build fails, check the error before retrying. missing
+`tree-sitter`, a missing compiler, or an unavailable language runtime will not be
+fixed by repeatedly restarting neovim. `:ConformInfo` shows which formatter is
+available for the current file.
+
+the leader is space. `Space sg` means press space, then `s`, then `g` in normal
+mode. capital letters matter.
+
+## where to change things
+
+* `init.lua`: Leader key, Nerd Font setting, and module loading
+* `lua/keymaps.lua`: Editor mappings and plugin shortcuts
+* `lua/options.lua`: Editor options
+* `lua/lazy-plugins.lua`: Plugin list and custom plugin imports
+* `lua/kickstart/plugins/lspconfig.lua`: Language servers and Mason tools
+* `lua/kickstart/plugins/conform.lua`: Formatters and format-on-save settings
+* `lua/custom/plugins/`: Extra plugin specs
+* `snippets/`: C and C++ snippets
+
+The mappings include a few departures from default Vim:
+
+* `;`: Opens the command line
+* `o` / `O`: Add a blank line without entering Insert mode
+
+Read `lua/keymaps.lua` before replacing shortcuts you already know.
+
+The repository is where I keep subsequent changes.
+
+## key mappings
+
+* `Space Space`: Find a file with Telescope
+* `Space sg`: Search text in the project
+* `Space e`: Open the current directory in Oil
+* `Space sk`: Search the configured keymaps
+* `Space sn`: Find a file in this Neovim config
+* `Space w`: Save the current file if it changed
+* `grd`: Go to definition when an LSP is attached
+* `grn`: Rename a symbol when an LSP is attached
+* `Ctrl-f`: Format the buffer
+* `F5` / `F6`: Pick a project script / rerun the last script
+* `Space n` / `Space N`: Open the global note / project note
+* `Space bb` / `Space bc`: Toggle a breakpoint / start or continue debugging
+
+`o` and `O` insert blank lines but stay in normal mode in this config. press `i`
+when you want to start typing. the mappings live in `lua/keymaps.lua` if you want
+to restore vim's defaults.
+
+## keep a launch command
+
+add this to `~/.bashrc` or `~/.zshrc`, then open a new terminal:
+
+```sh
+alias nvim-sektant='env NVIM_APPNAME=nvim-sektant nvim'
+```
+
+you can pass a project directory or file as usual:
+
+```sh
+nvim-sektant .
+nvim-sektant src/main.cpp
+```
+
+## make it yours
+
+start with `lua/options.lua` and `lua/keymaps.lua`. plugin specs live under
+`lua/kickstart/plugins/` and `lua/custom/plugins/`. clanger's spec contains my
+name and an `ENG` namespace for generated c++ files; replace those with yours.
+
+fork the repository if you plan to keep changes. it ignores `lazy-lock.json`;
+remove that ignore entry and commit your lockfile to record the plugin versions
+you installed. `:Lazy restore` uses that file to restore plugin revisions.
+
+the [older neovim post](/posts/how-to-setup-neovim) covers starting from
+kickstart. this guide follows my config at
+[`6939e01`](https://github.com/sektant1/nvim-sektant/tree/6939e0151e9a764aca7821d3ce9f1aa0e40bce54),
+including its own keymaps and plugins.

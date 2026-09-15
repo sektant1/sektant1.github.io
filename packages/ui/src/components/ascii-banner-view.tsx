@@ -29,6 +29,30 @@ const bannerVariants = cva(
   VARIANTS
 )
 
+const BLOCKS: Record<string, readonly [number, number, number, number]> = {
+  "█": [0, 0, 2, 2],
+  "▀": [0, 0, 2, 1],
+  "▄": [0, 1, 2, 1],
+  "▐": [1, 0, 1, 2],
+  "▌": [0, 0, 1, 2],
+}
+
+function blockPath(art: string): string | null {
+  if (!/^[ █▀▄▐▌\n]+$/.test(art)) return null
+
+  return art
+    .split("\n")
+    .flatMap((line, row) =>
+      Array.from(line, (glyph, column) => {
+        const block = BLOCKS[glyph]
+        if (!block) return ""
+        const [x, y, width, height] = block
+        return `M${column * 2 + x} ${row * 2 + y}h${width}v${height}h-${width}z`
+      })
+    )
+    .join("")
+}
+
 type AsciiBannerViewProps = Omit<React.ComponentProps<"div">, "children"> &
   VariantProps<typeof bannerVariants> & {
     /** Pre-rendered art. `renderAsciiArt` in lib/ascii-art produces it. */
@@ -74,6 +98,9 @@ function AsciiBannerView({
   className,
   ...props
 }: AsciiBannerViewProps) {
+  const path = blockPath(art)
+  const rows = art.split("\n").length
+
   return (
     <div
       data-slot="ascii-banner"
@@ -95,19 +122,37 @@ function AsciiBannerView({
       {/* No board and no diode canvas: the raster is inside the letterforms,
           so the art is the picture rather than the wiring diagram for one. */}
       <div className="relative">
-        <pre
-          aria-hidden="true"
-          className={cn(
-            bannerVariants({ tone, size }),
-            // Without the raster the ink is flat: a gradient clipped to the
-            // glyphs takes pixels out of the letterforms rather than shading
-            // them, and at "none" the caller has asked for the art itself.
-            effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
-            effect !== "none" && "crt-bloom"
-          )}
-        >
-          {art}
-        </pre>
+        {path ? (
+          <svg
+            aria-hidden="true"
+            viewBox={`0 0 ${columns * 2} ${rows * 2}`}
+            preserveAspectRatio="none"
+            shapeRendering="crispEdges"
+            className={cn(
+              "block ascii-fit-text ascii-phosphor-ink",
+              TONE_VARS[tone ?? "default"],
+              SIZE_VARS[size ?? "default"],
+              effect !== "none" && "crt-bloom"
+            )}
+            style={{ width: `${columns * 0.61}em`, height: `${rows}em` }}
+          >
+            <path d={path} fill="currentColor" />
+          </svg>
+        ) : (
+          <pre
+            aria-hidden="true"
+            className={cn(
+              bannerVariants({ tone, size }),
+              // Without the raster the ink is flat: a gradient clipped to the
+              // glyphs takes pixels out of the letterforms rather than shading
+              // them, and at "none" the caller has asked for the art itself.
+              effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill",
+              effect !== "none" && "crt-bloom"
+            )}
+          >
+            {art}
+          </pre>
+        )}
       </div>
     </div>
   )

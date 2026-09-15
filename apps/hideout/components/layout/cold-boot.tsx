@@ -8,11 +8,13 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { AsciiPlanetScene } from "@/components/ascii-planet/ascii-planet-lazy"
 import type { RenderStyle } from "@/components/ascii-planet/policy"
 import { logger } from "@workspace/ui/lib/logger"
-import { usePersistedPreference } from "@workspace/ui/hooks/use-persisted-preference"
 import { usePrefersReducedMotion } from "@workspace/ui/hooks/use-reduced-motion"
-import { bootDueOnThisLoad, coldBootLastSeen } from "@/lib/cold-boot-state"
+import { bootIsDue, coldBootLastSeen } from "@/lib/cold-boot-state"
 import { CONSOLE } from "@/lib/navigation"
 import { pad } from "@/lib/format"
+
+const subscribeToBoot = () => () => {}
+const serverBootSnapshot = () => null
 
 /**
  * The sequence a machine like this runs when it is switched on.
@@ -145,16 +147,16 @@ export function ColdBoot({
     [posts, projects, games, cms]
   )
 
-  // The server renders the curtain. The head script hides it before first
-  // paint when storage says it should be skipped.
-  const [lastSeen, markSeen] = usePersistedPreference(coldBootLastSeen)
-  // The server has no storage, so it renders the curtain and the head script
-  // hides it before first paint when the last viewing is still fresh.
-  //
-  // Latched on the first render rather than read every one, because the stamp
-  // is now written as the sequence starts: recomputing would answer "not due"
-  // one tick in and pull the curtain out from under the reader watching it.
-  const [due] = React.useState(() => bootDueOnThisLoad(lastSeen))
+  const [getBootSnapshot] = React.useState(() => {
+    let due: boolean | undefined
+    return () => (due ??= bootIsDue(coldBootLastSeen.read()))
+  })
+  const due = React.useSyncExternalStore(
+    subscribeToBoot,
+    getBootSnapshot,
+    serverBootSnapshot
+  )
+  const markSeen = coldBootLastSeen.write
 
   const [dismissed, setDismissed] = React.useState(false)
   // Asked for explicitly, so it overrides both the stored state and the
@@ -162,7 +164,7 @@ export function ColdBoot({
   const [replaying, setReplaying] = React.useState(false)
   const [progress, setProgress] = React.useState(0)
   const [coinReady, setCoinReady] = React.useState(false)
-  const running = replaying || (due && !reduceMotion && !dismissed)
+  const running = replaying || (due !== false && !reduceMotion && !dismissed)
   const complete = progress >= 1
   const markCoinReady = React.useCallback(() => setCoinReady(true), [])
 
@@ -184,13 +186,14 @@ export function ColdBoot({
   }, [])
 
   React.useEffect(() => {
+    if (due === null && !replaying) return
     if (!running) {
       document.documentElement.removeAttribute("data-cold-boot")
       return
     }
     logger.info("boot", "cold boot sequence")
     markSeen(Date.now())
-  }, [running, markSeen])
+  }, [due, replaying, running, markSeen])
 
   React.useEffect(() => {
     if (!running || !complete) return

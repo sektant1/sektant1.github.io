@@ -15,7 +15,7 @@ import {
   BANNER_FONT_STORAGE_KEY,
   DEFAULT_BANNER_FONT,
 } from "@/lib/banner-font"
-import { COLD_BOOT_STORAGE_KEY, COLD_BOOT_TTL_MS } from "@/lib/cold-boot-state"
+import { COLD_BOOT_STORAGE_KEY } from "@/lib/cold-boot-state"
 import { CRT_SCREEN_STORAGE_KEY } from "@/lib/crt-screen"
 import { TUBES, TUBE_STORAGE_KEY } from "@/lib/tube"
 import {
@@ -100,7 +100,7 @@ const siteJsonLd = {
 // settle what the page looks like before React exists, so nothing flashes and
 // gets corrected. Their storage keys come from the modules that own them rather
 // than being spelled out again here — one place to change a key.
-const coldBootSetup = `(function(){try{var raw=localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)});var seen=Number(raw);var fresh=raw!==null&&isFinite(seen)&&seen>0&&Math.abs(Date.now()-seen)<${COLD_BOOT_TTL_MS};if(fresh||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
+const coldBootSetup = `(function(){try{var seen=Number(localStorage.getItem(${JSON.stringify(COLD_BOOT_STORAGE_KEY)}));if((isFinite(seen)&&seen>0)||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.coldBoot="skip";return}document.documentElement.dataset.coldBoot="run";var link=document.createElement("link");link.rel="preload";link.as="fetch";link.href="/models/bitcoin.glb";link.type="model/gltf-binary";link.crossOrigin="anonymous";link.fetchPriority="high";document.head.appendChild(link)}catch(error){document.documentElement.dataset.coldBoot="skip"}})()`
 const bannerFontSetup = `(function(){try{var value=localStorage.getItem(${JSON.stringify(BANNER_FONT_STORAGE_KEY)});if(${JSON.stringify(BANNER_FONT_IDS)}.includes(value)){document.documentElement.dataset.asciiFont=value}}catch(error){}})()`
 // Which phosphor the tube is coated with. Green is the default and needs no
 // attribute, so only a stored amber writes one.
@@ -133,9 +133,10 @@ export default function RootLayout({
         <Script id="banner-font-setup" strategy="beforeInteractive">
           {bannerFontSetup}
         </Script>
-        <Script id="cold-boot-setup" strategy="beforeInteractive">
-          {coldBootSetup}
-        </Script>
+        <script
+          id="cold-boot-setup"
+          dangerouslySetInnerHTML={{ __html: coldBootSetup }}
+        />
         <Script id="crt-screen-setup" strategy="beforeInteractive">
           {crtScreenSetup}
         </Script>

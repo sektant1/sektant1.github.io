@@ -1,0 +1,92 @@
+---
+title: "nvim-sektant"
+slug: "nvim-sektant"
+description: "my neovim config, with telescope, oil, language tools and my own plugins."
+date: "2026-09-15"
+status: "active"
+visibility: "published"
+tags:
+  - "neovim"
+  - "setup"
+  - "devtools"
+stack:
+  - "lua"
+  - "neovim"
+repo: "https://github.com/sektant1/nvim-sektant"
+open: "project"
+thumbnail: "./assets/cover.svg"
+---
+
+i keep my neovim config in [nvim-sektant](https://github.com/sektant1/nvim-sektant).
+it started from kickstart-modular.nvim. `init.lua` loads separate files for
+plugins, options, autocommands and keymaps.
+
+if you want to use it, the [quick setup post](/posts/nvim-sektant-quick-setup)
+covers installation and the first few keys to press.
+
+## inside the config
+
+telescope handles file and text search. oil opens directories as editable
+buffers, and harpoon keeps a list of files you want to return to. flash handles
+jumps within text; aerial shows the symbols in a file.
+
+blink.cmp supplies completion with luasnip snippets. the language configuration
+includes clangd, pyright, ruff, `ts_ls`, `jsonls` and `lua_ls`, with a separate
+roslyn setup for c#. conform formats on save. its formatter table includes
+clang-format for c/c++, ruff and black for python, and prettier for web files.
+
+the default theme is tokyonight-night with transparent backgrounds. a nerd font
+is enabled in `init.lua`. you can switch themes with `Space sT`.
+
+## my plugins in this setup
+
+[executioner.nvim](/projects/executioner-nvim) runs project scripts and builds.
+`F5` opens the script picker, `F6` repeats the last script, and `F4` picks a build
+target. debugger controls use `Space b` instead of the function keys.
+
+[ram.nvim](/projects/ram-nvim) holds two notes: `Space n` opens the global note,
+and `Space N` opens the current project's note. vimwiki has its own mappings
+under `Space v` for pages and diary entries.
+
+[clanger.nvim](/projects/clanger-nvim) adds c/c++ commands for classes,
+implementations and header/source files. this config sets its author to `Gabe`
+and default namespace to `ENG`; change those in
+`lua/custom/plugins/clanger.lua` before generating your own files.
+
+## where to change things
+
+* `init.lua`: Leader key, Nerd Font setting, and module loading
+* `lua/keymaps.lua`: Editor mappings and plugin shortcuts
+* `lua/options.lua`: Editor options
+* `lua/lazy-plugins.lua`: Plugin list and custom plugin imports
+* `lua/kickstart/plugins/lspconfig.lua`: Language servers and Mason tools
+* `lua/kickstart/plugins/conform.lua`: Formatters and format-on-save settings
+* `lua/custom/plugins/`: Extra plugin specs
+* `snippets/`: C and C++ snippets
+
+The mappings include a few departures from default Vim:
+
+* `;`: Opens the command line
+* `o` / `O`: Add a blank line without entering Insert mode
+
+Read `lua/keymaps.lua` before replacing shortcuts you already know.
+
+The repository is where I keep subsequent changes.
+
+## key mappings
+
+* `Space Space`: Find a file with Telescope
+* `Space sg`: Search text in the project
+* `Space e`: Open the current directory in Oil
+* `Space sk`: Search the configured keymaps
+* `Space sn`: Find a file in this Neovim config
+* `Space w`: Save the current file if it changed
+* `grd`: Go to definition when an LSP is attached
+* `grn`: Rename a symbol when an LSP is attached
+* `Ctrl-f`: Format the buffer
+* `F5` / `F6`: Pick a project script / rerun the last script
+* `Space n` / `Space N`: Open the global note / project note
+* `Space bb` / `Space bc`: Toggle a breakpoint / start or continue debugging
+
+
+
