@@ -37,17 +37,29 @@ const BLOCKS: Record<string, readonly [number, number, number, number]> = {
   "▌": [0, 0, 1, 2],
 }
 
+const SHADES: Record<string, number> = { "░": 4, "▒": 8, "▓": 12 }
+const SHADE_PATTERN = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5]
+
 function blockPath(art: string): string | null {
-  if (!/^[ █▀▄▐▌\n]+$/.test(art)) return null
+  if (!/^[ █▀▄▐▌░▒▓\n]+$/.test(art)) return null
 
   return art
     .split("\n")
     .flatMap((line, row) =>
       Array.from(line, (glyph, column) => {
         const block = BLOCKS[glyph]
-        if (!block) return ""
-        const [x, y, width, height] = block
-        return `M${column * 2 + x} ${row * 2 + y}h${width}v${height}h-${width}z`
+        if (block) {
+          const [x, y, width, height] = block
+          return `M${column * 2 + x} ${row * 2 + y}h${width}v${height}h-${width}z`
+        }
+        const density = SHADES[glyph]
+        if (!density) return ""
+        return SHADE_PATTERN.map((threshold, index) => {
+          if (threshold >= density) return ""
+          const x = column * 2 + (index % 4) / 2
+          const y = row * 2 + Math.floor(index / 4) / 2
+          return `M${x} ${y}h0.5v0.5h-0.5z`
+        }).join("")
       })
     )
     .join("")
@@ -110,7 +122,9 @@ function AsciiBannerView({
         "ascii-fit relative isolate",
         // The waver sits out here rather than on the art: it is a filter, and
         // the art is already carrying one for the halo.
-        effect === "glitch" && "crt-holo-waver",
+        effect === "glitch" &&
+          font !== "Delta Corps Priest 1" &&
+          "crt-holo-waver",
         className
       )}
       {...props}
@@ -122,7 +136,35 @@ function AsciiBannerView({
       {/* No board and no diode canvas: the raster is inside the letterforms,
           so the art is the picture rather than the wiring diagram for one. */}
       <div className="relative">
-        {path ? (
+        {font === "Delta Corps Priest 1" ? (
+          <div
+            data-slot="terminal-ascii"
+            data-animated={effect !== "none" || undefined}
+            aria-hidden="true"
+            className={cn(
+              "relative grid overflow-hidden",
+              TONE_VARS[tone ?? "default"],
+              SIZE_VARS[size ?? "default"]
+            )}
+          >
+            <pre
+              className={cn(
+                bannerVariants({ tone, size }),
+                "terminal-ascii-signal col-start-1 row-start-1",
+                effect === "none" ? "ascii-phosphor-ink" : "crt-holo-fill"
+              )}
+            >
+              {art}
+            </pre>
+            {effect !== "none" && (
+              <>
+                <pre className="terminal-ascii-ghost col-start-1 row-start-1 w-full font-mono ascii-fit-text leading-[1] whitespace-pre select-none">
+                  {art}
+                </pre>
+              </>
+            )}
+          </div>
+        ) : path ? (
           <svg
             aria-hidden="true"
             viewBox={`0 0 ${columns * 2} ${rows * 2}`}
