@@ -25,6 +25,30 @@ export const BANNER_FONT_OPTIONS = [
     font: "Sub-Zero",
     note: "compact tactical",
   },
+  {
+    id: "ansi-regular",
+    label: "ANSI Regular",
+    font: "ANSI Regular",
+    note: "block stencil",
+  },
+  {
+    id: "bloody",
+    label: "Bloody",
+    font: "Bloody",
+    note: "worn phosphor",
+  },
+  {
+    id: "electronic",
+    label: "Electronic",
+    font: "Electronic",
+    note: "outlined circuitry",
+  },
+  {
+    id: "cyberlarge",
+    label: "Cyberlarge",
+    font: "Cyberlarge",
+    note: "wireframe console",
+  },
 ] as const satisfies ReadonlyArray<{
   id: string
   label: string

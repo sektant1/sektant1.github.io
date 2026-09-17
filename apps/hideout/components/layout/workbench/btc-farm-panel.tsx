@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupCaret,
-  InputGroupInput,
-} from "@workspace/ui/components/input-group"
+  IconMinus,
+  IconPlus,
+  IconSun,
+  IconChevronDown,
+} from "@tabler/icons-react"
 
 import {
   ModelIcon,
@@ -16,44 +16,21 @@ import {
 import { MAX_CARDS, clampCards, runFarm } from "@/lib/btc-farm"
 import { formatRoubles, type FleaState, type TrackedKey } from "@/lib/tarkov"
 
-/**
- * The farm that makes the thing in the viewer, as a calculator.
- *
- * The instrument draws a physical bitcoin, so the panel under it answers the
- * question a reader actually has about one: how many graphics cards it takes,
- * what the generator's fuel costs against it, and how long the rack takes to
- * pay for itself. The cycle and the fuel burn are game constants named in
- * `lib/btc-farm.ts`.
- *
- * The three prices are the market's when a market answers, and the reader's
- * otherwise: every one is a field seeded from the live figure, so the farm runs
- * with both markets down and runs against tomorrow's prices today. What it
- * never does is print a figure nobody supplied — an empty price is a dash.
- *
- * The answer is at the top whether or not there is one, and when there is not
- * it is one line asking for what is missing. A console that opens with five
- * rows of dashes has put an empty state where its result goes; a console that
- * moves its blocks around when the sum completes tears the field the reader is
- * typing into out of the tree on that keystroke. One order, one line.
- *
- */
 export function BtcFarmPanel({ report }: { report: FleaState }) {
   const market = readMarket(report)
   const [cards, setCards] = React.useState(25)
   const [solar, setSolar] = React.useState(true)
   const [typed, setTyped] = React.useState<
-    Partial<Record<PriceKey, number | undefined>>
+    Partial<Record<PriceKey, number | null>>
   >({})
 
   const prices = {
-    bitcoin: typed.bitcoin ?? market.bitcoin.price,
-    gpu: typed.gpu ?? market.gpu.price,
-    fuel: typed.fuel ?? market.fuel.price,
+    bitcoin: typed.bitcoin === undefined ? market.bitcoin.price : typed.bitcoin,
+    gpu: typed.gpu === undefined ? market.gpu.price : typed.gpu,
+    fuel: typed.fuel === undefined ? market.fuel.price : typed.fuel,
   }
-  const missing = PRICES.filter(({ key }) => !prices[key]).map(({ label }) =>
-    label.toLowerCase()
-  )
-
+  const missing = PRICES.filter(({ key }) => !prices[key])
+  const hasOverrides = Object.keys(typed).length > 0
   const farm =
     prices.bitcoin && prices.gpu && prices.fuel
       ? runFarm({
@@ -64,195 +41,256 @@ export function BtcFarmPanel({ report }: { report: FleaState }) {
           tankPrice: prices.fuel,
         })
       : null
+  const resultState = !farm
+    ? "awaiting prices"
+    : farm.netPerDay > 0
+      ? "profitable"
+      : farm.netPerDay < 0
+        ? "operating at a loss"
+        : "break-even"
 
-  /* The answer, and the working that reached it. The two figures the reader
-     came for are drawn a tier above the rows that explain them. */
-  const result = (
-    <div className="flex flex-col gap-1.5">
-      <Rule
-        label="Result"
-        stamp={`${String(cards).padStart(2, "0")} gpu · ${solar ? "solar" : "generator"}`}
-      />
-
-      {farm ? (
-        <>
-          <div className="grid grid-cols-2 divide-x divide-terminal-rule bg-terminal-wash/30 py-2">
-            <Figure
-              label="Net / day"
-              value={formatRoubles(Math.round(farm.netPerDay))}
-              lit={farm.netPerDay > 0}
-            />
-            <Figure
-              label="Payback"
-              value={
-                farm.paybackDays === null
+  return (
+    <section className="btc-farm-panel" aria-label="Bitcoin farm calculator">
+      <div
+        className="btc-farm-result"
+        data-loss={(farm && farm.netPerDay < 0) || undefined}
+      >
+        <div className="btc-farm-section-head">
+          <h3 className="btc-farm-caption">
+            <span aria-hidden="true">РАСЧЁТ</span>
+            <span className="sr-only">Projection</span>
+          </h3>
+          <span className="btc-farm-status">{resultState}</span>
+        </div>
+        <div className="btc-farm-figures" aria-live="polite" aria-atomic="true">
+          <Figure
+            label="Net / day"
+            value={farm ? formatRoubles(Math.round(farm.netPerDay)) : ""}
+            pending={!farm}
+            primary
+          />
+          <Figure
+            label="GPU payback"
+            value={
+              !farm
+                ? ""
+                : farm.paybackDays === null
                   ? "never"
                   : `${farm.paybackDays.toFixed(1)} d`
-              }
-              lit={farm.paybackDays !== null}
-            />
-          </div>
+            }
+            pending={!farm}
+          />
+        </div>
+        <div className="btc-farm-production">
+          {farm ? (
+            <>
+              <span>
+                <strong>{farm.coinsPerDay.toFixed(2)}</strong> BTC / day
+              </span>
+              <span>
+                <strong>{farm.cycleHours.toFixed(1)} h</strong> / coin
+              </span>
+            </>
+          ) : (
+            <p>
+              enter {missing.length} {missing.length === 1 ? "price" : "prices"}{" "}
+              below to calculate returns.
+            </p>
+          )}
+        </div>
+      </div>
 
-          <div className="flex flex-col gap-1">
-            <Line label="Rate" value={`${farm.coinsPerDay.toFixed(2)} btc`} />
-            <Line label="Cycle" value={`${farm.cycleHours.toFixed(1)} h`} />
-            <Line
-              label="Gross"
-              value={formatRoubles(Math.round(farm.grossPerDay))}
+      <div className="btc-farm-module">
+        <div className="btc-farm-section-head">
+          <h3>
+            <label htmlFor="farm-cards" className="btc-farm-caption">
+              GPU rack
+            </label>
+          </h3>
+          <output htmlFor="farm-cards" className="btc-farm-capacity">
+            <strong>{String(cards).padStart(2, "0")}</strong> / {MAX_CARDS}
+          </output>
+        </div>
+        <Rack cards={cards} />
+        <div className="btc-farm-slider-row">
+          <button
+            type="button"
+            className="btc-farm-key"
+            aria-label="Remove one graphics card"
+            disabled={cards === 1}
+            onClick={() => setCards((current) => clampCards(current - 1))}
+          >
+            <IconMinus size={16} aria-hidden="true" />
+          </button>
+          <input
+            id="farm-cards"
+            type="range"
+            autoComplete="off"
+            min={1}
+            max={MAX_CARDS}
+            step={1}
+            value={cards}
+            aria-valuetext={`${cards} of ${MAX_CARDS} graphics cards`}
+            onChange={(event) =>
+              setCards(clampCards(event.target.valueAsNumber))
+            }
+            className="console-slider"
+          />
+          <button
+            type="button"
+            className="btc-farm-key"
+            aria-label="Add one graphics card"
+            disabled={cards === MAX_CARDS}
+            onClick={() => setCards((current) => clampCards(current + 1))}
+          >
+            <IconPlus size={16} aria-hidden="true" />
+          </button>
+        </div>
+        <div
+          className="btc-farm-presets"
+          role="group"
+          aria-label="GPU count presets"
+        >
+          {[10, 25, MAX_CARDS].map((count) => (
+            <button
+              key={count}
+              type="button"
+              className="btc-farm-key"
+              aria-pressed={cards === count}
+              onClick={() => setCards(count)}
+            >
+              {count} GPU
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="btc-farm-solar"
+          aria-pressed={solar}
+          onClick={() => setSolar((current) => !current)}
+        >
+          <IconSun size={20} aria-hidden="true" />
+          <span className="btc-farm-solar-label">
+            <span className="btc-farm-caption">Solar power</span>
+            <span className="btc-farm-note">
+              {solar ? "fuel consumption halved" : "standard fuel consumption"}
+            </span>
+          </span>
+          <span className="btc-farm-toggle" aria-hidden="true">
+            {solar ? "ON" : "OFF"}
+          </span>
+        </button>
+      </div>
+
+      <div className="btc-farm-prices">
+        <div className="btc-farm-section-head">
+          <h3 className="btc-farm-caption">
+            <span aria-hidden="true">ЦЕНЫ</span>
+            <span className="sr-only">Item prices</span>
+          </h3>
+          <button
+            type="button"
+            className="btc-farm-key btc-farm-reset"
+            disabled={!hasOverrides}
+            onClick={() => setTyped({})}
+          >
+            Reset prices
+          </button>
+        </div>
+        <div className="btc-farm-price-list">
+          <ModelIconLayer />
+          {PRICES.map((field) => (
+            <PriceField
+              key={field.key}
+              field={field}
+              value={prices[field.key]}
+              fromMarket={
+                typed[field.key] === undefined &&
+                market[field.key].price !== null
+              }
+              onChange={(next) =>
+                setTyped((current) => ({ ...current, [field.key]: next }))
+              }
             />
-            <Line
-              label="Fuel"
-              value={`-${formatRoubles(Math.round(farm.fuelPerDay))}`}
-            />
-            <Line label="Rack" value={formatRoubles(farm.buildCost)} />
-          </div>
-        </>
-      ) : (
-        <div className="flex min-h-16 flex-col justify-center gap-0.5 bg-terminal-wash/20 px-2.5 py-2">
-          <p className="console-label text-terminal-chrome-dim">
-            Input required
+          ))}
+        </div>
+        {"error" in report ? (
+          <p className="btc-farm-note btc-farm-feed">
+            market unavailable. enter your own prices.
           </p>
-          <p className="console-note text-terminal-ink-dim">
-            enter {missing.join(" / ")}{" "}
-            {missing.length === 1 ? "price" : "prices"} below.
+        ) : (
+          <p className="btc-farm-note btc-farm-feed">
+            prices from {report.source}
+            {report.updated ? (
+              <>
+                {" "}
+                · <time dateTime={report.updated}>{stamp(report.updated)}</time>
+              </>
+            ) : null}
+          </p>
+        )}
+      </div>
+
+      <details className="btc-farm-breakdown">
+        <summary>
+          <span>Cost breakdown</span>
+          <IconChevronDown size={16} aria-hidden="true" />
+        </summary>
+        <div className="btc-farm-breakdown-body">
+          <dl>
+            <Line
+              label="Revenue / day"
+              value={
+                farm ? formatRoubles(Math.round(farm.grossPerDay)) : "pending"
+              }
+            />
+            <Line
+              label="Fuel / day"
+              value={
+                farm ? formatRoubles(Math.round(farm.fuelPerDay)) : "pending"
+              }
+            />
+            <Line
+              label="GPU investment"
+              value={farm ? formatRoubles(farm.buildCost) : "pending"}
+            />
+          </dl>
+          <p className="btc-farm-note">
+            assumes continuous production and charges all generator fuel to the
+            farm. GPU payback excludes hideout construction and solar upgrade
+            costs.
           </p>
         </div>
-      )}
-    </div>
-  )
-
-  /* The rack and its generator: the two settings the answer moves with. */
-  const controls = (
-    <div className="flex flex-col gap-2">
-      <Rule label="Farm" stamp={"error" in report ? "manual" : report.source} />
-
-      {/* The rack, on a slider: fifty cards is fifty presses on a pair of keys,
-          and the reader is sweeping for a payback figure rather than setting an
-          exact count. */}
-      <div className="flex flex-col border border-terminal-rule bg-terminal-wash/20 px-2.5 pt-2">
-        <p className="console-label flex items-baseline justify-between text-terminal-chrome-dim">
-          <label htmlFor="farm-cards">Gpu rack</label>
-          <output
-            htmlFor="farm-cards"
-            className="text-terminal-ink tabular-nums"
-          >
-            {String(cards).padStart(2, "0")} / {MAX_CARDS}
-          </output>
-        </p>
-
-        <Rack cards={cards} />
-
-        <input
-          id="farm-cards"
-          type="range"
-          // Chrome restores form values across a reload, which would hand the
-          // reader a rack they did not set on a page they thought was fresh.
-          autoComplete="off"
-          min={1}
-          max={MAX_CARDS}
-          step={1}
-          value={cards}
-          aria-valuetext={`${cards} of ${MAX_CARDS} graphics cards`}
-          onChange={(event) => setCards(clampCards(event.target.valueAsNumber))}
-          className="console-slider w-full"
-        />
-      </div>
-
-      <button
-        type="button"
-        onClick={() => setSolar(!solar)}
-        aria-pressed={solar}
-        className="stash-switch flex min-h-11 w-full items-center gap-2.5 border border-terminal-rule bg-terminal-wash/20 px-2.5 text-start crt-persist hover:border-terminal-edge focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-      >
-        <span aria-hidden="true" className="w-7 shrink-0">
-          <span
-            data-thrown={solar || undefined}
-            data-lit
-            className="stash-track relative block h-4 w-7 border border-terminal-edge"
-          />
-        </span>
-        <span className="console-label min-w-0 flex-1 truncate text-terminal-chrome-dim">
-          Solar
-        </span>
-        <span className="console-value shrink-0 text-terminal-ink">
-          {solar ? "BUILT" : "ABSENT"}
-        </span>
-      </button>
-    </div>
-  )
-
-  /* The prices, editable whether or not a market answered. */
-  const priceBlock = (
-    <div className="flex flex-col gap-1.5">
-      <Rule label="Prices" stamp="₽ each" />
-
-      <div className="relative flex flex-col gap-1.5">
-        <ModelIconLayer />
-        {PRICES.map((field) => (
-          <PriceField
-            key={field.key}
-            label={field.label}
-            model={field.model}
-            name={market[field.key].name}
-            value={prices[field.key]}
-            fromMarket={
-              typed[field.key] === undefined && market[field.key].price !== null
-            }
-            onChange={(next) =>
-              setTyped((current) => ({
-                ...current,
-                [field.key]: next ?? undefined,
-              }))
-            }
-          />
-        ))}
-      </div>
-
-      {"error" in report ? (
-        <MarketDown keyed={report.keyed} />
-      ) : report.updated ? (
-        <p className="console-sign text-terminal-ink-faint tabular-nums">
-          {report.source} {stamp(report.updated)}
-        </p>
-      ) : null}
-    </div>
-  )
-
-  /* One order, always. Swapping the blocks around when the last price lands
-     would tear the price fields out of the tree and build them again at a new
-     index on the very keystroke that completed the sum — React reconciles a
-     fragment by position, and the field the reader is typing into would lose
-     the caret at the moment it finally answered. */
-  return (
-    <section className="btc-farm-panel flex flex-col gap-4">
-      {result}
-      {controls}
-      {priceBlock}
+      </details>
     </section>
   )
 }
 
 type PriceKey = TrackedKey
-
 type PriceModel = { src: string; front: ModelFront; fallback: string }
+type PriceFieldSpec = { key: PriceKey; label: string; model: PriceModel }
 
-const PRICE_MODELS: Record<PriceKey, PriceModel> = {
-  bitcoin: { src: "/models/bitcoin.glb", front: "z", fallback: "₿" },
-  gpu: { src: "/models/gpu.glb", front: "-y", fallback: "GPU" },
-  fuel: { src: "/models/fuel_can.glb", front: "z", fallback: "FUEL" },
-}
-
-const PRICES: { key: PriceKey; label: string; model: PriceModel }[] = [
-  { key: "bitcoin", label: "Btc", model: PRICE_MODELS.bitcoin },
-  { key: "gpu", label: "Gpu", model: PRICE_MODELS.gpu },
-  { key: "fuel", label: "Fuel", model: PRICE_MODELS.fuel },
+const PRICES: PriceFieldSpec[] = [
+  {
+    key: "bitcoin",
+    label: "Physical bitcoin",
+    model: { src: "/models/bitcoin.glb", front: "z", fallback: "₿" },
+  },
+  {
+    key: "gpu",
+    label: "Graphics card",
+    model: { src: "/models/gpu.glb", front: "-y", fallback: "GPU" },
+  },
+  {
+    key: "fuel",
+    label: "Metal fuel tank",
+    model: { src: "/models/fuel_can.glb", front: "z", fallback: "FUEL" },
+  },
 ]
-
-type MarketRow = { price: number | null; name: string }
 
 function Rack({ cards }: { cards: number }) {
   return (
-    <div aria-hidden="true" className="btc-farm-rack mt-2">
+    <div aria-hidden="true" className="btc-farm-rack">
       {Array.from({ length: MAX_CARDS }, (_, index) => (
         <span key={index} data-filled={index < cards || undefined} />
       ))}
@@ -260,258 +298,114 @@ function Rack({ cards }: { cards: number }) {
   )
 }
 
-/** The three items the market supplied, each of which may be missing. */
-function readMarket(report: FleaState): Record<PriceKey, MarketRow> {
-  const blank = { price: null, name: "" }
-  if ("error" in report) return { bitcoin: blank, gpu: blank, fuel: blank }
-
-  const row = (key: PriceKey): MarketRow => {
-    const item = report.items.find((candidate) => candidate.key === key)
-    return {
-      price: item?.price ?? null,
-      name: item?.name ?? "",
-    }
-  }
-
+function readMarket(
+  report: FleaState
+): Record<PriceKey, { price: number | null }> {
+  const row = (key: PriceKey) => ({
+    price:
+      "error" in report
+        ? null
+        : (report.items.find((item) => item.key === key)?.price ?? null),
+  })
   return { bitcoin: row("bitcoin"), gpu: row("gpu"), fuel: row("fuel") }
 }
 
-/**
- * One price the calculator runs on.
- *
- * A field rather than a readout even when the market answered: the reader's
- * own flea is the one they are trading on, so the live figure is a starting
- * point rather than the last word.
- *
- * Emptying the field is a real state, not a zero. It hands the row back to the
- * market — clearing what was typed restores the live figure, and with no live
- * figure the row is blank and the farm says so. A cleared field that wrote 0
- * meant the reader could destroy the calculation with a backspace and had no
- * key to get back from it.
- */
 function PriceField({
-  label,
-  model,
-  name,
+  field,
   value,
   fromMarket,
   onChange,
 }: {
-  label: string
-  model: PriceModel
-  name: string
+  field: PriceFieldSpec
   value: number | null
   fromMarket: boolean
   onChange: (value: number | null) => void
 }) {
-  const id = `farm-price-${label.toLowerCase()}`
-  const sourceId = `${id}-source`
-  const source = fromMarket ? "MKT" : value ? "SET" : "REQ"
-  const sourceLabel = fromMarket
-    ? "market price"
-    : value
-      ? "price set by you"
-      : "price required"
+  const id = `farm-price-${field.key}`
+  const source = !value ? "required" : fromMarket ? "market" : "custom"
 
   return (
-    <div className="btc-farm-price-row min-w-0 items-center gap-1.5">
+    <div className="btc-farm-price-row" data-required={!value || undefined}>
       <ModelIcon
-        src={model.src}
-        front={model.front}
+        src={field.model.src}
+        front={field.model.front}
         fallback={
-          <span className="console-sign text-terminal-chrome-dim">
-            {model.fallback}
-          </span>
+          <span className="btc-farm-caption">{field.model.fallback}</span>
         }
-        className="size-11 border border-terminal-rule bg-terminal-wash/20"
+        className="btc-farm-item-icon"
       />
-
-      {/* The market's full name for the item rides in the label rather than in
-          a title attribute: a tooltip on the row was reachable with a pointer
-          and with nothing else. */}
-      <label
-        htmlFor={id}
-        className="flex min-w-0 flex-col justify-center leading-none"
-      >
-        <span className="console-label truncate text-terminal-chrome-dim">
-          {label}
-        </span>
-        <span
-          aria-hidden="true"
-          className="console-value truncate text-terminal-ink-faint"
-        >
-          {source}
-        </span>
-        <span className="sr-only">
-          {name ? ` — ${name}` : null} price in roubles
-        </span>
-      </label>
-
-      <InputGroup className="btc-farm-price-control min-h-11 rounded-none border-terminal-rule bg-terminal-wash/20 transition-none dark:bg-terminal-wash/20">
-        <InputGroupInput
-          id={id}
-          type="number"
-          inputMode="numeric"
-          autoComplete="off"
-          min={0}
-          step={1000}
-          value={value ?? ""}
-          aria-describedby={sourceId}
-          onChange={(event) => {
-            if (event.target.value === "") return onChange(null)
-            const next = event.target.valueAsNumber
-            onChange(Number.isFinite(next) ? Math.max(0, next) : null)
-          }}
-          className="btc-farm-price-input console-value min-h-11 py-0 text-end text-terminal-ink placeholder:text-terminal-ink-faint"
-        />
-        <InputGroupCaret className="end-4 text-primary" />
-        <InputGroupAddon
-          align="inline-end"
-          className="console-value text-terminal-chrome-dim"
-        >
-          ₽
-        </InputGroupAddon>
-      </InputGroup>
-      <span id={sourceId} className="sr-only">
-        {sourceLabel}
-      </span>
+      <div className="btc-farm-price-body">
+        <div className="btc-farm-price-label">
+          <label htmlFor={id}>{field.label}</label>
+          <span id={`${id}-source`} className="btc-farm-source">
+            {source}
+          </span>
+        </div>
+        <div className="btc-farm-price-control">
+          <input
+            id={id}
+            type="number"
+            inputMode="numeric"
+            autoComplete="off"
+            min={1}
+            step={1}
+            value={value ?? ""}
+            placeholder="enter price"
+            aria-label={`${field.label} price in roubles`}
+            aria-describedby={`${id}-source`}
+            aria-invalid={(value !== null && value <= 0) || undefined}
+            onChange={(event) => {
+              const next = event.target.valueAsNumber
+              onChange(Number.isFinite(next) ? Math.max(0, next) : null)
+            }}
+            className="btc-farm-price-input"
+          />
+          <span aria-hidden="true">₽</span>
+        </div>
+      </div>
     </div>
   )
 }
 
-/** Both markets are quiet: what that means, and what can be done about it. */
-function MarketDown({ keyed }: { keyed: boolean }) {
-  return (
-    <div className="flex flex-col gap-1.5 pt-1">
-      <p className="console-note text-terminal-ink-dim">
-        no live prices. enter prices above to run it manually.
-      </p>
-
-      {keyed ? null : (
-        <details className="btc-farm-market-help group border border-terminal-rule bg-terminal-wash/20">
-          <summary className="console-label flex min-h-11 cursor-pointer list-none items-center gap-2 px-2.5 text-terminal-chrome-dim focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none">
-            <span aria-hidden="true" className="w-4 text-primary">
-              <span className="group-open:hidden">[+]</span>
-              <span className="hidden group-open:inline">[-]</span>
-            </span>
-            Wire market feed
-          </summary>
-
-          <div className="flex flex-col gap-2 border-t border-terminal-rule px-2.5 py-2.5">
-            <ol className="console-note flex flex-col gap-1 text-terminal-ink-faint">
-              {STEPS.map((step, index) => (
-                <li key={step.text} className="flex gap-1.5">
-                  <span
-                    aria-hidden="true"
-                    className="shrink-0 text-terminal-chrome-dim tabular-nums"
-                  >
-                    {index + 1}.
-                  </span>
-                  <span className="min-w-0">
-                    {step.text}
-                    {step.code ? (
-                      <code className="ms-1 break-all text-primary normal-case">
-                        {step.code}
-                      </code>
-                    ) : null}
-                  </span>
-                </li>
-              ))}
-            </ol>
-
-            <a
-              href="https://tarkov-market.com/dev/api"
-              target="_blank"
-              rel="noreferrer"
-              className="console-note inline-flex min-h-11 w-fit items-center gap-1.5 text-terminal-ink-dim underline underline-offset-4 crt-persist hover:text-primary focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-            >
-              <span aria-hidden="true" className="text-terminal-chrome-dim">
-                &gt;
-              </span>
-              get a market key
-            </a>
-          </div>
-        </details>
-      )}
-    </div>
-  )
-}
-
-const STEPS = [
-  { text: "request a free key at tarkov-market.com/dev/api" },
-  {
-    text: "add it to apps/hideout/.env.local:",
-    code: "TARKOV_MARKET_API_KEY=",
-  },
-  { text: "restart the server." },
-]
-
-function Rule({ label, stamp }: { label: string; stamp: string }) {
-  return (
-    <p className="console-sign flex items-center gap-2 text-terminal-chrome-dim">
-      {label}
-      <span aria-hidden="true" className="h-px flex-1 bg-terminal-rule" />
-      <span className="text-terminal-ink-faint">{stamp}</span>
-    </p>
-  )
-}
-
-/**
- * A headline figure, boxed.
- *
- * The two the reader came for are drawn a tier above the working, so the panel
- * answers before it explains.
- */
 function Figure({
   label,
   value,
-  lit,
+  primary,
+  pending,
 }: {
   label: string
   value: string
-  lit?: boolean
+  primary?: boolean
+  pending: boolean
 }) {
   return (
-    <p className="flex min-w-0 flex-col gap-0.5 px-2.5">
-      <span className="console-label truncate text-terminal-chrome-dim">
-        {label}
-      </span>
-      <span
-        className={
-          lit
-            ? "btc-farm-result-value truncate font-mono text-primary tabular-nums crt-glow-soft"
-            : "btc-farm-result-value truncate font-mono text-terminal-ink tabular-nums"
-        }
-      >
-        {value}
+    <p className="btc-farm-figure" data-primary={primary || undefined}>
+      <span className="btc-farm-caption">{label}</span>
+      <span className="btc-farm-result-value">
+        {pending ? (
+          <>
+            <span aria-hidden="true">···</span>
+            <span className="sr-only">awaiting prices</span>
+          </>
+        ) : (
+          value
+        )}
       </span>
     </p>
   )
 }
 
-/** One figure on a dotted leader, the way every value on this console prints. */
 function Line({ label, value }: { label: string; value: string }) {
   return (
-    <p className="flex items-baseline gap-1.5">
-      <span className="console-label shrink-0 text-terminal-chrome-dim">
-        {label}
-      </span>
-      {/* The leader is nudged up off the baseline the row is aligned on, or it
-          draws through the descenders of the label rather than under them. */}
-      <span
-        aria-hidden="true"
-        className="min-w-3 flex-1 translate-y-[-0.15em] border-b border-dotted border-terminal-rule"
-      />
-      <span className="console-value shrink-0 text-terminal-ink">{value}</span>
-    </p>
+    <div className="btc-farm-line">
+      <dt>{label}</dt>
+      <dd>{value}</dd>
+    </div>
   )
 }
 
-/** The market's own timestamp, printed the way the status bar prints time. */
 function stamp(iso: string) {
   const at = new Date(iso)
   if (Number.isNaN(at.getTime())) return iso
-
-  const pad = (value: number) => String(value).padStart(2, "0")
-  return `${pad(at.getUTCDate())}${pad(at.getUTCHours())}${pad(at.getUTCMinutes())}Z`
+  return `${at.toISOString().slice(0, 10)} ${at.toISOString().slice(11, 16)} UTC`
 }

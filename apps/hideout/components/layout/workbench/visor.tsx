@@ -51,10 +51,12 @@ function useWideViewport() {
 
 export function Visor({
   className,
+  compact = false,
   /** Larger grid in the dock, where the panel is wider than the sidebar. */
   resolution = 0.3,
 }: {
   className?: string
+  compact?: boolean
   resolution?: number
 }) {
   const wide = useWideViewport()
@@ -66,6 +68,7 @@ export function Visor({
     return (
       <VisorPlate
         className={className}
+        compact={compact}
         reason={reduceMotion ? "motion held" : "screen too narrow"}
       />
     )
@@ -111,10 +114,28 @@ export function Visor({
 export function VisorPlate({
   className,
   reason,
+  compact = false,
 }: {
   className?: string
   reason: string
+  compact?: boolean
 }) {
+  if (compact) {
+    return (
+      <div
+        className={cn(
+          "flex aspect-square w-full items-center justify-center",
+          className
+        )}
+      >
+        <span aria-hidden="true" className="font-mono text-5xl text-primary">
+          ₿
+        </span>
+        <span className="sr-only">bitcoin preview paused: {reason}</span>
+      </div>
+    )
+  }
+
   return (
     <div
       className={cn(

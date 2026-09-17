@@ -33,7 +33,7 @@ install: ## Install dependencies for every workspace
 
 .PHONY: clean
 clean: ## Remove build output and caches (keeps node_modules)
-	rm -rf apps/web/dist apps/sortie/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
+	rm -rf apps/web/dist apps/sortie/dist apps/aim-converter/dist apps/hideout/.next apps/hideout/out dist-pages .turbo
 	find . -name '*.tsbuildinfo' -not -path './node_modules/*' -delete
 
 .PHONY: reset
@@ -58,6 +58,12 @@ dev-showcase: ## Run just the component showcase, on :5173
 .PHONY: dev-sortie
 dev-sortie: ## Run just the raid planner, on :5174
 	npm run dev --workspace sortie
+
+.PHONY: dev-kalibr dev-aim-converter
+dev-kalibr: ## Run kalibr sensitivity converter on :5175
+	npm run dev --workspace kalibr
+
+dev-aim-converter: dev-kalibr
 
 ##@ Verify
 

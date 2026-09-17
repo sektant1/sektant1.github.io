@@ -36,7 +36,7 @@ export function worksFrom(
       thumbnail: meta.thumbnail,
       date: meta.date,
       makeup: meta.stack,
-      links: projectDestinations(meta),
+      links: projectDestinations(meta).filter((link) => link.key === "project"),
     })),
     ...games.map(({ meta }) => ({
       kind: "game" as const,
@@ -58,8 +58,7 @@ export function worksFrom(
  *
  * Rows rather than cards so every work fits in the first screen or two: a
  * card grid put three projects three screens down, and a recruiter does not
- * scroll that far. The row is one target, opening where front matter says the
- * work should open; the other destinations ride along where there is room.
+ * scroll that far.
  *
  * Needs an `@container` ancestor: it is laid out by the buffer's width, which
  * the side panel changes, not by the viewport's.

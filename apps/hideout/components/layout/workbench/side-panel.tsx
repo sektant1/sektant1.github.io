@@ -7,11 +7,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { SiteMark } from "@/components/layout/site-mark"
 import { BtcFarmPanel } from "@/components/layout/workbench/btc-farm-panel"
 import { StashPanel } from "@/components/layout/workbench/stash-panel"
-import {
-  Visor,
-  MODEL_LABEL,
-  VisorPlate,
-} from "@/components/layout/workbench/visor"
+import { Visor, VisorPlate } from "@/components/layout/workbench/visor"
 import { useInstrument } from "@/components/layout/workbench/use-instrument"
 import type { SidePanel as SidePanelId } from "@/lib/workbench"
 import type { FleaState } from "@/lib/tarkov"
@@ -50,7 +46,10 @@ export function SidePanelView({
     <aside
       aria-label={CAPTIONS[panel].aria}
       className={cn(
-        "flex w-[clamp(16rem,22vw,20rem)] shrink-0 flex-col overflow-hidden border-e border-sidebar-border bg-sidebar",
+        "flex shrink-0 flex-col overflow-hidden border-e border-sidebar-border bg-sidebar",
+        panel === "visor"
+          ? "w-[clamp(19rem,28vw,23rem)]"
+          : "w-[clamp(16rem,22vw,20rem)]",
         className
       )}
     >
@@ -98,15 +97,24 @@ function VisorPanel({ flea }: { flea: FleaState }) {
   const busy = useInstrument("panel")
 
   return (
-    <div className="flex flex-col gap-3 p-3">
-      {busy ? <VisorPlate reason={busy} /> : <Visor />}
-      <p className="flex items-center justify-between font-mono text-[0.6rem] text-terminal-chrome-dim uppercase">
-        <span>модель</span>
-        <span className="text-terminal-ink-dim">{MODEL_LABEL}</span>
-      </p>
-
-      {/* The model is a Tarkov item, so the panel under it can run the farm
-          that produces one instead of naming the file twice. */}
+    <div className="btc-farm-workstation">
+      <div className="btc-farm-hero">
+        <div className="btc-farm-hero-copy">
+          <p className="btc-farm-caption">TARKOV / HIDEOUT</p>
+          <h2>
+            <span aria-hidden="true">БИТКОИН</span>
+            <span className="sr-only">Bitcoin farm</span>
+          </h2>
+          <p className="btc-farm-note">
+            plan your rack.
+            <br />
+            check what it earns.
+          </p>
+        </div>
+        <div className="btc-farm-preview">
+          {busy ? <VisorPlate reason={busy} compact /> : <Visor compact />}
+        </div>
+      </div>
       <BtcFarmPanel report={flea} />
     </div>
   )
