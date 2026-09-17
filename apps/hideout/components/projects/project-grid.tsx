@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Badge } from "@workspace/ui/components/badge"
-import { LinkButton } from "@workspace/ui/components/button"
 
 import { THUMB_ASPECT } from "@/components/media/thumbnail"
 import type { ProjectDocument, ProjectMeta } from "@/lib/content/types"
@@ -15,15 +14,8 @@ type Destination = {
   href: string
 }
 
-/**
- * Everywhere a project can be opened.
- *
- * Front matter names a primary with `open`, and that one leads — but the
- * others are still offered rather than hidden behind it. Someone who wants the
- * source should not have to open the write-up to find the repository link.
- */
 export function destinations(meta: ProjectMeta): Destination[] {
-  const all: Destination[] = [
+  return [
     { key: "project", label: "Write-up", href: `/projects/${meta.slug}` },
     ...(meta.repo
       ? [{ key: "repo" as const, label: "Repo", href: meta.repo }]
@@ -32,11 +24,6 @@ export function destinations(meta: ProjectMeta): Destination[] {
       ? [{ key: "website" as const, label: "Site", href: meta.href }]
       : []),
   ]
-
-  const primary = meta.open ?? "website"
-  return all.sort((a, b) =>
-    a.key === primary ? -1 : b.key === primary ? 1 : 0
-  )
 }
 
 export function ProjectGrid({ projects }: { projects: ProjectDocument[] }) {
@@ -50,10 +37,8 @@ export function ProjectGrid({ projects }: { projects: ProjectDocument[] }) {
 }
 
 function ProjectCard({ meta }: { meta: ProjectMeta }) {
-  const links = destinations(meta)
-
   return (
-    <li className="flex min-w-0 flex-col border border-border crt-persist hover:border-terminal-edge">
+    <li className="relative flex min-w-0 flex-col border border-border crt-persist hover:border-terminal-edge">
       {/* The image fills the band edge to edge, cropped rather than
           stretched: every card carries the same band, and nothing in it is
           squashed out of its own proportions. */}
@@ -79,7 +64,7 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
           <h3 className="min-w-0 truncate font-sans text-sm text-foreground">
             <Link
               href={`/projects/${meta.slug}`}
-              className="hover:text-primary hover:crt-glow-soft focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+              className="after:absolute after:inset-0 hover:text-primary hover:crt-glow-soft focus-visible:outline-none focus-visible:after:ring-1 focus-visible:after:ring-ring"
             >
               {meta.title}
             </Link>
@@ -107,26 +92,12 @@ function ProjectCard({ meta }: { meta: ProjectMeta }) {
           </div>
         ) : null}
 
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-          {links.map((link, index) => {
-            const external = isExternal(link.href)
-
-            return (
-              <LinkButton
-                key={link.key}
-                href={link.href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noreferrer" : undefined}
-                // The one front matter names is filled; the rest are outlined,
-                // so the card still says where it wants to send you.
-                variant={index === 0 ? "default" : "outline"}
-                size="xs"
-              >
-                {link.label} {external ? "↗" : "→"}
-              </LinkButton>
-            )
-          })}
-        </div>
+        <span
+          className="mt-auto pt-1 font-mono text-xs text-primary"
+          aria-hidden="true"
+        >
+          read write-up →
+        </span>
       </div>
     </li>
   )

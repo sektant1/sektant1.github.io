@@ -20,8 +20,6 @@ export function BannerFontPicker() {
     BANNER_FONT_OPTIONS[0]
 
   function choose(next: BannerFontId) {
-    // The face is applied by an attribute rather than by re-rendering: the
-    // hero ships all three, and CSS picks the one this attribute names.
     document.documentElement.dataset.asciiFont = next
     store(next)
   }

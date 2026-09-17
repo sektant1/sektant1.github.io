@@ -390,45 +390,430 @@ html[data-crt="off"] .ascii-planet-scene {
 }
 
 @layer components {
+  .btc-farm-workstation {
+    --farm-surface: color-mix(in oklch, var(--sidebar) 65%, var(--card));
+    --farm-inset: color-mix(in oklch, var(--sidebar) 85%, black);
+    --farm-space: 0.875rem;
+    padding: var(--farm-space);
+    color: var(--terminal-ink);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-shadow: none;
+  }
+
+  .btc-farm-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6rem;
+    align-items: center;
+    gap: var(--farm-space);
+    padding-block-end: var(--farm-space);
+  }
+
+  .btc-farm-hero-copy h2 {
+    margin-block: 0.25rem;
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+  }
+
+  .btc-farm-preview {
+    overflow: hidden;
+    border: 1px solid var(--terminal-rule);
+    background: var(--farm-inset);
+  }
+
   .btc-farm-panel {
     container: btc-farm / inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--farm-space);
+  }
+
+  .btc-farm-caption {
+    color: var(--terminal-chrome-dim);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .btc-farm-note {
+    color: var(--terminal-ink-dim);
+    font-size: 0.6875rem;
+    line-height: 1.6;
+    text-transform: lowercase;
+  }
+
+  .btc-farm-section-head {
+    display: flex;
+    min-block-size: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .btc-farm-result {
+    border: 1px solid var(--terminal-rule);
+    border-block-start: 2px solid var(--primary);
+    background: var(--farm-surface);
+    padding: 0.75rem;
+  }
+
+  .btc-farm-status {
+    color: var(--terminal-ink-dim);
+    font-size: 0.625rem;
+    text-transform: lowercase;
+  }
+
+  .btc-farm-figures {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-block: 0.75rem;
+  }
+
+  .btc-farm-figure {
+    display: flex;
+    min-inline-size: 0;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .btc-farm-figure + .btc-farm-figure {
+    border-inline-start: 1px solid var(--terminal-rule);
+    padding-inline-start: 0.75rem;
+  }
+
+  .btc-farm-result-value {
+    color: var(--foreground);
+    font-size: clamp(1rem, 5.4cqi, 1.25rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .btc-farm-figure[data-primary] .btc-farm-result-value {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .btc-farm-result[data-loss] {
+    border-block-start-color: var(--destructive);
+  }
+
+  .btc-farm-result[data-loss]
+    .btc-farm-figure[data-primary]
+    .btc-farm-result-value {
+    color: var(--destructive);
+  }
+
+  .btc-farm-production {
+    display: flex;
+    min-block-size: 2.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    border-block-start: 1px solid var(--terminal-rule);
+    padding-block-start: 0.625rem;
+    color: var(--terminal-ink-dim);
+    font-size: 0.6875rem;
+    line-height: 1.6;
+  }
+
+  .btc-farm-production strong {
+    color: var(--terminal-ink);
+    font-weight: 500;
+  }
+
+  .btc-farm-module {
+    border: 1px solid var(--terminal-rule);
+    background: var(--farm-surface);
+    padding: 0.75rem;
+  }
+
+  .btc-farm-capacity {
+    color: var(--terminal-ink-dim);
+    font-size: 0.75rem;
+  }
+
+  .btc-farm-capacity strong {
+    color: var(--foreground);
+    font-size: 1.25rem;
+    font-weight: 500;
   }
 
   .btc-farm-rack {
     display: grid;
-    grid-template-columns: repeat(25, minmax(0, 1fr));
-    gap: 0.375rem 0.125rem;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 0.25rem;
+    margin-block: 0.625rem;
+    padding: 0.5rem;
+    background: var(--farm-inset);
   }
 
   .btc-farm-rack > span {
-    block-size: 0.5rem;
+    block-size: 0.375rem;
     border: 1px solid var(--terminal-rule);
-    opacity: 0.55;
   }
 
   .btc-farm-rack > span[data-filled] {
     border-color: var(--primary);
-    background-color: var(--primary);
-    opacity: 1;
+    background: color-mix(in oklch, var(--primary) 70%, var(--farm-inset));
   }
 
-  .btc-farm-result-value {
-    font-size: clamp(0.9rem, 5cqi, 1.1rem);
+  .btc-farm-slider-row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .btc-farm-slider-row input {
+    min-inline-size: 0;
+    inline-size: 100%;
+  }
+
+  .btc-farm-key {
+    display: inline-flex;
+    min-block-size: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--terminal-rule);
+    padding-inline: 0.5rem;
+    background: var(--farm-inset);
+    color: var(--terminal-ink);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .btc-farm-key:hover:not(:disabled),
+  .btc-farm-solar:hover {
+    border-color: var(--primary);
+    background: var(--terminal-wash);
+  }
+
+  .btc-farm-key[aria-pressed="true"],
+  .btc-farm-key[aria-pressed="true"]:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .btc-farm-key:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btc-farm-key:focus-visible,
+  .btc-farm-solar:focus-visible,
+  .btc-farm-breakdown > summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  .btc-farm-presets {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.375rem;
+    margin-block-start: 0.5rem;
+  }
+
+  .btc-farm-solar {
+    display: flex;
+    inline-size: 100%;
+    min-block-size: 3.5rem;
+    align-items: center;
+    gap: 0.625rem;
+    margin-block-start: 0.75rem;
+    border: 1px solid var(--terminal-rule);
+    padding: 0.5rem;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .btc-farm-solar > svg {
+    flex-shrink: 0;
+    color: var(--terminal-chrome-dim);
+  }
+
+  .btc-farm-solar-label {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .btc-farm-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--terminal-ink-dim);
+    font-size: 0.625rem;
+  }
+
+  .btc-farm-toggle::before {
+    content: "";
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    border: 1px solid currentColor;
+  }
+
+  .btc-farm-solar[aria-pressed="true"] .btc-farm-toggle {
+    color: var(--primary);
+  }
+
+  .btc-farm-solar[aria-pressed="true"] .btc-farm-toggle::before {
+    background: currentColor;
+  }
+
+  .btc-farm-reset {
+    font-size: 0.625rem;
+  }
+
+  .btc-farm-price-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-block-start: 0.5rem;
   }
 
   .btc-farm-price-row {
     display: grid;
-    grid-template-columns: 2.75rem 3.25rem minmax(0, 1fr);
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.625rem;
+    border: 1px solid var(--terminal-rule);
+    background: var(--farm-surface);
+    padding: 0.5rem;
+  }
+
+  .btc-farm-item-icon {
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    border: 1px solid var(--terminal-rule);
+    background: var(--farm-inset);
+  }
+
+  .btc-farm-price-body {
+    min-inline-size: 0;
+  }
+
+  .btc-farm-price-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.125rem 0.5rem;
+    margin-block-end: 0.375rem;
+    font-size: 0.6875rem;
+  }
+
+  .btc-farm-source {
+    color: var(--terminal-ink-dim);
+    font-size: 0.5625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .btc-farm-price-control {
+    display: flex;
+    min-block-size: 2.75rem;
+    align-items: center;
+    border: 1px solid var(--input);
+    background: var(--farm-inset);
+  }
+
+  .btc-farm-price-control:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .btc-farm-price-control > span {
+    padding-inline-end: 0.625rem;
+    color: var(--terminal-chrome-dim);
+    font-size: 0.75rem;
   }
 
   .btc-farm-price-input {
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 2.75rem;
+    padding-inline: 0.625rem;
+    outline: none;
     appearance: textfield;
+    color: var(--foreground);
+    font-size: 0.875rem;
+    caret-color: var(--primary);
+  }
+
+  .btc-farm-price-input::placeholder {
+    color: var(--terminal-ink-dim);
+    font-size: 0.6875rem;
+  }
+
+  .btc-farm-price-input[aria-invalid="true"] {
+    outline: 1px solid var(--destructive);
   }
 
   .btc-farm-price-input::-webkit-inner-spin-button,
   .btc-farm-price-input::-webkit-outer-spin-button {
     margin: 0;
     appearance: none;
+  }
+
+  .btc-farm-feed {
+    margin-block-start: 0.625rem;
+    overflow-wrap: anywhere;
+  }
+
+  .btc-farm-breakdown {
+    border-block-start: 1px solid var(--terminal-rule);
+  }
+
+  .btc-farm-breakdown > summary {
+    display: flex;
+    min-block-size: 2.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--terminal-ink-dim);
+    font-size: 0.6875rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .btc-farm-breakdown[open] > summary svg {
+    transform: rotate(180deg);
+  }
+
+  .btc-farm-breakdown > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .btc-farm-breakdown-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-block-end: 0.5rem;
+  }
+
+  .btc-farm-line {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-block: 0.375rem;
+    font-size: 0.6875rem;
+  }
+
+  .btc-farm-line dt {
+    color: var(--terminal-ink-dim);
   }
 
   .model-icon-fallback {
@@ -445,23 +830,18 @@ html[data-crt="off"] .ascii-planet-scene {
     }
   }
 
-  .btc-farm-market-help > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  @container btc-farm (inline-size < 13rem) {
-    .btc-farm-price-row {
-      grid-template-columns: 2.75rem minmax(0, 1fr);
+  @container btc-farm (inline-size < 15rem) {
+    .btc-farm-source {
+      font-size: 0.625rem;
     }
 
-    .btc-farm-price-control {
-      grid-column: 1 / -1;
+    .btc-farm-figures {
+      grid-template-columns: minmax(0, 1fr);
     }
-  }
 
-  @container btc-farm (inline-size >= 18rem) {
-    .btc-farm-price-row {
-      grid-template-columns: 2.75rem 4rem minmax(0, 1fr);
+    .btc-farm-figure + .btc-farm-figure {
+      border-inline-start: 0;
+      padding-inline-start: 0;
     }
   }
 
@@ -480,6 +860,12 @@ html[data-crt="off"] .ascii-planet-scene {
 
     .btc-farm-rack > span[data-filled] {
       background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    .btc-farm-key[aria-pressed="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: -4px;
     }
   }
 }
@@ -678,8 +1064,15 @@ html[data-crt="off"]::view-transition-group(*) {
 html[data-ascii-font="delta"] .ascii-font-choice[data-ascii-font="delta"],
 html[data-ascii-font="dos-rebel"]
   .ascii-font-choice[data-ascii-font="dos-rebel"],
-html[data-ascii-font="sub-zero"]
-  .ascii-font-choice[data-ascii-font="sub-zero"] {
+html[data-ascii-font="sub-zero"] .ascii-font-choice[data-ascii-font="sub-zero"],
+html[data-ascii-font="ansi-regular"]
+  .ascii-font-choice[data-ascii-font="ansi-regular"],
+html[data-ascii-font="bloody"] .ascii-font-choice[data-ascii-font="bloody"],
+html[data-ascii-font="electronic"]
+  .ascii-font-choice[data-ascii-font="electronic"],
+html[data-ascii-font="cyberlarge"]
+  .ascii-font-choice[data-ascii-font="cyberlarge"],
+html[data-ascii-font="doom"] .ascii-font-choice[data-ascii-font="doom"] {
   display: block;
 }
 

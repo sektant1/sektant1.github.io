@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Tarkov Aim Lab</title>
+  <desc id="desc">Phosphor-green sensitivity instrument with a circular sight and a CS2 control of 47.23 centimetres per full turn at 800 DPI and 1.1 sensitivity.</desc>
+  <rect width="1200" height="675" fill="#04170c"/>
+  <g fill="none" stroke="#188038">
+    <path d="M48 100H1152M48 570H1152"/>
+    <circle cx="905" cy="330" r="192"/>
+    <circle cx="905" cy="330" r="176" stroke-dasharray="2 9"/>
+    <path d="M681 330H1129M905 106V554"/>
+  </g>
+  <g fill="none" stroke="#32f078" stroke-width="3">
+    <path d="M713 308V330H735M1075 330H1097V352M883 138H905V160M905 500V522H927"/>
+    <path d="M48 52V36H64M1136 36H1152V52M48 623V639H64M1136 639H1152V623"/>
+  </g>
+  <g font-family="monospace" font-size="18" letter-spacing="2" fill="#32f078">
+    <text x="48" y="77">SEKTANT / AIM CONVERTER</text>
+    <text x="1152" y="77" text-anchor="end">LOCAL INPUT INSTRUMENT</text>
+    <text x="48" y="613">SENSITIVITY / FOV / CALIBRATION</text>
+    <text x="1152" y="613" text-anchor="end">CM / 360</text>
+  </g>
+  <g font-family="Impact, 'Arial Narrow', sans-serif" font-weight="700" font-size="104" letter-spacing="-3" fill="#a9ffc9">
+    <text x="42" y="287">TARKOV</text>
+    <text x="42" y="390">AIM LAB</text>
+  </g>
+  <g font-family="monospace" fill="#a9ffc9">
+    <text x="48" y="451" font-size="20">match mouse travel across games.</text>
+    <rect x="762" y="258" width="286" height="149" fill="#04170c"/>
+    <text x="905" y="282" text-anchor="middle" font-size="17" letter-spacing="3">CS2 CONTROL</text>
+    <text x="905" y="351" text-anchor="middle" font-size="58" fill="#32f078">47.23</text>
+    <text x="905" y="386" text-anchor="middle" font-size="17">cm / 360</text>
+    <rect x="786" y="440" width="238" height="28" fill="#04170c"/>
+    <text x="905" y="460" text-anchor="middle" font-size="16">800 DPI × 1.1</text>
+  </g>
+</svg>

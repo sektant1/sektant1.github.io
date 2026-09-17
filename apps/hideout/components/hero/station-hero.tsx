@@ -270,7 +270,7 @@ const MONTHS = [
 /**
  * The hero ships every face and lets CSS pick one, so the reader's stored
  * choice applies before first paint with no script and no flash. The art for
- * all three is rendered here, on the server — the browser receives glyphs
+ * every face is rendered here, on the server — the browser receives glyphs
  * instead of the figlet engine and its font tables.
  */
 function HeroBanner({

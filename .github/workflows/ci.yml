@@ -58,6 +58,7 @@ jobs:
       # only show up as a 404 on the boot screen of a published build.
       - run: test -f dist-pages/CNAME && test -f dist-pages/r/button.json
       - run: test -f dist-pages/models/bitcoin.glb
+      - run: test -f dist-pages/kalibr/index.html
 
   # Proves the image the installer will pull actually builds, before master
   # ever tries to publish it. Not pushed: this runs on branches and PRs.

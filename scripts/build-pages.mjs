@@ -46,6 +46,7 @@ async function copyInto(source, target, label) {
 await run("npm", ["run", "registry:build"])
 await run("npm", ["run", "build", "--workspace", "web"])
 await run("npm", ["run", "build", "--workspace", "sortie"])
+await run("npm", ["run", "build", "--workspace", "kalibr"])
 await run("npm", ["run", "build:pages", "--workspace", "hideout"])
 
 await fs.rm(outDir, { recursive: true, force: true })
@@ -60,6 +61,11 @@ await copyInto(
   path.join(root, "apps/sortie/dist"),
   path.join(outDir, "sortie"),
   "sortie build"
+)
+await copyInto(
+  path.join(root, "apps/aim-converter/dist"),
+  path.join(outDir, "kalibr"),
+  "kalibr build"
 )
 await copyInto(
   path.join(root, "apps/web/public/r"),

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <title>kalibr / калибр — multi-game sensitivity lab</title>
+  <defs>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 3.5H4" stroke="#020d06" stroke-opacity=".24"/></pattern>
+    <radialGradient id="tube"><stop stop-color="#0b2c18"/><stop offset="1" stop-color="#020d06"/></radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#tube)"/>
+  <g fill="none" stroke="#32f078" stroke-width="3">
+    <path d="M800 150V318m0 62v70M510 350h258m56 0h242M800 186h-18m18 30h-12m12 30h-18m18 30h-12M550 332v36m40-28v20m40-28v36m40-28v20m40-28v36M870 332v36m40-28v20m40-28v36m40-28v20m40-28v36"/>
+    <rect x="776" y="326" width="48" height="48" rx="2"/>
+    <path d="M814 240Q1128 218 1140 329" stroke-dasharray="4 13"/>
+    <rect x="1120" y="338" width="40" height="65" rx="20"/><path d="M1140 338v26m-20 0h40"/>
+  </g>
+  <rect x="794" y="344" width="12" height="12" fill="#a9ffc9"/>
+  <g fill="none" stroke="#188038" stroke-width="2">
+    <path d="M177 291h22v-17h40v9h130v-22h53v70h-53v-22H239v9h-40v-17h-22zm96-8v-18h32v18m-41 26v24m53-24v24"/>
+    <path d="M1250 273h38l9-30h60l13 17h39v54h-48l-19 19h-72zm45-13h45l10 17h-60z"/>
+  </g>
+  <g fill="#32f078" font-family="Bender, sans-serif" text-anchor="middle">
+    <text x="800" y="577" font-size="154" font-weight="700" letter-spacing="6">КАЛИБР</text>
+    <text x="800" y="643" font-size="27" letter-spacing="8" fill="#a9ffc9">KALIBR / SENSITIVITY LAB</text>
+    <text x="800" y="756" font-size="22" letter-spacing="5">&gt; CALIBRATE // CONVERT // MATCH</text>
+  </g>
+  <g stroke="#188038"><path d="M185 633h160m910 0h160M100 709h1400"/></g>
+  <rect width="1600" height="900" fill="url(#scan)"/>
+</svg>
