@@ -64,11 +64,6 @@ export const buildCommandIndex = cache(async (): Promise<CommandIndex> => {
         label: section.paletteLabel,
         keywords: section.keywords,
       })),
-      {
-        href: "/tech-passport",
-        label: "Tech passport",
-        keywords: "colophon stack built with fonts credits",
-      },
       { href: "/rss.xml", label: "RSS feed", keywords: "subscribe atom" },
     ],
   }

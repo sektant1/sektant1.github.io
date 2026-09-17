@@ -19,7 +19,6 @@
   <g fill="#32f078" font-family="Bender, sans-serif" text-anchor="middle">
     <text x="800" y="577" font-size="154" font-weight="700" letter-spacing="6">КАЛИБР</text>
     <text x="800" y="643" font-size="27" letter-spacing="8" fill="#a9ffc9">KALIBR / SENSITIVITY LAB</text>
-    <text x="800" y="756" font-size="22" letter-spacing="5">&gt; CALIBRATE // CONVERT // MATCH</text>
   </g>
   <g stroke="#188038"><path d="M185 633h160m910 0h160M100 709h1400"/></g>
   <rect width="1600" height="900" fill="url(#scan)"/>
