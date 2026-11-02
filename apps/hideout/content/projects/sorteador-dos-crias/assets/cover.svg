@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Sorteador dos Crias</title>
+  <desc id="desc">Dark Windows app cover: the title on the left, a drawn 5x5 with orange Team A and blue Team B on the right, a split CT/TR coin and the console command for de_inferno.</desc>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity=".035"/>
+    </pattern>
+    <radialGradient id="glow" cx="0.3" cy="0.45" r="0.7">
+      <stop offset="0" stop-color="#ff9a1f" stop-opacity=".10"/>
+      <stop offset="1" stop-color="#ff9a1f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ct" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#4e8ceb"/>
+      <stop offset="1" stop-color="#1c3f7c"/>
+    </radialGradient>
+    <radialGradient id="tr" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#e9a83a"/>
+      <stop offset="1" stop-color="#7e420e"/>
+    </radialGradient>
+    <clipPath id="coinL"><rect x="1660" y="96" width="110" height="240"/></clipPath>
+    <clipPath id="coinR"><rect x="1770" y="96" width="110" height="240"/></clipPath>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".5"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#19191b"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+
+  <!-- top and bottom rails -->
+  <g font-family="Cascadia Mono, Consolas, monospace" font-size="22" letter-spacing="4">
+    <text x="120" y="92" fill="#ff9a1f">SORTEADOR // CS2</text>
+    <text x="1800" y="92" text-anchor="end" fill="#8a8a90">5x5 · 10 DE 11 ON · MAPA SORTEADO</text>
+    <text x="120" y="1008" fill="#6e6e74">WINDOWS · WPF · .NET FRAMEWORK 4</text>
+    <text x="1800" y="1008" text-anchor="end" fill="#6e6e74">v1.2</text>
+  </g>
+  <path d="M120 124H1800M120 960H1800" stroke="#ffffff" stroke-opacity=".08" stroke-width="2"/>
+
+  <!-- title -->
+  <g font-family="Segoe UI Variable Display, Segoe UI, sans-serif" font-weight="700">
+    <text x="112" y="418" font-size="148" fill="#f4f4f5" letter-spacing="-3">Sorteador</text>
+    <text x="112" y="562" font-size="148" fill="#f4f4f5" letter-spacing="-3">dos <tspan fill="#ff9a1f">Crias</tspan></text>
+  </g>
+  <text x="120" y="640" font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="34" fill="#a1a1a8">quem joga a próxima, em que time e em que mapa.</text>
+
+  <!-- mode selector -->
+  <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="28" text-anchor="middle">
+    <rect x="120" y="704" width="560" height="72" rx="14" fill="#ffffff" fill-opacity=".05" stroke="#ffffff" stroke-opacity=".1" stroke-width="2"/>
+    <text x="210" y="750" fill="#d4d4d8">Jogadores</text>
+    <text x="350" y="750" fill="#d4d4d8">3x3</text>
+    <text x="460" y="750" fill="#d4d4d8">4x4</text>
+    <rect x="512" y="712" width="160" height="56" rx="10" fill="#ff9a1f"/>
+    <text x="592" y="750" fill="#1a1a1a" font-weight="700">5x5</text>
+  </g>
+  <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="26">
+    <rect x="120" y="808" width="268" height="54" rx="27" fill="#ff6b6b" fill-opacity=".14" stroke="#ff6b6b" stroke-opacity=".4" stroke-width="2"/>
+    <text x="254" y="844" text-anchor="middle" fill="#f4f4f5">felps  ≠  vitao</text>
+    <rect x="404" y="808" width="300" height="54" rx="27" fill="#ffffff" fill-opacity=".08" stroke="#ffffff" stroke-opacity=".1" stroke-width="2"/>
+    <text x="554" y="844" text-anchor="middle" fill="#f4f4f5"><tspan fill="#ff9a1f">★</tspan>  prioridade: mute</text>
+  </g>
+
+  <!-- result panel -->
+  <g filter="url(#shadow)">
+    <rect x="1000" y="196" width="800" height="696" rx="22" fill="#242427" stroke="#ffffff" stroke-opacity=".09" stroke-width="2"/>
+  </g>
+  <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif">
+    <text x="1044" y="262" font-size="22" font-weight="700" letter-spacing="2" fill="#ff9a1f">TIME A</text>
+    <text x="1414" y="262" font-size="22" font-weight="700" letter-spacing="2" fill="#4fa8ff">TIME B</text>
+
+    <g font-size="30" font-weight="600" fill="#f4f4f5">
+      <!-- Time A -->
+      <g>
+        <rect x="1044" y="286" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1044" y="366" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1044" y="446" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1044" y="526" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1044" y="606" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <g fill="#ff9a1f">
+          <circle cx="1086" cy="320" r="20"/><circle cx="1086" cy="400" r="20"/><circle cx="1086" cy="480" r="20"/><circle cx="1086" cy="560" r="20"/><circle cx="1086" cy="640" r="20"/>
+        </g>
+        <text x="1124" y="331">vitao</text>
+        <text x="1124" y="411">thiaguin</text>
+        <text x="1124" y="491">tallesco</text>
+        <text x="1124" y="571">rikizin</text>
+        <text x="1124" y="651">gabriel</text>
+      </g>
+      <!-- Time B -->
+      <g>
+        <rect x="1414" y="286" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1414" y="366" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1414" y="446" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1414" y="526" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <rect x="1414" y="606" width="350" height="68" rx="10" fill="#ffffff" fill-opacity=".06"/>
+        <g fill="#4fa8ff">
+          <circle cx="1456" cy="320" r="20"/><circle cx="1456" cy="400" r="20"/><circle cx="1456" cy="480" r="20"/><circle cx="1456" cy="560" r="20"/><circle cx="1456" cy="640" r="20"/>
+        </g>
+        <text x="1494" y="331">andras</text>
+        <text x="1494" y="411">felps</text>
+        <text x="1494" y="490" font-size="27">henrique retardado</text>
+        <text x="1494" y="571">chimas</text>
+        <text x="1494" y="651">mute</text>
+      </g>
+    </g>
+    <g font-size="20" font-weight="700" fill="#1a1a1a" text-anchor="middle">
+      <text x="1086" y="327">1</text><text x="1086" y="407">2</text><text x="1086" y="487">3</text><text x="1086" y="567">4</text><text x="1086" y="647">5</text>
+      <text x="1456" y="327">1</text><text x="1456" y="407">2</text><text x="1456" y="487">3</text><text x="1456" y="567">4</text><text x="1456" y="647">5</text>
+    </g>
+
+    <!-- map + console -->
+    <rect x="1044" y="712" width="720" height="136" rx="12" fill="#3dd68c" fill-opacity=".10" stroke="#3dd68c" stroke-opacity=".35" stroke-width="2"/>
+    <text x="1076" y="760" font-size="22" font-weight="700" letter-spacing="2" fill="#3dd68c">MAPA SORTEADO</text>
+    <text x="1076" y="812" font-size="40" font-weight="700" fill="#f4f4f5">Inferno</text>
+    <text x="1740" y="812" text-anchor="end" font-family="Cascadia Mono, Consolas, monospace" font-size="22" fill="#a1a1a8">game_mode 1; map <tspan fill="#ff9a1f">de_inferno</tspan></text>
+  </g>
+
+  <!-- CT/TR coin, split down the middle -->
+  <g filter="url(#shadow)">
+    <g clip-path="url(#coinL)">
+      <circle cx="1770" cy="216" r="104" fill="url(#ct)" stroke="#a9cbff" stroke-width="8"/>
+      <path d="M1730 168l28 10v24c0 18-13 28-28 34c-15-6-28-16-28-34v-24z" fill="#eaf2ff" transform="translate(-2 -6)"/>
+      <path d="M1728 180l3 9h9.5l-7.7 5.6 3 9-7.8-5.6-7.8 5.6 3-9-7.7-5.6h9.5z" fill="#244e94"/>
+    </g>
+    <g clip-path="url(#coinR)">
+      <circle cx="1770" cy="216" r="104" fill="url(#tr)" stroke="#ffd58a" stroke-width="8"/>
+      <path d="M1812 160c17 0 29 12 29 28 0 10-5 16-11 20v11h-36v-11c-6-4-11-10-11-20 0-16 12-28 29-28z" fill="#fff3dc"/>
+      <path d="M1785 178c10-5 44-5 54 0v6c-10-4-44-4-54 0z" fill="#3a1e05" opacity=".85"/>
+      <ellipse cx="1802" cy="192" rx="6.5" ry="6" fill="#3a1e05"/>
+      <ellipse cx="1822" cy="192" rx="6.5" ry="6" fill="#3a1e05"/>
+      <path d="M1812 199l-4 7h8z" fill="#3a1e05"/>
+    </g>
+    <path d="M1770 112V320" stroke="#19191b" stroke-width="4"/>
+    <g font-family="Segoe UI Variable Display, Segoe UI, sans-serif" font-size="30" font-weight="900" text-anchor="middle">
+      <text x="1724" y="274" fill="#eaf2ff">CT</text>
+      <text x="1814" y="274" fill="#fff3dc">TR</text>
+    </g>
+  </g>
+</svg>

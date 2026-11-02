@@ -1,0 +1,104 @@
+---
+title: "sorteador dos crias"
+slug: "sorteador-dos-crias"
+description: "a windows app that decides who plays the next cs2 match, on which team, on which map, and from which side."
+date: "2026-11-02"
+status: "active"
+visibility: "published"
+tags:
+  - "cs2"
+  - "tool"
+  - "windows"
+stack:
+  - "c#"
+  - "wpf"
+  - "xaml"
+open: "project"
+thumbnail: "./assets/cover.png"
+---
+
+eleven of us, ten slots, and every night the same argument about who sits out.
+
+![sorteador dos crias cover: the title, a drawn 5x5 with orange and blue teams, a split ct/tr coin and the console command for de_inferno](/content-assets/projects/sorteador-dos-crias/assets/cover.webp)
+
+## Briefing
+
+```text
+TARGET      windows 10 / 11
+RUNTIME     .net framework 4, ships with windows
+BUILD       csc.exe from the framework, no sdk
+SIZE        one exe, no installer
+MODES       players, 3x3, 4x4, 5x5
+MAPS        veto md1, veto md3, random draw
+```
+
+## Who plays
+
+the player list is the group, not tonight. click a name to mark them off for
+the night; they stay on the list and the draw skips them. the counter reads
+`10 de 11 on`.
+
+whoever sat out the last **registered** match gets a ★ and a guaranteed slot
+in the next one. drawing again before you play does not move the queue, so a
+reroll cannot push someone out twice.
+
+![the main window: player chips with one marked off and two starred, a 4x4 draw in orange and blue, and the buttons to register the winner](/content-assets/projects/sorteador-dos-crias/assets/teams.png)
+
+pairs that must never share a team go in **nunca no mesmo time**. the default
+is `felps ≠ vitao`. in 25 test draws of 5x5 they both played in 18 and landed
+on the same side in none.
+
+## Maps
+
+the pool starts with ancient, anubis, dust2, inferno, mirage, nuke and train;
+overpass, vertigo, office and italy are there switched off. custom maps can be
+added. the pool is saved beside the exe.
+
+- **veto md1:** teams alternate bans until one map is left. a coin decides who
+  starts.
+- **veto md3:** ban, ban, pick, pick, ban, ban, decider.
+- **sortear mapa:** a slowing spin over the active pool.
+
+![an md3 veto: two picks, four bans and the decider ancient](/content-assets/projects/sorteador-dos-crias/assets/veto-md3.png)
+
+once a map is decided, **copiar comando do console** puts this on the
+clipboard:
+
+```text
+game_type 0; game_mode 1; map de_inferno
+```
+
+paste it into the cs2 console and the map loads in offline competitive.
+
+![a random map draw that landed on inferno, with the console command button lit](/content-assets/projects/sorteador-dos-crias/assets/map-draw.png)
+
+## Sides
+
+the coin flips for team a; team b takes the other side. the emblems are drawn
+for this app, not taken from the game. drop a `ct.png` and `tr.png` next to the
+exe to replace them.
+
+![the coin after a flip, showing the tr face](/content-assets/projects/sorteador-dos-crias/assets/coin.png)
+
+## Score
+
+**time a venceu** and **time b venceu** register the match. the history keeps
+wins, games, win rate and how many times each player sat out, plus the last
+four matches. **copiar pro discord** formats the teams, sides, bench and map
+for the group chat.
+
+![the history overlay: a ranking by wins and the four most recent matches](/content-assets/projects/sorteador-dos-crias/assets/history.png)
+
+## Files
+
+everything is plain text beside the exe, so a backup is a folder copy.
+
+```text
+jogadores.txt    the group; a leading # means off tonight
+separados.txt    never-same-team pairs, one per line
+mapas.txt        the map pool; a leading # means switched off
+historico.txt    one registered match per line
+```
+
+the [build write-up](/posts/building-sorteador-dos-crias) covers how it is
+compiled and why windows still warns about it.
