@@ -1,0 +1,105 @@
+---
+title: "building a team picker for cs nights"
+slug: "building-sorteador-dos-crias"
+description: "a wpf app compiled with the csc.exe windows already has, fair draws under constraints, and why smartscreen still complains."
+date: "2026-11-02"
+status: "published"
+tags:
+  - "cs2"
+  - "windows"
+  - "devlog"
+thumbnail: "thumb.png"
+---
+
+[sorteador dos crias](/projects/sorteador-dos-crias) started as a five-name
+randomiser and grew a feature every time the group found a new thing to argue
+about. these are the decisions that held up.
+
+## no sdk, no installer
+
+every windows install has .net framework 4 and its compiler at
+`%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe`. that is enough to
+build a wpf app, so the build is one batch file:
+
+```bat
+set FW=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319
+"%FW%\csc.exe" /nologo /codepage:65001 /optimize+ /target:winexe ^
+  /out:SorteadorDosCrias.exe /win32icon:icone.ico /win32manifest:app.manifest ^
+  /r:"%FW%\WPF\PresentationFramework.dll" /r:"%FW%\WPF\PresentationCore.dll" ^
+  /r:"%FW%\WPF\WindowsBase.dll" /r:"%FW%\System.Xaml.dll" ^
+  /resource:MainWindow.xaml,MainWindow.xaml ^
+  Program.cs
+```
+
+the catch is that this compiler stops at c# 5: no string interpolation, no
+`?.`, no `out var`. the window is xaml embedded as a resource and loaded with
+`XamlReader.Load`, so there is no `x:Class` and no generated code-behind;
+controls are found by name and wired by hand.
+
+`/codepage:65001` makes the compiler read the source as utf-8. the discord
+export keeps its emoji in string literals, and the system code page would not
+survive them.
+
+## looking like windows 11
+
+wpf's default controls look like 2010. the fix was a handful of control
+templates (rounded buttons, a segmented selector, a text box with an accent
+underline on focus) and two dwm calls on the window handle:
+
+```cs
+int dark = 1;
+DwmSetWindowAttribute(hwnd, 20, ref dark, 4);   // dark title bar
+int mica = 2;
+DwmSetWindowAttribute(hwnd, 38, ref mica, 4);   // mica backdrop
+```
+
+mica only shows through if the window background is transparent, the
+`HwndSource` composition target is transparent, and the frame is extended into
+the whole client area with `DwmExtendFrameIntoClientArea`. below build 22000
+the app skips the backdrop and keeps a solid background.
+
+## fair draws under rules
+
+the shuffle is fisher–yates over `RandomNumberGenerator`, which is more than a
+team picker needs and costs nothing.
+
+the rules made it interesting. "felps and vitao never on the same team" and
+"whoever sat out last plays next" both constrain the result, and the easy
+fixes bias it: swapping players after the fact favours some splits over
+others.
+
+priority is handled by construction. the starred players fill slots first,
+the rest of the slots come from a shuffle of everyone else, and only then are
+the chosen players shuffled into teams. the never-together pairs are handled
+by rejection: shuffle, check every pair, try again. every valid split is
+equally likely, and with eleven players a valid one turns up in a few tries.
+after 5000 misses the app says the rules cannot all hold instead of looping.
+
+the priority only reads the last **registered** match. if it followed every
+draw, rerolling a split you did not like would quietly change who was
+guaranteed a slot.
+
+## the console command
+
+the map step ends with a button that copies:
+
+```text
+game_type 0; game_mode 1; map de_inferno
+```
+
+`game_type 0` with `game_mode 1` is competitive. map names get `de_` unless
+they are hostage maps like office and italy, which get `cs_`.
+
+## smartscreen
+
+friends who downloaded the exe got "windows protected your pc". defender found
+nothing; this is smartscreen saying it has never seen the file, and it shows
+for any unsigned exe that arrives from the internet.
+
+adding version info, a manifest that asks for no elevation and an icon makes
+the file look like a normal program, but it does not remove the prompt. a
+code-signing certificate does, eventually: smartscreen still wants reputation,
+and since 2024 not even an ev certificate skips that. for eleven people the
+answer is **more info → run anyway** once per machine, or sending the folder
+and letting each person run the batch file, since an exe compiled locally
+carries no mark of the web.
